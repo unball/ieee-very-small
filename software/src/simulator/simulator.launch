@@ -1,0 +1,7 @@
+<launch>
+  <!-- We resume the logic in empty_world.launch, changing only the name of the world to be launched -->
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <arg name="world_name" value="$(find unball)/simulator/ieee_very_small_field.world"/>
+  </include>
+  <node name="spawn_sdf" pkg="gazebo_ros" type="spawn_model" args="-file $(find unball)/simulator/unball_robot.sdf -sdf -z 1 -model unball_robot" />
+</launch>

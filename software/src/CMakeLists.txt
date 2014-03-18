@@ -3,8 +3,34 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(unball)
 
-find_package(catkin REQUIRED)
+find_package(catkin REQUIRED COMPONENTS
+  gazebo_ros
+)
 
-catkin_package()
+find_package(gazebo REQUIRED)
+
+find_package(Boost REQUIRED COMPONENTS system)
+
+include_directories(
+  include
+  ${catkin_INCLUDE_DIRS}
+  ${Boost_INCLUDE_DIRS}
+  ${GAZEBO_INCLUDE_DIRS}
+  ${SDFormat_INCLUDE_DIRS}
+)
+
+link_directories(
+  ${Boost_LIBRARY_DIRS}
+  ${GAZEBO_LIBRARY_DIRS}
+  ${SDFormat_LIBRARY_DIRS}
+)
+
+catkin_package(
+  DEPENDS 
+      gazebo_ros
+  CATKIN_DEPENDS
+  INCLUDE_DIRS 
+  LIBRARIES 
+)
 
 add_executable(hello_world test/hello_world.cpp)
