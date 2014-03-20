@@ -7,12 +7,42 @@
         <view_controller>orbit</view_controller>
       </camera>
     </gui>
+    
     <include>
       <uri>model://sun</uri>
     </include>
+    
     <include>
       <uri>model://ground_plane</uri>
     </include>
+    
+    <model name='ball'>
+      <static>false</static>
+      <pose>0 0 0 0 0 0</pose>
+      <link name='ball_link'>
+        <collision name='ball_collision'>
+          <geometry>
+            <sphere>
+              <radius>0.02135</radius>
+            </sphere>
+          </geometry>
+        </collision>
+        <visual name='ball_visual'>
+          <geometry>
+            <sphere>
+              <radius>0.02135</radius>
+            </sphere>
+          </geometry>
+          <material>
+            <script>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+              <name>Gazebo/Orange</name>
+            </script>
+          </material>
+        </visual>
+      </link>
+    </model>
+    
     <model name='field_walls'>
       <link name='Wall_11'>
         <collision name='Wall_11_Collision'>
