@@ -1,6 +1,12 @@
 <?xml version='1.0'?>
 <sdf version='1.4'>
   <world name='ieee_very_small_field'>
+    <gui fullscreen='0'>
+      <camera name='camera'>
+        <pose>0 0 4.0 0 1.55 0</pose>
+        <view_controller>orbit</view_controller>
+      </camera>
+    </gui>
     <include>
       <uri>model://sun</uri>
     </include>
