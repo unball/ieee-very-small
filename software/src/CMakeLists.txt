@@ -34,3 +34,6 @@ catkin_package(
 )
 
 add_executable(hello_world test/hello_world.cpp)
+
+add_executable(strategy_node strategy/strategy_node.cpp)
+target_link_libraries(strategy_node ${catkin_LIBRARIES})
