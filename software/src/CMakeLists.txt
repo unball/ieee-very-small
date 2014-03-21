@@ -5,6 +5,12 @@ project(unball)
 
 find_package(catkin REQUIRED COMPONENTS
   gazebo_ros
+  roscpp
+  rospy
+  std_msgs
+  image_transport
+  sensor_msgs
+  cv_bridge
 )
 
 find_package(gazebo REQUIRED)
@@ -37,3 +43,6 @@ add_executable(hello_world test/hello_world.cpp)
 
 add_executable(strategy_node strategy/strategy_node.cpp)
 target_link_libraries(strategy_node ${catkin_LIBRARIES})
+
+add_executable(dummy_camera dummy_camera/dummy_camera.cpp)
+target_link_libraries(dummy_camera ${catkin_LIBRARIES})

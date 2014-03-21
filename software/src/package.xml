@@ -3,7 +3,7 @@
   <name>unball</name>
   <version>0.0.1</version>
   <description>The UnBall Robot Soccer Team package</description>
-
+  
   <maintainer email="matheus.v.portela@gmail.com">Matheus Vieira Portela</maintainer>
   <maintainer email="mota.icaro@gmail.com">Ícaro Mota</maintainer>
   <maintainer email="gabri.navess@gmail.com">Gabriel Naves</maintainer>
@@ -11,10 +11,24 @@
   <license>MIT</license>
   
   <url type="website">https://github.com/unball/ieee-very-small</url>
-
+  
   <buildtool_depend>catkin</buildtool_depend>
   <build_depend>gazebo_ros</build_depend>
+  <build_depend>roscpp</build_depend>
+  <build_depend>rospy</build_depend>
+  <build_depend>std_msgs</build_depend>
+  <build_depend>image_transport</build_depend>
+  <build_depend>cv_bridge</build_depend>
+  <build_depend>sensor_msgs</build_depend>
+  <build_depend>opencv2</build_depend>
   <run_depend>gazebo_ros</run_depend>
+  <run_depend>roscpp</run_depend>
+  <run_depend>rospy</run_depend>
+  <run_depend>std_msgs</run_depend>
+  <run_depend>image_transport</run_depend>
+  <run_depend>cv_bridge</run_depend>
+  <run_depend>sensor_msgs</run_depend>
+  <run_depend>opencv2</run_depend>
   
 </package>
 
