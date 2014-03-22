@@ -6,7 +6,6 @@ project(unball)
 find_package(catkin REQUIRED COMPONENTS
   gazebo_ros
   roscpp
-  rospy
   std_msgs
   image_transport
   sensor_msgs
