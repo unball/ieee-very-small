@@ -1,84 +1,101 @@
 <?xml version='1.0'?>
 <sdf version='1.4'>
   <model name="unball_robot">
+    <plugin filename="libsimulation_example.so" name="robot_animation" />
+    <static>false</static>
 
-  <static>false</static>
+    <link name='chassis'>
+      <pose>0 0 .1 0 0 0</pose>
+      <collision name='collision'>
+        <geometry>
+          <box>
+            <size>.075 .075 .075</size>
+          </box>
+        </geometry>
+      </collision>
+      <visual name='visual'>
+        <geometry>
+          <box>
+            <size>.075 .075 .075</size>
+          </box>
+        </geometry>
+        <material>
+          <script>
+            <uri>file://media/materials/scripts/gazebo.material</uri>
+            <name>Gazebo/Black</name>
+          </script>
+        </material>
+      </visual>
+    </link>     
+    
+    <link name="left_wheel">
+      <pose>0 0.0375 0.08 0 1.5707 1.5707</pose>
+      <collision name="collision">
+        <geometry>
+          <cylinder>
+            <radius>.0375</radius>
+            <length>.01</length>
+          </cylinder>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <cylinder>
+            <radius>.0375</radius>
+            <length>.01</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <script>
+            <uri>file://media/materials/scripts/gazebo.material</uri>
+            <name>Gazebo/White</name>
+          </script>
+        </material>
+      </visual>
+    </link>
 
-  <link name='chassis'>
-    <pose>0 0 .1 0 0 0</pose>
-    <collision name='collision'>
-      <geometry>
-        <box>
-          <size>.075 .075 .075</size>
-        </box>
-      </geometry>
-    </collision>
-    <visual name='visual'>
-      <geometry>
-        <box>
-          <size>.075 .075 .075</size>
-        </box>
-      </geometry>
-    </visual>
-  </link>     
-  
-  <link name="left_wheel">
-    <pose>0 0.0375 0.08 0 1.5707 1.5707</pose>
-    <collision name="collision">
-      <geometry>
-        <cylinder>
-          <radius>.0375</radius>
-          <length>.01</length>
-        </cylinder>
-      </geometry>
-    </collision>
-    <visual name="visual">
-      <geometry>
-        <cylinder>
-          <radius>.0375</radius>
-          <length>.01</length>
-        </cylinder>
-      </geometry>
-    </visual>
-  </link>
+    <link name="right_wheel">
+      <pose>0 -0.0375 0.08 0 1.5707 1.5707</pose>
+      <collision name="collision">
+        <geometry>
+          <cylinder>
+            <radius>.0375</radius>
+            <length>.01</length>
+          </cylinder>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <cylinder>
+            <radius>.0375</radius>
+            <length>.01</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <script>
+            <uri>file://media/materials/scripts/gazebo.material</uri>
+            <name>Gazebo/White</name>
+          </script>
+        </material>
+      </visual>
+    </link>
 
-  <link name="right_wheel">
-    <pose>0 -0.0375 0.08 0 1.5707 1.5707</pose>
-    <collision name="collision">
-      <geometry>
-        <cylinder>
-          <radius>.0375</radius>
-          <length>.01</length>
-        </cylinder>
-      </geometry>
-    </collision>
-    <visual name="visual">
-      <geometry>
-        <cylinder>
-          <radius>.0375</radius>
-          <length>.01</length>
-        </cylinder>
-      </geometry>
-    </visual>
-  </link>
+    <joint type="revolute" name="left_wheel_hinge">
+      <pose>0 0 -0.03 0 0 0</pose>
+      <child>left_wheel</child>
+      <parent>chassis</parent>
+      <axis>
+        <xyz>0 1 0</xyz>
+      </axis>
+    </joint>
 
-  <joint type="revolute" name="left_wheel_hinge">
-    <pose>0 0 -0.03 0 0 0</pose>
-    <child>left_wheel</child>
-    <parent>chassis</parent>
-    <axis>
-      <xyz>0 1 0</xyz>
-    </axis>
-  </joint>
-
-  <joint type="revolute" name="right_wheel_hinge">
-    <pose>0 0 0.03 0 0 0</pose>
-    <child>right_wheel</child>
-    <parent>chassis</parent>
-    <axis>
-      <xyz>0 1 0</xyz>
-    </axis>
-  </joint>
-
+    <joint type="revolute" name="right_wheel_hinge">
+      <pose>0 0 0.03 0 0 0</pose>
+      <child>right_wheel</child>
+      <parent>chassis</parent>
+      <axis>
+        <xyz>0 1 0</xyz>
+      </axis>
+    </joint>
   </model>
 </sdf>
