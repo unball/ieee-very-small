@@ -1,7 +1,7 @@
 /**
  * @file   vision_node.cpp
  * @author Matheus Vieira Portela
- * @date   21/03/2014
+ * @date   25/03/2014
  *
  * @attention Copyright (C) 2014 UnBall Robot Soccer Team
  * 
@@ -24,7 +24,7 @@
 Vision vision;
 
 void publishRobotsLocations(ros::Publisher &publisher);
-void receiveVisionMessage(const std_msgs::String::ConstPtr& msg);
+void receiveCameraFrame(const std_msgs::String::ConstPtr& msg);
 
 int main(int argc, char **argv)
 {
@@ -33,7 +33,7 @@ int main(int argc, char **argv)
     ros::NodeHandle n;
     ros::Rate loop_rate(10);
     
-    ros::Subscriber sub = n.subscribe("camera/image_raw", 1000, receiveVisionMessage);
+    ros::Subscriber sub = n.subscribe("camera/image_raw", 1000, receiveCameraFrame);
     ros::Publisher publisher = n.advertise<std_msgs::String>("vision_topic", 1000);
     
     while (ros::ok())
@@ -71,13 +71,11 @@ void publishRobotsLocations(ros::Publisher &publisher)
 }
 
 /**
- * Receives the six robots locations through the vision topic.
- * Each location is separated by a space.
- * Example: 0.2 0.4 0.6 0.8 1.0 1.2
+ * Receive image frame from camera
  * 
  * @param msg a ROS string message pointer.
  */
-void receiveVisionMessage(const std_msgs::String::ConstPtr& msg)
+void receiveCameraFrame(const std_msgs::String::ConstPtr& msg)
 {
     ROS_DEBUG("Receiving: [%s]", msg->data.c_str());
 }
