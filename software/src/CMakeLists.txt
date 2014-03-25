@@ -52,3 +52,6 @@ target_link_libraries(vision_node ${catkin_LIBRARIES})
 
 add_executable(dummy_camera dummy_camera/dummy_camera.cpp)
 target_link_libraries(dummy_camera ${catkin_LIBRARIES})
+
+add_executable(test_dummy_camera dummy_camera/test/test_dummy_camera.cpp)
+target_link_libraries(test_dummy_camera ${catkin_LIBRARIES})
