@@ -32,7 +32,7 @@ link_directories(
 
 catkin_package(
   DEPENDS 
-      gazebo_ros
+    gazebo_ros
   CATKIN_DEPENDS
   INCLUDE_DIRS 
   LIBRARIES 
@@ -40,7 +40,9 @@ catkin_package(
 
 add_executable(hello_world test/hello_world.cpp)
 
-add_executable(strategy_node strategy/strategy_node.cpp)
+add_executable(strategy_node
+  strategy/strategy_node.cpp
+  strategy/strategy.cpp)
 target_link_libraries(strategy_node ${catkin_LIBRARIES})
 
 add_executable(dummy_camera dummy_camera/dummy_camera.cpp)
