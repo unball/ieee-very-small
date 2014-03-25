@@ -45,5 +45,10 @@ add_executable(strategy_node
   strategy/strategy.cpp)
 target_link_libraries(strategy_node ${catkin_LIBRARIES})
 
+add_executable(vision_node
+  vision/vision_node.cpp
+  vision/vision.cpp)
+target_link_libraries(vision_node ${catkin_LIBRARIES})
+
 add_executable(dummy_camera dummy_camera/dummy_camera.cpp)
 target_link_libraries(dummy_camera ${catkin_LIBRARIES})
