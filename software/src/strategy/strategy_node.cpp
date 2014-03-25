@@ -46,7 +46,7 @@ int main(int argc, char **argv)
     
     while (ros::ok())
     {
-        strategy.runStrategy();
+        strategy.run();
         
         publishRobotsVelocities(publisher);
         
