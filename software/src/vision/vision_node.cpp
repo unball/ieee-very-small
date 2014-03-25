@@ -1,6 +1,7 @@
 /**
  * @file   vision_node.cpp
  * @author Matheus Vieira Portela
+ * @author Gabriel Naves da Silva
  * @date   25/03/2014
  *
  * @attention Copyright (C) 2014 UnBall Robot Soccer Team
@@ -18,22 +19,25 @@
 
 #include <ros/ros.h>
 #include <std_msgs/String.h>
+#include <image_transport/image_transport.h>
+#include <sensor_msgs/image_encodings.h>
 
 #include "vision.hpp"
 
 Vision vision;
 
 void publishRobotsLocations(ros::Publisher &publisher);
-void receiveCameraFrame(const std_msgs::String::ConstPtr& msg);
+void receiveCameraFrame(const sensor_msgs::ImageConstPtr& msg);
 
 int main(int argc, char **argv)
 {
     ros::init(argc, argv, "vision_node");
     
     ros::NodeHandle n;
+    image_transport::ImageTransport it(n);
     ros::Rate loop_rate(10);
     
-    ros::Subscriber sub = n.subscribe("camera/image_raw", 1000, receiveCameraFrame);
+    image_transport::Subscriber sub = it.subscribe("camera/image_raw", 1, receiveCameraFrame);
     ros::Publisher publisher = n.advertise<std_msgs::String>("vision_topic", 1000);
     
     while (ros::ok())
@@ -71,11 +75,23 @@ void publishRobotsLocations(ros::Publisher &publisher)
 }
 
 /**
- * Receive image frame from camera
+ * Receive image frame from camera and give it to
+ * the vision object
  * 
- * @param msg a ROS string message pointer.
+ * @param msg a ROS image message pointer.
  */
-void receiveCameraFrame(const std_msgs::String::ConstPtr& msg)
+void receiveCameraFrame(const sensor_msgs::ImageConstPtr& msg)
 {
-    ROS_DEBUG("Receiving: [%s]", msg->data.c_str());
+    cv_bridge::CvImagePtr cv_ptr;
+    try
+    {
+        cv_ptr = cv_bridge::toCvCopy(msg, sensor_msgs::image_encodings::BGR8);
+    }
+    catch (cv_bridge::Exception& e)
+    {
+        ROS_ERROR("cv_bridge exception: %s", e.what());
+        return;
+    }
+    
+    vision.setCameraFrame(*cv_ptr);
 }
