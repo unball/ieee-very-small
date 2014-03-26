@@ -1,7 +1,6 @@
 <?xml version='1.0'?>
 <sdf version='1.4'>
   <model name="unball_robot">
-    <plugin filename="libsimulation_example.so" name="robot_animation" />
     <static>false</static>
 
     <link name='chassis'>
