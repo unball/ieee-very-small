@@ -93,5 +93,11 @@ void receiveCameraFrame(const sensor_msgs::ImageConstPtr& msg)
         return;
     }
     
+    if (!(cv_ptr->image.rows) || !(cv_ptr->image.cols))
+    {
+        ROS_ERROR("cv_ptr error: invalid image frame received");
+        exit(1);
+    }
+    
     vision.setCameraFrame(*cv_ptr);
 }
