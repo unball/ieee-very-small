@@ -12,19 +12,16 @@
  * topic
  */
 
-#include <string>
-#include <iostream>
-#include <sstream>
-
 #include <ros/ros.h>
 #include <std_msgs/String.h>
 
 #include "strategy.hpp"
+#include "unball/VisionMessage.h"
 
 Strategy strategy;
 
 void publishRobotsVelocities(ros::Publisher &publisher);
-void receiveVisionMessage(const std_msgs::String::ConstPtr& msg);
+void receiveVisionMessage(const unball::VisionMessage::ConstPtr &msg);
 
 int main(int argc, char **argv)
 {
@@ -75,7 +72,7 @@ void publishRobotsVelocities(ros::Publisher &publisher)
     message.data = message_buffer.str();
     publisher.publish(message);
     
-    ROS_INFO("Publishing: [%s]", message.data.c_str());
+    ROS_DEBUG("Publishing: [%s]", message.data.c_str());
 }
 
 /**
@@ -85,9 +82,14 @@ void publishRobotsVelocities(ros::Publisher &publisher)
  * 
  * @param msg a ROS string message pointer.
  */
-void receiveVisionMessage(const std_msgs::String::ConstPtr& msg)
+void receiveVisionMessage(const unball::VisionMessage::ConstPtr &msg)
 {
-    ROS_INFO("Receiving: [%s]", msg->data.c_str());
+    ROS_DEBUG("Receiving vision message");
+    
+    for (int i = 0; i < msg->x.size(); i++)
+    {
+        ROS_DEBUG("%f", msg->x[i]);
+    }
     
     // TODO(Matheus Vieira Portela): Remove this testing positions to get
     // from vision or simulation. Should be done when vision and simulation

@@ -16,17 +16,17 @@
 
 void Strategy::run()
 {
-    ROS_INFO("Run strategy");
+    ROS_DEBUG("Run strategy");
 }
 
 void Strategy::setRobotLocation(float location, int robot_number)
 {
-    ROS_INFO("Set robot %d location", robot_number);
+    ROS_DEBUG("Set robot %d location", robot_number);
     this->robots_location_[robot_number] = location;
 }
 
 float Strategy::getRobotVelocity(int robot_number)
 {
-    ROS_INFO("Get robot %d velocity", robot_number);
+    ROS_DEBUG("Get robot %d velocity", robot_number);
     return this->robots_velocities_[robot_number];
 }

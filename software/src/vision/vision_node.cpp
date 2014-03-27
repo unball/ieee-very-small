@@ -23,6 +23,7 @@
 #include <sensor_msgs/image_encodings.h>
 
 #include "vision.hpp"
+#include "unball/VisionMessage.h"
 
 Vision vision;
 
@@ -38,7 +39,7 @@ int main(int argc, char **argv)
     ros::Rate loop_rate(10);
     
     image_transport::Subscriber sub = it.subscribe("camera/image_raw", 1, receiveCameraFrame);
-    ros::Publisher publisher = n.advertise<std_msgs::String>("vision_topic", 1000);
+    ros::Publisher publisher = n.advertise<unball::VisionMessage>("vision_topic", 1000);
     
     while (ros::ok())
     {
@@ -62,16 +63,16 @@ int main(int argc, char **argv)
  */
 void publishRobotsLocations(ros::Publisher &publisher)
 {
-    std_msgs::String message;
-    std::ostringstream message_buffer;
+    unball::VisionMessage message;
+ 
+    ROS_DEBUG("Publishing robots locations");
+    for (int i = 0; i < (int)message.x.size(); i++)
+    {
+        ROS_DEBUG("Robot %d: %f", i, vision.getRobotLocation(i));
+        message.x[i] = vision.getRobotLocation(i);
+    }
     
-    for (int i = 0; i < 6; i++)
-        message_buffer << vision.getRobotLocation(i) << ' ';
-    
-    message.data = message_buffer.str();
     publisher.publish(message);
-    
-    ROS_DEBUG("Publishing: [%s]", message.data.c_str());
 }
 
 /**

@@ -30,6 +30,9 @@ link_directories(
   ${SDFormat_LIBRARY_DIRS}
 )
 
+add_message_files(DIRECTORY msg FILES VisionMessage.msg)
+generate_messages(DEPENDENCIES std_msgs)
+
 catkin_package(
   DEPENDS 
     gazebo_ros
