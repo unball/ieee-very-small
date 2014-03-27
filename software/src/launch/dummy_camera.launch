@@ -1,0 +1,4 @@
+<launch>
+  <node name="test_dummy_camera" pkg="unball" type="test_dummy_camera" />
+  <node name="dummy_camera" pkg="unball" type="dummy_camera" args="$(find unball)/dummy_camera/1.avi" />
+</launch>
