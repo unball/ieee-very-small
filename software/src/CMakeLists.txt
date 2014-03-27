@@ -38,8 +38,6 @@ catkin_package(
   LIBRARIES 
 )
 
-add_executable(hello_world test/hello_world.cpp)
-
 add_executable(strategy_node
   strategy/strategy_node.cpp
   strategy/strategy.cpp)
