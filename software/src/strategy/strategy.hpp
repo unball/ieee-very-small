@@ -13,17 +13,19 @@
 #ifndef UNBALL_STRATEGY_H_
 #define UNBALL_STRATEGY_H_
 
+#include <vector>
+#include "robot.hpp"
+
 class Strategy
 {
   public:
     void run();
     
-    void setRobotLocation(float location, int robot_number);
-    float getRobotVelocity(int robot_number);
+    void setRobotLocation(float x, float y, int robot_number);
+    std::vector<float> getRobotVelocities(int robot_number);
     
   private:
-    float robots_location_[6];
-    float robots_velocities_[6];
+    Robot robots_[6];
 };
 
 #endif  // UNBALL_STRATEGY_H_

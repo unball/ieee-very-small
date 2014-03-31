@@ -19,14 +19,20 @@ void Strategy::run()
     ROS_DEBUG("Run strategy");
 }
 
-void Strategy::setRobotLocation(float location, int robot_number)
+void Strategy::setRobotLocation(float x, float y, int robot_number)
 {
     ROS_DEBUG("Set robot %d location", robot_number);
-    this->robots_location_[robot_number] = location;
+    this->robots_[robot_number].setX(x);
+    this->robots_[robot_number].setY(y);
 }
 
-float Strategy::getRobotVelocity(int robot_number)
+std::vector<float> Strategy::getRobotVelocities(int robot_number)
 {
-    ROS_DEBUG("Get robot %d velocity", robot_number);
-    return this->robots_velocities_[robot_number];
+    ROS_DEBUG("Get robot %d velocities", robot_number);
+    float lin_vel = this->robots_[robot_number].getLinVel();
+    float rot_vel = this->robots_[robot_number].getRotVel();
+    std::vector<float> velocities;
+    velocities.push_back(lin_vel);
+    velocities.push_back(rot_vel);
+    return velocities;
 }

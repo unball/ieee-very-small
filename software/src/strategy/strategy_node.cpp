@@ -12,11 +12,13 @@
  * topic
  */
 
-#include <ros/ros.h>
-#include <std_msgs/String.h>
+#include <vector>
 
-#include "strategy.hpp"
+#include <ros/ros.h>
+
 #include "unball/VisionMessage.h"
+#include "unball/StrategyMessage.h"
+#include "strategy.hpp"
 
 Strategy strategy;
 
@@ -31,15 +33,7 @@ int main(int argc, char **argv)
     ros::Rate loop_rate(10);
     
     ros::Subscriber sub = n.subscribe("vision_topic", 1000, receiveVisionMessage);
-    ros::Publisher publisher = n.advertise<std_msgs::String>("strategy_topic", 1000);
-    
-    // TODO(Matheus Vieira Portela): Remove this testing positions to get
-    // from vision or simulation. Should be done when vision and simulation
-    // nodes are completed.
-    float r[6] = {1, 2, 3, 4, 5, 6};
-    
-    for (int i = 0; i < 6; i++)
-        strategy.setRobotLocation(r[i], i);
+    ros::Publisher publisher = n.advertise<unball::StrategyMessage>("strategy_topic", 1000);
     
     while (ros::ok())
     {
@@ -63,16 +57,21 @@ int main(int argc, char **argv)
  */
 void publishRobotsVelocities(ros::Publisher &publisher)
 {
-    std_msgs::String message;
-    std::ostringstream message_buffer;
+    unball::StrategyMessage msg;
+    std::vector<float> velocities;
+    
+    ROS_DEBUG("Publishing strategy message");
     
     for (int i = 0; i < 6; i++)
-        message_buffer << strategy.getRobotVelocity(i) << ' ';
+    {
+        velocities = strategy.getRobotVelocities(i);
+        msg.lin_vel[i] = velocities[0];
+        msg.rot_vel[i] = velocities[1];
+        
+        ROS_DEBUG("lin_vel: %f\t rot_vel: %f", msg.lin_vel[i], msg.rot_vel[i]);
+    }
     
-    message.data = message_buffer.str();
-    publisher.publish(message);
-    
-    ROS_DEBUG("Publishing: [%s]", message.data.c_str());
+    publisher.publish(msg);
 }
 
 /**
@@ -86,16 +85,9 @@ void receiveVisionMessage(const unball::VisionMessage::ConstPtr &msg)
 {
     ROS_DEBUG("Receiving vision message");
     
-    for (int i = 0; i < msg->x.size(); i++)
-    {
-        ROS_DEBUG("%f", msg->x[i]);
-    }
-    
-    // TODO(Matheus Vieira Portela): Remove this testing positions to get
-    // from vision or simulation. Should be done when vision and simulation
-    // nodes are completed.
-    float r[6] = {1, 2, 3, 4, 5, 6};
-    
     for (int i = 0; i < 6; i++)
-        strategy.setRobotLocation(r[i], i);
+    {
+        ROS_DEBUG("x: %f\t y: %f\t th: %f", msg->x[i], msg->y[i], msg->y[i]);
+        strategy.setRobotLocation(msg->x[i], msg->y[i], i);
+    }
 }

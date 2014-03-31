@@ -10,11 +10,26 @@ find_package(catkin REQUIRED COMPONENTS
   image_transport
   sensor_msgs
   cv_bridge
+  message_generation
 )
 
 find_package(gazebo REQUIRED)
 
 find_package(Boost REQUIRED COMPONENTS system)
+
+add_message_files(DIRECTORY msg FILES
+  VisionMessage.msg
+  StrategyMessage.msg)
+generate_messages(DEPENDENCIES std_msgs)
+
+catkin_package(
+  DEPENDS 
+    gazebo_ros
+  CATKIN_DEPENDS
+    message_runtime
+  INCLUDE_DIRS 
+  LIBRARIES 
+)
 
 include_directories(
   include
@@ -30,20 +45,10 @@ link_directories(
   ${SDFormat_LIBRARY_DIRS}
 )
 
-add_message_files(DIRECTORY msg FILES VisionMessage.msg)
-generate_messages(DEPENDENCIES std_msgs)
-
-catkin_package(
-  DEPENDS 
-    gazebo_ros
-  CATKIN_DEPENDS
-  INCLUDE_DIRS 
-  LIBRARIES 
-)
-
 add_executable(strategy_node
   strategy/strategy_node.cpp
-  strategy/strategy.cpp)
+  strategy/strategy.cpp
+  strategy/robot.cpp)
 target_link_libraries(strategy_node ${catkin_LIBRARIES})
 
 add_executable(vision_node
