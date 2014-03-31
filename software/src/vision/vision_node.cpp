@@ -13,17 +13,12 @@
  * to the vision topic
  */
 
-#include <string>
-#include <iostream>
-#include <sstream>
-
 #include <ros/ros.h>
-#include <std_msgs/String.h>
 #include <image_transport/image_transport.h>
 #include <sensor_msgs/image_encodings.h>
 
-#include "vision.hpp"
 #include "unball/VisionMessage.h"
+#include "vision.hpp"
 
 Vision vision;
 
