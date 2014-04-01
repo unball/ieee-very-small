@@ -29,7 +29,7 @@ class Strategy
     
   private:
     Robot robots_[6];
-    Ball ball;
+    Ball ball_;
 };
 
 #endif  // UNBALL_STRATEGY_H_
