@@ -30,10 +30,10 @@ int main(int argc, char **argv)
     ros::init(argc, argv, "strategy_node");
     
     ros::NodeHandle n;
-    ros::Rate loop_rate(10);
+    ros::Rate loop_rate(10); // 10 Hz
     
-    ros::Subscriber sub = n.subscribe("vision_topic", 1000, receiveVisionMessage);
-    ros::Publisher publisher = n.advertise<unball::StrategyMessage>("strategy_topic", 1000);
+    ros::Subscriber sub = n.subscribe("vision_topic", 1, receiveVisionMessage);
+    ros::Publisher publisher = n.advertise<unball::StrategyMessage>("strategy_topic", 1);
     
     while (ros::ok())
     {

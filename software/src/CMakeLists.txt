@@ -48,7 +48,8 @@ link_directories(
 add_executable(strategy_node
   strategy/strategy_node.cpp
   strategy/strategy.cpp
-  strategy/robot.cpp)
+  strategy/robot.cpp
+  strategy/ball.cpp)
 target_link_libraries(strategy_node ${catkin_LIBRARIES})
 
 add_executable(vision_node

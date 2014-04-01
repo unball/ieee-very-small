@@ -15,6 +15,7 @@
 
 #include <vector>
 #include "robot.hpp"
+#include "ball.hpp"
 
 class Strategy
 {
@@ -24,8 +25,11 @@ class Strategy
     void setRobotLocation(float x, float y, int robot_number);
     std::vector<float> getRobotVelocities(int robot_number);
     
+    void setBallLocation(float x, float y);
+    
   private:
     Robot robots_[6];
+    Ball ball;
 };
 
 #endif  // UNBALL_STRATEGY_H_
