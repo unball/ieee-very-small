@@ -38,6 +38,11 @@ int main(int argc, char **argv)
     
     while (ros::ok())
     {
+        if (!vision.has_field_center_)
+        {
+            vision.findFieldCenter();
+        }
+        
         vision.run();
         
         publishRobotsLocations(publisher);
