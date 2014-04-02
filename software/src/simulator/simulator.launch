@@ -9,20 +9,20 @@
   
   <!-- spawn robots -->
   <node name="robot_1" pkg="gazebo_ros" type="spawn_model"
-  args="-file $(find unball)/simulator/unball_robot.sdf -sdf -x 0.37 -y 0.40 -z 1 -model robot_1" />
+  args="-file $(find unball)/simulator/unball_robot.sdf -sdf -x 0.37 -y 0.40 -z 0.1 -model robot_1" />
   
   <node name="robot_2" pkg="gazebo_ros" type="spawn_model"
-  args="-file $(find unball)/simulator/unball_robot.sdf -sdf -x 0.37 -y -0.40 -z 1 -model robot_2" />
+  args="-file $(find unball)/simulator/unball_robot.sdf -sdf -x 0.37 -y -0.40 -z 0.1 -model robot_2" />
   
   <node name="robot_3" pkg="gazebo_ros" type="spawn_model"
-  args="-file $(find unball)/simulator/unball_robot.sdf -sdf -x 0.60 -y 0 -z 1 -model robot_3" />
+  args="-file $(find unball)/simulator/unball_robot.sdf -sdf -x 0.60 -y 0 -z 0.1 -model robot_3" />
   
   <node name="robot_4" pkg="gazebo_ros" type="spawn_model"
-  args="-file $(find unball)/simulator/unball_robot.sdf -sdf -x -0.37 -y 0.40 -z 1 -model robot_4" />
+  args="-file $(find unball)/simulator/unball_robot.sdf -sdf -x -0.37 -y 0.40 -z 0.1 -model robot_4" />
   
   <node name="robot_5" pkg="gazebo_ros" type="spawn_model"
-  args="-file $(find unball)/simulator/unball_robot.sdf -sdf -x -0.37 -y -0.40 -z 1 -model robot_5" />
+  args="-file $(find unball)/simulator/unball_robot.sdf -sdf -x -0.37 -y -0.40 -z 0.1 -model robot_5" />
   
   <node name="robot_6" pkg="gazebo_ros" type="spawn_model"
-  args="-file $(find unball)/simulator/unball_robot.sdf -sdf -x -0.60 -y 0 -z 1 -model robot_6" />
+  args="-file $(find unball)/simulator/unball_robot.sdf -sdf -x -0.60 -y 0 -z 0.1 -model robot_6" />
 </launch>

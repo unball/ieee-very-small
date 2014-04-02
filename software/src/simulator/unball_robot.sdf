@@ -1,6 +1,6 @@
 <?xml version='1.0'?>
 <sdf version='1.4'>
-  <model name="unball_robot">
+  <model name="unball_robot">  
     <static>false</static>
 
     <link name='chassis'>
@@ -80,7 +80,7 @@
     </link>
 
     <joint type="revolute" name="left_wheel_hinge">
-      <pose>0 0 -0.03 0 0 0</pose>
+      <pose>0 0 0 0 0 0</pose>
       <child>left_wheel</child>
       <parent>chassis</parent>
       <axis>
@@ -89,7 +89,7 @@
     </joint>
 
     <joint type="revolute" name="right_wheel_hinge">
-      <pose>0 0 0.03 0 0 0</pose>
+      <pose>0 0 0 0 0 0</pose>
       <child>right_wheel</child>
       <parent>chassis</parent>
       <axis>
