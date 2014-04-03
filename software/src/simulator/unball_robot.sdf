@@ -2,15 +2,27 @@
 <sdf version='1.4'>
   <model name="unball_robot">  
     <static>false</static>
-    <plugin name="object_controller" filename="libgazebo_ros_planar_move.so">
-      <commandTopic>cmd_vel</commandTopic>
-      <odometryTopic>odom</odometryTopic>
-      <odometryFrame>odom</odometryFrame>
-      <odometryRate>20.0</odometryRate>
-      <robotBaseFrame>base_footprint</robotBaseFrame>
-    </plugin>
 
-    <link name='chassis'>
+    <link name='unball_robot_chassis'>
+      <gravity>true</gravity>
+      <self_collide>true</self_collide>
+      <kinematic>false</kinematic>
+      <velocity_decay>
+        <linear>0.1</linear>
+        <angular>0.1</angular>
+      </velocity_decay>
+      <inertial>
+        <mass>0.200</mass>
+        <pose>0 0 -0.05 0 0 0</pose>
+        <inertia>
+          <ixx>1</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>1</iyy>
+          <iyz>0</iyz>
+          <izz>1</izz>
+        </inertia>
+      </inertial>
       <pose>0 0 .1 0 0 0</pose>
       <collision name='collision'>
         <geometry>
@@ -35,6 +47,21 @@
     </link>     
     
     <link name="left_wheel">
+      <velocity_decay>
+        <linear>0.1</linear>
+        <angular>0.1</angular>
+      </velocity_decay>
+      <inertial>
+        <mass>0.100</mass>
+        <inertia>
+          <ixx>1</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>1</iyy>
+          <iyz>0</iyz>
+          <izz>1</izz>
+        </inertia>
+      </inertial>
       <pose>0 0.0375 0.08 0 1.5707 1.5707</pose>
       <collision name="collision">
         <geometry>
@@ -61,6 +88,21 @@
     </link>
 
     <link name="right_wheel">
+      <velocity_decay>
+        <linear>0.1</linear>
+        <angular>0.1</angular>
+      </velocity_decay>
+      <inertial>
+        <mass>0.100</mass>
+        <inertia>
+          <ixx>1</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>1</iyy>
+          <iyz>0</iyz>
+          <izz>1</izz>
+        </inertia>
+      </inertial>
       <pose>0 -0.0375 0.08 0 1.5707 1.5707</pose>
       <collision name="collision">
         <geometry>
@@ -86,22 +128,90 @@
       </visual>
     </link>
 
-    <joint type="revolute" name="left_wheel_hinge">
+    <joint type="revolute" name="unball_robot_left_wheel_joint">
       <pose>0 0 0 0 0 0</pose>
       <child>left_wheel</child>
-      <parent>chassis</parent>
+      <parent>unball_robot_chassis</parent>
       <axis>
-        <xyz>0 1 0</xyz>
+        <xyz>0.0 1.0 0.0</xyz>
+        <limit>
+          <lower>-100</lower>
+          <upper>100</upper>
+          <effort>1000</effort>
+          <velocity>1000</velocity>
+        </limit>
+        <dynamics>
+          <damping>1.0</damping>
+          <friction>0.0</friction>
+        </dynamics>
       </axis>
+      <physics>
+        <ode>
+          <cfm>0.2</cfm>
+          <bounce>0.0</bounce>
+          <max_force>1000.0</max_force>
+          <velocity>0.0</velocity>
+          <fudge_factor>0.0</fudge_factor>
+          <limit>
+            <cfm>0</cfm>
+            <erp>0.1</erp>
+          </limit>
+          <suspension>
+            <cfm>0</cfm>
+            <erp>0.2</erp>
+          </suspension>
+        </ode>
+      </physics>
     </joint>
 
-    <joint type="revolute" name="right_wheel_hinge">
+    <joint type="revolute" name="unball_robot_right_wheel_joint">
       <pose>0 0 0 0 0 0</pose>
       <child>right_wheel</child>
-      <parent>chassis</parent>
+      <parent>unball_robot_chassis</parent>
       <axis>
-        <xyz>0 1 0</xyz>
+        <xyz>0.0 1.0 0.0</xyz>
+        <limit>
+          <lower>-100</lower>
+          <upper>100</upper>
+          <effort>1000</effort>
+          <velocity>1000</velocity>
+        </limit>
+        <dynamics>
+          <damping>1.0</damping>
+          <friction>0.0</friction>
+        </dynamics>
       </axis>
+      <physics>
+        <ode>
+          <cfm>0.2</cfm>
+          <bounce>0.0</bounce>
+          <max_force>1000.0</max_force>
+          <velocity>0.0</velocity>
+          <fudge_factor>0.0</fudge_factor>
+          <limit>
+            <cfm>0</cfm>
+            <erp>0.1</erp>
+          </limit>
+          <suspension>
+            <cfm>0</cfm>
+            <erp>0.2</erp>
+          </suspension>
+        </ode>
+      </physics>
     </joint>
+    
+    <plugin name="differential_drive_controller" filename="libgazebo_ros_diff_drive.so">
+      <alwaysOn>true</alwaysOn>
+      <updateRate>1000</updateRate>
+      <leftJoint>unball_robot_left_wheel_joint</leftJoint>
+      <rightJoint>unball_robot_right_wheel_joint</rightJoint>
+      <wheelSeparation>0.075</wheelSeparation>
+      <wheelDiameter>0.08</wheelDiameter>
+      <torque>100</torque>
+      <commandTopic>cmd_vel</commandTopic>
+      <odometryTopic>odom</odometryTopic>
+      <odometryFrame>odom</odometryFrame>
+      <robotBaseFrame>unball_robot_chassis</robotBaseFrame>
+    </plugin>
   </model>
 </sdf>

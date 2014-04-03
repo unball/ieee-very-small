@@ -1,6 +1,7 @@
 /**
  * @file   simulator_node.cpp
  * @author Icaro da Costa Mota
+ * @author Matheus Vieira Portela
  * @date   25/03/2014
  *
  * @attention Copyright (C) 2014 UnBall Robot Soccer Team
@@ -10,8 +11,9 @@
  
 #include <ros/ros.h>
 #include <geometry_msgs/Twist.h>
+#include <vector>
 
-void publishCmdVel(ros::Publisher &publisher);
+void publishVel(ros::Publisher &publisher);
 
 int main(int argc, char **argv){
     ros::init(argc, argv, "simulator_node");
@@ -23,7 +25,7 @@ int main(int argc, char **argv){
   
     while (ros::ok())
     {
-        publishCmdVel(publisher);
+        publishVel(publisher);
         
         ros::spinOnce();
         loop_rate.sleep();
@@ -32,19 +34,19 @@ int main(int argc, char **argv){
     return(0);
 }
 
-void publishCmdVel(ros::Publisher &publisher)
+void publishVel(ros::Publisher &publisher)
 {
     geometry_msgs::Twist msg;
     
     ROS_DEBUG("Publishing cmd vel");
     
-    msg.linear.x = 0.1;
+    msg.linear.x = 0.0;
     msg.linear.y = 0.0;
     msg.linear.z = 0.0;
     
     msg.angular.x = 0.0;
     msg.angular.y = 0.0;
-    msg.angular.z = 0.0;
+    msg.angular.z = 100.0;
     
     publisher.publish(msg);
 }
