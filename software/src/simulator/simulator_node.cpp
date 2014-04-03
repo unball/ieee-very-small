@@ -6,18 +6,14 @@
  * @attention Copyright (C) 2014 UnBall Robot Soccer Team
  * 
  * @brief Has a Gazebo plugin for controlling the robots and publish the state of the simulation
- * 
  */
-
-#include <string>
-#include <iostream>
-#include <sstream>
  
 #include <ros/ros.h>
 #include <std_msgs/String.h>
+
 #include "simulation.hpp"
 
-Simulation simulation;
+Simulator simulator;
 
 int main(int argc, char **argv){
     ros::init(argc, argv, "simulator_node");
@@ -25,12 +21,12 @@ int main(int argc, char **argv){
     ros::NodeHandle n;
     ros::Rate loop_rate(10);
     
-    ros::Subscriber sub = n.subscribe("strategy_topic", 1000, ReceiveStrategyMessage);
+    ros::Subscriber sub = n.subscribe("strategy_topic", 1000, receiveStrategyMessage);
     ros::Publisher publisher = n.advertise<unball::SimulationMessage>("simulation_topic", 1000);
   
     while (ros::ok())
     {
-        simulation.run();
+        simulator.run();
         
         publishRobotsVelocities(publisher);
         
@@ -61,14 +57,14 @@ publishRobotsVelocities(ros::Publisher &publisher)
 }
 
 
-void ReceiveStrategyMessage(const std_msgs::String::ConstPtr& msg){
+void receiveStrategyMessage(const std_msgs::String::ConstPtr& msg){
     ROS_INFO("Receiving: [%s]", msg->data.c_str());
 
     for (int i = 0; i < msg->x.size(); i++)
     {
         ROS_DEBUG("%f", msg->x[i]);
-        //simulation.SetRobotLocation();
-        simulation.SetRobotLinearVel();
-        simulation.SetRobotAngularVel();        
+        //simulator.SetRobotLocation();
+        simulator.SetRobotLinearVel();
+        simulator.SetRobotAngularVel();        
     }
 }
