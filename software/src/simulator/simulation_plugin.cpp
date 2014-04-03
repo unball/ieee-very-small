@@ -16,14 +16,14 @@ namespace gazebo
       printf("ModelPush ctor\n");
     }   
     
-    void Load(physics::ModelPtr _parent, sdf::unball_robot _sdf)
+    void Load(physics::ModelPtr _parent, sdf::ElementPtr /*_sdf*/)
     {
       printf("Load\n");
 
       // Store the pointer to the model
       this->model = _parent;
       this->model->SetLinearVel(math::Vector3(0, 0, 0));
-      this->model->SetAngularVel(math::Vector3(0, 0, 0);
+      this->model->SetAngularVel(math::Vector3(0, 0, 0));
     }
 
     // Pointer to the model

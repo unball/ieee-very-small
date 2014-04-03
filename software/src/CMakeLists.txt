@@ -66,6 +66,6 @@ target_link_libraries(dummy_frame ${catkin_LIBRARIES})
 add_executable(test_dummy_camera dummy_camera/test/test_dummy_camera.cpp)
 target_link_libraries(test_dummy_camera ${catkin_LIBRARIES})
 
-add_library(simulation_plugin SHARED simulation_plugin.cpp)
+add_library(simulation_plugin SHARED simulator/simulation_plugin.cpp)
 target_link_libraries(simulation_plugin ${GAZEBO_libraries})
 
