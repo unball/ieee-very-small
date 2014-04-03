@@ -1,12 +1,12 @@
 /**
- * @file   test_dummy_camera
+ * @file   show_dummy_camera.cpp
  * @author Gabriel Naves da Silva
  * @author Matheus Vieira Portela
  * @date   25/03/2014
  *
  * @attention Copyright (C) 2014 UnBall Robot Soccer Team
  *
- * @brief  Dummy camera testing node
+ * @brief  Show dummy camera images
  *
  * Subscribes to the /camera/image_raw topic and shows each
  * image published by the dummy_camera node.
