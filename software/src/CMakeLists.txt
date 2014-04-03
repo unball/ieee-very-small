@@ -78,3 +78,5 @@ target_link_libraries(show_dummy_camera ${catkin_LIBRARIES})
 add_library(simulation_plugin SHARED simulator/simulation_plugin.cpp)
 target_link_libraries(simulation_plugin ${GAZEBO_libraries})
 
+add_executable(simulator_node simulator/simulator_node.cpp)
+target_link_libraries(simulator_node ${catkin_LIBRARIES})

@@ -9,11 +9,9 @@
  */
  
 #include <ros/ros.h>
-#include <std_msgs/String.h>
+#include <geometry_msgs/Twist.h>
 
-#include "simulation.hpp"
-
-Simulator simulator;
+void publishCmdVel(ros::Publisher &publisher);
 
 int main(int argc, char **argv){
     ros::init(argc, argv, "simulator_node");
@@ -21,14 +19,11 @@ int main(int argc, char **argv){
     ros::NodeHandle n;
     ros::Rate loop_rate(10);
     
-    ros::Subscriber sub = n.subscribe("strategy_topic", 1000, receiveStrategyMessage);
-    ros::Publisher publisher = n.advertise<unball::SimulationMessage>("simulation_topic", 1000);
+    ros::Publisher publisher = n.advertise<geometry_msgs::Twist>("cmd_vel", 1);
   
     while (ros::ok())
     {
-        simulator.run();
-        
-        publishRobotsVelocities(publisher);
+        publishCmdVel(publisher);
         
         ros::spinOnce();
         loop_rate.sleep();
@@ -37,34 +32,19 @@ int main(int argc, char **argv){
     return(0);
 }
 
-publishRobotsVelocities(ros::Publisher &publisher)
+void publishCmdVel(ros::Publisher &publisher)
 {
-    unball::StrategyMessage msg;
-    std::vector<float> velocities;
+    geometry_msgs::Twist msg;
     
-    ROS_DEBUG("Publishing simulation message");
+    ROS_DEBUG("Publishing cmd vel");
     
-    for (int i = 0; i < 6; i++)
-    {
-        velocities = simulation.getRobotVelocities(i);
-        msg.lin_vel[i] = velocities[0];
-        msg.rot_vel[i] = velocities[1];
-        
-        ROS_DEBUG("lin_vel: %f\t rot_vel: %f", msg.lin_vel[i], msg.rot_vel[i]);
-    }
+    msg.linear.x = 0.1;
+    msg.linear.y = 0.0;
+    msg.linear.z = 0.0;
+    
+    msg.angular.x = 0.0;
+    msg.angular.y = 0.0;
+    msg.angular.z = 0.0;
     
     publisher.publish(msg);
-}
-
-
-void receiveStrategyMessage(const std_msgs::String::ConstPtr& msg){
-    ROS_INFO("Receiving: [%s]", msg->data.c_str());
-
-    for (int i = 0; i < msg->x.size(); i++)
-    {
-        ROS_DEBUG("%f", msg->x[i]);
-        //simulator.SetRobotLocation();
-        simulator.SetRobotLinearVel();
-        simulator.SetRobotAngularVel();        
-    }
 }
