@@ -22,9 +22,11 @@ class Strategy
   public:
     void run();
     
+    // Robot methods
     void setRobotLocation(float x, float y, int robot_number);
     std::vector<float> getRobotVelocities(int robot_number);
     
+    // Ball methods
     void setBallLocation(float x, float y);
     
   private:
