@@ -11,11 +11,17 @@ find_package(catkin REQUIRED COMPONENTS
   sensor_msgs
   cv_bridge
   message_generation
+  freenect_camera
+  freenect_launch
 )
 
 find_package(gazebo REQUIRED)
 
 find_package(Boost REQUIRED COMPONENTS system)
+
+find_package(freenect_launch REQUIRED)
+
+find_package(freenect_camera REQUIRED)
 
 add_message_files(DIRECTORY msg FILES
   VisionMessage.msg
@@ -56,6 +62,9 @@ add_executable(vision_node
   vision/vision_node.cpp
   vision/vision.cpp)
 target_link_libraries(vision_node ${catkin_LIBRARIES})
+
+add_executable(kinect_camera camera/kinect_camera.cpp)
+target_link_libraries(kinect_camera ${catkin_LIBRARIES})
 
 add_executable(dummy_camera dummy_camera/dummy_camera.cpp)
 target_link_libraries(dummy_camera ${catkin_LIBRARIES})
