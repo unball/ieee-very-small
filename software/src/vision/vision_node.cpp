@@ -33,7 +33,8 @@ int main(int argc, char **argv)
     image_transport::ImageTransport it(n);
     ros::Rate loop_rate(10);
     
-    image_transport::Subscriber sub = it.subscribe("camera/image_raw", 1, receiveCameraFrame);
+    image_transport::Subscriber rgb_sub = it.subscribe("camera/rgb/image_raw", 1, receiveCameraFrame);
+    image_transport::Subscriber depth_sub = it.subscribe("camera/depth/image_raw", 1, receiveCameraFrame);
     ros::Publisher publisher = n.advertise<unball::VisionMessage>("vision_topic", 1000);
     
     while (ros::ok())
@@ -76,7 +77,7 @@ void publishRobotsLocations(ros::Publisher &publisher)
 }
 
 /**
- * Receive image frame from camera and give it to
+ * Receive rgb image frame from camera and give it to
  * the vision object
  * 
  * @param msg a ROS image message pointer.
@@ -100,5 +101,5 @@ void receiveCameraFrame(const sensor_msgs::ImageConstPtr& msg)
         exit(1);
     }
     
-    vision.setCameraFrame(*cv_ptr);
+    
 }

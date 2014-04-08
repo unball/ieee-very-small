@@ -23,16 +23,20 @@ class Vision
     Vision();
     void findFieldCenter();
     void run();
-    void setCameraFrame(cv_bridge::CvImage camera_frame);
+    void setCameraFrame(cv_bridge::CvImage camera_frame, int flag);
     float getRobotLocation(int robot_index);
     
     bool has_field_center_;
+    
+    static const int RGB_IMAGE = 1, DEPTH_IMAGE = 2;
+    
   private:
     void segmentDepth();
     void segmentImage();
     void findAngle(int robot_number);
     
-    cv_bridge::CvImage camera_frame_;
+    cv_bridge::CvImage rgb_frame_;
+    cv_bridge::CvImage depth_frame_;
     float robot_location_[6]; // Final robot location (in centimeters)
     float ball_location_; // Final ball location (in centimeters)
     float robot_angle_[6]; // The angle of each robot (relative to the center of the field)

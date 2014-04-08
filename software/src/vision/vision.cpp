@@ -24,7 +24,7 @@ void Vision::run()
 {
     ROS_DEBUG("Run vision");
     
-    if (camera_frame_.image.rows == 0 && camera_frame_.image.cols == 0)
+    if (rgb_frame_.image.rows == 0 && rgb_frame_.image.cols == 0)
     {
         ROS_WARN("No image on camera_frame_. Nothing to do here.");
         return;
@@ -38,12 +38,31 @@ void Vision::run()
     }
 }
 
-void Vision::setCameraFrame(cv_bridge::CvImage camera_frame)
+/**
+ * Sets both the rgb frame and the depth frame.
+ * @param camera_frame The frame to be set.
+ * @param type Flag used to identify the given,
+ * either rgb or depth.
+ */
+void Vision::setCameraFrame(cv_bridge::CvImage camera_frame, int type)
 {
     ROS_DEBUG("Set camera frame");
-    this->camera_frame_.header = camera_frame.header;
-    this->camera_frame_.encoding = camera_frame.encoding;
-    camera_frame.image.copyTo(this->camera_frame_.image);
+    switch(type)
+    {
+        case Vision::RGB_IMAGE:
+            this->rgb_frame_.header = camera_frame.header;
+            this->rgb_frame_.encoding = camera_frame.encoding;
+            camera_frame.image.copyTo(this->rgb_frame_.image);
+            break;
+        case Vision::DEPTH_IMAGE:
+            this->depth_frame_.header = camera_frame.header;
+            this->depth_frame_.encoding = camera_frame.encoding;
+            camera_frame.image.copyTo(this->depth_frame_.image);
+            break;
+        default:
+            ROS_ERROR("Invalid image type");
+            break;
+    } 
 }
 
 float Vision::getRobotLocation(int robot_number)
@@ -59,7 +78,7 @@ void Vision::findFieldCenter()
 {
     ROS_DEBUG("Find the field center");
     
-    if (camera_frame_.image.rows == 0 && camera_frame_.image.cols == 0)
+    if (rgb_frame_.image.rows == 0 && rgb_frame_.image.cols == 0)
     {
         ROS_WARN("No image on camera_frame_. Nothing to do here.");
         return;
