@@ -40,13 +40,13 @@ void publishVel(ros::Publisher &publisher)
     
     ROS_DEBUG("Publishing cmd vel");
     
-    msg.linear.x = 0.0;
+    msg.linear.x = 0.10; // Set to make the robot turn
     msg.linear.y = 0.0;
     msg.linear.z = 0.0;
     
     msg.angular.x = 0.0;
     msg.angular.y = 0.0;
-    msg.angular.z = 10.0;
+    msg.angular.z = 0.5; // Set to make the robot move
     
     publisher.publish(msg);
 }
