@@ -46,7 +46,7 @@ void publishVel(ros::Publisher &publisher)
     
     msg.angular.x = 0.0;
     msg.angular.y = 0.0;
-    msg.angular.z = 100.0;
+    msg.angular.z = 10.0;
     
     publisher.publish(msg);
 }
