@@ -7,9 +7,8 @@
  * 
  * @brief Run strategy for robots
  * 
- * This node subscribes to the vision topic, applies strategy to decide
- * robots linear and angular velocities, and publishes to the strategy
- * topic
+ * This node subscribes to the vision topic, applies strategy to decide robots linear and angular velocities, and
+ * publishes to the strategy topic
  */
 
 #include <vector>
