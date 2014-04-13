@@ -14,24 +14,30 @@
 
 #include <ros/ros.h>
 
+/**
+ * Run strategy methods that should be called each strategy iteration.
+ */
 void Strategy::run()
 {
     ROS_DEBUG("Run strategy");
 }
 
-void Strategy::setRobotLocation(float x, float y, int robot_number)
+void Strategy::setRobotPose(int robot_number, float x, float y, float th)
 {
     this->robots_[robot_number].setX(x);
     this->robots_[robot_number].setY(y);
+    this->robots_[robot_number].setTh(th);
 }
 
 std::vector<float> Strategy::getRobotVelocities(int robot_number)
 {
     float lin_vel = this->robots_[robot_number].getLinVel();
-    float rot_vel = this->robots_[robot_number].getRotVel();
+    float ang_vel = this->robots_[robot_number].getAngVel();
     std::vector<float> velocities;
+    
     velocities.push_back(lin_vel);
-    velocities.push_back(rot_vel);
+    velocities.push_back(ang_vel);
+    
     return velocities;
 }
 

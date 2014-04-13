@@ -48,10 +48,7 @@ int main(int argc, char **argv)
 }
 
 /**
- * Publishes the six robots velocities to the strategy topic.
- * Each velocity is separated by a space.
- * Example: 0.2 0.4 0.6 0.8 1.0 1.2
- * 
+ * Publishes the robots velocities to the strategy topic.
  * @param publisher a ROS node publisher.
  */
 void publishRobotsVelocities(ros::Publisher &publisher)
@@ -65,19 +62,16 @@ void publishRobotsVelocities(ros::Publisher &publisher)
     {
         velocities = strategy.getRobotVelocities(i);
         msg.lin_vel[i] = velocities[0];
-        msg.rot_vel[i] = velocities[1];
+        msg.ang_vel[i] = velocities[1];
         
-        ROS_INFO("lin_vel: %f\t rot_vel: %f", msg.lin_vel[i], msg.rot_vel[i]);
+        ROS_INFO("lin_vel: %f\t ang_vel: %f", msg.lin_vel[i], msg.ang_vel[i]);
     }
     
     publisher.publish(msg);
 }
 
 /**
- * Receives the six robots locations through the vision topic.
- * Each location is separated by a space.
- * Example: 0.2 0.4 0.6 0.8 1.0 1.2
- * 
+ * Receives the robots locations from the vision topic.
  * @param msg a ROS string message pointer.
  */
 void receiveVisionMessage(const unball::VisionMessage::ConstPtr &msg)
@@ -87,6 +81,6 @@ void receiveVisionMessage(const unball::VisionMessage::ConstPtr &msg)
     for (int i = 0; i < 6; i++)
     {
         ROS_INFO("%d x: %f\t y: %f\t th: %f", i, msg->x[i], msg->y[i], msg->th[i]);
-        strategy.setRobotLocation(msg->x[i], msg->y[i], i);
+        strategy.setRobotPose(i, msg->x[i], msg->y[i], msg->th[i]);
     }
 }

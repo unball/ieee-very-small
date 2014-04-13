@@ -57,7 +57,6 @@ int main(int argc, char **argv){
 
 /**
  * Receives the six robots velocities through the strategy topic and publishes the velocities to the Gazebo simulation.
- * 
  * @param msg a ROS string message pointer.
  */
 void receiveStrategyMessage(const unball::StrategyMessage::ConstPtr &msg)
@@ -68,14 +67,13 @@ void receiveStrategyMessage(const unball::StrategyMessage::ConstPtr &msg)
     
     for (int i = 0; i < 6; i++)
     {
-        ROS_DEBUG("lin_vel: %f\t rot_vel: %f", msg->lin_vel[i], msg->rot_vel[i]);
-        publishVelocities(publisher[i], msg->lin_vel[i], msg->rot_vel[i]);
+        ROS_DEBUG("lin_vel: %f\t ang_vel: %f", msg->lin_vel[i], msg->ang_vel[i]);
+        publishVelocities(publisher[i], msg->lin_vel[i], msg->ang_vel[i]);
     }
 }
 
 /**
  * Publishes a twist message for controlling linear and angular velocities of each robot in the proper Gazebo topic.
- * 
  * @param publisher a ROS message publisher pointer.
  * @param lin_vel the desired robot linear velocity.
  * @param ang_vel the desired robot angular velocity.
@@ -100,9 +98,7 @@ void publishVelocities(ros::Publisher &publisher, float lin_vel, float ang_vel)
 /**
  * Receives the simulation model states and publishes the robot poses to strategy. Ignores all message positions that
  * is not a robot information.
- * 
  * Since robot orientation is given as a quaternion, it first converts it to an Euler angle on the XY plane.
- * 
  * @param msg a Gazebo message pointer.
  */
 void receiveGazeboModelStates(const gazebo_msgs::ModelStates::ConstPtr &msg)
@@ -140,7 +136,6 @@ void receiveGazeboModelStates(const gazebo_msgs::ModelStates::ConstPtr &msg)
 /**
  * Converts a quaternion to Euler angle on the XY plane (or around the Z-axis). Based on the approach available at:
  * http://stackoverflow.com/questions/14447338/converting-quaternions-to-euler-angles-problems-with-the-range-of-y-angle
- * 
  * @param x quaternion x.
  * @param y quaternion y.
  * @param z quaternion z.
@@ -162,7 +157,6 @@ float convertQuaternionToEuler(float x, float y, float z, float w)
 
 /**
  * Publishes a vision message with the update robot poses.
- * 
  * @param publisher a ROS message publisher pointer.
  * @param x robots x coordinate.
  * @param y robots y coordinate.

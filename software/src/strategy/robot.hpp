@@ -20,13 +20,13 @@ class Robot
     float getY();
     float getTh();
     float getLinVel();
-    float getRotVel();
+    float getAngVel();
     
     void setX(float x);
     void setY(float y);
     void setTh(float th);
     void setLinVel(float lin_vel);
-    void setRotVel(float rot_vel);
+    void setAngVel(float ang_vel);
     
   private:
     // Location attributes
@@ -36,7 +36,7 @@ class Robot
     
     // Velocity attributes
     float lin_vel_;
-    float rot_vel_;
+    float ang_vel_;
 };
 
 #endif  // UNBALL_ROBOT_H_

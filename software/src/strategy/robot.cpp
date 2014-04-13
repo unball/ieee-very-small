@@ -32,9 +32,9 @@ float Robot::getLinVel()
     return this->lin_vel_;
 }
 
-float Robot::getRotVel()
+float Robot::getAngVel()
 {
-    return this->rot_vel_;
+    return this->ang_vel_;
 }
 
 void Robot::setX(float x)
@@ -57,7 +57,7 @@ void Robot::setLinVel(float lin_vel)
     this->lin_vel_ = lin_vel;
 }
 
-void Robot::setRotVel(float rot_vel)
+void Robot::setAngVel(float ang_vel)
 {
-    this->rot_vel_ = rot_vel;
+    this->ang_vel_ = ang_vel;
 }

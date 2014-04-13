@@ -23,7 +23,7 @@ class Strategy
     void run();
     
     // Robot methods
-    void setRobotLocation(float x, float y, int robot_number);
+    void setRobotPose(int robot_number, float x, float y, float th);
     std::vector<float> getRobotVelocities(int robot_number);
     
     // Ball methods
