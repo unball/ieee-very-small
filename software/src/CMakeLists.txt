@@ -56,24 +56,27 @@ add_executable(strategy_node
   strategy/strategy.cpp
   strategy/robot.cpp
   strategy/ball.cpp)
+add_dependencies(strategy_node unball_gencpp)
 target_link_libraries(strategy_node ${catkin_LIBRARIES})
 
 add_executable(vision_node
   vision/vision_node.cpp
   vision/vision.cpp)
+add_dependencies(vision_node unball_gencpp)
 target_link_libraries(vision_node ${catkin_LIBRARIES})
 
 add_executable(show_kinect_camera camera/show_kinect_camera.cpp)
+add_dependencies(show_kinect_camera unball_gencpp)
 target_link_libraries(show_kinect_camera ${catkin_LIBRARIES})
 
 add_executable(dummy_camera dummy_camera/dummy_camera.cpp)
+add_dependencies(dummy_camera unball_gencpp)
 target_link_libraries(dummy_camera ${catkin_LIBRARIES})
 
 add_executable(dummy_frame dummy_camera/dummy_frame.cpp)
+add_dependencies(dummy_frame unball_gencpp)
 target_link_libraries(dummy_frame ${catkin_LIBRARIES})
 
-add_library(simulation_plugin SHARED simulator/simulation_plugin.cpp)
-target_link_libraries(simulation_plugin ${GAZEBO_libraries})
-
 add_executable(simulator_node simulator/simulator_node.cpp)
+add_dependencies(simulator_node unball_gencpp)
 target_link_libraries(simulator_node ${catkin_LIBRARIES})
