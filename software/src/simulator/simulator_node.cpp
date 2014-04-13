@@ -6,7 +6,8 @@
  *
  * @attention Copyright (C) 2014 UnBall Robot Soccer Team
  * 
- * @brief Has a Gazebo plugin for controlling the robots and publish the state of the simulation
+ * @brief Implements a simulator node with communication for controlling the robots velocities and publish their poses
+ * in the vision topic, emulating the real usage in the strategy node perspective.
  */
  
 #include <vector>
@@ -20,9 +21,9 @@
 #include "unball/VisionMessage.h"
 
 void receiveStrategyMessage(const unball::StrategyMessage::ConstPtr &msg);
-void publishVelocities(ros::Publisher &publisher, float lin_vel, float rot_vel);
-float convertQuaternionToEuler(float x, float y, float z, float w);
+void publishVelocities(ros::Publisher &publisher, float lin_vel, float ang_vel);
 void receiveGazeboModelStates(const gazebo_msgs::ModelStates::ConstPtr &msg);
+float convertQuaternionToEuler(float x, float y, float z, float w);
 void publishRobotsPoses(ros::Publisher &publisher, std::vector<float> &x, std::vector<float> &y, std::vector<float> &th);
 
 ros::Publisher publisher[6], poses_publisher;
@@ -47,8 +48,6 @@ int main(int argc, char **argv){
   
     while (ros::ok())
     {
-        publishVelocities(publisher[0], 0.5, 0.1);
-        
         ros::spinOnce();
         loop_rate.sleep();
     }    
@@ -57,7 +56,7 @@ int main(int argc, char **argv){
 }
 
 /**
- * Receives the six robots velocities through the strategy topic.
+ * Receives the six robots velocities through the strategy topic and publishes the velocities to the Gazebo simulation.
  * 
  * @param msg a ROS string message pointer.
  */
@@ -74,40 +73,41 @@ void receiveStrategyMessage(const unball::StrategyMessage::ConstPtr &msg)
     }
 }
 
-void publishVelocities(ros::Publisher &publisher, float lin_vel, float rot_vel)
+/**
+ * Publishes a twist message for controlling linear and angular velocities of each robot in the proper Gazebo topic.
+ * 
+ * @param publisher a ROS message publisher pointer.
+ * @param lin_vel the desired robot linear velocity.
+ * @param ang_vel the desired robot angular velocity.
+ */
+void publishVelocities(ros::Publisher &publisher, float lin_vel, float ang_vel)
 {
     geometry_msgs::Twist msg;
     
     ROS_DEBUG("Publishing cmd vel");
     
-    msg.linear.x = rot_vel; // Set to make the robot turn
+    msg.linear.x = ang_vel;
     msg.linear.y = 0.0;
     msg.linear.z = 0.0;
     
     msg.angular.x = 0.0;
     msg.angular.y = 0.0;
-    msg.angular.z = lin_vel; // Set to make the robot move
+    msg.angular.z = lin_vel;
     
     publisher.publish(msg);
 }
 
-// based on: http://stackoverflow.com/questions/14447338/converting-quaternions-to-euler-angles-problems-with-the-range-of-y-angle
-float convertQuaternionToEuler(float x, float y, float z, float w)
-{
-    float th;
-    double sqw = w*w;
-    double sqx = x*x;
-    double sqy = y*y;
-    double sqz = z*z;
-    
-    th = (atan2(2.0 * (x*y + z*w),(sqx - sqy - sqz + sqw)) * (180.0f/M_PI));
-    
-    return th;
-}
-
+/**
+ * Receives the simulation model states and publishes the robot poses to strategy. Ignores all message positions that
+ * is not a robot information.
+ * 
+ * Since robot orientation is given as a quaternion, it first converts it to an Euler angle on the XY plane.
+ * 
+ * @param msg a Gazebo message pointer.
+ */
 void receiveGazeboModelStates(const gazebo_msgs::ModelStates::ConstPtr &msg)
 {
-    const int msg_size = msg->name.size();
+    int msg_size = msg->name.size();
     int robot_index;
     std::vector<float> x(6), y(6), th(6);
     
@@ -130,12 +130,44 @@ void receiveGazeboModelStates(const gazebo_msgs::ModelStates::ConstPtr &msg)
         
         x[robot_index] = msg->pose[i].position.x;
         y[robot_index] = msg->pose[i].position.y;
-        th[robot_index] = convertQuaternionToEuler(msg->pose[i].orientation.x, msg->pose[i].orientation.y, msg->pose[i].orientation.z, msg->pose[i].orientation.w);
+        th[robot_index] = convertQuaternionToEuler(msg->pose[i].orientation.x, msg->pose[i].orientation.y,
+                                                   msg->pose[i].orientation.z, msg->pose[i].orientation.w);
     }
     
     publishRobotsPoses(poses_publisher, x, y, th);
 }
 
+/**
+ * Converts a quaternion to Euler angle on the XY plane (or around the Z-axis). Based on the approach available at:
+ * http://stackoverflow.com/questions/14447338/converting-quaternions-to-euler-angles-problems-with-the-range-of-y-angle
+ * 
+ * @param x quaternion x.
+ * @param y quaternion y.
+ * @param z quaternion z.
+ * @param w quaternion w.
+ * @return th angle on the XY plane.
+ */
+float convertQuaternionToEuler(float x, float y, float z, float w)
+{
+    float th;
+    double sqw = w*w;
+    double sqx = x*x;
+    double sqy = y*y;
+    double sqz = z*z;
+    
+    th = (atan2(2.0 * (x*y + z*w),(sqx - sqy - sqz + sqw)) * (180.0f/M_PI));
+    
+    return th;
+}
+
+/**
+ * Publishes a vision message with the update robot poses.
+ * 
+ * @param publisher a ROS message publisher pointer.
+ * @param x robots x coordinate.
+ * @param y robots y coordinate.
+ * @param th robots orientation angle.
+ */
 void publishRobotsPoses(ros::Publisher &publisher, std::vector<float> &x, std::vector<float> &y, std::vector<float> &th)
 {
     unball::VisionMessage message;
