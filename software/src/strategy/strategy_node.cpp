@@ -83,4 +83,6 @@ void receiveVisionMessage(const unball::VisionMessage::ConstPtr &msg)
         ROS_INFO("%d x: %f\t y: %f\t th: %f", i, msg->x[i], msg->y[i], msg->th[i]);
         strategy.setRobotPose(i, msg->x[i], msg->y[i], msg->th[i]);
     }
+    
+    strategy.setBallLocation(msg->ball_x, msg->ball_y);
 }

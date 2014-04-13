@@ -24,7 +24,8 @@ void receiveStrategyMessage(const unball::StrategyMessage::ConstPtr &msg);
 void publishVelocities(ros::Publisher &publisher, float lin_vel, float ang_vel);
 void receiveGazeboModelStates(const gazebo_msgs::ModelStates::ConstPtr &msg);
 float convertQuaternionToEuler(float x, float y, float z, float w);
-void publishRobotsPoses(ros::Publisher &publisher, std::vector<float> &x, std::vector<float> &y, std::vector<float> &th);
+void publishVisionMessage(ros::Publisher &publisher, std::vector<float> &x, std::vector<float> &y, std::vector<float> &th,
+                          std::vector<float> &ball_location);
 
 ros::Publisher publisher[6], poses_publisher;
 
@@ -106,23 +107,46 @@ void receiveGazeboModelStates(const gazebo_msgs::ModelStates::ConstPtr &msg)
     int msg_size = msg->name.size();
     int robot_index;
     std::vector<float> x(6), y(6), th(6);
+    std::vector<float> ball_location(2);
+    
+    ROS_DEBUG("Receiving Gazebo model states");
     
     for (int i = 0; i < msg_size; ++i)
     {
         if (msg->name[i] == "robot_1")
+        {
             robot_index = 0;
+        }
         else if (msg->name[i] == "robot_2")
+        {
             robot_index = 1;
+        }
         else if (msg->name[i] == "robot_3")
+        {
             robot_index = 2;
+        }
         else if (msg->name[i] == "robot_4")
+        {
             robot_index = 3;
+        }
         else if (msg->name[i] == "robot_5")
+        {
             robot_index = 4;
+        }
         else if (msg->name[i] == "robot_6")
+        {
             robot_index = 5;
+        }
+        else if (msg->name[i] == "ball")
+        {
+            ball_location[i] = msg->pose[i].position.x;
+            ball_location[i] = msg->pose[i].position.y;
+            continue;
+        }
         else
+        {
             continue; // ignore message if it is not a robot
+        }
         
         x[robot_index] = msg->pose[i].position.x;
         y[robot_index] = msg->pose[i].position.y;
@@ -130,7 +154,7 @@ void receiveGazeboModelStates(const gazebo_msgs::ModelStates::ConstPtr &msg)
                                                    msg->pose[i].orientation.z, msg->pose[i].orientation.w);
     }
     
-    publishRobotsPoses(poses_publisher, x, y, th);
+    publishVisionMessage(poses_publisher, x, y, th, ball_location);
 }
 
 /**
@@ -156,13 +180,15 @@ float convertQuaternionToEuler(float x, float y, float z, float w)
 }
 
 /**
- * Publishes a vision message with the update robot poses.
+ * Publishes a vision message with the updated robot poses and ball location.
  * @param publisher a ROS message publisher pointer.
  * @param x robots x coordinate.
  * @param y robots y coordinate.
  * @param th robots orientation angle.
+ * @param ball_location vector containing the ball (x, y) coordinates.
  */
-void publishRobotsPoses(ros::Publisher &publisher, std::vector<float> &x, std::vector<float> &y, std::vector<float> &th)
+void publishVisionMessage(ros::Publisher &publisher, std::vector<float> &x, std::vector<float> &y, std::vector<float> &th,
+                          std::vector<float> &ball_location)
 {
     unball::VisionMessage message;
  
@@ -174,6 +200,10 @@ void publishRobotsPoses(ros::Publisher &publisher, std::vector<float> &x, std::v
         message.y[i] = y[i];
         message.th[i] = th[i];
     }
+    
+    ROS_DEBUG("Ball: x: %f, y: %f", ball_location[0], ball_location[1]);
+    message.ball_x = ball_location[0];
+    message.ball_y = ball_location[1];
     
     publisher.publish(message);
 }

@@ -85,12 +85,12 @@ void Ball::setVelAngle(float vel_angle)
 }
 
 /**
- * Update all internal state variables of the ball, such as velocities, based on its new (X, Y) coordinates.
+ * Update  the ball (x, y) position and all internal state variables of the ball, such as velocities.
  * Angular velocity is set in rad/s.
  * @param x x coordinate, in centimeters.
  * @param y y coordinate, in centimeters.
  */
-void Ball::refreshState(float x, float y)
+void Ball::updatePosition(float x, float y)
 {
     ROS_DEBUG("Refreshing ball state");
     

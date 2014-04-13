@@ -43,5 +43,5 @@ std::vector<float> Strategy::getRobotVelocities(int robot_number)
 
 void Strategy::setBallLocation(float x, float y)
 {
-    this->ball_.refreshState(x, y);
+    this->ball_.updatePosition(x, y);
 }

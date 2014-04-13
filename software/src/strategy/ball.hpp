@@ -32,7 +32,7 @@ class Ball
     void setVelAbs(float vel_abs);
     void setVelAngle(float vel_angle);
     
-    void refreshState(float x, float y);
+    void updatePosition(float x, float y);
     
   private:
     float x_;
