@@ -28,6 +28,10 @@ class Robot
     void setLinVel(float lin_vel);
     void setAngVel(float ang_vel);
     
+    float saturate(float x, float limit);
+    
+    void stop();
+    
   private:
     // Location attributes
     float x_;
