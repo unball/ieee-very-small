@@ -1,0 +1,5 @@
+<launch>
+  <include file="$(find unball)/simulator/simulator.launch" />
+  <node name="strategy" pkg="unball" type="strategy_node" />
+  <node name="simulator" pkg="unball" type="simulator_node" />
+</launch>
