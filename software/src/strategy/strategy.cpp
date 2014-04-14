@@ -20,8 +20,9 @@
 void Strategy::run()
 {
     ROS_DEBUG("Run strategy");
-    this->robots_[0].setLinVel(0);
-    this->robots_[0].setAngVel(-100);
+    
+    this->robots_[0].turn(0.3);
+    this->robots_[0].run();
 }
 
 void Strategy::setRobotPose(int robot_number, float x, float y, float th)

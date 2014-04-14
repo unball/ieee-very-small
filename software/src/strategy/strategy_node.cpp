@@ -56,7 +56,7 @@ void publishRobotsVelocities(ros::Publisher &publisher)
     unball::StrategyMessage msg;
     std::vector<float> velocities;
     
-    ROS_INFO("Publishing strategy message");
+    ROS_DEBUG("Publishing strategy message");
     
     for (int i = 0; i < 6; i++)
     {
@@ -64,7 +64,7 @@ void publishRobotsVelocities(ros::Publisher &publisher)
         msg.lin_vel[i] = velocities[0];
         msg.ang_vel[i] = velocities[1];
         
-        ROS_INFO("lin_vel: %f\t ang_vel: %f", msg.lin_vel[i], msg.ang_vel[i]);
+        ROS_DEBUG("lin_vel: %f\t ang_vel: %f", msg.lin_vel[i], msg.ang_vel[i]);
     }
     
     publisher.publish(msg);
@@ -76,11 +76,11 @@ void publishRobotsVelocities(ros::Publisher &publisher)
  */
 void receiveVisionMessage(const unball::VisionMessage::ConstPtr &msg)
 {
-    ROS_INFO("Receiving vision message");
+    ROS_DEBUG("Receiving vision message");
     
     for (int i = 0; i < 6; i++)
     {
-        ROS_INFO("%d x: %f\t y: %f\t th: %f", i, msg->x[i], msg->y[i], msg->th[i]);
+        ROS_DEBUG("%d x: %f\t y: %f\t th: %f", i, msg->x[i], msg->y[i], msg->th[i]);
         strategy.setRobotPose(i, msg->x[i], msg->y[i], msg->th[i]);
     }
     

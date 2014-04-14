@@ -2,7 +2,7 @@
   <!-- start gazebo server-->
   <!-- to start the server paused, include a -u flag -->
   <node name="gazebo" pkg="gazebo_ros" type="gzserver" respawn="false" output="screen"
-	args="-u $(find unball)/simulator/ieee_very_small_field.world" />
+	args="$(find unball)/simulator/ieee_very_small_field.world" />
 	
   <!-- start gazebo client -->
   <node name="gazebo_gui" pkg="gazebo_ros" type="gzclient" respawn="false" output="screen" />
