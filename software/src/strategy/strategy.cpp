@@ -14,6 +14,19 @@
 
 #include <ros/ros.h>
 
+Strategy::Strategy()
+{
+    // Init robots positions according to the simulator positions
+    float x[6] = {0.37, 0.37, 0.60, -0.37, -0.37, -0.60};
+    float y[6] = {0.40, -0.40, 0.0, 0.40, -0.40, 0.0};
+    
+    for (int i = 0; i < 6; ++i)
+    {
+        this->setRobotPose(i, x[i], y[i], 0.0);
+        //this->robots_[i].stop();
+    }
+}
+
 /**
  * Run strategy methods that should be called each strategy iteration.
  */
@@ -21,8 +34,9 @@ void Strategy::run()
 {
     ROS_DEBUG("Run strategy");
     
-    this->robots_[0].turn(0.3);
-    this->robots_[0].run();
+    this->robots_[0].move(-0.3);
+    ROS_INFO("Robot 0: x: %f, y: %f, th: %f", this->robots_[0].getX(), this->robots_[0].getY(), this->robots_[0].getTh());
+    this->runRobots();
 }
 
 void Strategy::setRobotPose(int robot_number, float x, float y, float th)
@@ -42,6 +56,12 @@ std::vector<float> Strategy::getRobotVelocities(int robot_number)
     velocities.push_back(ang_vel);
     
     return velocities;
+}
+
+void Strategy::runRobots()
+{
+    for (int i = 0; i < 6; ++i)
+        this->robots_[i].run();
 }
 
 void Strategy::setBallLocation(float x, float y)

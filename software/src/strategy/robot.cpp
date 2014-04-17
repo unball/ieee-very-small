@@ -21,7 +21,8 @@ Robot::Robot()
     this->th_ = 0;
     this->lin_vel_ = 0;
     this->ang_vel_ = 0;
-    this->locomotion_state_ = STOP;
+    this->motion_state_ = STOP;
+    this->last_motion_state_ = UNDEFINED;
 }
 
 float Robot::getX()
@@ -49,9 +50,9 @@ float Robot::getAngVel()
     return this->ang_vel_;
 }
 
-LocomotionState Robot::getLocomotionState()
+MotionState Robot::getMotionState()
 {
-    return this->locomotion_state_;
+    return this->motion_state_;
 }
 
 void Robot::setX(float x)
@@ -89,10 +90,10 @@ void Robot::setAngVel(float ang_vel)
     this->ang_vel_ = ang_vel;
 }
 
-void Robot::setLocomotionState(LocomotionState locomotion_state)
+void Robot::setMotionState(MotionState motion_state)
 {
-    ROS_INFO("Changing state from %d to %d", this->locomotion_state_, locomotion_state);
-    this->locomotion_state_ = locomotion_state;
+    ROS_DEBUG("Changing state from %d to %d", this->motion_state_, motion_state);
+    this->motion_state_ = motion_state;
 }
 
 /**
@@ -110,25 +111,32 @@ float Robot::saturate(float x, float limit)
     return x;
 }
 
+bool Robot::hasMotionStateChanged()
+{
+    return (this->last_motion_state_ != this->motion_state_);
+}
+
 /**
  * Execute an action with respect to the current locomotion state.
  */
 void Robot::run()
 {
-    ROS_INFO("Robot state: %d", this->getLocomotionState());
+    ROS_DEBUG("Robot state: %d", this->getMotionState());
     
-    switch (this->getLocomotionState())
+    this->last_motion_state_ = this->motion_state_;
+    
+    switch (this->getMotionState())
     {
         case STOP:
-            ROS_INFO("STOP");
+            ROS_DEBUG("STOP");
             this->executeStop();
             break;
         case MOVE:
-            ROS_INFO("MOVE");
+            ROS_DEBUG("MOVE");
             this->executeMove();
             break;
         case TURN:
-            ROS_INFO("TURN");
+            ROS_DEBUG("TURN");
             this->executeTurn();
             break;
     }
@@ -139,8 +147,8 @@ void Robot::run()
  */
 void Robot::stop()
 {
-    if (this->getLocomotionState() != STOP)
-        this->setLocomotionState(STOP);
+    if (this->getMotionState() != STOP)
+        this->setMotionState(STOP);
 }
 
 /**
@@ -148,7 +156,7 @@ void Robot::stop()
  */
 void Robot::executeStop()
 {
-    ROS_INFO("Robot stopped");
+    ROS_DEBUG("Robot stopped");
     
     this->setLinVel(0);
     this->setAngVel(0);
@@ -161,14 +169,14 @@ void Robot::executeStop()
  */
 void Robot::move(float distance)
 {
-    if (this->getLocomotionState() != MOVE)
+    if (this->getMotionState() != MOVE)
     {
         ROS_INFO("Robot move: %f", distance);
         
         this->move_distance_ = distance;
         this->move_initial_x_ = this->getX();
         this->move_initial_y_ = this->getY();
-        this->setLocomotionState(MOVE);
+        this->setMotionState(MOVE);
     }
 }
 
@@ -178,9 +186,10 @@ void Robot::move(float distance)
  */
 void Robot::executeMove()
 {
-    ROS_INFO("Robot moving");
+    ROS_DEBUG("Robot moving");
     
     const float tolerance = 0.02; // 2 cm
+    float vel;
     float dx, dy, travelled_distance;
     
     dx = this->getX() - this->move_initial_x_;
@@ -188,19 +197,28 @@ void Robot::executeMove()
     
     travelled_distance = sqrt(pow(dx, 2) + pow(dy, 2));
     
+    if (this->move_distance_ >= 0)
+        vel = 1;
+    else
+        vel = -1;
+    
     ROS_INFO("dx: %f", dx);
     ROS_INFO("dy: %f", dy);
+    ROS_INFO("move distance: %f", this->move_distance_);
     ROS_INFO("travelled distance: %f", travelled_distance);
+    ROS_INFO("difference: %f", (this->move_distance_ - travelled_distance));
+    ROS_INFO("tolerance: %f", tolerance);
+    ROS_INFO("abs: %f", fabs(this->move_distance_) - travelled_distance);
     
-    if ((this->move_distance_ - travelled_distance) > tolerance)
+    if ((fabs(this->move_distance_) - travelled_distance) > tolerance)
     {
         ROS_INFO("Still moving");
-        this->setLinVel(1);
+        this->setLinVel(vel);
     }
     else
     {
         ROS_INFO("Finished moving");
-        this->setLocomotionState(STOP);
+        this->setMotionState(STOP);
     }
 }
 
@@ -210,13 +228,13 @@ void Robot::executeMove()
  */
 void Robot::turn(float angle)
 {
-    if (this->getLocomotionState() != TURN)
+    if (this->getMotionState() != TURN)
     {
-        ROS_INFO("Robot turn: %f", angle);
+        ROS_DEBUG("Robot turn: %f", angle);
         
         this->turn_angle_ = angle;
         this->turn_initial_th_ = this->getTh();
-        this->setLocomotionState(TURN);
+        this->setMotionState(TURN);
     }
 }
 
@@ -226,7 +244,7 @@ void Robot::turn(float angle)
  */
 void Robot::executeTurn()
 {
-    ROS_INFO("Robot turning");
+    ROS_DEBUG("Robot turning");
     
     const float tolerance = 0.1; // 1 rad
     float dth;
@@ -235,12 +253,12 @@ void Robot::executeTurn()
     
     if ((this->turn_angle_ - dth) > tolerance)
     {
-        ROS_INFO("Still turning");
+        ROS_DEBUG("Still turning");
         this->setAngVel(1);
     }
     else
     {
-        ROS_INFO("Finished turning");
-        this->setLocomotionState(STOP);
+        ROS_DEBUG("Finished turning");
+        this->setMotionState(STOP);
     }
 }

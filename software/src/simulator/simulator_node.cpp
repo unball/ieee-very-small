@@ -139,8 +139,8 @@ void receiveGazeboModelStates(const gazebo_msgs::ModelStates::ConstPtr &msg)
         }
         else if (msg->name[i] == "ball")
         {
-            ball_location[i] = msg->pose[i].position.x;
-            ball_location[i] = msg->pose[i].position.y;
+            ball_location[0] = msg->pose[i].position.x;
+            ball_location[1] = msg->pose[i].position.y;
             continue;
         }
         else

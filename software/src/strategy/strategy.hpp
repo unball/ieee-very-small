@@ -20,11 +20,14 @@
 class Strategy
 {
   public:
+    Strategy();
+  
     void run();
     
     // Robot methods
     void setRobotPose(int robot_number, float x, float y, float th);
     std::vector<float> getRobotVelocities(int robot_number);
+    void runRobots();
     
     // Ball methods
     void setBallLocation(float x, float y);

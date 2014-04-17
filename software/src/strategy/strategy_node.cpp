@@ -29,7 +29,7 @@ int main(int argc, char **argv)
     ros::init(argc, argv, "strategy_node");
     
     ros::NodeHandle n;
-    ros::Rate loop_rate(10); // 10 Hz
+    ros::Rate loop_rate(1); // 1 Hz
     
     ros::Subscriber sub = n.subscribe("vision_topic", 1, receiveVisionMessage);
     ros::Publisher publisher = n.advertise<unball::StrategyMessage>("strategy_topic", 1);
@@ -76,7 +76,7 @@ void publishRobotsVelocities(ros::Publisher &publisher)
  */
 void receiveVisionMessage(const unball::VisionMessage::ConstPtr &msg)
 {
-    ROS_DEBUG("Receiving vision message");
+    ROS_INFO("Receiving vision message");
     
     for (int i = 0; i < 6; i++)
     {

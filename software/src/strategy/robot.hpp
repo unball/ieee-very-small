@@ -16,8 +16,9 @@
 #define ROBOT_SATURATION_LIN_VEL 5.0
 #define ROBOT_SATURATION_ANG_VEL 2.0
 
-enum LocomotionState
+enum MotionState
 {
+    UNDEFINED,
     STOP,
     MOVE,
     TURN,
@@ -33,16 +34,18 @@ class Robot
     float getTh();
     float getLinVel();
     float getAngVel();
-    LocomotionState getLocomotionState();
+    MotionState getMotionState();
     
     void setX(float x);
     void setY(float y);
     void setTh(float th);
     void setLinVel(float lin_vel);
     void setAngVel(float ang_vel);
-    void setLocomotionState(LocomotionState locomotion_state);
+    void setMotionState(MotionState motion_state);
     
     float saturate(float x, float limit);
+    
+    bool hasMotionStateChanged();
     
     void run();
     void stop();
@@ -63,7 +66,8 @@ class Robot
     float ang_vel_;
     
     // Locomotion attributes
-    LocomotionState locomotion_state_;
+    MotionState motion_state_;
+    MotionState last_motion_state_;
     
     // Move attributes
     float move_initial_x_;
