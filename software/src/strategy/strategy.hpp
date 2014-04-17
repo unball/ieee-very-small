@@ -32,9 +32,13 @@ class Strategy
     // Ball methods
     void setBallLocation(float x, float y);
     
+    void example1();
+    
   private:
     Robot robots_[6];
     Ball ball_;
+    
+    int example1_state;
 };
 
 #endif  // UNBALL_STRATEGY_H_

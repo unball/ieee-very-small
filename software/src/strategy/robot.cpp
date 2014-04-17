@@ -22,7 +22,7 @@ Robot::Robot()
     this->lin_vel_ = 0;
     this->ang_vel_ = 0;
     this->motion_state_ = STOP;
-    this->last_motion_state_ = UNDEFINED;
+    this->previous_motion_state_ = UNDEFINED;
 }
 
 float Robot::getX()
@@ -111,9 +111,16 @@ float Robot::saturate(float x, float limit)
     return x;
 }
 
+/**
+ * Return whether the robot has changed its motion state, configuring that the last motion has finished.
+ * @return whether the motion has changed.
+ */
 bool Robot::hasMotionStateChanged()
 {
-    return (this->last_motion_state_ != this->motion_state_);
+    if (this->previous_motion_state_ == UNDEFINED)
+        return false;
+    
+    return (this->previous_motion_state_ != this->motion_state_);
 }
 
 /**
@@ -123,7 +130,7 @@ void Robot::run()
 {
     ROS_DEBUG("Robot state: %d", this->getMotionState());
     
-    this->last_motion_state_ = this->motion_state_;
+    this->previous_motion_state_ = this->motion_state_;
     
     switch (this->getMotionState())
     {

@@ -67,7 +67,7 @@ class Robot
     
     // Locomotion attributes
     MotionState motion_state_;
-    MotionState last_motion_state_;
+    MotionState previous_motion_state_;
     
     // Move attributes
     float move_initial_x_;

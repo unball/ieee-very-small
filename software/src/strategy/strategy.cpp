@@ -23,8 +23,10 @@ Strategy::Strategy()
     for (int i = 0; i < 6; ++i)
     {
         this->setRobotPose(i, x[i], y[i], 0.0);
-        //this->robots_[i].stop();
+        this->robots_[i].stop();
     }
+    
+    this->example1_state = 0;
 }
 
 /**
@@ -34,9 +36,10 @@ void Strategy::run()
 {
     ROS_DEBUG("Run strategy");
     
-    this->robots_[0].move(-0.3);
-    ROS_INFO("Robot 0: x: %f, y: %f, th: %f", this->robots_[0].getX(), this->robots_[0].getY(), this->robots_[0].getTh());
+    this->example1();
     this->runRobots();
+    
+    ROS_INFO("Robot state: %d", this->robots_[0].getMotionState());
 }
 
 void Strategy::setRobotPose(int robot_number, float x, float y, float th)
@@ -67,4 +70,28 @@ void Strategy::runRobots()
 void Strategy::setBallLocation(float x, float y)
 {
     this->ball_.updatePosition(x, y);
+}
+
+/**
+ * Executes an example plan with robot 0. First, it moves behind and, then, forward. Changes state each time the robot
+ * also changes its motion state (configuring that the current motion has stopped).
+ */
+void Strategy::example1()
+{
+    if (this->robots_[0].hasMotionStateChanged())
+        ++this->example1_state;
+    
+    switch (this->example1_state)
+    {
+        case 0:
+            ROS_INFO("EXAMPLE 1 STATE 1");
+            this->robots_[0].move(-0.30);
+            break;
+        case 1:
+            ROS_INFO("EXAMPLE 1 STATE 2");
+            this->robots_[0].move(0.15);
+            break;
+        default:
+            return;
+    }
 }
