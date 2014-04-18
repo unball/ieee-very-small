@@ -25,16 +25,16 @@
   
   <group ns="robot_4">
   <node name="robot_4" pkg="gazebo_ros" type="spawn_model"
-  args="-file $(find unball)/simulator/unball_robot.urdf -urdf -x -0.37 -y 0.40 -z 0.05 -model robot_4" />
+  args="-file $(find unball)/simulator/unball_robot.urdf -urdf -x -0.37 -y 0.40 -z 0.05 -Y 3.14 -model robot_4" />
   </group>
   
   <group ns="robot_5">
   <node name="robot_5" pkg="gazebo_ros" type="spawn_model"
-  args="-file $(find unball)/simulator/unball_robot.urdf -urdf -x -0.37 -y -0.40 -z 0.05 -model robot_5" />
+  args="-file $(find unball)/simulator/unball_robot.urdf -urdf -x -0.37 -y -0.40 -z 0.05 -Y 3.14 -model robot_5" />
   </group>
   
   <group ns="robot_6">
   <node name="robot_6" pkg="gazebo_ros" type="spawn_model"
-  args="-file $(find unball)/simulator/unball_robot.urdf -urdf -x -0.60 -y 0 -z 0.05 -model robot_6" />
+  args="-file $(find unball)/simulator/unball_robot.urdf -urdf -x -0.60 -y 0 -z 0.05 -Y 3.14 -model robot_6" />
   </group>
 </launch>
