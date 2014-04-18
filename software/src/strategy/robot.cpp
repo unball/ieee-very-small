@@ -92,23 +92,7 @@ void Robot::setAngVel(float ang_vel)
 
 void Robot::setMotionState(MotionState motion_state)
 {
-    ROS_DEBUG("Changing state from %d to %d", this->motion_state_, motion_state);
     this->motion_state_ = motion_state;
-}
-
-/**
- * Saturate a number x, forcing it to the interval (-limit) <= x <= (limit).
- * @param x The number to saturate.
- * @param limit The limit of the saturation interval.
- */
-float Robot::saturate(float x, float limit)
-{
-    if (x > limit)
-        x = limit;
-    else if (x < -limit)
-        x = -limit;
-    
-    return x;
 }
 
 /**
@@ -124,6 +108,37 @@ bool Robot::hasMotionStateChanged()
 }
 
 /**
+ * Saturate a number x, forcing it to the interval (-limit) <= x <= (limit).
+ * @param x The number to saturate.
+ * @param limit The limit of the saturation interval.
+ * @return The saturated number.
+ */
+float Robot::saturate(float x, float limit)
+{
+    if (x > limit)
+        x = limit;
+    else if (x < -limit)
+        x = -limit;
+    
+    return x;
+}
+
+/**
+ * Reduce an angle to the interval (-M_PI) <= angle < (M_PI).
+ * @param angle The angle to saturate.
+ * @return The reduced angle.
+ */
+float Robot::reduceAngle(float angle)
+{
+    while (angle < -M_PI)
+        angle += 2*M_PI;
+    while (angle >= M_PI)
+        angle -= 2*M_PI;
+        
+    return angle;
+}
+
+/**
  * Execute an action with respect to the current locomotion state.
  */
 void Robot::run()
@@ -135,16 +150,13 @@ void Robot::run()
     switch (this->getMotionState())
     {
         case STOP:
-            ROS_DEBUG("STOP");
             this->executeStop();
             break;
         case MOVE:
-            ROS_DEBUG("MOVE");
             this->executeMove();
             break;
-        case TURN:
-            ROS_DEBUG("TURN");
-            this->executeTurn();
+        case LOOK_AT:
+            this->executeLookAt();
             break;
     }
 }
@@ -178,7 +190,7 @@ void Robot::move(float distance)
 {
     if (this->getMotionState() != MOVE)
     {
-        ROS_INFO("Robot move: %f", distance);
+        ROS_DEBUG("Robot move: %f", distance);
         
         this->move_distance_ = distance;
         this->move_initial_x_ = this->getX();
@@ -196,76 +208,61 @@ void Robot::executeMove()
     ROS_DEBUG("Robot moving");
     
     const float tolerance = 0.02; // 2 cm
-    float vel;
-    float dx, dy, travelled_distance;
     
-    dx = this->getX() - this->move_initial_x_;
-    dy = this->getY() - this->move_initial_y_;
+    float dx = this->getX() - this->move_initial_x_;
+    float dy = this->getY() - this->move_initial_y_;
+    float travelled_distance = sqrt(pow(dx, 2) + pow(dy, 2));
+    float error = fabs(this->move_distance_) - travelled_distance;
+    float vel = (this->move_distance_ >= 0) ? 1 : -1;
     
-    travelled_distance = sqrt(pow(dx, 2) + pow(dy, 2));
-    
-    if (this->move_distance_ >= 0)
-        vel = 1;
-    else
-        vel = -1;
-    
-    ROS_INFO("dx: %f", dx);
-    ROS_INFO("dy: %f", dy);
-    ROS_INFO("move distance: %f", this->move_distance_);
-    ROS_INFO("travelled distance: %f", travelled_distance);
-    ROS_INFO("difference: %f", (this->move_distance_ - travelled_distance));
-    ROS_INFO("tolerance: %f", tolerance);
-    ROS_INFO("abs: %f", fabs(this->move_distance_) - travelled_distance);
-    
-    if ((fabs(this->move_distance_) - travelled_distance) > tolerance)
+    if (error > tolerance)
     {
-        ROS_INFO("Still moving");
         this->setLinVel(vel);
     }
     else
     {
-        ROS_INFO("Finished moving");
+        this->setLinVel(0); // force it to a stop (may be unnecessary)
         this->setMotionState(STOP);
     }
 }
 
 /**
- * Turn a specified angle. Change robot locomotion state to TURN, if it is not yet in it, and initialize turn variables.
- * @param angle Desired angle for the robot to turn.
+ * Turn the robot to face a (x, y) coordinate. Change robot locomotion state to LOOK_AT, if it is not yet in it, and
+ * initialize the look at variables.
+ * @param x Desired x coordinate for the robot to turn.
+ * @param y Desired y coordinate for the robot to turn.
  */
-void Robot::turn(float angle)
+void Robot::lookAt(float x, float y)
 {
-    if (this->getMotionState() != TURN)
+    if (this->getMotionState() != LOOK_AT)
     {
-        ROS_DEBUG("Robot turn: %f", angle);
-        
-        this->turn_angle_ = angle;
-        this->turn_initial_th_ = this->getTh();
-        this->setMotionState(TURN);
+        this->look_at_x_ = x;
+        this->look_at_y_ = y;
+        this->setMotionState(LOOK_AT);
     }
 }
 
 /**
- * Calculates the turned angle from the initial orientation to the current orientation. Keeps moving while the turned
- * angle is less than the allowed tolerance.
+ * Calculates the necessary angle to look at the (x, y) coordinate, based on the robot's current position. Keeps moving
+ * while the difference between the current angle and the target angle is less than the allowed tolerance.
  */
-void Robot::executeTurn()
+void Robot::executeLookAt()
 {
-    ROS_DEBUG("Robot turning");
+    const float tolerance = 0.1; // ~ 5.72 degrees
     
-    const float tolerance = 0.1; // 1 rad
-    float dth;
+    float dx = this->getX() - this->look_at_x_;
+    float dy = this->getY() - this->look_at_y_;
+    float target_angle = atan2(dy, dx);
+    float error = this->reduceAngle(this->getTh() - target_angle);
+    float vel = (error > 0) ? 0.05 : -0.05;
     
-    dth = this->getTh() - this->turn_initial_th_;
-    
-    if ((this->turn_angle_ - dth) > tolerance)
+    if (fabs(error) > tolerance)
     {
-        ROS_DEBUG("Still turning");
-        this->setAngVel(1);
+        this->setAngVel(vel);
     }
     else
     {
-        ROS_DEBUG("Finished turning");
+        this->setAngVel(0);
         this->setMotionState(STOP);
     }
 }

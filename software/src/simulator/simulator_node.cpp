@@ -91,7 +91,7 @@ void publishVelocities(ros::Publisher &publisher, float lin_vel, float ang_vel)
     
     msg.angular.x = 0.0;
     msg.angular.y = 0.0;
-    msg.angular.z = lin_vel;
+    msg.angular.z = -lin_vel;
     
     publisher.publish(msg);
 }
@@ -164,7 +164,7 @@ void receiveGazeboModelStates(const gazebo_msgs::ModelStates::ConstPtr &msg)
  * @param y quaternion y.
  * @param z quaternion z.
  * @param w quaternion w.
- * @return th angle on the XY plane.
+ * @return th angle in radians on the XY plane.
  */
 float convertQuaternionToEuler(float x, float y, float z, float w)
 {
@@ -174,7 +174,7 @@ float convertQuaternionToEuler(float x, float y, float z, float w)
     double sqy = y*y;
     double sqz = z*z;
     
-    th = (atan2(2.0 * (x*y + z*w),(sqx - sqy - sqz + sqw)) * (180.0f/M_PI));
+    th = atan2(2.0 * (x*y + z*w),(sqx - sqy - sqz + sqw));
     
     return th;
 }

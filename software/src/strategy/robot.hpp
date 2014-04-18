@@ -21,7 +21,7 @@ enum MotionState
     UNDEFINED,
     STOP,
     MOVE,
-    TURN,
+    LOOK_AT,
 };
 
 class Robot
@@ -42,18 +42,18 @@ class Robot
     void setLinVel(float lin_vel);
     void setAngVel(float ang_vel);
     void setMotionState(MotionState motion_state);
+    bool hasMotionStateChanged();
     
     float saturate(float x, float limit);
-    
-    bool hasMotionStateChanged();
+    float reduceAngle(float angle);
     
     void run();
     void stop();
     void executeStop();
     void move(float distance);
     void executeMove();
-    void turn(float angle);
-    void executeTurn();
+    void lookAt(float x, float y);
+    void executeLookAt();
     
   private:
     // Location attributes
@@ -74,9 +74,9 @@ class Robot
     float move_initial_y_;
     float move_distance_;
     
-    // Turn attributes
-    float turn_initial_th_;
-    float turn_angle_;
+    // Look at attributes
+    float look_at_x_;
+    float look_at_y_;
 };
 
 #endif  // UNBALL_ROBOT_H_

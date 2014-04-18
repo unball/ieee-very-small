@@ -78,18 +78,22 @@ void Strategy::setBallLocation(float x, float y)
  */
 void Strategy::example1()
 {
-    if (this->robots_[0].hasMotionStateChanged())
+    if (this->robots_[1].hasMotionStateChanged())
         ++this->example1_state;
     
     switch (this->example1_state)
     {
         case 0:
-            ROS_INFO("EXAMPLE 1 STATE 1");
-            this->robots_[0].move(-0.30);
+            ROS_INFO("EXAMPLE STATE 0");
+            this->robots_[1].move(0.10);
             break;
         case 1:
+            ROS_INFO("EXAMPLE 1 STATE 1");
+            this->robots_[1].lookAt(0.0, 0.0);
+            break;
+        case 2:
             ROS_INFO("EXAMPLE 1 STATE 2");
-            this->robots_[0].move(0.15);
+            this->robots_[1].move(0.15);
             break;
         default:
             return;

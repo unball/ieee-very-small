@@ -29,7 +29,7 @@ int main(int argc, char **argv)
     ros::init(argc, argv, "strategy_node");
     
     ros::NodeHandle n;
-    ros::Rate loop_rate(1); // 1 Hz
+    ros::Rate loop_rate(5); // Hz
     
     ros::Subscriber sub = n.subscribe("vision_topic", 1, receiveVisionMessage);
     ros::Publisher publisher = n.advertise<unball::StrategyMessage>("strategy_topic", 1);
