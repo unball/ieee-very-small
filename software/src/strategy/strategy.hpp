@@ -14,6 +14,7 @@
 #define UNBALL_STRATEGY_H_
 
 #include <vector>
+#include <queue>
 #include "robot.hpp"
 #include "ball.hpp"
 
@@ -32,13 +33,21 @@ class Strategy
     // Ball methods
     void setBallLocation(float x, float y);
     
-    void example1();
+    // Action methods
+    void updateAction();
+    void executeAction();
+    void actionExample(int robot_number);
+    void actionLookAndGo(int robot_number);
     
   private:
     Robot robots_[6];
+    
     Ball ball_;
     
-    int example1_state;
+    int action_state_;
+    bool action_mutex_;
+    std::queue<int> action_set_;
+    int current_action_;
 };
 
 #endif  // UNBALL_STRATEGY_H_

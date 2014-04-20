@@ -65,7 +65,7 @@ class Robot
     float lin_vel_;
     float ang_vel_;
     
-    // Locomotion attributes
+    // Motion attributes
     MotionState motion_state_;
     MotionState previous_motion_state_;
     

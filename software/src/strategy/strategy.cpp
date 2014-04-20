@@ -11,7 +11,6 @@
  */
 
 #include "strategy.hpp"
-
 #include <ros/ros.h>
 
 Strategy::Strategy()
@@ -26,7 +25,13 @@ Strategy::Strategy()
         this->robots_[i].stop();
     }
     
-    this->example1_state = 0;
+    this->action_set_.push(1);
+    this->action_set_.push(2);
+    this->action_set_.push(0);
+    
+    this->action_state_ = 0;
+    this->action_mutex_ = true;
+    this->current_action_ = -1;
 }
 
 /**
@@ -34,12 +39,11 @@ Strategy::Strategy()
  */
 void Strategy::run()
 {
-    ROS_DEBUG("Run strategy");
+    ROS_INFO("Run strategy");
     
-    this->example1();
+    this->updateAction();
+    this->executeAction();
     this->runRobots();
-    
-    ROS_INFO("Robot state: %d", this->robots_[0].getMotionState());
 }
 
 void Strategy::setRobotPose(int robot_number, float x, float y, float th)
@@ -61,6 +65,9 @@ std::vector<float> Strategy::getRobotVelocities(int robot_number)
     return velocities;
 }
 
+/**
+ * Call for each robot's run method.
+ */
 void Strategy::runRobots()
 {
     for (int i = 0; i < 6; ++i)
@@ -73,29 +80,94 @@ void Strategy::setBallLocation(float x, float y)
 }
 
 /**
- * Executes an example plan with robot 0. First, it moves behind and, then, forward. Changes state each time the robot
+ * Executes an example play. First, it moves behind and, then, forward. Changes state each time the robot
  * also changes its motion state (configuring that the current motion has stopped).
  */
-void Strategy::example1()
+void Strategy::actionExample(int robot_number)
 {
-    if (this->robots_[1].hasMotionStateChanged())
-        ++this->example1_state;
+    if (this->robots_[robot_number].hasMotionStateChanged())
+        ++this->action_state_;
     
-    switch (this->example1_state)
+    switch (this->action_state_)
     {
         case 0:
-            ROS_INFO("EXAMPLE STATE 0");
-            this->robots_[1].move(0.10);
+            ROS_INFO("ACTION EXAMPLE STATE 0");
+            this->robots_[robot_number].move(0.10);
             break;
         case 1:
-            ROS_INFO("EXAMPLE 1 STATE 1");
-            this->robots_[1].lookAt(0.0, 0.0);
+            ROS_INFO("ACTION EXAMPLE STATE 1");
+            this->robots_[robot_number].lookAt(0.0, 0.0);
             break;
         case 2:
-            ROS_INFO("EXAMPLE 1 STATE 2");
-            this->robots_[1].move(0.15);
+            ROS_INFO("ACTION EXAMPLE STATE 2");
+            this->robots_[robot_number].move(0.15);
             break;
         default:
-            return;
+            ROS_INFO("ACTION EXAMPLE FINISHED");
+            this->action_mutex_ = true;
+            break;
+    }
+}
+
+void Strategy::actionLookAndGo(int robot_number)
+{
+    float dx, dy, distance;
+    
+    if (this->robots_[robot_number].hasMotionStateChanged())
+        ++this->action_state_;
+    
+    switch (this->action_state_)
+    {
+        case 0:
+            ROS_INFO("ACTION LOOK AND GO STATE 0");
+            this->robots_[robot_number].lookAt(0.0, 0.0);
+            break;
+        case 1:
+            ROS_INFO("ACTION LOOK AND GO STATE 1");
+            dx = this->robots_[robot_number].getX() - 0.0;
+            dy = this->robots_[robot_number].getY() - 0.0;
+            distance = sqrt(pow(dx, 2) + pow(dy, 2));
+            this->robots_[robot_number].move(distance);
+            break;
+        default:
+            ROS_INFO("ACTION LOOK AND GO FINISHED");
+            this->action_mutex_ = true;
+            break;
+    }
+}
+
+void Strategy::updateAction()
+{
+    ROS_INFO("UPDATE ACTION: %d", this->current_action_);
+    
+    if (this->action_mutex_)
+    {
+        if (not this->action_set_.empty())
+        {
+            this->current_action_ = this->action_set_.front();
+            this->action_set_.pop();
+        }
+        else
+        {
+            this->current_action_ = 0;
+        }
+        
+        this->action_state_ = 0;
+        this->action_mutex_ = false;
+    }
+}
+
+void Strategy::executeAction()
+{
+    switch (this->current_action_)
+    {
+        case 1:
+            this->actionExample(3);
+            break;
+        case 2:
+            this->actionLookAndGo(3);
+            break;
+        default: // No action
+            break;
     }
 }
