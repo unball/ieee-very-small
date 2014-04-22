@@ -139,10 +139,13 @@ float Robot::reduceAngle(float angle)
 }
 
 /**
- * Execute an action with respect to the current locomotion state.
+ * Execute an action with respect to the current motion state. Whenever an execution returns true, meaning that it has
+ * completed its goal, changes the motion state to STOP.
  */
 void Robot::run()
 {
+    bool finished;
+    
     ROS_DEBUG("Robot state: %d", this->getMotionState());
     
     this->previous_motion_state_ = this->motion_state_;
@@ -150,15 +153,21 @@ void Robot::run()
     switch (this->getMotionState())
     {
         case STOP:
-            this->executeStop();
+            finished = this->executeStop();
             break;
         case MOVE:
-            this->executeMove();
+            finished = this->executeMove();
             break;
         case LOOK_AT:
-            this->executeLookAt();
+            finished = this->executeLookAt();
+            break;
+        case GO_TO:
+            finished = this->executeGoTo();
             break;
     }
+    
+    if (finished)
+        this->setMotionState(STOP);
 }
 
 /**
@@ -172,13 +181,15 @@ void Robot::stop()
 
 /**
  * Stop all robot movements.
+ * @return always true, since it always is successful in stopping the movements.
  */
-void Robot::executeStop()
+bool Robot::executeStop()
 {
     ROS_DEBUG("Robot stopped");
     
     this->setLinVel(0);
     this->setAngVel(0);
+    return true;
 }
 
 /**
@@ -202,8 +213,9 @@ void Robot::move(float distance)
 /**
  * Calculates the travelled distance from the initial move position to the current position. Keeps moving while the
  * travelled distance is less than the allowed tolerance.
+ * @return true if it has moved the required distance, false otherwise.
  */
-void Robot::executeMove()
+bool Robot::executeMove()
 {
     ROS_DEBUG("Robot moving");
     
@@ -218,11 +230,12 @@ void Robot::executeMove()
     if (error > tolerance)
     {
         this->setLinVel(vel);
+        return false;
     }
     else
     {
         this->setLinVel(0); // force it to a stop (may be unnecessary)
-        this->setMotionState(STOP);
+        return true;
     }
 }
 
@@ -245,8 +258,9 @@ void Robot::lookAt(float x, float y)
 /**
  * Calculates the necessary angle to look at the (x, y) coordinate, based on the robot's current position. Keeps moving
  * while the difference between the current angle and the target angle is less than the allowed tolerance.
+ * @return true if its has finished turning to the (x, y) coordinate, false otherwise.
  */
-void Robot::executeLookAt()
+bool Robot::executeLookAt()
 {
     const float tolerance = 0.1; // ~ 5.72 degrees
     
@@ -259,10 +273,67 @@ void Robot::executeLookAt()
     if (fabs(error) > tolerance)
     {
         this->setAngVel(vel);
+        return false;
     }
     else
     {
         this->setAngVel(0);
-        this->setMotionState(STOP);
+        return true;
     }
+}
+
+/**
+ * Move the robot to a (x, y) coordinate. Change robot locomotion state to GO_TO, if it is not yet in it, and initialize
+ * the go to variables.
+ * @param x Desired x coordinate for the robot to go.
+ * @param y Desired y coordinate for the robot to go.
+ */
+void Robot::goTo(float x, float y)
+{
+    if (this->getMotionState() != GO_TO)
+    {
+        ROS_DEBUG("Robot go to: (%f, %f)", x, y);
+        
+        this->go_to_x_ = x;
+        this->go_to_y_ = y;
+        this->go_to_state_ = 0;
+        this->setMotionState(GO_TO);
+    }
+}
+
+/**
+ * Makes the robot first look at the (x, y) coordinate, then, move the distance between the robot's current position and
+ * the (x, y) point.
+ * @return true if its has arrived at the (x, y) coordinate, false otherwise.
+ */
+bool Robot::executeGoTo()
+{
+    float dx, dy, distance;
+    
+    switch (this->go_to_state_)
+    {
+        case 0:
+            // Look to the point
+            this->look_at_x_ = this->go_to_x_;
+            this->look_at_y_ = this->go_to_y_;
+            if (this->executeLookAt())
+                ++this->go_to_state_;
+            break;
+        case 1:
+            // Move to the point
+            dx = this->getX() - this->go_to_x_;
+            dy = this->getY() - this->go_to_y_;
+            distance = sqrt(pow(dx, 2) + pow(dy, 2));
+            this->move_initial_x_ = this->getX();
+            this->move_initial_y_ = this->getY();
+            this->move_distance_ = distance;
+            if (this->executeMove())
+                ++this->go_to_state_;
+            break;
+        default:
+            // Finished
+            return true;
+    }
+    
+    return false;
 }

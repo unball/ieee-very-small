@@ -26,7 +26,7 @@ Strategy::Strategy()
     }
     
     this->action_set_.push(1);
-    this->action_set_.push(2);
+    //this->action_set_.push(2);
     this->action_set_.push(0);
     
     this->action_state_ = 0;
@@ -92,7 +92,7 @@ void Strategy::actionExample(int robot_number)
     {
         case 0:
             ROS_INFO("ACTION EXAMPLE STATE 0");
-            this->robots_[robot_number].move(0.10);
+            this->robots_[robot_number].goTo(0.0, 0.15);
             break;
         case 1:
             ROS_INFO("ACTION EXAMPLE STATE 1");

@@ -22,6 +22,7 @@ enum MotionState
     STOP,
     MOVE,
     LOOK_AT,
+    GO_TO,
 };
 
 class Robot
@@ -49,11 +50,13 @@ class Robot
     
     void run();
     void stop();
-    void executeStop();
+    bool executeStop();
     void move(float distance);
-    void executeMove();
+    bool executeMove();
     void lookAt(float x, float y);
-    void executeLookAt();
+    bool executeLookAt();
+    void goTo(float x, float y);
+    bool executeGoTo();
     
   private:
     // Location attributes
@@ -77,6 +80,11 @@ class Robot
     // Look at attributes
     float look_at_x_;
     float look_at_y_;
+    
+    // Go to attributes
+    float go_to_x_;
+    float go_to_y_;
+    int go_to_state_;
 };
 
 #endif  // UNBALL_ROBOT_H_
