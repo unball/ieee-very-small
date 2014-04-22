@@ -47,6 +47,8 @@ class Robot
     
     float saturate(float x, float limit);
     float reduceAngle(float angle);
+    float calculateDistance(float x, float y);
+    float calculateAngle(float x, float y);
     
     void run();
     void stop();
@@ -84,7 +86,8 @@ class Robot
     // Go to attributes
     float go_to_x_;
     float go_to_y_;
-    int go_to_state_;
+    float go_to_error_acc_;
+    float go_to_error_ant_;
 };
 
 #endif  // UNBALL_ROBOT_H_

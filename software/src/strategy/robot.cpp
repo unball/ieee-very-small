@@ -139,6 +139,32 @@ float Robot::reduceAngle(float angle)
 }
 
 /**
+ * Calculate the distance from the robot's current position to a (x, y) coordinate by using the Pythagorean theorem.
+ * @param x The x coordinate.
+ * @param y The y coordinate.
+ * @return The calculated distance.
+ */
+float Robot::calculateDistance(float x, float y)
+{
+    float dx = this->getX() - x;
+    float dy = this->getY() - y;
+    return sqrt(pow(dx, 2) + pow(dy, 2));
+}
+
+/**
+ * Calculate the angle from the robot's current position to a (x, y) coordinate by using arc-tangent.
+ * @param x The x coordinate.
+ * @param y The y coordinate.
+ * @return The calculated angle.
+ */
+float Robot::calculateAngle(float x, float y)
+{
+    float dx = this->getX() - x;
+    float dy = this->getY() - y;
+    return atan2(dy, dx);
+}
+
+/**
  * Execute an action with respect to the current motion state. Whenever an execution returns true, meaning that it has
  * completed its goal, changes the motion state to STOP.
  */
@@ -221,9 +247,7 @@ bool Robot::executeMove()
     
     const float tolerance = 0.02; // 2 cm
     
-    float dx = this->getX() - this->move_initial_x_;
-    float dy = this->getY() - this->move_initial_y_;
-    float travelled_distance = sqrt(pow(dx, 2) + pow(dy, 2));
+    float travelled_distance = this->calculateDistance(this->move_initial_x_, this->move_initial_y_);
     float error = fabs(this->move_distance_) - travelled_distance;
     float vel = (this->move_distance_ >= 0) ? 1 : -1;
     
@@ -264,9 +288,7 @@ bool Robot::executeLookAt()
 {
     const float tolerance = 0.1; // ~ 5.72 degrees
     
-    float dx = this->getX() - this->look_at_x_;
-    float dy = this->getY() - this->look_at_y_;
-    float target_angle = atan2(dy, dx);
+    float target_angle = calculateAngle(this->look_at_x_, this->look_at_y_);
     float error = this->reduceAngle(this->getTh() - target_angle);
     float vel = (error > 0) ? 0.05 : -0.05;
     
@@ -292,48 +314,44 @@ void Robot::goTo(float x, float y)
 {
     if (this->getMotionState() != GO_TO)
     {
-        ROS_DEBUG("Robot go to: (%f, %f)", x, y);
-        
         this->go_to_x_ = x;
         this->go_to_y_ = y;
-        this->go_to_state_ = 0;
+        this->go_to_error_acc_ = 0.0;
+        this->go_to_error_ant_ = 0.0;
         this->setMotionState(GO_TO);
     }
 }
 
 /**
- * Makes the robot first look at the (x, y) coordinate, then, move the distance between the robot's current position and
- * the (x, y) point.
+ * Implements a PID controller for linear and angular velocities.
  * @return true if its has arrived at the (x, y) coordinate, false otherwise.
  */
 bool Robot::executeGoTo()
 {
-    float dx, dy, distance;
+    float target_angle = calculateAngle(this->go_to_x_, this->go_to_y_);
+    float distance_error = this->calculateDistance(this->go_to_x_, this->go_to_y_);
+    float angle_error = reduceAngle(this->getTh() - target_angle);
+    float ang_vel = 0.1*(angle_error + (angle_error - this->go_to_error_ant_)*0.01); // PD error
+    float lin_vel = 6.0*distance_error; // P error
     
-    switch (this->go_to_state_)
+    this->go_to_error_acc_ += angle_error; // I error
+    this->go_to_error_ant_ = angle_error; // D error
+
+    ROS_INFO("GO TO (%f, %f)", this->go_to_x_, this->go_to_y_);
+    ROS_INFO("AT (%f, %f)", this->getX(), this->getY());
+    ROS_INFO("distance error: %f", distance_error);
+    ROS_INFO("angle error: %f", angle_error);
+    ROS_INFO("ang vel: %f", ang_vel);
+    ROS_INFO("lin vel: %f", lin_vel);
+    ROS_INFO("error ack: %f", this->go_to_error_acc_);
+    ROS_INFO("error ant: %f", this->go_to_error_ant_);
+
+    if (distance_error > 0.05) // 5 cm
     {
-        case 0:
-            // Look to the point
-            this->look_at_x_ = this->go_to_x_;
-            this->look_at_y_ = this->go_to_y_;
-            if (this->executeLookAt())
-                ++this->go_to_state_;
-            break;
-        case 1:
-            // Move to the point
-            dx = this->getX() - this->go_to_x_;
-            dy = this->getY() - this->go_to_y_;
-            distance = sqrt(pow(dx, 2) + pow(dy, 2));
-            this->move_initial_x_ = this->getX();
-            this->move_initial_y_ = this->getY();
-            this->move_distance_ = distance;
-            if (this->executeMove())
-                ++this->go_to_state_;
-            break;
-        default:
-            // Finished
-            return true;
+        this->setLinVel(lin_vel);
+        this->setAngVel(ang_vel);
+        return false;
     }
     
-    return false;
+    return true;
 }
