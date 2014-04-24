@@ -69,6 +69,10 @@ add_executable(show_kinect_camera camera/show_kinect_camera.cpp)
 add_dependencies(show_kinect_camera unball_gencpp)
 target_link_libraries(show_kinect_camera ${catkin_LIBRARIES})
 
+add_executable(save_kinect_video camera/save_kinect_video.cpp)
+add_dependencies(save_kinect_video unball_gencpp)
+target_link_libraries(save_kinect_video ${catkin_LIBRARIES})
+
 add_executable(dummy_camera dummy_camera/dummy_camera.cpp)
 add_dependencies(dummy_camera unball_gencpp)
 target_link_libraries(dummy_camera ${catkin_LIBRARIES})

@@ -1,6 +1,7 @@
 /**
  * @file   show_kinect_camera.cpp
  * @author Matheus Vieira Portela
+ *         Gabriel Naves da Silva
  * @date   02/04/2014
  *
  * @attention Copyright (C) 2014 UnBall Robot Soccer Team
@@ -16,6 +17,7 @@
 #include <cv_bridge/cv_bridge.h>
 #include <sensor_msgs/image_encodings.h>
 #include <opencv2/highgui/highgui.hpp>
+#include <opencv/cv.h>
 
 static const std::string RGB_WINDOW = "RGB image";
 static const std::string DEPTH_WINDOW = "Depth image";
@@ -53,7 +55,7 @@ void depthCallback(const sensor_msgs::ImageConstPtr &msg)
     // Copies the image data to cv_ptr and handles exceptions
     try
     {
-        cv_ptr = cv_bridge::toCvCopy(msg);
+        cv_ptr = cv_bridge::toCvCopy(msg, sensor_msgs::image_encodings::TYPE_16UC1);
     }
     catch (cv_bridge::Exception &e)
     {
@@ -67,8 +69,12 @@ void depthCallback(const sensor_msgs::ImageConstPtr &msg)
         exit(-1);
     }
     
+    // Normalizes the depth image
+    cv::Mat normed;
+    normalize(cv_ptr->image, normed, 0, 255, cv::NORM_MINMAX, CV_8UC1);
+    
     //Update GUI Window
-    cv::imshow(DEPTH_WINDOW, cv_ptr->image);
+    cv::imshow(DEPTH_WINDOW, normed);
     cv::waitKey(1);
 }
 

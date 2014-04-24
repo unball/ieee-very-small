@@ -77,7 +77,7 @@ void publishRobotsLocations(ros::Publisher &publisher)
 }
 
 /**
- * Receive rgb image frame from camera and give it to
+ * Receive both rgb and depth image frame from camera and give it to
  * the vision object
  * 
  * @param msg a ROS image message pointer.
