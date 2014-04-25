@@ -1,3 +1,15 @@
+/**
+ * @file   action_controller.cpp
+ * @author Matheus Vieira Portela
+ * @date   25/04/2014
+ *
+ * @attention Copyright (C) 2014 UnBall Robot Soccer Team
+ *
+ * @brief Action class
+ *
+ * Implements robots actions for strategy
+ */
+
 #include "action_controller.hpp"
 #include <ros/ros.h>
 
@@ -8,6 +20,8 @@
 void ActionController::run()
 {
     bool finished;
+    
+    ROS_INFO("Run action controller");
     
     for (int i = 0; i < 6; ++i)
     {
