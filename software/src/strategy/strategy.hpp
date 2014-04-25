@@ -15,6 +15,7 @@
 
 #include <vector>
 #include <queue>
+#include "action_controller.hpp"
 #include "robot.hpp"
 #include "ball.hpp"
 
@@ -25,29 +26,19 @@ class Strategy
   
     void run();
     
-    // Robot methods
-    void setRobotPose(int robot_number, float x, float y, float th);
-    std::vector<float> getRobotVelocities(int robot_number);
-    void runRobots();
-    
-    // Ball methods
-    void setBallLocation(float x, float y);
-    
-    // Action methods
-    void updateAction();
-    void executeAction();
-    void actionExample(int robot_number);
-    void actionLookAndGo(int robot_number);
+    // Play methods
+    void updatePlay();
+    void executePlay();
+    void playExample(int robot_number);
+    void playLookAndGo(int robot_number);
     
   private:
-    Robot robots_[6];
+    ActionController action_controller_;
     
-    Ball ball_;
-    
-    int action_state_;
-    bool action_mutex_;
-    std::queue<int> action_set_;
-    int current_action_;
+    int play_state_;
+    bool play_mutex_;
+    std::queue<int> play_set_;
+    int current_play_;
 };
 
 #endif  // UNBALL_STRATEGY_H_

@@ -36,6 +36,7 @@ class Robot
     float getLinVel();
     float getAngVel();
     MotionState getMotionState();
+    MotionState getPreviousMotionState();
     
     void setX(float x);
     void setY(float y);
@@ -43,22 +44,13 @@ class Robot
     void setLinVel(float lin_vel);
     void setAngVel(float ang_vel);
     void setMotionState(MotionState motion_state);
+    void setPreviousMotionState(MotionState previous_motion_state);
     bool hasMotionStateChanged();
     
     float saturate(float x, float limit);
     float reduceAngle(float angle);
     float calculateDistance(float x, float y);
     float calculateAngle(float x, float y);
-    
-    void run();
-    void stop();
-    bool executeStop();
-    void move(float distance);
-    bool executeMove();
-    void lookAt(float x, float y);
-    bool executeLookAt();
-    void goTo(float x, float y);
-    bool executeGoTo();
     
   private:
     // Location attributes
@@ -73,22 +65,9 @@ class Robot
     // Motion attributes
     MotionState motion_state_;
     MotionState previous_motion_state_;
-    
-    // Move attributes
-    float move_initial_x_;
-    float move_initial_y_;
-    float move_distance_;
-    
-    // Look at attributes
-    float look_at_x_;
-    float look_at_y_;
-    
-    // Go to attributes
-    float go_to_x_;
-    float go_to_y_;
-    float go_to_error_acc_;
-    float go_to_error_ant_;
 };
+
+extern Robot robot[6];
 
 #endif  // UNBALL_ROBOT_H_
 

@@ -55,7 +55,8 @@ add_executable(strategy_node
   strategy/strategy_node.cpp
   strategy/strategy.cpp
   strategy/robot.cpp
-  strategy/ball.cpp)
+  strategy/ball.cpp
+  strategy/action_controller.cpp)
 add_dependencies(strategy_node unball_gencpp)
 target_link_libraries(strategy_node ${catkin_LIBRARIES})
 

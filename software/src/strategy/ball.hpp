@@ -43,4 +43,6 @@ class Ball
     float vel_angle_;
 };
 
+extern Ball ball;
+
 #endif  // UNBALL_BALL_H_
