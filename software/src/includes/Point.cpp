@@ -53,26 +53,6 @@ float Point::DistanceTo(Point other_point){
 	return(sqrt(pow(x_distance,2) + pow(y_distance,2)));
 }
 
-/*
-float Point::Inclination(Point other_point){
-	//Returns the inclination of the line given by two points (it may be negative)
-	//remember that the lower point has the greatest y value
-	if (IsEqualTo(other_point)) return 0;
-	if (HasSameY(other_point))
-		return(IsOnTheLeftOf(other_point) ? M_PI : 0);	//180 if it is on the left, 0 if it is on the right
-	if (HasSameX(other_point))
-		return(IsLowerThan(other_point) ? 3*M_PI/2 : M_PI/2);//270 degrees if is lower, 90 if it is above
-
-	float theta = atan(fabs((y - other_point.GetY())/(x - other_point.GetX())));
-
-	if (IsOnTheLeftOf(other_point))
-		return(IsLowerThan(other_point) ? (2*M_PI)-theta : theta); //360-theta if lower, theta if above
-	if (IsOnTheRightOf(other_point))
-		return(IsLowerThan(other_point) ? M_PI + theta : M_PI - theta); //180 + theta if lower, 180 - theta if above
-	return (0);
-}
-*/
-
 bool Point::IsOnTheLeftOf(Point other_point){
 	return ((this->x < other_point.GetX()) ?  true : false);
 }
@@ -82,14 +62,12 @@ bool Point::IsOnTheRightOf(Point other_point){
 bool Point::HasSameX(Point other_point){
 	return ((this->x == other_point.GetX()) ?  true : false);
 }
-/*bool Point::IsAbove(Point other_point){
-	return ((this->y < other_point.GetY()) ?  true : false);
-	//y grows as the image goes down. therefore, if y1<y2, y1 is above y2
+bool Point::IsAbove(Point other_point){
+    return(this->y > other_point.GetY() ? true:false);
 }
-bool Point::IsLowerThan(Point other_point){
-	return ((this->y > other_point.GetY()) ?  true : false);
-	//y grows as the image goes down. therefore, if y1>y2, y1 is lower than y2
-}*/
+bool Point::IsLowerThan(){
+    return(this->y < other_point.GetY() ? true:false);
+}
 bool Point::HasSameY(Point other_point){
 	return ((this->y == other_point.GetY()) ?  true : false);
 }
