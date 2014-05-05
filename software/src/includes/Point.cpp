@@ -23,28 +23,20 @@ void Point::Set(float x, float y){
 	this->x=x,this->y=y;
 }
 
-Point Point::Add(Point other_point){
-	return (Point(x+other_point.GetX(),y+other_point.GetY()));
+Point operator+(Point& rhs) {
+    return (Point(x + rhs.x,y + rhs.y));
 }
 
-Point Point::Add(float x, float y){
-	return(Point(this->x+x,this->y+y));
+Point operator-(Point& rhs) {
+    return (Point(x - rhs.x,y - rhs.y));
 }
 
-Point Point::Subtract(Point other_point){
-	return (Point(x-other_point.GetX(),y-other_point.GetY()));
+Point operator*(float rhs) {
+    return (Point(x*rhs,y*rhs));
 }
 
-Point Point::Multiply(float k){
-	return(Point(k*x,k*y));
-}
-
-Point Point::Divide(float k){ //TODO: Apply exception in cases of division by 0
-	if (k==0){
-		std::cerr << "Cannot perform division by zero. Abort the program" << std::endl;
-		exit(1);
-	}
-	return(Point(x/k,y/k));
+Point operator/(float rhs) { //Look out, do not divide by 0
+    return (Point(x/rhs,y/rhs));
 }
 
 float Point::DistanceTo(Point other_point){
