@@ -20,6 +20,10 @@ Vision::Vision()
     has_field_center_ = false;
 }
 
+/**
+ * Segments the depth and rgb images, and finds all the necessary data
+ * from the state of the game.
+ */
 void Vision::run()
 {
     ROS_DEBUG("Run vision");
@@ -41,13 +45,13 @@ void Vision::run()
 /**
  * Sets both the rgb frame and the depth frame.
  * @param camera_frame The frame to be set.
- * @param type Flag used to identify the given,
+ * @param image_type Identifier for the image given,
  * either rgb or depth.
  */
-void Vision::setCameraFrame(cv_bridge::CvImage camera_frame, int type)
+void Vision::setCameraFrame(cv_bridge::CvImage camera_frame, int image_type)
 {
     ROS_DEBUG("Set camera frame");
-    switch(type)
+    switch(image_type)
     {
         case Vision::RGB_IMAGE:
             this->rgb_frame_.header = camera_frame.header;

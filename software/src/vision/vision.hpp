@@ -11,8 +11,8 @@
  * Defines computer vision class
  */
 
-#ifndef UNBALL_STRATEGY_H_
-#define UNBALL_STRATEGY_H_
+#ifndef UNBALL_VISION_H_
+#define UNBALL_VISION_H_
 
 #include <cv_bridge/cv_bridge.h>
 #include <opencv2/highgui/highgui.hpp>
@@ -23,7 +23,7 @@ class Vision
     Vision();
     void findFieldCenter();
     void run();
-    void setCameraFrame(cv_bridge::CvImage camera_frame, int flag);
+    void setCameraFrame(cv_bridge::CvImage camera_frame, int image_type);
     float getRobotLocation(int robot_index);
     
     bool has_field_center_;
@@ -42,4 +42,4 @@ class Vision
     float robot_angle_[6]; // The angle of each robot (relative to the center of the field)
 };
 
-#endif  // UNBALL_STRATEGY_H_
+#endif  // UNBALL_VISION_H_

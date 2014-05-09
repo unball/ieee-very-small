@@ -77,7 +77,7 @@ void publishRobotsLocations(ros::Publisher &publisher)
 }
 
 /**
- * Receive both rgb and depth image frame from camera and give it to
+ * Receives both rgb and depth image frame from camera and gives it to
  * the vision object
  * 
  * @param msg a ROS image message pointer.
@@ -85,9 +85,9 @@ void publishRobotsLocations(ros::Publisher &publisher)
 void receiveCameraFrame(const sensor_msgs::ImageConstPtr& msg)
 {
     cv_bridge::CvImagePtr cv_ptr;
-    try
     {
-        cv_ptr = cv_bridge::toCvCopy(msg, sensor_msgs::image_encodings::BGR8);
+    try
+        cv_ptr = cv_bridge::toCvCopy(msg);
     }
     catch (cv_bridge::Exception& e)
     {
@@ -101,5 +101,11 @@ void receiveCameraFrame(const sensor_msgs::ImageConstPtr& msg)
         exit(1);
     }
     
-    
+    if (cv_ptr->encoding == sensor_msgs::image_encodings::BGR8)
+        vision.setCameraFrame(*cv_ptr, Vision::RGB_IMAGE);
+    else if (cv_ptr->encoding == sensor_msgs::image_encodings::MONO8)
+        vision.setCameraFrame(*cv_ptr, Vision::DEPTH_IMAGE);
+    else 
+        ROS_ERROR("Error: invalid image encoding.");
 }
+
