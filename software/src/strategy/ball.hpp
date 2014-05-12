@@ -5,7 +5,7 @@
  *
  * @attention Copyright (C) 2014 UnBall Robot Soccer Team
  *
- * @brief  Ball class
+ * @brief Ball class
  *
  * Defines ball methods for strategy
  */
@@ -25,14 +25,12 @@ class Ball
     float getVelAbs();
     float getVelAngle();
     
-    void setX(float x);
-    void setY(float y);
-    void setVelX(float vel_x);
-    void setVelY(float vel_y);
+    void setPosition(float x, float y);
+    void setVel(float vel_x, float vel_y);
     void setVelAbs(float vel_abs);
     void setVelAngle(float vel_angle);
     
-    void updatePosition(float x, float y);
+    void update(float x, float y);
     
   private:
     float x_;

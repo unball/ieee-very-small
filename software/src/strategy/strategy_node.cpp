@@ -71,7 +71,6 @@ void initRobotsPoses()
     {
         robot[i].setX(x[i]);
         robot[i].setY(y[i]);
-        robot[i].setTh(0.0);
     }
 }
 
@@ -112,5 +111,5 @@ void receiveVisionMessage(const unball::VisionMessage::ConstPtr &msg)
         robot[i].setTh(msg->th[i]);
     }
     
-    ball.updatePosition(msg->ball_x, msg->ball_y);
+    ball.update(msg->ball_x, msg->ball_y);
 }
