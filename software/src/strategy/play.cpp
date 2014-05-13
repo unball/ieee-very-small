@@ -18,8 +18,6 @@ Play::Play()
         this->robots_action_finished_[i] = false;
     
     this->play_state_ = 0; // No play state
-    mutexUnlock(); // Allow to change plays
-
 }
 
 void Play::mutexLock(bool &mutex)
