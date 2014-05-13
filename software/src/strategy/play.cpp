@@ -12,3 +12,12 @@
 
 #include "play.hpp"
 
+void Play::mutexLock(&mutex)
+{
+    mutex = false;
+}
+
+void Play::mutexUnlock(&mutex)
+{
+    mutex = true;
+}
