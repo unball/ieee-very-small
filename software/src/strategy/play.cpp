@@ -12,12 +12,22 @@
 
 #include "play.hpp"
 
-void Play::mutexLock(&mutex)
+Play::Play()
+{
+    for (int i = 0; i < 6; ++i)
+        this->robots_action_finished_[i] = false;
+    
+    this->play_state_ = 0; // No play state
+    mutexUnlock(); // Allow to change plays
+
+}
+
+void Play::mutexLock(bool &mutex)
 {
     mutex = false;
 }
 
-void Play::mutexUnlock(&mutex)
+void Play::mutexUnlock(bool &mutex)
 {
     mutex = true;
 }

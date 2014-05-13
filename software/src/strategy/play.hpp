@@ -16,8 +16,8 @@
 class Play
 }
   public:
+    Play();
     virtual void run() = 0;
-    virtual void updatePlay() = 0;
   private:
     ActionController action_controller_;
     bool robots_action_finished_[6];
