@@ -27,12 +27,12 @@ class PlayController
     void run();
     void updatePlay();
     void executePlay();
-    void play1();
+    void play1(); //TODO: make it a specific class that inherits from Play.
     
   private:
-    ActionController action_controller_;
-    bool robots_action_finished_[6];
-    int play_state_;
+    ActionController action_controller_; //remove when play1 is a class
+    bool robots_action_finished_[6]; //remove when play1 is a class
+    int play_state_; //remove when play1 is a class
     bool play_mutex_;
     std::queue<int> play_set_;
     int current_play_;
