@@ -25,10 +25,8 @@ class Ball
     float getVelAbs();
     float getVelAngle();
     
-    void setX(float x);
-    void setY(float y);
-    void setVelX(float vel_x);
-    void setVelY(float vel_y);
+    void setPosition(float x, float y);
+    void setVel(float vel_x, float vel_y);
     void setVelAbs(float vel_abs);
     void setVelAngle(float vel_angle);
     

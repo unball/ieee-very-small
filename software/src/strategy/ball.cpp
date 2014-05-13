@@ -54,23 +54,15 @@ float Ball::getVelAngle()
     return this->vel_angle_;
 }
 
-void Ball::setX(float x)
+void Ball::setPosition(float x, float y)
 {
     this->x_ = x;
-}
-
-void Ball::setY(float y)
-{
     this->y_ = y;
 }
 
-void Ball::setVelX(float vel_x)
+void Ball::setVel(float vel_x, float vel_y)
 {
     this->vel_x_ = vel_x;
-}
-
-void Ball::setVelY(float vel_y)
-{
     this->vel_y_ = vel_y;
 }
 
@@ -95,14 +87,12 @@ void Ball::updatePosition(float x, float y)
     ROS_DEBUG("Updating ball position");
     
     // calculate velocities
-    this->setVelX(x - this->getX());
-    this->setVelY(y - this->getY());
+    this->setVel(x - this->getX(),y - this->getY());
     this->setVelAbs(sqrt(pow(this->getVelX(), 2) + pow(this->getVelY(), 2)));
     this->setVelAngle(atan2(y - this->getY(), x - this->getX()));
     
     // refresh position
-    this->setX(x);
-    this->setY(y);
+    this->setPosition(x,y);
     
     ROS_DEBUG("Ball X = %f", this->getX());
     ROS_DEBUG("Ball Y = %f", this->getY());
