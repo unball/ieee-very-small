@@ -19,7 +19,7 @@ PlayController::PlayController()
         this->robots_action_finished_[i] = false;
     
     this->play_state_ = 0; // No play state
-    this->play_mutex_ = true; // Allow to change plays
+    mutexUnlock(); // Allow to change plays
     this->current_play_ = -1; // No current play
     
     // Example play set
@@ -37,13 +37,13 @@ void PlayController::run()
 }
 
 /**
- * Change the current play ID number, which occures whenever the play mutex is set to true.
+ * Change the current play ID number, which occures whenever the play mutex is unlocked.
  */
 void PlayController::updatePlay()
 {
     ROS_INFO("UPDATE PLAY: %d", this->current_play_);
     
-    if (this->play_mutex_)
+    if (not mutexIsLocked())
     {
         if (not this->play_set_.empty())
         {
@@ -56,7 +56,7 @@ void PlayController::updatePlay()
         }
         
         this->play_state_ = 0;
-        this->play_mutex_ = false;
+        mutexLock();
     }
 }
 
@@ -108,7 +108,22 @@ void PlayController::play1()
             break;
         default:
             ROS_INFO("PLAY EXAMPLE FINISHED");
-            this->play_mutex_ = true;
+            mutexUnlock();
             break;
     }
+}
+
+void PlayController::mutexLock()
+{
+    play_mutex_ = false;
+}
+
+void PlayController::mutexUnlock()
+{
+    play_mutex_ = true;
+}
+
+bool PlayController::mutexIsLocked()
+{
+    return(not play_mutex_);
 }

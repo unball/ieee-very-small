@@ -36,6 +36,9 @@ class PlayController
     bool play_mutex_;
     std::queue<int> play_set_;
     int current_play_;
+    void mutexLock();
+    void mutexUnlock();
+    bool mutexIsLocked();
 };
 
 #endif  // UNBALL_PLAY_CONTROLLER_H_
