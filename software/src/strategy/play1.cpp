@@ -1,0 +1,39 @@
+#include "play1.hpp"
+#include <ros/ros.h>
+
+bool Play1::run()
+{
+    ROS_INFO("PLAY 1 RUN");
+    
+    for (int i = 0; i < 6; ++i)
+    {
+        if (robot[i].hasMotionStateChanged())
+            this->robots_action_finished_[i] = true;
+    }
+    
+    if (this->robots_action_finished_[3] && this->robots_action_finished_[4])
+    {
+        this->robots_action_finished_[3] = false;
+        this->robots_action_finished_[4] = false;
+        ++this->play_state_;
+    }
+    
+    switch (this->play_state_)
+    {
+        case 0:
+            ROS_INFO("PLAY 1 STATE 0");
+            this->action_controller_.goTo(3, -0.15, 0.15);
+            this->action_controller_.goTo(4, 0.30, 0.15);
+            break;
+        case 1:
+            ROS_INFO("PLAY 1 STATE 1");
+            this->action_controller_.goTo(3, -0.40, 0.2);
+            this->action_controller_.goTo(4, -0.60, 0.2);
+            break;
+        default:
+            ROS_INFO("PLAY 1 FINISHED");
+            return true;
+    }
+    
+    return false;
+}
