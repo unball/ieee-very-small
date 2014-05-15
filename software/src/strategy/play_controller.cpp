@@ -18,9 +18,9 @@ PlayController::PlayController()
     for (int i = 0; i < 6; ++i)
         this->robots_action_finished_[i] = false;
     
-    this->play_state_ = 0; // No play state
+    this->play_state_ = 0; // Initial play state
     this->play_mutex_ = true; // Allow to change plays
-    this->current_play_ = -1; // No current play
+    this->current_play_ = NO_PLAY; // No current play
     
     // Example play set
     this->play_set_.push(1);
@@ -52,7 +52,7 @@ void PlayController::updatePlay()
         }
         else
         {
-            this->current_play_ = 0;
+            this->current_play_ = NO_PLAY;
         }
         
         this->play_state_ = 0;

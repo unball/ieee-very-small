@@ -19,6 +19,8 @@
 #include "robot.hpp"
 #include "ball.hpp"
 
+#define NO_PLAY 0
+
 class PlayController
 {
   public:
