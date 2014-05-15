@@ -21,11 +21,9 @@ void ActionController::run()
 {
     bool finished;
     
-    ROS_INFO("Run action controller");
-    
     for (int i = 0; i < 6; ++i)
     {
-        ROS_DEBUG("Robot state: %d", robot[i].getMotionState());
+        ROS_DEBUG("Robot action state: %d", robot[i].getMotionState());
         
         // Update previous motion state
         robot[i].setPreviousMotionState(robot[i].getMotionState());
@@ -83,8 +81,6 @@ void ActionController::move(int robot_number, float distance)
 {
     if (robot[robot_number].getMotionState() != MOVE)
     {
-        ROS_DEBUG("Robot move: %f", distance);
-        
         this->move_distance_[robot_number] = distance;
         this->move_initial_x_[robot_number] = robot[robot_number].getX();
         this->move_initial_y_[robot_number] = robot[robot_number].getY();
@@ -100,8 +96,6 @@ void ActionController::move(int robot_number, float distance)
  */
 bool ActionController::executeMove(int robot_number)
 {
-    ROS_DEBUG("Robot moving");
-    
     const float tolerance = 0.02; // 2 cm
     
     float travelled_distance = robot[robot_number].calculateDistance(this->move_initial_x_[robot_number],

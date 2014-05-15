@@ -68,10 +68,7 @@ void initRobotsPoses()
     float y[6] = {0.40, -0.40, 0.0, 0.40, -0.40, 0.0};
     
     for (int i = 0; i < 6; ++i)
-    {
-        robot[i].setX(x[i]);
-        robot[i].setY(y[i]);
-    }
+        robot[i].setPose(x[i], y[i], 0.0); // Initial theta is 0
 }
 
 /**
@@ -106,9 +103,7 @@ void receiveVisionMessage(const unball::VisionMessage::ConstPtr &msg)
     for (int i = 0; i < 6; i++)
     {
         ROS_DEBUG("%d x: %f\t y: %f\t th: %f", i, msg->x[i], msg->y[i], msg->th[i]);
-        robot[i].setX(msg->x[i]);
-        robot[i].setY(msg->y[i]);
-        robot[i].setTh(msg->th[i]);
+        robot[i].setPose(msg->x[i], msg->y[i], msg->th[i]);
     }
     
     ball.update(msg->ball_x, msg->ball_y);

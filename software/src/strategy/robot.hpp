@@ -38,9 +38,9 @@ class Robot
     MotionState getMotionState();
     MotionState getPreviousMotionState();
     
-    void setX(float x);
-    void setY(float y);
+    void setPosition(float x, float y);
     void setTh(float th);
+    void setPose(float x, float y, float th);
     void setLinVel(float lin_vel);
     void setAngVel(float ang_vel);
     void setMotionState(MotionState motion_state);

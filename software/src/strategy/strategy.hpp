@@ -5,7 +5,7 @@
  *
  * @attention Copyright (C) 2014 UnBall Robot Soccer Team
  *
- * @brief  Strategy class
+ * @brief Strategy class
  *
  * Defines strategy for robots
  */

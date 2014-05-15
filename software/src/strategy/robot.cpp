@@ -60,19 +60,21 @@ MotionState Robot::getPreviousMotionState()
     return this->previous_motion_state_;
 }
 
-void Robot::setX(float x)
+void Robot::setPosition(float x, float y)
 {
     this->x_ = x;
-}
-
-void Robot::setY(float y)
-{
     this->y_ = y;
 }
 
 void Robot::setTh(float th)
 {
     this->th_ = th;
+}
+
+void Robot::setPose(float x, float y, float th)
+{
+    this->setPosition(x, y);
+    this->setTh(th);
 }
 
 /**
