@@ -10,8 +10,10 @@
  * Defines the requisits of any given play. All plays will inherit from Play
  */
 
-#ifndef UNBALL_ROBOT_H_
-#define UNBALL_ROBOT_H_
+#ifndef UNBALL_PLAY_H_
+#define UNBALL_PLAY_H_
+
+#include "action_controller.hpp"
 
 #define INITIAL_PLAY_STATE 0
 
@@ -19,16 +21,13 @@ class Play
 {
   public:
     Play();
-    virtual void run() = 0; // will have the code for the specific play
+    virtual bool run() = 0; // will have the code for the specific play
     
-  private:
+  protected:
     ActionController action_controller_;
     bool robots_action_finished_[6];
     int play_state_;
-    
-    void mutexLock(bool &mutex);
-    void mutexUnlock(bool &mutex);
 };
 
-#endif  // UNBALL_ROBOT_H_
+#endif  // UNBALL_PLAY_H_
 

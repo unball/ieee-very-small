@@ -68,7 +68,9 @@ void PlayController::executePlay()
     switch (this->current_play_)
     {
         case 1:
-            this->play1();
+            //this->play1();
+            if (this->play1_.run())
+                this->mutexUnlock();
             break;
         default: // No play
             break;

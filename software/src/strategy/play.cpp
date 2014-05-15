@@ -17,20 +17,5 @@ Play::Play()
     for (int i = 0; i < 6; ++i)
         this->robots_action_finished_[i] = false;
     
-    this->initPlayState();
-}
-
-void Play::initPlayState()
-{
     this->play_state_ = INITIAL_PLAY_STATE;
-}
-
-void Play::mutexLock(bool &mutex)
-{
-    mutex = false;
-}
-
-void Play::mutexUnlock(bool &mutex)
-{
-    mutex = true;
 }
