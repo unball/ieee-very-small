@@ -13,8 +13,6 @@
 #ifndef UNBALL_PLAY_H_
 #define UNBALL_PLAY_H_
 
-#include "action_controller.hpp"
-
 #define INITIAL_PLAY_STATE 0
 
 class Play
@@ -24,7 +22,6 @@ class Play
     virtual bool run() = 0; // will have the code for the specific play
     
   protected:
-    ActionController action_controller_;
     bool robots_action_finished_[6];
     int play_state_;
 };

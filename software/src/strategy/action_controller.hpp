@@ -45,5 +45,7 @@ class ActionController
     float go_to_error_ant_[6];
 };
 
+extern ActionController action_controller;
+
 #endif  // UNBALL_ACTION_CONTROLLER_H_
 

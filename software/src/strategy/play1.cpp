@@ -1,5 +1,6 @@
 #include "play1.hpp"
 #include <ros/ros.h>
+#include "action_controller.hpp" // ActionControler action_controller
 
 bool Play1::run()
 {
@@ -22,13 +23,13 @@ bool Play1::run()
     {
         case 0:
             ROS_INFO("PLAY 1 STATE 0");
-            this->action_controller_.goTo(3, -0.15, 0.15);
-            this->action_controller_.goTo(4, 0.30, 0.15);
+            action_controller.goTo(3, -0.15, 0.15);
+            action_controller.goTo(4, 0.30, 0.15);
             break;
         case 1:
             ROS_INFO("PLAY 1 STATE 1");
-            this->action_controller_.goTo(3, -0.40, 0.2);
-            this->action_controller_.goTo(4, -0.60, 0.2);
+            action_controller.goTo(3, -0.40, 0.2);
+            action_controller.goTo(4, -0.60, 0.2);
             break;
         default:
             ROS_INFO("PLAY 1 FINISHED");

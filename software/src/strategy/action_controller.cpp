@@ -13,6 +13,8 @@
 #include "action_controller.hpp"
 #include <ros/ros.h>
 
+ActionController action_controller;
+
 /**
  * Execute an action with respect to the current motion state. Whenever an execution returns true, meaning that it has
  * completed its goal, changes the motion state to STOP.
