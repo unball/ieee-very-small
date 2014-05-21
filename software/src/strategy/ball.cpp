@@ -14,6 +14,11 @@
 #include <cmath>
 #include <ros/ros.h>
 
+/**
+ * Ball global object
+ */
+Ball ball;
+
 Ball::Ball()
 {
     this->x_ = 0;

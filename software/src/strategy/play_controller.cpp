@@ -30,7 +30,6 @@ void PlayController::run()
     
     this->updatePlay();
     this->executePlay();
-    //this->action_controller_.run();
     action_controller.run();
 }
 

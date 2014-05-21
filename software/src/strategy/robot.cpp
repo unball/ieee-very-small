@@ -14,6 +14,11 @@
 #include <cmath>
 #include <ros/ros.h>
 
+/**
+ * Robot global object
+ */
+Robot robot[6];
+
 Robot::Robot()
 {
     this->x_ = 0;

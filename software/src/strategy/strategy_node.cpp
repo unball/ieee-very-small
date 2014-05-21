@@ -17,12 +17,9 @@
 
 #include "unball/VisionMessage.h"
 #include "unball/StrategyMessage.h"
-#include "strategy.hpp"
-
-// Initialize strategy global variables
-Strategy strategy;
-Robot robot[6];
-Ball ball;
+#include "strategy.hpp" // Strategy strategy;
+#include "robot.hpp" // Robot robot[6];
+#include "ball.hpp" // Ball ball;
 
 void initRobotsPoses();
 void publishRobotsVelocities(ros::Publisher &publisher);

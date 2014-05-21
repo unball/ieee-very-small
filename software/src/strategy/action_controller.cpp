@@ -13,6 +13,9 @@
 #include "action_controller.hpp"
 #include <ros/ros.h>
 
+/**
+ * Action controller global object
+ */
 ActionController action_controller;
 
 /**

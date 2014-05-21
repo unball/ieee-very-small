@@ -24,4 +24,6 @@ class Strategy
     PlayController play_controller_;
 };
 
+extern Strategy strategy;
+
 #endif  // UNBALL_STRATEGY_H_

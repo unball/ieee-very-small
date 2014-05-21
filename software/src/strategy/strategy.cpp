@@ -14,6 +14,11 @@
 #include <ros/ros.h>
 
 /**
+ * Strategy global object
+ */
+Strategy strategy;
+
+/**
  * Run strategy methods that should be called each strategy iteration.
  */
 void Strategy::run()
