@@ -19,7 +19,7 @@ class Play
 {
   public:
     Play();
-    virtual bool run() = 0; // will have the code for the specific play
+    virtual bool run() = 0; // Implement the code to execute the specific play
     
   protected:
     bool robots_action_finished_[6];

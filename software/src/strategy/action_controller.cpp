@@ -12,6 +12,7 @@
 
 #include "action_controller.hpp"
 #include <ros/ros.h>
+#include "robot.hpp" // robot[6] object
 
 /**
  * Action controller global object

@@ -1,6 +1,7 @@
 #include "play1.hpp"
 #include <ros/ros.h>
-#include "action_controller.hpp" // ActionControler action_controller
+#include "action_controller.hpp" // ActionControler action_controller;
+#include "robot.hpp" // Robot robot[6];
 
 bool Play1::run()
 {

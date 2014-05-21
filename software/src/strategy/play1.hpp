@@ -12,7 +12,6 @@
 #define UNBALL_PLAY1_H_
 
 #include "play.hpp"
-#include "robot.hpp" // robot[6]
 
 #define INITIAL_PLAY_STATE 0
 

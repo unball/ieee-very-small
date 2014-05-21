@@ -13,6 +13,8 @@
 #include "play_controller.hpp"
 #include <ros/ros.h>
 #include "action_controller.hpp" // ActionControler action_controller
+#include "robot.hpp" // Robot robot[6];
+#include "ball.hpp" // Ball ball;
 
 PlayController::PlayController()
 {

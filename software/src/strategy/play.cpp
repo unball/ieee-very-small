@@ -14,6 +14,10 @@
 
 Play::Play()
 {
+    /**
+     * robots_action_finished_ is true when the last action has finished. Therefore, it must be initialized with false
+     * indicating that no action was completed yet.
+     */
     for (int i = 0; i < 6; ++i)
         this->robots_action_finished_[i] = false;
     

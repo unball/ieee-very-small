@@ -13,8 +13,6 @@
 #ifndef UNBALL_ACTION_CONTROLLER_H_
 #define UNBALL_ACTION_CONTROLLER_H_
 
-#include "robot.hpp" // robot[6] object
-
 class ActionController
 {
   public:

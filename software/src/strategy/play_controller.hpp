@@ -13,10 +13,7 @@
 #ifndef UNBALL_PLAY_CONTROLLER_H_
 #define UNBALL_PLAY_CONTROLLER_H_
 
-#include <vector>
 #include <queue>
-#include "robot.hpp" // robot[6]
-#include "ball.hpp"
 #include "play1.hpp"
 
 #define NO_PLAY 0
