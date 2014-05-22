@@ -15,28 +15,41 @@
 
 #include <queue>
 #include "play1.hpp"
+#include "play_stop.hpp"
 
-#define NO_PLAY 0
-#define INITIAL_PLAY_STATE 0
+// Execute a play run method and unlock the mutex when finished
+#define RUN_PLAY(play) if (play.run()) this->mutexUnlock()
+
+enum PlayId
+{
+    NO_PLAY = 0,
+    PLAY_STOP,
+    PLAY_1,
+    PLAY_2,
+};
 
 class PlayController
 {
   public:
     PlayController();
-  
     void run();
-    void updatePlay();
-    void executePlay();
+    void setPlay(PlayId play_number);
+    void pushPlay(PlayId play_number);
+    void clearPlayQueue();
+    void abortPlay();
     
   private:
+    void updatePlay();
+    void executePlay();
     void mutexLock();
     void mutexUnlock();
     bool isMutexUnlocked();
     
     bool play_mutex_; // TODO: move to strategy class
-    std::queue<int> play_set_;
-    int current_play_;
+    std::queue<PlayId> play_queue_;
+    PlayId current_play_;
     Play1 play1_;
+    PlayStop play_stop_;
 };
 
 #endif  // UNBALL_PLAY_CONTROLLER_H_

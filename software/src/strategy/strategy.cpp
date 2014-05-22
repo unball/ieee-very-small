@@ -18,6 +18,11 @@
  */
 Strategy strategy;
 
+Strategy::Strategy()
+{
+    this->play_controller_.pushPlay(PLAY_1);
+}
+
 /**
  * Run strategy methods that should be called each strategy iteration.
  */

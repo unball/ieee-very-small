@@ -18,12 +18,8 @@
 
 PlayController::PlayController()
 {
-    this->current_play_ = NO_PLAY;
+    this->setPlay(NO_PLAY); // Don't have any initial play
     this->mutexUnlock(); // Allow to change plays
-    
-    // Example play set
-    this->play_set_.push(1);
-    this->play_set_.push(0); // Empty play
 }
 
 void PlayController::run()
@@ -36,6 +32,48 @@ void PlayController::run()
 }
 
 /**
+ * Set the current play.
+ * @param play_number Number of the play to set.
+ */
+void PlayController::setPlay(PlayId play_number)
+{
+    ROS_INFO("Set play: %d", play_number);
+    
+    this->current_play_ = play_number;
+}
+
+/**
+ * Push a new play to the play queue.
+ * @param play_number Number of the play that will be pushed.
+ */
+void PlayController::pushPlay(PlayId play_number)
+{
+    this->play_queue_.push(play_number);
+}
+
+/**
+ * Clear the play queue. There is no method in the std::queue container for this, so we swap the current queue by an
+ * empty version of the container.
+ * Implementation suggested at: http://stackoverflow.com/questions/709146/how-do-i-clear-the-stdqueue-efficiently
+ */
+void PlayController::clearPlayQueue()
+{
+    std::queue<PlayId> empty_play_queue;
+    std::swap(this->play_queue_, empty_play_queue);
+}
+
+/**
+ * Interrupt the current play and clear the play queue.
+ */
+void PlayController::abortPlay()
+{
+    ROS_INFO("Abort play");
+    
+    this->setPlay(PLAY_STOP);
+    this->clearPlayQueue();
+}
+
+/**
  * Change the current play ID number, which occures whenever the play mutex is unlocked.
  */
 void PlayController::updatePlay()
@@ -44,14 +82,14 @@ void PlayController::updatePlay()
     
     if (this->isMutexUnlocked())
     {
-        if (not this->play_set_.empty())
+        if (not this->play_queue_.empty())
         {
-            this->current_play_ = this->play_set_.front();
-            this->play_set_.pop();
+            this->setPlay(this->play_queue_.front());
+            this->play_queue_.pop();
         }
         else
         {
-            this->current_play_ = NO_PLAY;
+            this->setPlay(NO_PLAY);
         }
         
         this->mutexLock();
@@ -65,11 +103,20 @@ void PlayController::executePlay()
 {
     switch (this->current_play_)
     {
-        case 1:
-            if (this->play1_.run())
-                this->mutexUnlock();
+        case NO_PLAY:
+            this->mutexUnlock(); // Always unlock for the next play
             break;
-        default: // No play
+        case PLAY_STOP:
+            RUN_PLAY(this->play_stop_);
+            break;
+        case PLAY_1:
+            RUN_PLAY(this->play1_);
+            break;
+        case PLAY_2:
+            // Play 2 enters here
+            break;
+        default:
+            ROS_ERROR("Unknown play ID number");
             break;
     }
 }

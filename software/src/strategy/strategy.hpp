@@ -18,6 +18,7 @@
 class Strategy
 {
   public:
+    Strategy();
     void run();
     
   private:
