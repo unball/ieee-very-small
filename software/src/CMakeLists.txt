@@ -25,7 +25,8 @@ find_package(freenect_camera REQUIRED)
 
 add_message_files(DIRECTORY msg FILES
   VisionMessage.msg
-  StrategyMessage.msg)
+  StrategyMessage.msg
+  StrategyControlMessage.msg)
 generate_messages(DEPENDENCIES std_msgs)
 
 catkin_package(
@@ -89,3 +90,7 @@ target_link_libraries(dummy_frame ${catkin_LIBRARIES})
 add_executable(simulator_node simulator/simulator_node.cpp)
 add_dependencies(simulator_node unball_gencpp)
 target_link_libraries(simulator_node ${catkin_LIBRARIES})
+
+add_executable(keyboard_node keyboard/keyboard_node.cpp)
+add_dependencies(keyboard_node unball_gencpp)
+target_link_libraries(keyboard_node ${catkin_LIBRARIES})
