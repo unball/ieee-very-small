@@ -17,9 +17,6 @@
 #include "play1.hpp"
 #include "play_stop.hpp"
 
-// Execute a play run method and unlock the mutex when finished
-#define RUN_PLAY(play) if (play.run()) this->mutexUnlock()
-
 enum PlayId
 {
     NO_PLAY = 0,

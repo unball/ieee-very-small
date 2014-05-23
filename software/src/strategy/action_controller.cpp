@@ -25,7 +25,7 @@ ActionController action_controller;
  */
 void ActionController::run()
 {
-    bool finished;
+    bool has_action_finished;
     
     for (int i = 0; i < 6; ++i)
     {
@@ -37,20 +37,20 @@ void ActionController::run()
         switch (robot[i].getMotionState())
         {
             case STOP:
-                finished = this->executeStop(i);
+                has_action_finished = this->executeStop(i);
                 break;
             case MOVE:
-                finished = this->executeMove(i);
+                has_action_finished = this->executeMove(i);
                 break;
             case LOOK_AT:
-                finished = this->executeLookAt(i);
+                has_action_finished = this->executeLookAt(i);
                 break;
             case GO_TO:
-                finished = this->executeGoTo(i);
+                has_action_finished = this->executeGoTo(i);
                 break;
         }
         
-        if (finished)
+        if (has_action_finished)
             robot[i].setMotionState(STOP);
     }
 }
@@ -125,6 +125,7 @@ bool ActionController::executeMove(int robot_number)
     }
     else
     {
+        // TODO [matheus.v.portela@gmail.com]: Check whether it is necessary to force a stop by 30-jun-2014.
         robot[robot_number].setLinVel(0); // force it to a stop (may be unnecessary)
         return true;
     }

@@ -15,16 +15,25 @@
 
 #include "play_controller.hpp"
 
+enum GameState
+{
+    GAME_RUNNING,
+    GAME_PAUSED,
+    GAME_FIELD_KICK,
+    GAME_GOAL,
+    GAME_FINISHED,
+};
+
 class Strategy
 {
   public:
     Strategy();
     void run();
-    
     void choosePlay();
     
   private:
     PlayController play_controller_;
+    GameState game_state_;
 };
 
 extern Strategy strategy;

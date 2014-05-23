@@ -99,16 +99,18 @@ void PlayController::updatePlay()
  */
 void PlayController::executePlay()
 {
+    bool has_play_finished;
+    
     switch (this->current_play_)
     {
         case NO_PLAY:
-            this->mutexUnlock(); // Always unlock for the next play
+            has_play_finished = true; // Always unlock for the next play
             break;
         case PLAY_STOP:
-            RUN_PLAY(this->play_stop_);
+            has_play_finished = this->play_stop_.run();
             break;
         case PLAY_1:
-            RUN_PLAY(this->play1_);
+            has_play_finished = this->play1_.run();
             break;
         case PLAY_2:
             // Play 2 enters here
@@ -117,6 +119,9 @@ void PlayController::executePlay()
             ROS_ERROR("Unknown play ID number");
             break;
     }
+    
+    if (has_play_finished)
+        this->mutexUnlock();
 }
 
 void PlayController::mutexLock()

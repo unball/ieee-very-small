@@ -21,6 +21,7 @@ Strategy strategy;
 Strategy::Strategy()
 {
     this->play_controller_.pushPlay(PLAY_1);
+    this->game_state_ = GAME_RUNNING;
 }
 
 /**
@@ -28,10 +29,11 @@ Strategy::Strategy()
  */
 void Strategy::run()
 {
-    ROS_INFO("Run strategy");
-    
-    this->choosePlay();
-    this->play_controller_.run();
+    if (not this->game_state_ == GAME_PAUSED)
+    {
+        this->choosePlay();
+        this->play_controller_.run();
+    }
 }
 
 void Strategy::choosePlay()
