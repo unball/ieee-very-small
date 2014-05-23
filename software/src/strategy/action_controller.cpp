@@ -12,7 +12,7 @@
 
 #include "action_controller.hpp"
 #include <ros/ros.h>
-#include "robot.hpp" // robot[6] object
+#include "robot.hpp" // Robot robot[6];
 
 /**
  * Action controller global object
@@ -53,6 +53,15 @@ void ActionController::run()
         if (finished)
             robot[i].setMotionState(STOP);
     }
+}
+
+/**
+ * Check whether a robot has finished its action, which is characterized by a change in the motion state.
+ * @param robot_number Number of the robot to be checked.
+ */
+bool ActionController::hasRobotFinished(int robot_number)
+{
+    return robot[robot_number].hasMotionStateChanged();
 }
 
 /**

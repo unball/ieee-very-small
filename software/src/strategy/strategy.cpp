@@ -30,5 +30,11 @@ void Strategy::run()
 {
     ROS_INFO("Run strategy");
     
+    this->choosePlay();
     this->play_controller_.run();
+}
+
+void Strategy::choosePlay()
+{
+    
 }

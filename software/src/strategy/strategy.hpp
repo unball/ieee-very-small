@@ -21,6 +21,8 @@ class Strategy
     Strategy();
     void run();
     
+    void choosePlay();
+    
   private:
     PlayController play_controller_;
 };

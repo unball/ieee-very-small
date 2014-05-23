@@ -17,6 +17,7 @@ class ActionController
 {
   public:
     void run();
+    bool hasRobotFinished(int robot_number);
     void stop(int robot_number);
     bool executeStop(int robot_number);
     void move(int robot_number, float distance);

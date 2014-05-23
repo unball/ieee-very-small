@@ -1,7 +1,6 @@
 #include "play1.hpp"
 #include <ros/ros.h>
 #include "action_controller.hpp" // ActionControler action_controller;
-#include "robot.hpp" // Robot robot[6];
 
 bool Play1::run()
 {
@@ -9,7 +8,7 @@ bool Play1::run()
     
     for (int i = 0; i < 6; ++i)
     {
-        if (robot[i].hasMotionStateChanged())
+        if (action_controller.hasRobotFinished(i))
             this->robots_action_finished_[i] = true;
     }
     
