@@ -28,6 +28,8 @@ class Strategy
 {
   public:
     Strategy();
+    void setGameState(GameState game_state);
+    void receiveKeyboardInput(char key);
     void run();
     void choosePlay();
     

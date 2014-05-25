@@ -116,4 +116,6 @@ void receiveVisionMessage(const unball::VisionMessage::ConstPtr &msg)
 void receiveStrategyControlMessage(const unball::StrategyControlMessage::ConstPtr &msg)
 {
     ROS_INFO("Received key: %c", msg->key);
+    
+    strategy.receiveKeyboardInput(msg->key);
 }

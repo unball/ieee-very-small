@@ -21,7 +21,31 @@ Strategy strategy;
 Strategy::Strategy()
 {
     this->play_controller_.pushPlay(PLAY_1);
-    this->game_state_ = GAME_RUNNING;
+    this->setGameState(GAME_RUNNING);
+}
+
+void Strategy::setGameState(GameState game_state)
+{
+    this->game_state_ = game_state;
+}
+
+/**
+ * Receive keyboard input and set the proper game state.
+ * @param key Input key.
+ */
+void Strategy::receiveKeyboardInput(char key)
+{
+    switch (key)
+    {
+        case 'r': case 'R':
+            ROS_INFO("Setting game state: RUNNING");
+            this->setGameState(GAME_RUNNING);
+            break;
+        case 'p': case 'P':
+            ROS_INFO("Setting game state: PAUSED");
+            this->setGameState(GAME_PAUSED);
+            break;
+    }
 }
 
 /**
