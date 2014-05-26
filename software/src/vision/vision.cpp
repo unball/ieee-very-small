@@ -77,6 +77,7 @@ float Vision::getRobotLocation(int robot_number)
 
 /**
  * Finds the pixel corresponding to the center of the field
+ * TODO(gabri.navess@gmail.com): Implement this method properly.
  */
 void Vision::findFieldCenter()
 {
