@@ -31,7 +31,6 @@ Point Point::operator/(float rhs)
     return Point(x/rhs, y/rhs);
 }
 
-
 float Point::DistanceTo(Point other_point)
 {
 	float x_distance = x - other_point.GetX();

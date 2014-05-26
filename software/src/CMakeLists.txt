@@ -67,8 +67,7 @@ target_link_libraries(strategy_node ${catkin_LIBRARIES})
 
 add_executable(vision_node
   vision/vision_node.cpp
-  vision/vision.cpp
-  includes/point.cpp)
+  vision/vision.cpp)
 add_dependencies(vision_node unball_gencpp)
 target_link_libraries(vision_node ${catkin_LIBRARIES})
 

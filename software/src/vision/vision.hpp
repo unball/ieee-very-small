@@ -19,8 +19,6 @@
 #include <vector>
 #include <iostream>
 
-#include "../includes/point.hpp"
-
 class Vision
 {
   public:
@@ -44,7 +42,7 @@ class Vision
     float robot_location_[6]; // Final robot location (in centimeters)
     float ball_location_; // Final ball location (in centimeters)
     float robot_angle_[6]; // The angle of each robot (relative to the center of the field)
-    std::vector<Point> robot_center_;
+    std::vector<cv::Point> robot_center_;
 };
 
 #endif  // UNBALL_VISION_H_
