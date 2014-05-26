@@ -119,3 +119,4 @@ void Vision::findAngle(int robot_number)
 {
     ROS_DEBUG("Find %d robot's angle", robot_number);
 }
+
