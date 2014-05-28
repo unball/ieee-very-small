@@ -16,6 +16,8 @@
 
 #include <cv_bridge/cv_bridge.h>
 #include <opencv2/highgui/highgui.hpp>
+#include <vector>
+#include <iostream>
 
 class Vision
 {
@@ -40,6 +42,7 @@ class Vision
     float robot_location_[6]; // Final robot location (in centimeters)
     float ball_location_; // Final ball location (in centimeters)
     float robot_angle_[6]; // The angle of each robot (relative to the center of the field)
+    std::vector<cv::Point> robot_center_;
 };
 
 #endif  // UNBALL_VISION_H_

@@ -18,6 +18,7 @@
 Vision::Vision()
 {
     has_field_center_ = false;
+    robot_center_.resize(6);
 }
 
 /**
@@ -77,6 +78,7 @@ float Vision::getRobotLocation(int robot_number)
 
 /**
  * Finds the pixel corresponding to the center of the field
+ * TODO(gabri.navess@gmail.com): Implement this method properly.
  */
 void Vision::findFieldCenter()
 {
@@ -98,6 +100,8 @@ void Vision::findFieldCenter()
 void Vision::segmentDepth()
 {
     ROS_DEBUG("Segmenting depth image");
+    robot_center_[0].x = 192;
+    robot_center_[0].y = 216;
 }
 
 /**
@@ -107,6 +111,9 @@ void Vision::segmentDepth()
 void Vision::segmentImage()
 {
     ROS_DEBUG("Segmenting rgb image");
+    cv::circle(rgb_frame_.image, robot_center_[0], 35, cv::Scalar(250, 250, 250));
+    cv::imshow("image", rgb_frame_.image);
+    cv::waitKey(3);
 }
 
 /**
@@ -118,3 +125,4 @@ void Vision::findAngle(int robot_number)
 {
     ROS_DEBUG("Find %d robot's angle", robot_number);
 }
+

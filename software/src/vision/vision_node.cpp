@@ -40,18 +40,15 @@ int main(int argc, char **argv)
     while (ros::ok())
     {
         if (!vision.has_field_center_)
-        {
             vision.findFieldCenter();
-        }
-        
-        vision.run();
+        else
+            vision.run();
         
         publishRobotsLocations(publisher);
         
         ros::spinOnce();
         loop_rate.sleep();
     }
-    
     return 0;
 }
 

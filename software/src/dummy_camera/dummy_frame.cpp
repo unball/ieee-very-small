@@ -21,7 +21,7 @@ int main(int argc, char **argv)
     ros::init(argc, argv, "dummy_frame");
     ros::NodeHandle nh;
     image_transport::ImageTransport it(nh); // Used to publish and subscribe to images.
-    image_transport::Publisher pub = it.advertise("camera/image_raw", 1);
+    image_transport::Publisher pub = it.advertise("/camera/rgb/image_raw", 1);
     cv_bridge::CvImage frame;
     int frame_counter; // Used to count the number of frames published on the topic.
     int num_frames;
