@@ -188,8 +188,10 @@ void ActionController::goTo(int robot_number, float x, float y)
     {
         this->go_to_x_[robot_number] = x;
         this->go_to_y_[robot_number] = y;
-        this->go_to_error_acc_[robot_number] = 0.0;
-        this->go_to_error_ant_[robot_number] = 0.0;
+        this->go_to_error_dist_i_[robot_number] = 0.0;
+        this->go_to_error_dist_d_[robot_number] = 0.0;
+        this->go_to_error_ang_i_[robot_number] = 0.0;
+        this->go_to_error_ang_d_[robot_number] = 0.0;
         robot[robot_number].setMotionState(GO_TO);
     }
 }
@@ -201,16 +203,30 @@ void ActionController::goTo(int robot_number, float x, float y)
  */
 bool ActionController::executeGoTo(int robot_number)
 {
+    // PID controller constants
+    const float DIST_KP = 4.0;
+    const float DIST_KD = 0.1;
+    
+    const float ANG_KP = 0.1;
+    const float ANG_KD = 0.01;
+    
+    const float distance_tolerance = 0.05; // m
+    
     float target_angle = robot[robot_number].calculateAngle(this->go_to_x_[robot_number], this->go_to_y_[robot_number]);
     float distance_error = robot[robot_number].calculateDistance(this->go_to_x_[robot_number], this->go_to_y_[robot_number]);
     float angle_error = robot[robot_number].reduceAngle(robot[robot_number].getTh() - target_angle);
-    float ang_vel = 0.1*(angle_error + (angle_error - this->go_to_error_ant_[robot_number])*0.01); // PD error
-    float lin_vel = 6.0*distance_error; // P error
+    float ang_vel = ANG_KP*(angle_error + (angle_error - ANG_KD*this->go_to_error_ang_d_[robot_number])); // PD control
+    float lin_vel = DIST_KP*distance_error + DIST_KD*this->go_to_error_dist_i_[robot_number]; // P control
     
-    this->go_to_error_acc_[robot_number] += angle_error; // I error
-    this->go_to_error_ant_[robot_number] = angle_error; // D error
+    // Distance I and D error
+    this->go_to_error_dist_i_[robot_number] += distance_error;
+    this->go_to_error_dist_d_[robot_number] = distance_error;
+    
+    // Angle I and D error
+    this->go_to_error_ang_i_[robot_number] += angle_error;
+    this->go_to_error_ang_d_[robot_number] = angle_error;
 
-    if (distance_error > 0.05) // 5 cm
+    if (distance_error > distance_tolerance)
     {
         robot[robot_number].setLinVel(lin_vel);
         robot[robot_number].setAngVel(ang_vel);

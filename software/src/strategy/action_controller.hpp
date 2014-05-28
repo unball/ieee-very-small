@@ -40,8 +40,10 @@ class ActionController
     // Go to attributes
     float go_to_x_[6];
     float go_to_y_[6];
-    float go_to_error_acc_[6];
-    float go_to_error_ant_[6];
+    float go_to_error_dist_i_[6];
+    float go_to_error_dist_d_[6];
+    float go_to_error_ang_i_[6];
+    float go_to_error_ang_d_[6];
 };
 
 extern ActionController action_controller;
