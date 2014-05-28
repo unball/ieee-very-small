@@ -50,6 +50,11 @@ void Strategy::receiveKeyboardInput(char key)
             this->setGameState(GAME_ABORTED);
             this->play_controller_.abortPlay();
             break;
+        case '1':
+            ROS_INFO("Formation 1");
+            this->play_controller_.clearPlayQueue();
+            this->play_controller_.setPlay(PLAY_FORMATION_1);
+            break;
     }
 }
 

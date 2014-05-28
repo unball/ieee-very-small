@@ -14,15 +14,16 @@
 #define UNBALL_PLAY_CONTROLLER_H_
 
 #include <queue>
-#include "play1.hpp"
 #include "play_stop.hpp"
+#include "play1.hpp"
+#include "play_formation_1.hpp"
 
 enum PlayId
 {
     NO_PLAY = -1,
     PLAY_STOP,
     PLAY_1,
-    PLAY_2,
+    PLAY_FORMATION_1,
 };
 
 class PlayController
@@ -46,6 +47,7 @@ class PlayController
     std::queue<PlayId> play_queue_;
     PlayId current_play_;
     Play1 play1_;
+    PlayFormation1 play_formation_1_;
     PlayStop play_stop_;
 };
 

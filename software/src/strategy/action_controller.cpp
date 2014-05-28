@@ -61,7 +61,8 @@ void ActionController::run()
  */
 bool ActionController::hasRobotFinished(int robot_number)
 {
-    return robot[robot_number].hasMotionStateChanged();
+    return (robot[robot_number].getMotionState() == STOP);
+    //return robot[robot_number].hasMotionStateChanged();
 }
 
 /**
@@ -215,6 +216,10 @@ bool ActionController::executeGoTo(int robot_number)
         robot[robot_number].setAngVel(ang_vel);
         return false;
     }
-    
-    return true;
+    else
+    {
+        robot[robot_number].setLinVel(0);
+        robot[robot_number].setAngVel(0);
+        return true;
+    }
 }
