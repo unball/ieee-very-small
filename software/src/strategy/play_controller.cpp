@@ -88,6 +88,7 @@ void PlayController::updatePlay()
         else
         {
             this->setPlay(NO_PLAY);
+            //this->setPlay(PLAY_STOP);
         }
         
         this->mutexLock();

@@ -7,8 +7,7 @@
  * 
  * @brief Run strategy for robots
  * 
- * This node subscribes to the vision topic, applies strategy to decide robots linear and angular velocities, and
- * publishes to the strategy topic.
+ * This node reads publishes keyboard input to "strategy_control_topic" without requiring the user to press ENTER.
  */
 
 #include <stdio.h>
@@ -16,6 +15,8 @@
 #include <unistd.h>
 #include <ros/ros.h>
 #include "unball/StrategyControlMessage.h"
+
+#define KEY_ESC 27
 
 int getch();
 void publishKey(ros::Publisher &publisher, char c);
@@ -30,7 +31,7 @@ int main(int argc, char **argv)
     
     while (true)
     {
-        if ((c = getch()))
+        if ((c = getch()) != KEY_ESC)
         {
             publishKey(publisher, c);
             ros::spinOnce();
@@ -54,6 +55,7 @@ int getch()
 
     // Disable buffering
     newt.c_lflag &= ~(ICANON);
+    //newt.c_lflag &= ~(ICANON|ECHO); // Disable echo to the screen
 
     // Apply new settings
     tcsetattr(STDIN_FILENO, TCSANOW, &newt);

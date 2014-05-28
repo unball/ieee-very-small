@@ -19,7 +19,7 @@
 
 enum PlayId
 {
-    NO_PLAY = 0,
+    NO_PLAY = -1,
     PLAY_STOP,
     PLAY_1,
     PLAY_2,
@@ -42,7 +42,7 @@ class PlayController
     void mutexUnlock();
     bool isMutexUnlocked();
     
-    bool play_mutex_; // TODO: move to strategy class
+    bool play_mutex_;
     std::queue<PlayId> play_queue_;
     PlayId current_play_;
     Play1 play1_;

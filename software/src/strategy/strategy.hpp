@@ -19,6 +19,8 @@ enum GameState
 {
     GAME_RUNNING,
     GAME_PAUSED,
+    GAME_STOPPED,
+    GAME_ABORTED,
     GAME_FIELD_KICK,
     GAME_GOAL,
     GAME_FINISHED,

@@ -45,6 +45,11 @@ void Strategy::receiveKeyboardInput(char key)
             ROS_INFO("Setting game state: PAUSED");
             this->setGameState(GAME_PAUSED);
             break;
+        case 'a': case 'A':
+            ROS_INFO("Setting game state: ABORT");
+            this->setGameState(GAME_ABORTED);
+            this->play_controller_.abortPlay();
+            break;
     }
 }
 
@@ -53,13 +58,16 @@ void Strategy::receiveKeyboardInput(char key)
  */
 void Strategy::run()
 {
-    if (not this->game_state_ == GAME_PAUSED)
+    if (this->game_state_ != GAME_PAUSED)
     {
         this->choosePlay();
         this->play_controller_.run();
     }
 }
 
+/**
+ * Choose the best play for the current state of the game.
+ */
 void Strategy::choosePlay()
 {
     
