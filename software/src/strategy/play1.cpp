@@ -27,7 +27,8 @@ bool Play1::run()
             action_controller.stop(4);
         case 1:
             ROS_INFO("PLAY 1 STATE 1");
-            action_controller.goTo(3, -0.15, 0.15);
+            //action_controller.goTo(3, -0.15, 0.15);
+            action_controller.goTo(3, 0, 0);
             action_controller.goTo(4, 0.30, 0.15);
             break;
         case 2:

@@ -204,11 +204,11 @@ void ActionController::goTo(int robot_number, float x, float y)
 bool ActionController::executeGoTo(int robot_number)
 {
     // PID controller constants
-    const float DIST_KP = 4.0;
+    const float DIST_KP = 3.0;
     const float DIST_KD = 0.1;
     
-    const float ANG_KP = 0.1;
-    const float ANG_KD = 0.01;
+    const float ANG_KP = 0.03;
+    const float ANG_KD = 0.003;
     
     const float distance_tolerance = 0.05; // m
     
@@ -216,7 +216,7 @@ bool ActionController::executeGoTo(int robot_number)
     float distance_error = robot[robot_number].calculateDistance(this->go_to_x_[robot_number], this->go_to_y_[robot_number]);
     float angle_error = robot[robot_number].reduceAngle(robot[robot_number].getTh() - target_angle);
     float ang_vel = ANG_KP*(angle_error + (angle_error - ANG_KD*this->go_to_error_ang_d_[robot_number])); // PD control
-    float lin_vel = DIST_KP*distance_error + DIST_KD*this->go_to_error_dist_i_[robot_number]; // P control
+    float lin_vel = DIST_KP*distance_error + DIST_KD*this->go_to_error_dist_i_[robot_number]; // PD control
     
     // Distance I and D error
     this->go_to_error_dist_i_[robot_number] += distance_error;

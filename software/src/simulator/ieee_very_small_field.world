@@ -40,6 +40,14 @@
             </script>
           </material>
         </visual>
+        <inertial>
+          <mass>0.046</mass>
+          <inertia>
+            <ixx>8.3e-6</ixx>
+            <iyy>8.3e-6</iyy>
+            <izz>8.3e-6</izz>
+          </inertia>
+        </inertial>
       </link>
     </model>
     
