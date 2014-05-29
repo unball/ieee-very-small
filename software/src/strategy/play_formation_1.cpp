@@ -39,6 +39,7 @@ bool PlayFormation1::run()
             break;
         default:
             ROS_INFO("PLAY FORMATION 1 FINISHED");
+            this->play_state_ = 0; // Reseting play state for the next time the play is called
             return true;
     }
     

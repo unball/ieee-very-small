@@ -37,6 +37,7 @@ bool Play1::run()
             break;
         default:
             ROS_INFO("PLAY 1 FINISHED");
+            this->play_state_ = 0; // Reseting play state for the next time the play is called
             return true;
     }
     
