@@ -115,6 +115,9 @@ void PlayController::executePlay()
         case PLAY_FORMATION_1:
             has_play_finished = this->play_formation_1_.run();
             break;
+        case PLAY_FORMATION_2:
+            has_play_finished = this->play_formation_2_.run();
+            break;
         default:
             ROS_ERROR("Unknown play ID number");
             break;

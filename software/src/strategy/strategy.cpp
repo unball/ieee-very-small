@@ -52,8 +52,13 @@ void Strategy::receiveKeyboardInput(char key)
             break;
         case '1':
             ROS_INFO("Formation 1");
-            this->play_controller_.clearPlayQueue();
-            this->play_controller_.setPlay(PLAY_FORMATION_1);
+            this->play_controller_.abortPlay();
+            this->play_controller_.pushPlay(PLAY_FORMATION_1);
+            break;
+        case '2':
+            ROS_INFO("Formation 2");
+            this->play_controller_.abortPlay();
+            this->play_controller_.pushPlay(PLAY_FORMATION_2);
             break;
     }
 }

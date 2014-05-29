@@ -61,6 +61,7 @@ void ActionController::run()
  */
 bool ActionController::hasRobotFinished(int robot_number)
 {
+    // TODO [matheus.v.portela@gmail.com]: Choose which method will be used as a finishing criteria by 10-jun-2014.
     return (robot[robot_number].getMotionState() == STOP);
     //return robot[robot_number].hasMotionStateChanged();
 }
@@ -126,7 +127,6 @@ bool ActionController::executeMove(int robot_number)
     }
     else
     {
-        // TODO [matheus.v.portela@gmail.com]: Check whether it is necessary to force a stop by 30-jun-2014.
         robot[robot_number].setLinVel(0); // force it to a stop (may be unnecessary)
         return true;
     }

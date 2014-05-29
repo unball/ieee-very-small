@@ -62,7 +62,8 @@ add_executable(strategy_node
   strategy/play.cpp
   strategy/play_stop.cpp
   strategy/play1.cpp
-  strategy/play_formation_1.cpp)
+  strategy/play_formation_1.cpp
+  strategy/play_formation_2.cpp)
 add_dependencies(strategy_node unball_gencpp)
 target_link_libraries(strategy_node ${catkin_LIBRARIES})
 

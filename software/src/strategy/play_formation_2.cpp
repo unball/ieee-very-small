@@ -1,10 +1,10 @@
-#include "play1.hpp"
+#include "play_formation_2.hpp"
 #include <ros/ros.h>
 #include "action_controller.hpp" // ActionControler action_controller;
 
-bool Play1::run()
+bool PlayFormation2::run()
 {
-    ROS_INFO("PLAY 1 RUN");
+    ROS_INFO("PLAY FORMATION 2 RUN");
     
     for (int i = 0; i < 6; ++i)
     {
@@ -21,22 +21,24 @@ bool Play1::run()
     
     switch (this->play_state_)
     {
+        // force initial stop (in case the last play was interrupted)
         case 0:
-            ROS_INFO("PLAY 1 STATE 0");
+            ROS_INFO("PLAY FORMATION 2 STATE 0");
             action_controller.stop(3);
             action_controller.stop(4);
+            break;
         case 1:
-            ROS_INFO("PLAY 1 STATE 1");
-            action_controller.goTo(3, -0.15, 0.15);
-            action_controller.goTo(4, 0.30, 0.15);
+            ROS_INFO("PLAY FORMATION 2 STATE 1");
+            action_controller.goTo(3, -0.15, 0.30);
+            action_controller.goTo(4, -0.15, -0.30);
             break;
         case 2:
-            ROS_INFO("PLAY 1 STATE 2");
-            action_controller.goTo(3, -0.40, 0.2);
-            action_controller.goTo(4, -0.60, 0.2);
+            ROS_INFO("PLAY FORMATION 2 STATE 2");
+            action_controller.lookAt(3, 0, 0);
+            action_controller.lookAt(4, 0, 0);
             break;
         default:
-            ROS_INFO("PLAY 1 FINISHED");
+            ROS_INFO("PLAY FORMATION 2 FINISHED");
             return true;
     }
     
