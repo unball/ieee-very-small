@@ -17,6 +17,7 @@
 #include <sensor_msgs/image_encodings.h>
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv/cv.h>
+#include <iostream>
 
 cv::VideoWriter rgb_writer;
 cv::VideoWriter depth_writer;
@@ -53,7 +54,7 @@ void rgbCallback(const sensor_msgs::ImageConstPtr &msg)
     // Opens the rgb video writer if it's not opened yet.
     if (!is_open_rgb)
     {
-        rgb_writer.open("devel/lib/unball/rgb_video.avi", CV_FOURCC('P','I','M','1'),
+        rgb_writer.open("rgb_video.avi", CV_FOURCC('P','I','M','1'),
                         25, cv::Size(cv_ptr->image.cols, cv_ptr->image.rows),true);
         if (!rgb_writer.isOpened()) ROS_ERROR("Error! Could not open rgb video writer!");
         else is_open_rgb = true;
@@ -92,7 +93,7 @@ void depthCallback(const sensor_msgs::ImageConstPtr &msg)
     // Opens the depth video writer if it's not opened yet.
     if (!is_open_depth)
     {
-        depth_writer.open("devel/lib/unball/depth_video.avi", CV_FOURCC('P','I','M','1'),
+        depth_writer.open("depth_video.avi", CV_FOURCC('P','I','M','1'),
                           25, cv::Size(cv_ptr->image.cols, cv_ptr->image.rows),false);
         if (!depth_writer.isOpened()) ROS_ERROR("Error! Could not open depth video writer!");
         else is_open_depth = true;
@@ -113,6 +114,7 @@ int main(int argc, char **argv)
     image_transport::Subscriber sub_rgb, sub_depth;
     is_open_rgb = false;
     is_open_depth = false;
+    
     
     sub_rgb = it.subscribe("/camera/rgb/image_raw", 1, rgbCallback);
     sub_depth = it.subscribe("/camera/depth/image_raw", 1, depthCallback);
