@@ -18,7 +18,7 @@
 Vision::Vision()
 {
     has_field_center_ = false;
-    robot_center_.resize(6);
+    robot_coordinates_.resize(6);
 }
 
 /**
@@ -100,8 +100,16 @@ void Vision::findFieldCenter()
 void Vision::segmentDepth()
 {
     ROS_DEBUG("Segmenting depth image");
-    robot_center_[0].x = 192;
-    robot_center_[0].y = 216;
+    robot_coordinates_[0].robot_center_.x = 192;
+    robot_coordinates_[0].robot_center_.y = 216;
+    robot_coordinates_[0].robot_corner_[0].x = 170;
+    robot_coordinates_[0].robot_corner_[0].y = 192;
+    robot_coordinates_[0].robot_corner_[1].x = 214;
+    robot_coordinates_[0].robot_corner_[1].y = 194;
+    robot_coordinates_[0].robot_corner_[2].x = 168;
+    robot_coordinates_[0].robot_corner_[2].y = 240;
+    robot_coordinates_[0].robot_corner_[3].x = 214;
+    robot_coordinates_[0].robot_corner_[3].y = 240;
 }
 
 /**
@@ -111,7 +119,11 @@ void Vision::segmentDepth()
 void Vision::segmentImage()
 {
     ROS_DEBUG("Segmenting rgb image");
-    cv::circle(rgb_frame_.image, robot_center_[0], 35, cv::Scalar(250, 250, 250));
+    cv::circle(rgb_frame_.image, robot_coordinates_[0].robot_center_, 5, cv::Scalar(250, 250, 250));
+    cv::circle(rgb_frame_.image, robot_coordinates_[0].robot_corner_[0], 5, cv::Scalar(250, 250, 250));
+    cv::circle(rgb_frame_.image, robot_coordinates_[0].robot_corner_[1], 5, cv::Scalar(250, 250, 250));
+    cv::circle(rgb_frame_.image, robot_coordinates_[0].robot_corner_[2], 5, cv::Scalar(250, 250, 250));
+    cv::circle(rgb_frame_.image, robot_coordinates_[0].robot_corner_[3], 5, cv::Scalar(250, 250, 250));
     cv::imshow("image", rgb_frame_.image);
     cv::waitKey(3);
 }
