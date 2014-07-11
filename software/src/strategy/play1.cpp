@@ -1,6 +1,10 @@
+<<<<<<< HEAD
  #include "play1.hpp"
+=======
+#include <unball/strategy/play1.hpp>
+>>>>>>> 895d8ae16e50b53ce0f387673f91012dc3baa3a4
 #include <ros/ros.h>
-#include "action_controller.hpp" // ActionControler action_controller;
+#include <unball/strategy/action_controller.hpp> // ActionControler action_controller;
 
 Play1::Play1() : Play()
 {

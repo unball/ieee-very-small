@@ -16,9 +16,10 @@
 #include <ros/ros.h>
 #include <image_transport/image_transport.h>
 #include <sensor_msgs/image_encodings.h>
+#include <iostream>
 
-#include "unball/VisionMessage.h"
-#include "vision.hpp"
+#include <unball/VisionMessage.h>
+#include <unball/vision/vision.hpp>
 
 Vision vision;
 
@@ -33,19 +34,14 @@ int main(int argc, char **argv)
     image_transport::ImageTransport it(n);
     ros::Rate loop_rate(10);
     
-    image_transport::Subscriber rgb_sub = it.subscribe("camera/rgb/image_raw", 1, receiveCameraFrame);
+//    image_transport::Subscriber rgb_sub = it.subscribe("camera/rgb/image_raw", 1, receiveCameraFrame);
     image_transport::Subscriber depth_sub = it.subscribe("camera/depth/image_raw", 1, receiveCameraFrame);
     ros::Publisher publisher = n.advertise<unball::VisionMessage>("vision_topic", 1000);
     
     while (ros::ok())
     {
-        if (!vision.has_field_center_)
-            vision.findFieldCenter();
-        else
-            vision.run();
-        
+        vision.run();
         publishRobotsLocations(publisher);
-        
         ros::spinOnce();
         loop_rate.sleep();
     }
@@ -97,12 +93,19 @@ void receiveCameraFrame(const sensor_msgs::ImageConstPtr& msg)
         ROS_ERROR("cv_ptr error: invalid image frame received");
         exit(1);
     }
+    std::cout << cv_ptr->encoding << std::endl;
+    cv::imshow("depth image", cv_ptr->image);
+    cv::waitKey(3);
     
-    if (cv_ptr->encoding == sensor_msgs::image_encodings::BGR8)
-        vision.setCameraFrame(*cv_ptr, Vision::RGB_IMAGE);
-    else if (cv_ptr->encoding == sensor_msgs::image_encodings::MONO8)
+    // For testing, this node is only receiving the depth images.
+    
+//    if (cv_ptr->encoding == sensor_msgs::image_encodings::BGR8)
+//        vision.setCameraFrame(*cv_ptr, Vision::RGB_IMAGE);
+//    else if (cv_ptr->encoding == sensor_msgs::image_encodings::MONO8)
+//    {
         vision.setCameraFrame(*cv_ptr, Vision::DEPTH_IMAGE);
-    else 
-        ROS_ERROR("Error: invalid image encoding.");
+//    }
+//    else 
+//        ROS_ERROR("Error: invalid image encoding.");
 }
 

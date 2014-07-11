@@ -10,9 +10,9 @@
  * Implements robots actions for strategy
  */
 
-#include "action_controller.hpp"
+#include <unball/strategy/action_controller.hpp>
 #include <ros/ros.h>
-#include "robot.hpp" // Robot robot[6];
+#include <unball/strategy/robot.hpp> // Robot robot[6];
 
 /**
  * Action controller global object

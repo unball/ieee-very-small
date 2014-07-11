@@ -58,6 +58,8 @@ int main(int argc, char **argv)
     // Set rgb and depth frame encoding
     rgb_frame.encoding = sensor_msgs::image_encodings::BGR8;
     depth_frame.encoding = sensor_msgs::image_encodings::MONO8;
+    
+    // Set rgb and depth frame header
 
     // Retrieve amount of frames on the video
     num_frames = rgb_cap.get(CV_CAP_PROP_FRAME_COUNT);
@@ -71,6 +73,10 @@ int main(int argc, char **argv)
         rgb_cap >> rgb_frame.image; // Get a new frame from the rgb video capture
         depth_cap >> depth_frame.image; // Get a new frame from the depth video capture
         rgb_pub.publish(rgb_frame.toImageMsg());
+        
+        cv::imshow("depth image", depth_frame.image);
+        cv::waitKey(3);        
+        
         depth_pub.publish(depth_frame.toImageMsg());
         ros::spinOnce();
         loop_rate.sleep();

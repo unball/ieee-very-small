@@ -10,7 +10,7 @@
  * Implements ball methods for strategy
  */
 
-#include "ball.hpp"
+#include <unball/strategy/ball.hpp>
 #include <cmath>
 #include <ros/ros.h>
 
