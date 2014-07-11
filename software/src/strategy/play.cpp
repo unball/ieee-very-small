@@ -10,7 +10,7 @@
  * Implements the methods that all plays must have
  */
 
-#include "play.hpp"
+#include <unball/strategy/play.hpp>
 
 Play::Play()
 {

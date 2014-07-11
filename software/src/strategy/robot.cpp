@@ -10,7 +10,7 @@
  * Implements robots for strategy
  */
 
-#include "robot.hpp"
+#include <unball/strategy/robot.hpp>
 #include <cmath>
 #include <ros/ros.h>
 

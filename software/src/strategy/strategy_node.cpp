@@ -15,12 +15,12 @@
 
 #include <ros/ros.h>
 
-#include "unball/VisionMessage.h"
-#include "unball/StrategyMessage.h"
-#include "unball/StrategyControlMessage.h"
-#include "strategy.hpp" // Strategy strategy;
-#include "robot.hpp" // Robot robot[6];
-#include "ball.hpp" // Ball ball;
+#include <unball/VisionMessage.h>
+#include <unball/StrategyMessage.h>
+#include <unball/StrategyControlMessage.h>
+#include <unball/strategy/strategy.hpp> // Strategy strategy;
+#include <unball/strategy/robot.hpp> // Robot robot[6];
+#include <unball/strategy/ball.hpp> // Ball ball;
 
 void initRobotsPoses();
 void publishRobotsVelocities(ros::Publisher &publisher);
