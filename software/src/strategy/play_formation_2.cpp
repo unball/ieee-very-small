@@ -2,24 +2,29 @@
 #include <ros/ros.h>
 #include "action_controller.hpp" // ActionControler action_controller;
 
-bool PlayFormation2::run()
+PlayFormation2::PlayFormation2() : Play()
 {
-    ROS_INFO("PLAY FORMATION 2 RUN");
-    
-    for (int i = 0; i < 6; ++i)
+	play_name_ = "PLAY FORMATION 2";
+}
+
+void PlayFormation2::initialRosMessage()
+{
+	ROS_INFO("PLAY FORMATION 2 RUN");
+}
+
+void PlayFormation2::setUnfinishedActions()
+{
+    if (robots_action_finished_[3] && robots_action_finished_[4])
     {
-        if (action_controller.hasRobotFinished(i))
-            this->robots_action_finished_[i] = true;
+        robots_action_finished_[3] = false;
+        robots_action_finished_[4] = false;
+        ++play_state_;
     }
-    
-    if (this->robots_action_finished_[3] && this->robots_action_finished_[4])
-    {
-        this->robots_action_finished_[3] = false;
-        this->robots_action_finished_[4] = false;
-        ++this->play_state_;
-    }
-    
-    switch (this->play_state_)
+}
+
+bool PlayFormation2::act()
+{
+    switch (play_state_)
     {
         // force initial stop (in case the last play was interrupted)
         case 0:
@@ -39,9 +44,9 @@ bool PlayFormation2::run()
             break;
         default:
             ROS_INFO("PLAY FORMATION 2 FINISHED");
-            this->play_state_ = 0; // Reseting play state for the next time the play is called
+            play_state_ = 0; // Reseting play state for the next time the play is called
             return true;
     }
     
-    return false;
+    return false;	
 }

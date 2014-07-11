@@ -2,12 +2,21 @@
 #include <ros/ros.h>
 #include "action_controller.hpp" // ActionControler action_controller;
 
-bool PlayStop::run()
+PlayStop::PlayStop()
 {
-    ROS_INFO("PLAY STOP");
-    
-    for (int i = 0; i < 6; ++i)
-        action_controller.stop(i);
-    
+	play_name_ = "PLAY STOP";
+}
+
+void PlayStop::initialRosMessage()
+{
+	ROS_INFO("PLAY STOP RUN");
+}
+
+void PlayStop::setUnfinishedActions() {}
+
+bool PlayStop::act()
+{
+	for (int i = 0; i < 6; ++i)
+		action_controller.stop(i);
     return true;
 }

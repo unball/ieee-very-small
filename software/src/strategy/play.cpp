@@ -6,11 +6,10 @@
  * @attention Copyright (C) 2014 UnBall Robot Soccer Team
  *
  * @brief  play class
- *
- * Implements the methods that all plays must have
  */
 
 #include "play.hpp"
+#include <ros/ros.h>
 
 Play::Play()
 {
@@ -19,7 +18,31 @@ Play::Play()
      * indicating that no action was completed yet.
      */
     for (int i = 0; i < 6; ++i)
-        this->robots_action_finished_[i] = false;
+        robots_action_finished_[i] = false;
     
-    this->play_state_ = INITIAL_PLAY_STATE;
+    play_state_ = INITIAL_PLAY_STATE;
+}
+
+/**
+ * Implements the basic structure the plays must follow.
+ */
+bool Play::run()
+{
+	initialRosMessage();
+    
+    // finish the action of all robots that have ended their actions
+    for (int i = 0; i < 6; ++i)
+		finishRobotAction(i);
+	// for those who have not finished their actions yet, set action_finished_ to false
+	setUnfinishedActions();
+	return act();
+}
+
+/**
+ * Finish the action of the robot if the actionController says it should finish
+ */
+void Play::finishRobotAction(int i)
+{
+    if (action_controller.hasRobotFinished(i))
+		robots_action_finished_[i] = true;
 }

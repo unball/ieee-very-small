@@ -16,7 +16,11 @@
 class PlayStop : public Play
 {
   public:
-    virtual bool run();
+	PlayStop();
+  private:
+	void initialRosMessage();
+	void setUnfinishedActions();
+	bool act();
 };
 
 #endif  // UNBALL_PLAY_STOP_H_

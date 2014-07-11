@@ -18,7 +18,11 @@
 class PlayFormation1 : public Play
 {
   public:
-    virtual bool run();
+	PlayFormation1();
+  private:
+	void initialRosMessage();
+	void setUnfinishedActions();
+	bool act();
 };
 
 #endif  // UNBALL_PLAY_FORMATION_1_H_

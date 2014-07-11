@@ -18,7 +18,11 @@
 class Play1 : public Play
 {
   public:
-    virtual bool run();
+	Play1();
+  private:
+	void initialRosMessage();
+	void setUnfinishedActions();
+	bool act();
 };
 
 #endif  // UNBALL_PLAY1_H_

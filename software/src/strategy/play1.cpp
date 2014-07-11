@@ -1,26 +1,32 @@
-#include "play1.hpp"
+ #include "play1.hpp"
 #include <ros/ros.h>
 #include "action_controller.hpp" // ActionControler action_controller;
 
-bool Play1::run()
+Play1::Play1() : Play()
 {
-    ROS_INFO("PLAY 1 RUN");
-    
-    for (int i = 0; i < 6; ++i)
+	play_name_ = "PLAY 1";
+}
+
+void Play1::initialRosMessage()
+{
+	ROS_INFO("PLAY 1 RUN");
+}
+
+void Play1::setUnfinishedActions()
+{
+	if (robots_action_finished_[3] && robots_action_finished_[4])
     {
-        if (action_controller.hasRobotFinished(i))
-            this->robots_action_finished_[i] = true;
+        robots_action_finished_[3] = false;
+        robots_action_finished_[4] = false;
+        ++play_state_;
     }
-    
-    if (this->robots_action_finished_[3] && this->robots_action_finished_[4])
+}
+
+bool Play1::act()
+{
+    switch (play_state_)
     {
-        this->robots_action_finished_[3] = false;
-        this->robots_action_finished_[4] = false;
-        ++this->play_state_;
-    }
-    
-    switch (this->play_state_)
-    {
+		// force initial stop (in case the last play was interrupted)
         case 0:
             ROS_INFO("PLAY 1 STATE 0");
             action_controller.stop(3);
@@ -37,7 +43,7 @@ bool Play1::run()
             break;
         default:
             ROS_INFO("PLAY 1 FINISHED");
-            this->play_state_ = 0; // Reseting play state for the next time the play is called
+            play_state_ = 0; // Reseting play state for the next time the play is called
             return true;
     }
     
