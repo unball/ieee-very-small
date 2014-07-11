@@ -11,7 +11,7 @@
  * Implements computer vision algorithms
  */
 
-#include "vision.hpp"
+#include <unball/vision/vision.hpp>
 
 #include <ros/ros.h>
 
@@ -35,8 +35,6 @@ void Vision::run()
         return;
     }
     
-    cv::imshow("depth image", depth_frame_.image);
-    cv::waitKey(3);
     if (!has_field_center_) findFieldCenter();
     
     // Still to be implemented

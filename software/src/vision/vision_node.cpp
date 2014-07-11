@@ -16,9 +16,10 @@
 #include <ros/ros.h>
 #include <image_transport/image_transport.h>
 #include <sensor_msgs/image_encodings.h>
+#include <iostream>
 
-#include "unball/VisionMessage.h"
-#include "vision.hpp"
+#include <unball/VisionMessage.h>
+#include <unball/vision/vision.hpp>
 
 Vision vision;
 
@@ -79,7 +80,7 @@ void receiveCameraFrame(const sensor_msgs::ImageConstPtr& msg)
     cv_bridge::CvImagePtr cv_ptr;
     try 
     {
-        cv_ptr = cv_bridge::toCvCopy(msg, sensor_msgs::image_encodings::MONO8);
+        cv_ptr = cv_bridge::toCvCopy(msg);
     }
     catch (cv_bridge::Exception& e)
     {
@@ -92,6 +93,9 @@ void receiveCameraFrame(const sensor_msgs::ImageConstPtr& msg)
         ROS_ERROR("cv_ptr error: invalid image frame received");
         exit(1);
     }
+    std::cout << cv_ptr->encoding << std::endl;
+    cv::imshow("depth image", cv_ptr->image);
+    cv::waitKey(3);
     
     // For testing, this node is only receiving the depth images.
     
