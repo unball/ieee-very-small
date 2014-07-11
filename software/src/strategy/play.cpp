@@ -8,12 +8,8 @@
  * @brief  play class
  */
 
-<<<<<<< HEAD
-#include "play.hpp"
 #include <ros/ros.h>
-=======
 #include <unball/strategy/play.hpp>
->>>>>>> 895d8ae16e50b53ce0f387673f91012dc3baa3a4
 
 Play::Play()
 {
