@@ -71,6 +71,11 @@ int main(int argc, char **argv)
         rgb_cap >> rgb_frame.image; // Get a new frame from the rgb video capture
         depth_cap >> depth_frame.image; // Get a new frame from the depth video capture
         rgb_pub.publish(rgb_frame.toImageMsg());
+        //depth_frame.encoding = sensor_msgs::image_encodings::MONO8;
+        
+        cv::imshow("depth image", depth_frame.image);
+        cv::waitKey(3);        
+        
         depth_pub.publish(depth_frame.toImageMsg());
         ros::spinOnce();
         loop_rate.sleep();
