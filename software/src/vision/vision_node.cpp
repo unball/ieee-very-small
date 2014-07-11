@@ -33,19 +33,14 @@ int main(int argc, char **argv)
     image_transport::ImageTransport it(n);
     ros::Rate loop_rate(10);
     
-    image_transport::Subscriber rgb_sub = it.subscribe("camera/rgb/image_raw", 1, receiveCameraFrame);
+//    image_transport::Subscriber rgb_sub = it.subscribe("camera/rgb/image_raw", 1, receiveCameraFrame);
     image_transport::Subscriber depth_sub = it.subscribe("camera/depth/image_raw", 1, receiveCameraFrame);
     ros::Publisher publisher = n.advertise<unball::VisionMessage>("vision_topic", 1000);
     
     while (ros::ok())
     {
-        if (!vision.has_field_center_)
-            vision.findFieldCenter();
-        else
-            vision.run();
-        
+        vision.run();
         publishRobotsLocations(publisher);
-        
         ros::spinOnce();
         loop_rate.sleep();
     }
@@ -84,7 +79,7 @@ void receiveCameraFrame(const sensor_msgs::ImageConstPtr& msg)
     cv_bridge::CvImagePtr cv_ptr;
     try 
     {
-        cv_ptr = cv_bridge::toCvCopy(msg);
+        cv_ptr = cv_bridge::toCvCopy(msg, sensor_msgs::image_encodings::MONO8);
     }
     catch (cv_bridge::Exception& e)
     {
@@ -98,11 +93,15 @@ void receiveCameraFrame(const sensor_msgs::ImageConstPtr& msg)
         exit(1);
     }
     
-    if (cv_ptr->encoding == sensor_msgs::image_encodings::BGR8)
-        vision.setCameraFrame(*cv_ptr, Vision::RGB_IMAGE);
-    else if (cv_ptr->encoding == sensor_msgs::image_encodings::MONO8)
+    // For testing, this node is only receiving the depth images.
+    
+//    if (cv_ptr->encoding == sensor_msgs::image_encodings::BGR8)
+//        vision.setCameraFrame(*cv_ptr, Vision::RGB_IMAGE);
+//    else if (cv_ptr->encoding == sensor_msgs::image_encodings::MONO8)
+//    {
         vision.setCameraFrame(*cv_ptr, Vision::DEPTH_IMAGE);
-    else 
-        ROS_ERROR("Error: invalid image encoding.");
+//    }
+//    else 
+//        ROS_ERROR("Error: invalid image encoding.");
 }
 

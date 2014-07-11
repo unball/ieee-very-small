@@ -29,18 +29,19 @@ void Vision::run()
 {
     ROS_DEBUG("Run vision");
     
-    if (rgb_frame_.image.rows == 0 && rgb_frame_.image.cols == 0)
+    if (depth_frame_.image.rows == 0 && depth_frame_.image.cols == 0)
     {
         ROS_WARN("No image on camera_frame_. Nothing to do here.");
         return;
     }
     
+    cv::imshow("depth image", depth_frame_.image);
+    cv::waitKey(3);
+    if (!has_field_center_) findFieldCenter();
+    
+    // Still to be implemented
     segmentDepth();
     segmentImage();
-    for (int i = 0; i < 6; i++)
-    {
-        findAngle(i);
-    }
 }
 
 /**
@@ -82,13 +83,7 @@ float Vision::getRobotLocation(int robot_number)
  */
 void Vision::findFieldCenter()
 {
-    ROS_DEBUG("Find the field center");
-    
-    if (rgb_frame_.image.rows == 0 && rgb_frame_.image.cols == 0)
-    {
-        ROS_WARN("No image on camera_frame_. Nothing to do here.");
-        return;
-    }
+    ROS_DEBUG("Finding the field center");
     
     has_field_center_ = true;
 }
@@ -100,16 +95,6 @@ void Vision::findFieldCenter()
 void Vision::segmentDepth()
 {
     ROS_DEBUG("Segmenting depth image");
-    robot_coordinates_[0].robot_center_.x = 192;
-    robot_coordinates_[0].robot_center_.y = 216;
-    robot_coordinates_[0].robot_corner_[0].x = 170;
-    robot_coordinates_[0].robot_corner_[0].y = 192;
-    robot_coordinates_[0].robot_corner_[1].x = 214;
-    robot_coordinates_[0].robot_corner_[1].y = 194;
-    robot_coordinates_[0].robot_corner_[2].x = 168;
-    robot_coordinates_[0].robot_corner_[2].y = 240;
-    robot_coordinates_[0].robot_corner_[3].x = 214;
-    robot_coordinates_[0].robot_corner_[3].y = 240;
 }
 
 /**
@@ -119,13 +104,6 @@ void Vision::segmentDepth()
 void Vision::segmentImage()
 {
     ROS_DEBUG("Segmenting rgb image");
-    cv::circle(rgb_frame_.image, robot_coordinates_[0].robot_center_, 5, cv::Scalar(250, 250, 250));
-    cv::circle(rgb_frame_.image, robot_coordinates_[0].robot_corner_[0], 5, cv::Scalar(250, 250, 250));
-    cv::circle(rgb_frame_.image, robot_coordinates_[0].robot_corner_[1], 5, cv::Scalar(250, 250, 250));
-    cv::circle(rgb_frame_.image, robot_coordinates_[0].robot_corner_[2], 5, cv::Scalar(250, 250, 250));
-    cv::circle(rgb_frame_.image, robot_coordinates_[0].robot_corner_[3], 5, cv::Scalar(250, 250, 250));
-    cv::imshow("image", rgb_frame_.image);
-    cv::waitKey(3);
 }
 
 /**
