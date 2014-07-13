@@ -54,14 +54,14 @@ void Vision::setCameraFrame(cv_bridge::CvImage camera_frame, int image_type)
     switch(image_type)
     {
         case Vision::RGB_IMAGE:
-            this->rgb_frame_.header = camera_frame.header;
-            this->rgb_frame_.encoding = camera_frame.encoding;
-            camera_frame.image.copyTo(this->rgb_frame_.image);
+            rgb_frame_.header = camera_frame.header;
+            rgb_frame_.encoding = camera_frame.encoding;
+            camera_frame.image.copyTo(rgb_frame_.image);
             break;
         case Vision::DEPTH_IMAGE:
-            this->depth_frame_.header = camera_frame.header;
-            this->depth_frame_.encoding = camera_frame.encoding;
-            camera_frame.image.copyTo(this->depth_frame_.image);
+            depth_frame_.header = camera_frame.header;
+            depth_frame_.encoding = camera_frame.encoding;
+            camera_frame.image.copyTo(depth_frame_.image);
             break;
         default:
             ROS_ERROR("Invalid image type");
@@ -72,7 +72,7 @@ void Vision::setCameraFrame(cv_bridge::CvImage camera_frame, int image_type)
 float Vision::getRobotLocation(int robot_number)
 {
     ROS_DEBUG("Get robot %d location", robot_number);
-    return this->robot_location_[robot_number];
+    return robot_location_[robot_number];
 }
 
 /**

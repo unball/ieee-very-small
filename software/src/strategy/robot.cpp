@@ -21,65 +21,65 @@ Robot robot[6];
 
 Robot::Robot()
 {
-    this->x_ = 0;
-    this->y_ = 0;
-    this->th_ = 0;
-    this->lin_vel_ = 0;
-    this->ang_vel_ = 0;
-    this->motion_state_ = STOP;
-    this->previous_motion_state_ = UNDEFINED;
+    x_ = 0;
+    y_ = 0;
+    th_ = 0;
+    lin_vel_ = 0;
+    ang_vel_ = 0;
+    motion_state_ = STOP;
+    previous_motion_state_ = UNDEFINED;
 }
 
 float Robot::getX()
 {
-    return this->x_;
+    return x_;
 }
 
 float Robot::getY()
 {
-    return this->y_;
+    return y_;
 }
 
 float Robot::getTh()
 {
-    return this->th_;
+    return th_;
 }
 
 float Robot::getLinVel()
 {
-    return this->lin_vel_;
+    return lin_vel_;
 }
 
 float Robot::getAngVel()
 {
-    return this->ang_vel_;
+    return ang_vel_;
 }
 
 MotionState Robot::getMotionState()
 {
-    return this->motion_state_;
+    return motion_state_;
 }
 
 MotionState Robot::getPreviousMotionState()
 {
-    return this->previous_motion_state_;
+    return previous_motion_state_;
 }
 
 void Robot::setPosition(float x, float y)
 {
-    this->x_ = x;
-    this->y_ = y;
+    x_ = x;
+    y_ = y;
 }
 
 void Robot::setTh(float th)
 {
-    this->th_ = th;
+    th_ = th;
 }
 
 void Robot::setPose(float x, float y, float th)
 {
-    this->setPosition(x, y);
-    this->setTh(th);
+    setPosition(x, y);
+    setTh(th);
 }
 
 /**
@@ -88,8 +88,8 @@ void Robot::setPose(float x, float y, float th)
  */
 void Robot::setLinVel(float lin_vel)
 {
-    lin_vel = this->saturate(lin_vel, ROBOT_SATURATION_LIN_VEL);
-    this->lin_vel_ = lin_vel;
+    lin_vel = saturate(lin_vel, ROBOT_SATURATION_LIN_VEL);
+    lin_vel_ = lin_vel;
 }
 
 /**
@@ -98,18 +98,18 @@ void Robot::setLinVel(float lin_vel)
  */
 void Robot::setAngVel(float ang_vel)
 {
-    ang_vel = this->saturate(ang_vel, ROBOT_SATURATION_ANG_VEL);
-    this->ang_vel_ = ang_vel;
+    ang_vel = saturate(ang_vel, ROBOT_SATURATION_ANG_VEL);
+    ang_vel_ = ang_vel;
 }
 
 void Robot::setMotionState(MotionState motion_state)
 {
-    this->motion_state_ = motion_state;
+    motion_state_ = motion_state;
 }
 
 void Robot::setPreviousMotionState(MotionState previous_motion_state)
 {
-    this->previous_motion_state_ = previous_motion_state;
+    previous_motion_state_ = previous_motion_state;
 }
 
 /**
@@ -118,10 +118,10 @@ void Robot::setPreviousMotionState(MotionState previous_motion_state)
  */
 bool Robot::hasMotionStateChanged()
 {
-    if (this->previous_motion_state_ == UNDEFINED)
+    if (previous_motion_state_ == UNDEFINED)
         return false;
     
-    return (this->previous_motion_state_ != this->motion_state_);
+    return (previous_motion_state_ != motion_state_);
 }
 
 /**
@@ -163,8 +163,8 @@ float Robot::reduceAngle(float angle)
  */
 float Robot::calculateDistance(float x, float y)
 {
-    float dx = this->getX() - x;
-    float dy = this->getY() - y;
+    float dx = getX() - x;
+    float dy = getY() - y;
     return sqrt(pow(dx, 2) + pow(dy, 2));
 }
 
@@ -176,7 +176,7 @@ float Robot::calculateDistance(float x, float y)
  */
 float Robot::calculateAngle(float x, float y)
 {
-    float dx = this->getX() - x;
-    float dy = this->getY() - y;
+    float dx = getX() - x;
+    float dy = getY() - y;
     return atan2(dy, dx);
 }

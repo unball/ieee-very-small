@@ -37,16 +37,16 @@ void ActionController::run()
         switch (robot[i].getMotionState())
         {
             case STOP:
-                has_action_finished = this->executeStop(i);
+                has_action_finished = executeStop(i);
                 break;
             case MOVE:
-                has_action_finished = this->executeMove(i);
+                has_action_finished = executeMove(i);
                 break;
             case LOOK_AT:
-                has_action_finished = this->executeLookAt(i);
+                has_action_finished = executeLookAt(i);
                 break;
             case GO_TO:
-                has_action_finished = this->executeGoTo(i);
+                has_action_finished = executeGoTo(i);
                 break;
         }
         
@@ -98,9 +98,9 @@ void ActionController::move(int robot_number, float distance)
 {
     if (robot[robot_number].getMotionState() != MOVE)
     {
-        this->move_distance_[robot_number] = distance;
-        this->move_initial_x_[robot_number] = robot[robot_number].getX();
-        this->move_initial_y_[robot_number] = robot[robot_number].getY();
+        move_distance_[robot_number] = distance;
+        move_initial_x_[robot_number] = robot[robot_number].getX();
+        move_initial_y_[robot_number] = robot[robot_number].getY();
         robot[robot_number].setMotionState(MOVE);
     }
 }
@@ -115,10 +115,10 @@ bool ActionController::executeMove(int robot_number)
 {
     const float tolerance = 0.02; // 2 cm
     
-    float travelled_distance = robot[robot_number].calculateDistance(this->move_initial_x_[robot_number],
-                                                                     this->move_initial_y_[robot_number]);
-    float error = fabs(this->move_distance_[robot_number]) - travelled_distance;
-    float vel = (this->move_distance_[robot_number] >= 0) ? 1 : -1;
+    float travelled_distance = robot[robot_number].calculateDistance(move_initial_x_[robot_number],
+                                                                     move_initial_y_[robot_number]);
+    float error = fabs(move_distance_[robot_number]) - travelled_distance;
+    float vel = (move_distance_[robot_number] >= 0) ? 1 : -1;
     
     if (error > tolerance)
     {
@@ -143,8 +143,8 @@ void ActionController::lookAt(int robot_number, float x, float y)
 {
     if (robot[robot_number].getMotionState() != LOOK_AT)
     {
-        this->look_at_x_[robot_number] = x;
-        this->look_at_y_[robot_number] = y;
+        look_at_x_[robot_number] = x;
+        look_at_y_[robot_number] = y;
         robot[robot_number].setMotionState(LOOK_AT);
     }
 }
@@ -159,7 +159,7 @@ bool ActionController::executeLookAt(int robot_number)
 {
     const float tolerance = 0.1; // ~ 5.72 degrees
     
-    float target_angle = robot[robot_number].calculateAngle(this->look_at_x_[robot_number], this->look_at_y_[robot_number]);
+    float target_angle = robot[robot_number].calculateAngle(look_at_x_[robot_number], look_at_y_[robot_number]);
     float error = robot[robot_number].reduceAngle(robot[robot_number].getTh() - target_angle);
     float vel = (error > 0) ? 0.05 : -0.05;
     
@@ -186,12 +186,12 @@ void ActionController::goTo(int robot_number, float x, float y)
 {
     if (robot[robot_number].getMotionState() != GO_TO)
     {
-        this->go_to_x_[robot_number] = x;
-        this->go_to_y_[robot_number] = y;
-        this->go_to_error_dist_i_[robot_number] = 0.0;
-        this->go_to_error_dist_d_[robot_number] = 0.0;
-        this->go_to_error_ang_i_[robot_number] = 0.0;
-        this->go_to_error_ang_d_[robot_number] = 0.0;
+        go_to_x_[robot_number] = x;
+        go_to_y_[robot_number] = y;
+        go_to_error_dist_i_[robot_number] = 0.0;
+        go_to_error_dist_d_[robot_number] = 0.0;
+        go_to_error_ang_i_[robot_number] = 0.0;
+        go_to_error_ang_d_[robot_number] = 0.0;
         robot[robot_number].setMotionState(GO_TO);
     }
 }
@@ -212,19 +212,19 @@ bool ActionController::executeGoTo(int robot_number)
     
     const float distance_tolerance = 0.05; // m
     
-    float target_angle = robot[robot_number].calculateAngle(this->go_to_x_[robot_number], this->go_to_y_[robot_number]);
-    float distance_error = robot[robot_number].calculateDistance(this->go_to_x_[robot_number], this->go_to_y_[robot_number]);
+    float target_angle = robot[robot_number].calculateAngle(go_to_x_[robot_number], go_to_y_[robot_number]);
+    float distance_error = robot[robot_number].calculateDistance(go_to_x_[robot_number], go_to_y_[robot_number]);
     float angle_error = robot[robot_number].reduceAngle(robot[robot_number].getTh() - target_angle);
-    float ang_vel = ANG_KP*(angle_error + (angle_error - ANG_KD*this->go_to_error_ang_d_[robot_number])); // PD control
-    float lin_vel = DIST_KP*distance_error + DIST_KD*this->go_to_error_dist_i_[robot_number]; // PD control
+    float ang_vel = ANG_KP*(angle_error + (angle_error - ANG_KD*go_to_error_ang_d_[robot_number])); // PD control
+    float lin_vel = DIST_KP*distance_error + DIST_KD*go_to_error_dist_i_[robot_number]; // PD control
     
     // Distance I and D error
-    this->go_to_error_dist_i_[robot_number] += distance_error;
-    this->go_to_error_dist_d_[robot_number] = distance_error;
+    go_to_error_dist_i_[robot_number] += distance_error;
+    go_to_error_dist_d_[robot_number] = distance_error;
     
     // Angle I and D error
-    this->go_to_error_ang_i_[robot_number] += angle_error;
-    this->go_to_error_ang_d_[robot_number] = angle_error;
+    go_to_error_ang_i_[robot_number] += angle_error;
+    go_to_error_ang_d_[robot_number] = angle_error;
 
     if (distance_error > distance_tolerance)
     {

@@ -21,64 +21,64 @@ Ball ball;
 
 Ball::Ball()
 {
-    this->x_ = 0;
-    this->y_ = 0;
-    this->vel_x_ = 0;
-    this->vel_y_ = 0;
-    this->vel_abs_ = 0;
-    this->vel_angle_ = 0;
+    x_ = 0;
+    y_ = 0;
+    vel_x_ = 0;
+    vel_y_ = 0;
+    vel_abs_ = 0;
+    vel_angle_ = 0;
 }
 
 float Ball::getX()
 {
-    return this->x_;
+    return x_;
 }
 
 float Ball::getY()
 {
-    return this->y_;
+    return y_;
 }
 
 float Ball::getVelX()
 {
-    return this->vel_x_;
+    return vel_x_;
 }
 
 float Ball::getVelY()
 {
-    return this->vel_y_;
+    return vel_y_;
 }
 
 float Ball::getVelAbs()
 {
-    return this->vel_abs_;
+    return vel_abs_;
 }
 
 float Ball::getVelAngle()
 {
-    return this->vel_angle_;
+    return vel_angle_;
 }
 
 void Ball::setPosition(float x, float y)
 {
-    this->x_ = x;
-    this->y_ = y;
+    x_ = x;
+    y_ = y;
 }
 
 void Ball::setVel(float vel_x, float vel_y)
 {
-    this->vel_x_ = vel_x;
-    this->vel_y_ = vel_y;
+    vel_x_ = vel_x;
+    vel_y_ = vel_y;
 }
 
 void Ball::setVelAbs(float vel_abs)
 {
-    this->vel_abs_ = vel_abs;
+    vel_abs_ = vel_abs;
 }
 
 void Ball::setVelAngle(float vel_angle)
 {
-    this->vel_angle_ = vel_angle;
+    vel_angle_ = vel_angle;
 }
 
 /**
@@ -92,17 +92,17 @@ void Ball::update(float x, float y)
     ROS_DEBUG("Updating ball position");
     
     // calculate velocities
-    this->setVel(x - this->getX(), y - this->getY());
-    this->setVelAbs(sqrt(pow(this->getVelX(), 2) + pow(this->getVelY(), 2)));
-    this->setVelAngle(atan2(y - this->getY(), x - this->getX()));
+    setVel(x - getX(), y - getY());
+    setVelAbs(sqrt(pow(getVelX(), 2) + pow(getVelY(), 2)));
+    setVelAngle(atan2(y - getY(), x - getX()));
     
     // refresh position
-    this->setPosition(x, y);
+    setPosition(x, y);
     
-    ROS_DEBUG("Ball X = %f", this->getX());
-    ROS_DEBUG("Ball Y = %f", this->getY());
-    ROS_DEBUG("Ball Vel X = %f", this->getVelX());
-    ROS_DEBUG("Ball Vel Y = %f", this->getVelY());
-    ROS_DEBUG("Ball Vel Abs = %f", this->getVelAbs());
-    ROS_DEBUG("Ball Vel Angle = %f", this->getVelAngle()*180.0/M_PI); // printing in deg/s
+    ROS_DEBUG("Ball X = %f", getX());
+    ROS_DEBUG("Ball Y = %f", getY());
+    ROS_DEBUG("Ball Vel X = %f", getVelX());
+    ROS_DEBUG("Ball Vel Y = %f", getVelY());
+    ROS_DEBUG("Ball Vel Abs = %f", getVelAbs());
+    ROS_DEBUG("Ball Vel Angle = %f", getVelAngle()*180.0/M_PI); // printing in deg/s
 }
