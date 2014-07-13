@@ -80,7 +80,7 @@ void receiveCameraFrame(const sensor_msgs::ImageConstPtr& msg)
     cv_bridge::CvImagePtr cv_ptr;
     try 
     {
-        cv_ptr = cv_bridge::toCvCopy(msg);
+        cv_ptr = cv_bridge::toCvCopy(msg, "mono8");
     }
     catch (cv_bridge::Exception& e)
     {

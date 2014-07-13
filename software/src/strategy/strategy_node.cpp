@@ -17,7 +17,7 @@
 
 #include <unball/VisionMessage.h>
 #include <unball/StrategyMessage.h>
-#include <unball/StrategyControlMessage.h>
+#include <unball/KeyboardMessage.h>
 #include <unball/strategy/strategy.hpp> // Strategy strategy;
 #include <unball/strategy/robot.hpp> // Robot robot[6];
 #include <unball/strategy/ball.hpp> // Ball ball;
@@ -25,7 +25,7 @@
 void initRobotsPoses();
 void publishRobotsVelocities(ros::Publisher &publisher);
 void receiveVisionMessage(const unball::VisionMessage::ConstPtr &msg);
-void receiveStrategyControlMessage(const unball::StrategyControlMessage::ConstPtr &msg);
+void receiveKeyboardMessage(const unball::KeyboardMessage::ConstPtr &msg);
 
 int main(int argc, char **argv)
 {
@@ -35,7 +35,7 @@ int main(int argc, char **argv)
     ros::Rate loop_rate(5); // Hz
     
     ros::Subscriber sub = n.subscribe("vision_topic", 1, receiveVisionMessage);
-    ros::Subscriber sub2 = n.subscribe("strategy_control_topic", 1, receiveStrategyControlMessage);
+    ros::Subscriber sub2 = n.subscribe("keyboard_topic", 1, receiveKeyboardMessage);
     ros::Publisher publisher = n.advertise<unball::StrategyMessage>("strategy_topic", 1);
     
     initRobotsPoses();
@@ -110,10 +110,10 @@ void receiveVisionMessage(const unball::VisionMessage::ConstPtr &msg)
 }
 
 /**
- * Receives the strategy control message from the keyboard node.
- * @param msg an UnBall strategy control message message pointer.
+ * Receives a key from the keyboard topic.
+ * @param msg a keyboard message pointer.
  */
-void receiveStrategyControlMessage(const unball::StrategyControlMessage::ConstPtr &msg)
+void receiveKeyboardMessage(const unball::KeyboardMessage::ConstPtr &msg)
 {
     ROS_INFO("Received key: %c", msg->key);
     

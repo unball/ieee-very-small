@@ -26,7 +26,7 @@ find_package(freenect_camera REQUIRED)
 add_message_files(DIRECTORY msg FILES
   VisionMessage.msg
   StrategyMessage.msg
-  StrategyControlMessage.msg)
+  KeyboardMessage.msg)
 generate_messages(DEPENDENCIES std_msgs)
 
 catkin_package(
