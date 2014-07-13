@@ -4,12 +4,12 @@
 
 PlayFormation1::PlayFormation1() : Play()
 {
-	play_name_ = "PLAY FORMATION 1";
+    play_name_ = "PLAY FORMATION 1";
 }
 
 void PlayFormation1::initialRosMessage()
 {
-	ROS_INFO("PLAY FORMATION 1 RUN");
+    ROS_INFO("PLAY FORMATION 1 RUN");
 }
 
 void PlayFormation1::setUnfinishedActions()

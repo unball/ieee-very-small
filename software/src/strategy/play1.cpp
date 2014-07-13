@@ -5,17 +5,17 @@
 
 Play1::Play1() : Play()
 {
-	play_name_ = "PLAY 1";
+    play_name_ = "PLAY 1";
 }
 
 void Play1::initialRosMessage()
 {
-	ROS_INFO("PLAY 1 RUN");
+    ROS_INFO("PLAY 1 RUN");
 }
 
 void Play1::setUnfinishedActions()
 {
-	if (robots_action_finished_[3] && robots_action_finished_[4])
+    if (robots_action_finished_[3] && robots_action_finished_[4])
     {
         robots_action_finished_[3] = false;
         robots_action_finished_[4] = false;

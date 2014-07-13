@@ -28,14 +28,14 @@ Play::Play()
  */
 bool Play::run()
 {
-	initialRosMessage();
+    initialRosMessage();
     
     // finish the action of all robots that have ended their actions
-    for (int i = 0; i < 6; ++i)
-		finishRobotAction(i);
-	// for those who have not finished their actions yet, set action_finished_ to false
-	setUnfinishedActions();
-	return act();
+    for (int i = 0; i < 6; ++i)	
+        finishRobotAction(i);
+    // for those who have not finished their actions yet, set action_finished_ to false
+    setUnfinishedActions();
+    return act();
 }
 
 /**
@@ -44,5 +44,5 @@ bool Play::run()
 void Play::finishRobotAction(int i)
 {
     if (action_controller.hasRobotFinished(i))
-		robots_action_finished_[i] = true;
+        robots_action_finished_[i] = true;
 }
