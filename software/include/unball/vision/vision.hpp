@@ -15,6 +15,7 @@
 #define UNBALL_VISION_H_
 
 #include <opencv2/highgui/highgui.hpp>
+ #include <unball/vision/segmenter.hpp>
 #include <unball/vision/gui.hpp>
 
 class Vision
@@ -24,10 +25,11 @@ class Vision
     float getRobotPose(int robot_index);
     void setRGBFrame(cv::Mat rgb_frame);
     void setDepthFrame(cv::Mat depth_frame);
-    void checkFrameSize(cv::Mat frame);
+    bool isValidSize(cv::Mat frame);
     
   private:
     GUI gui_;
+    Segmenter segmenter_;
 
     cv::Mat rgb_frame_;
     cv::Mat depth_frame_;

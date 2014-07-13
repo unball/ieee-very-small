@@ -30,31 +30,44 @@ float Vision::getRobotPose(int robot_number)
 
 void Vision::setRGBFrame(cv::Mat rgb_frame)
 {
-    checkFrameSize(rgb_frame);
-    rgb_frame_ = rgb_frame;
+    if (isValidSize(rgb_frame))
+        rgb_frame_ = rgb_frame;
 }
 
 void Vision::setDepthFrame(cv::Mat depth_frame)
 {
-    checkFrameSize(depth_frame);
-    depth_frame_ = depth_frame;
+    if (isValidSize(depth_frame))
+        depth_frame_ = depth_frame;
 }
 
 /**
- * Check whether a frame has a valid size, i.e., neither the widht nor the height can be zero.
+ * Check whether a frame has a valid size, i.e., neither the width nor the height can be zero.
+ * @param frame Image that will be checked.
+ * @return true is the image has proper size, false otherwise.
  */
-void Vision::checkFrameSize(cv::Mat frame)
+bool Vision::isValidSize(cv::Mat frame)
 {
     if (frame.rows == 0 || frame.cols == 0)
-    {
-        ROS_ERROR("Invalid image frame received");
-        exit(1);
-    }
+        return false;
+    else
+        return true;
 }
 
+/**
+ * Execute vision processing.
+ */
 void Vision::run()
 {
+    cv::Mat mask;
+
     ROS_DEBUG("Run vision");
 
+    // When the frame does not have proper size, there is no need to execute the vision algorithms, since they will
+    // crash. This is not a bug, however, since it can happen when the system is started and no frame has been sent
+    // to the vision yet.
+    if ((not isValidSize(rgb_frame_)) or (not isValidSize(depth_frame_)))
+        return;
+
+    mask = segmenter_.segment(rgb_frame_);
     gui_.show(rgb_frame_);
 }
