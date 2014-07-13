@@ -21,7 +21,7 @@ class Vision
 {
   public:
     void run();
-    float getRobotLocation(int robot_index);
+    float getRobotPose(int robot_index);
     void setRGBFrame(cv::Mat rgb_frame);
     void setDepthFrame(cv::Mat depth_frame);
     void checkFrameSize(cv::Mat frame);
@@ -31,8 +31,6 @@ class Vision
 
     cv::Mat rgb_frame_;
     cv::Mat depth_frame_;
-    
-    float robot_location_[6]; // Final robot location (in centimeters)
 };
 
 #endif // UNBALL_VISION_H_

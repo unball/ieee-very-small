@@ -20,10 +20,12 @@
 #include <unball/vision/vision.hpp>
 #include <ros/ros.h>
 
-float Vision::getRobotLocation(int robot_number)
+/**
+ * TODO (matheus.v.portela@gmail.com): Implement this method to return the robot pose (x, y, theta)
+ */
+float Vision::getRobotPose(int robot_number)
 {
-    ROS_DEBUG("Get robot %d location", robot_number);
-    return robot_location_[robot_number];
+    return 0;
 }
 
 void Vision::setRGBFrame(cv::Mat rgb_frame)

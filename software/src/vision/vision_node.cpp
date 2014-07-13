@@ -22,7 +22,7 @@
 
 Vision vision;
 
-void publishRobotsLocations(ros::Publisher &publisher);
+void publishRobotsPoses(ros::Publisher &publisher);
 void receiveRGBFrame(const sensor_msgs::ImageConstPtr& msg);
 void receiveDepthFrame(const sensor_msgs::ImageConstPtr& msg);
 
@@ -41,7 +41,7 @@ int main(int argc, char **argv)
     while (ros::ok())
     {
         vision.run();
-        publishRobotsLocations(publisher);
+        publishRobotsPoses(publisher);
         ros::spinOnce();
         loop_rate.sleep();
     }
@@ -49,23 +49,17 @@ int main(int argc, char **argv)
 }
 
 /**
- * Publishes the six robots locations to the vision topic.
- * Each location is separated by a space.
- * Example: 0.2 0.4 0.6 0.8 1.0 1.2
- * 
+ * Publishes the six robots poses (x, y, theta) to the vision topic.
  * @param publisher a ROS node publisher.
  */
-void publishRobotsLocations(ros::Publisher &publisher)
+void publishRobotsPoses(ros::Publisher &publisher)
 {
     unball::VisionMessage message;
  
-    ROS_DEBUG("Publishing robots locations");
+    ROS_DEBUG("Publishing robots poses");
 
     for (int i = 0; i < (int)message.x.size(); i++)
-    {
-        ROS_DEBUG("Robot %d: %f", i, vision.getRobotLocation(i));
-        message.x[i] = vision.getRobotLocation(i);
-    }
+        message.x[i] = vision.getRobotPose(i);
     
     publisher.publish(message);
 }

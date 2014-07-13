@@ -6,6 +6,11 @@
  * @attention Copyright (C) 2014 UnBall Robot Soccer Team
  *
  * @brief Definition of GUI for the vision module
+ *
+ * This GUI class deals with the following tasks:
+ * - Show images in proper windows
+ * - Handle mouse input for calibration and training
+ * - Draw circles in the robots positions
  */
 
 #ifndef UNBALL_VISION_GUI_H_
