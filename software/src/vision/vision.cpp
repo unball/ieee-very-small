@@ -8,66 +8,17 @@
  *
  * @brief  Vision class
  *
- * Implements computer vision algorithms
+ * Implements vision, which consists in six parts:
+ * - Homography
+ * - Pre-processing
+ * - Segmentation
+ * - Tracking
+ * - Communication
+ * - GUI
  */
 
 #include <unball/vision/vision.hpp>
-
 #include <ros/ros.h>
-
-Vision::Vision()
-{
-    has_field_center_ = false;
-    robot_coordinates_.resize(6);
-}
-
-/**
- * Segments the depth and rgb images, and finds all the necessary data
- * from the state of the game.
- */
-void Vision::run()
-{
-    ROS_DEBUG("Run vision");
-    
-    if (depth_frame_.image.rows == 0 && depth_frame_.image.cols == 0)
-    {
-        ROS_WARN("No image on camera_frame_. Nothing to do here.");
-        return;
-    }
-    
-    if (!has_field_center_) findFieldCenter();
-    
-    // Still to be implemented
-    segmentDepth();
-    segmentImage();
-}
-
-/**
- * Sets both the rgb frame and the depth frame.
- * @param camera_frame The frame to be set.
- * @param image_type Identifier for the image given,
- * either rgb or depth.
- */
-void Vision::setCameraFrame(cv_bridge::CvImage camera_frame, int image_type)
-{
-    ROS_DEBUG("Set camera frame");
-    switch(image_type)
-    {
-        case Vision::RGB_IMAGE:
-            rgb_frame_.header = camera_frame.header;
-            rgb_frame_.encoding = camera_frame.encoding;
-            camera_frame.image.copyTo(rgb_frame_.image);
-            break;
-        case Vision::DEPTH_IMAGE:
-            depth_frame_.header = camera_frame.header;
-            depth_frame_.encoding = camera_frame.encoding;
-            camera_frame.image.copyTo(depth_frame_.image);
-            break;
-        default:
-            ROS_ERROR("Invalid image type");
-            break;
-    } 
-}
 
 float Vision::getRobotLocation(int robot_number)
 {
@@ -75,42 +26,33 @@ float Vision::getRobotLocation(int robot_number)
     return robot_location_[robot_number];
 }
 
-/**
- * Finds the pixel corresponding to the center of the field
- * TODO(gabri.navess@gmail.com): Implement this method properly.
- */
-void Vision::findFieldCenter()
+void Vision::setRGBFrame(cv::Mat rgb_frame)
 {
-    ROS_DEBUG("Finding the field center");
-    
-    has_field_center_ = true;
+    checkFrameSize(rgb_frame);
+    rgb_frame_ = rgb_frame;
+}
+
+void Vision::setDepthFrame(cv::Mat depth_frame)
+{
+    checkFrameSize(depth_frame);
+    depth_frame_ = depth_frame;
 }
 
 /**
- * Segments the deph image and finds the
- * center pixel of all robots and the ball.
+ * Check whether a frame has a valid size, i.e., neither the widht nor the height can be zero.
  */
-void Vision::segmentDepth()
+void Vision::checkFrameSize(cv::Mat frame)
 {
-    ROS_DEBUG("Segmenting depth image");
+    if (frame.rows == 0 || frame.cols == 0)
+    {
+        ROS_ERROR("Invalid image frame received");
+        exit(1);
+    }
 }
 
-/**
- * Segments the rgb image and finds the
- * front pixel of all robots.
- */
-void Vision::segmentImage()
+void Vision::run()
 {
-    ROS_DEBUG("Segmenting rgb image");
-}
+    ROS_DEBUG("Run vision");
 
-/**
- * Uses the information found on the segmentation
- * to determine the angle of a given robot.
- * @param robot_number the number of the robot.
- */
-void Vision::findAngle(int robot_number)
-{
-    ROS_DEBUG("Find %d robot's angle", robot_number);
+    gui_.show(rgb_frame_);
 }
-
