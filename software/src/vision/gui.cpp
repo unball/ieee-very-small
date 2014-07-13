@@ -28,6 +28,7 @@ GUI::~GUI()
  */
 void GUI::show(cv::Mat image)
 {
+    // Check frame size
     if (image.cols == 0 || image.rows == 0)
     {
         ROS_WARN("Cannot show image of size %d x %d", image.cols, image.rows);
@@ -35,5 +36,5 @@ void GUI::show(cv::Mat image)
     }
 
     cv::imshow(window_name_, image);
-    cv::waitKey(1); // 
+    cv::waitKey(1); // Must be called to show images sequentially
 }
