@@ -70,11 +70,11 @@ void depthCallback(const sensor_msgs::ImageConstPtr &msg)
     }
     
     // Normalizes the depth image
-    cv::Mat normed;
-    normalize(cv_ptr->image, normed, 0, 255, cv::NORM_MINMAX, CV_8UC1);
+//    cv::Mat normed;
+//    normalize(cv_ptr->image, normed, 0, 255, cv::NORM_MINMAX, CV_8UC1);
     
     //Update GUI Window
-    cv::imshow(DEPTH_WINDOW, normed);
+    cv::imshow(DEPTH_WINDOW, cv_ptr->image);
     cv::waitKey(1);
 }
 
