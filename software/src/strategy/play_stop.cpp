@@ -7,11 +7,6 @@ PlayStop::PlayStop()
     play_name_ = "PLAY STOP";
 }
 
-void PlayStop::initialRosMessage()
-{
-    ROS_INFO("PLAY STOP RUN");
-}
-
 void PlayStop::setUnfinishedActions() {}
 
 bool PlayStop::act()

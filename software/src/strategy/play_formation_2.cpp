@@ -7,11 +7,6 @@ PlayFormation2::PlayFormation2() : Play()
     play_name_ = "PLAY FORMATION 2";
 }
 
-void PlayFormation2::initialRosMessage()
-{
-    ROS_INFO("PLAY FORMATION 2 RUN");
-}
-
 void PlayFormation2::setUnfinishedActions()
 {
     if (robots_action_finished_[3] && robots_action_finished_[4])

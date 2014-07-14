@@ -28,7 +28,8 @@ class Play
   protected:
 	virtual void setUnfinishedActions() = 0;
 	virtual bool act() = 0;
-	virtual void initialRosMessage() = 0;
+	
+	void initialRosMessage();
 
     bool robots_action_finished_[6];
     int play_state_;

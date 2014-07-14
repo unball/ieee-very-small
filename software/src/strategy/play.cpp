@@ -23,6 +23,12 @@ Play::Play()
     play_state_ = INITIAL_PLAY_STATE;
 }
 
+void Play::initialRosMessage()
+{
+	std::string message = play_name_ + " RUN";
+    ROS_INFO(message.c_str());
+}
+
 /**
  * Implements the basic structure the plays must follow.
  */
