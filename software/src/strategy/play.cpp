@@ -41,7 +41,7 @@ bool Play::run()
         finishRobotAction(i);
     // for those who have not finished their actions yet, set action_finished_ to false
     setUnfinishedActions();
-    return act();
+    return act(); //return true if action has finished
 }
 
 /**

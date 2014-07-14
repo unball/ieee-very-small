@@ -26,7 +26,9 @@ class Play
     bool run(); // Implement the code to execute the specific play
     
   protected:
+	//for those robots who have not finished their actions yet, set action_finished_ to false
 	virtual void setUnfinishedActions() = 0;
+	//moves the robots accoardingly to the play's objective. returns true if the action is done
 	virtual bool act() = 0;
 	
 	void initialRosMessage();

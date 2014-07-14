@@ -22,9 +22,6 @@ void Play1::setUnfinishedActions()
     }
 }
 
-/**
- * 
- */
 bool Play1::act()
 {
     switch (play_state_)

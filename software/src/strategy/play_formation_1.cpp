@@ -7,6 +7,9 @@ PlayFormation1::PlayFormation1() : Play()
     play_name_ = "PLAY FORMATION 1";
 }
 
+/**
+ * Sets the actions of both robots that are not the goalkeeper (3 and 4) to false.
+ */
 void PlayFormation1::setUnfinishedActions()
 {
     if (robots_action_finished_[3] && robots_action_finished_[4])
@@ -17,6 +20,12 @@ void PlayFormation1::setUnfinishedActions()
     }
 }
 
+/**
+ * Stop the action of the robots that are the goalkeeper.
+ * Move robot 3 to a defensive position.
+ * Move robot 4 to an ofensive position.
+ * Rotates them.
+ */
 bool PlayFormation1::act()
 {
     switch (play_state_)
