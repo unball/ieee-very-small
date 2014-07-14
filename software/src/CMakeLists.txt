@@ -53,6 +53,7 @@ link_directories(
 )
 
 add_executable(strategy_node
+  geometry/point.cpp
   strategy/strategy_node.cpp
   strategy/strategy.cpp
   strategy/robot.cpp

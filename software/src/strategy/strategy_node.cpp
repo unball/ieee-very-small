@@ -106,7 +106,7 @@ void receiveVisionMessage(const unball::VisionMessage::ConstPtr &msg)
         robot[i].setPose(msg->x[i], msg->y[i], msg->th[i]);
     }
     
-    ball.update(msg->ball_x, msg->ball_y);
+    Ball::getInstance().update(msg->ball_x, msg->ball_y);
 }
 
 /**

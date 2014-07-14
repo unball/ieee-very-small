@@ -15,70 +15,64 @@
 #include <ros/ros.h>
 
 /**
- * Ball global object
+ * Ball instance.
  */
-Ball ball;
+Ball* Ball::instance = NULL;
 
 Ball::Ball()
 {
-    x_ = 0;
-    y_ = 0;
-    vel_x_ = 0;
-    vel_y_ = 0;
-    vel_abs_ = 0;
-    vel_angle_ = 0;
+    pos_.set(0,0);
+    vel_.set(0,0);
+}
+
+Ball& Ball::getInstance()
+{
+    return *instance;
+}
+
+Point Ball::getPos()
+{
+    return(pos_);
 }
 
 float Ball::getX()
 {
-    return x_;
+    return pos_.getX();
 }
 
 float Ball::getY()
 {
-    return y_;
+    return pos_.getY();
 }
 
 float Ball::getVelX()
 {
-    return vel_x_;
+    return vel_.getX();
 }
 
 float Ball::getVelY()
 {
-    return vel_y_;
+    return vel_.getY();
 }
 
 float Ball::getVelAbs()
 {
-    return vel_abs_;
+    return (sqrt(pow(vel_.getX(),2)+pow(vel_.getY(),2)));
 }
 
 float Ball::getVelAngle()
 {
-    return vel_angle_;
+    return (Point().findAngle(pos_));
 }
 
 void Ball::setPosition(float x, float y)
 {
-    x_ = x;
-    y_ = y;
+    pos_.set(x,y);
 }
 
 void Ball::setVel(float vel_x, float vel_y)
 {
-    vel_x_ = vel_x;
-    vel_y_ = vel_y;
-}
-
-void Ball::setVelAbs(float vel_abs)
-{
-    vel_abs_ = vel_abs;
-}
-
-void Ball::setVelAngle(float vel_angle)
-{
-    vel_angle_ = vel_angle;
+    vel_.set(vel_x,vel_y);
 }
 
 /**
@@ -93,8 +87,6 @@ void Ball::update(float x, float y)
     
     // calculate velocities
     setVel(x - getX(), y - getY());
-    setVelAbs(sqrt(pow(getVelX(), 2) + pow(getVelY(), 2)));
-    setVelAngle(atan2(y - getY(), x - getX()));
     
     // refresh position
     setPosition(x, y);

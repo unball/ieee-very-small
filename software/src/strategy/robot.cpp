@@ -21,8 +21,7 @@ Robot robot[6];
 
 Robot::Robot()
 {
-    x_ = 0;
-    y_ = 0;
+    pos_.set(0,0);
     th_ = 0;
     lin_vel_ = 0;
     ang_vel_ = 0;
@@ -30,14 +29,19 @@ Robot::Robot()
     previous_motion_state_ = UNDEFINED;
 }
 
+Point Robot::getPos()
+{
+    return(pos_);
+}
+
 float Robot::getX()
 {
-    return x_;
+    return pos_.getX();
 }
 
 float Robot::getY()
 {
-    return y_;
+    return pos_.getY();
 }
 
 float Robot::getTh()
@@ -67,8 +71,7 @@ MotionState Robot::getPreviousMotionState()
 
 void Robot::setPosition(float x, float y)
 {
-    x_ = x;
-    y_ = y;
+    pos_.set(x,y);
 }
 
 void Robot::setTh(float th)

@@ -9,7 +9,6 @@ PlayStop::PlayStop()
 
 void PlayStop::setUnfinishedActions() {}
 
-
 /**
  * Stops all actions from all robots
  */

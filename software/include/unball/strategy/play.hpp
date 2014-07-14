@@ -17,7 +17,11 @@
 #define INITIAL_PLAY_STATE 0
 
 #include <iostream>
+#include <cmath>
+#include <vector>
 #include "action_controller.hpp"
+#include "ball.hpp"
+#include "robot.hpp"
 
 class Play
 {
@@ -32,6 +36,7 @@ class Play
 	virtual bool act() = 0;
 	
 	void initialRosMessage();
+    int findRobotClosestToBall(std::vector<int> index);
 
     bool robots_action_finished_[6];
     int play_state_;

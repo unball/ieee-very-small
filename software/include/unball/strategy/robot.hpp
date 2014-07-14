@@ -16,6 +16,8 @@
 #define ROBOT_SATURATION_LIN_VEL 5.0
 #define ROBOT_SATURATION_ANG_VEL 2.0
 
+#include "../geometry/point.hpp"
+
 enum MotionState
 {
     UNDEFINED,
@@ -29,7 +31,8 @@ class Robot
 {
   public:
     Robot();
-    
+
+    Point getPos();
     float getX();
     float getY();
     float getTh();
@@ -54,8 +57,7 @@ class Robot
     
   private:
     // Location attributes
-    float x_;
-    float y_;
+    Point pos_;
     float th_;
     
     // Velocity attributes
