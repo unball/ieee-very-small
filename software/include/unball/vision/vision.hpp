@@ -15,6 +15,7 @@
 #define UNBALL_VISION_H_
 
 #include <opencv2/highgui/highgui.hpp>
+#include <unball/vision/preprocessor.hpp>
 #include <unball/vision/segmenter.hpp>
 #include <unball/vision/gui.hpp>
 
@@ -29,6 +30,7 @@ class Vision
     
   private:
     GUI gui_;
+    Preprocessor preprocessor_;
     Segmenter segmenter_;
 
     cv::Mat rgb_frame_;

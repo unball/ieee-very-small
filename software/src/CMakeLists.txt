@@ -72,6 +72,7 @@ add_executable(vision_node
   vision/vision_node.cpp
   vision/vision.cpp
   vision/gui.cpp
+  vision/preprocessor.cpp
   vision/segmenter.cpp)
 add_dependencies(vision_node unball_gencpp)
 target_link_libraries(vision_node ${catkin_LIBRARIES})

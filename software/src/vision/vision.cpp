@@ -62,6 +62,7 @@ float Vision::getRobotPose(int robot_number)
  */
 void Vision::run()
 {
+    cv::Mat preprocessed;
     cv::Mat mask;
 
     ROS_DEBUG("Run vision");
@@ -75,6 +76,8 @@ void Vision::run()
     //if (not isValidSize(depth_frame_))
     //    return;
 
-    mask = segmenter_.segment(rgb_frame_);
     gui_.show(rgb_frame_);
+
+    preprocessed = preprocessor_.preprocess(rgb_frame_);
+    mask = segmenter_.segment(preprocessed);
 }

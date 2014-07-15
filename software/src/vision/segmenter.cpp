@@ -45,10 +45,12 @@ cv::Mat Segmenter::segment(cv::Mat image)
     cv::Mat hsv;
     cv::Mat structuring_element;
 
-    cv::cvtColor(image, hsv, CV_BGR2HSV); // HSV segments faster than HLS
+    // Convert to HSV, which segments faster than HLS and better than BGR
+    cv::cvtColor(image, hsv, CV_BGR2HSV);
     cv::inRange(hsv, cv::Scalar(0, s_min_, v_min_), cv::Scalar(180, 256, 256), mask);
 
-     //mais rapido fazer 2x do que 1x com um S.E. maior
+    // It is faster to apply the morphologic transformation twice than do it one with a
+    // larger structuring element
     structuring_element = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(3, 3));
     cv::morphologyEx(mask, mask, cv::MORPH_OPEN, structuring_element, cv::Point(-1,-1), 2);
 
