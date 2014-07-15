@@ -20,24 +20,20 @@
 #include <unball/vision/vision.hpp>
 #include <ros/ros.h>
 
-/**
- * TODO (matheus.v.portela@gmail.com): Implement this method to return the robot pose (x, y, theta)
- */
-float Vision::getRobotPose(int robot_number)
-{
-    return 0;
-}
-
 void Vision::setRGBFrame(cv::Mat rgb_frame)
 {
     if (isValidSize(rgb_frame))
         rgb_frame_ = rgb_frame;
+    else
+        ROS_ERROR("Invalid RGB frame size");
 }
 
 void Vision::setDepthFrame(cv::Mat depth_frame)
 {
     if (isValidSize(depth_frame))
         depth_frame_ = depth_frame;
+    else
+        ROS_ERROR("Invalid depth frame size");
 }
 
 /**
@@ -54,6 +50,14 @@ bool Vision::isValidSize(cv::Mat frame)
 }
 
 /**
+ * TODO (matheus.v.portela@gmail.com): Implement this method to return the robot pose (x, y, theta)
+ */
+float Vision::getRobotPose(int robot_number)
+{
+    return 0;
+}
+
+/**
  * Execute vision processing.
  */
 void Vision::run()
@@ -65,8 +69,11 @@ void Vision::run()
     // When the frame does not have proper size, there is no need to execute the vision algorithms, since they will
     // crash. This is not a bug, however, since it can happen when the system is started and no frame has been sent
     // to the vision yet.
-    if ((not isValidSize(rgb_frame_)) or (not isValidSize(depth_frame_)))
+    if (not isValidSize(rgb_frame_))
         return;
+
+    //if (not isValidSize(depth_frame_))
+    //    return;
 
     mask = segmenter_.segment(rgb_frame_);
     gui_.show(rgb_frame_);

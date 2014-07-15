@@ -15,6 +15,7 @@
 
 #include <ros/ros.h>
 #include <image_transport/image_transport.h>
+#include <sensor_msgs/image_encodings.h>
 #include <cv_bridge/cv_bridge.h>
 
 #include <unball/VisionMessage.h>
@@ -35,9 +36,9 @@ int main(int argc, char **argv)
     ros::Rate loop_rate(10);
     
     image_transport::Subscriber rgb_sub = it.subscribe("camera/rgb/image_raw", 1, receiveRGBFrame);
-    image_transport::Subscriber depth_sub = it.subscribe("camera/depth/image_raw", 1, receiveDepthFrame);
+    //image_transport::Subscriber depth_sub = it.subscribe("camera/depth/image_raw", 1, receiveDepthFrame);
     ros::Publisher publisher = n.advertise<unball::VisionMessage>("vision_topic", 1);
-    
+
     while (ros::ok())
     {
         vision.run();
@@ -95,7 +96,7 @@ void receiveDepthFrame(const sensor_msgs::ImageConstPtr& msg)
 
     try
     {
-        cv_ptr = cv_bridge::toCvCopy(msg, "mono8");
+        cv_ptr = cv_bridge::toCvCopy(msg, sensor_msgs::image_encodings::TYPE_16UC1);
     }
     catch (cv_bridge::Exception& e)
     {

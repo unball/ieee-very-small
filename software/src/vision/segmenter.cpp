@@ -9,7 +9,6 @@
  */
 
 #include <unball/vision/segmenter.hpp>
-#include <ros/ros.h>
 
 Segmenter::Segmenter()
 {
