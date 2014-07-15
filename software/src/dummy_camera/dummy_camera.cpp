@@ -8,7 +8,9 @@
  *
  * @brief  Dummy camera node
  * 
- * Loads a video file and publishes it on the "camera/image_raw" topic.
+ * Loads the rgb video file and publishes it on the "/camera/rgb/image_raw" topic,
+ * and loads the depth images in sequence and publishes them on the
+ * "/camera/depth/image_raw" topic.
  */
 
 #include <ros/ros.h>
@@ -19,6 +21,11 @@
 
 #include <string>
 
+/**
+ * Converts an integer to a string.
+ * 
+ * @param num the integer to be converted.
+ */
 std::string to_string(int num)
 {
     std::string result;
@@ -56,7 +63,7 @@ int main(int argc, char **argv)
 
     // Opens depth image and check for errors
     std::string depth_image_file, folder(argv[2]);
-    depth_image_file = folder + "depth ";
+    depth_image_file = folder + "/depth";
     int depth_counter = 0;
 
     // Set the loop rate, defined by the framerate of the video
@@ -65,7 +72,7 @@ int main(int argc, char **argv)
 
     // Set rgb and depth frame encoding
     rgb_frame.encoding = sensor_msgs::image_encodings::BGR8;
-//    depth_frame.encoding = sensor_msgs::image_encodings::MONO8;
+    depth_frame.encoding = sensor_msgs::image_encodings::TYPE_16UC1;
     
     // Retrieve amount of frames on the video
     num_frames = rgb_cap.get(CV_CAP_PROP_FRAME_COUNT);
@@ -76,21 +83,16 @@ int main(int argc, char **argv)
     for (frame_counter = 0; ros::ok() && (frame_counter < num_frames); frame_counter++)
     {
         ROS_DEBUG("Frame counter: %d", frame_counter);
+        // Publish the rgb frame
         ROS_DEBUG("Publishing the rgb frame");
         rgb_cap >> rgb_frame.image; // Get a new frame from the rgb video capture
         rgb_pub.publish(rgb_frame.toImageMsg());
         
-        // TODO: Finish this later (after getting the actual depth images)
+        // Publish the depth frame
         ROS_DEBUG("Publishing the depth frame");
         depth_counter++;
-        depth_image_file.erase(depth_image_file.begin()+depth_image_file.size()-1);
-        depth_image_file.append(to_string(depth_counter));
-        if (depth_counter == 5) depth_counter = 0;
-        depth_frame.image = cv::imread(depth_image_file + ".png");
+        depth_frame.image = cv::imread(depth_image_file+to_string(depth_counter)+".png", CV_LOAD_IMAGE_ANYDEPTH);
         depth_pub.publish(depth_frame.toImageMsg());
-        
-        cv::imshow("depth image", depth_frame.image);
-        cv::waitKey(3);        
         
         ros::spinOnce();
         loop_rate.sleep();
