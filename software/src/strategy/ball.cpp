@@ -27,6 +27,9 @@ Ball::Ball()
 
 Ball& Ball::getInstance()
 {
+    if (instance == NULL)
+        instance = new Ball();
+
     return *instance;
 }
 

@@ -7,7 +7,9 @@
  *
  * @brief Ball class
  *
- * Defines ball methods for strategy. Ball uses the singleton pattern, since there is only a single ball in the game.
+ * Defines ball methods for strategy.
+ * Ball uses the singleton pattern, since there is only a single ball in the game. In this pattern, only one instance of
+ * the Ball class can exist and it can only be accessed through the getInstance() method, which deals with instantiation.
  */
 
 #ifndef UNBALL_BALL_H_
@@ -18,9 +20,8 @@
 class Ball
 {
   public:
-    Ball();
-
     static Ball& getInstance();
+
     Point getPos();
     float getX();
     float getY();
@@ -36,9 +37,12 @@ class Ball
     
     void update(float x, float y);
     
+  protected:
+    Ball();
+
   private:
+    static Ball *instance; // singleton instance
     Point pos_, vel_;
-    static Ball *instance;
 };
 
 #endif  // UNBALL_BALL_H_
