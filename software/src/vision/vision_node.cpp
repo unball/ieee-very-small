@@ -34,7 +34,7 @@ int main(int argc, char **argv)
     image_transport::ImageTransport it(n);
     ros::Rate loop_rate(10);
     
-//    image_transport::Subscriber rgb_sub = it.subscribe("camera/rgb/image_raw", 1, receiveCameraFrame);
+    image_transport::Subscriber rgb_sub = it.subscribe("camera/rgb/image_raw", 1, receiveCameraFrame);
     image_transport::Subscriber depth_sub = it.subscribe("camera/depth/image_raw", 1, receiveCameraFrame);
     ros::Publisher publisher = n.advertise<unball::VisionMessage>("vision_topic", 1000);
     
@@ -80,7 +80,7 @@ void receiveCameraFrame(const sensor_msgs::ImageConstPtr& msg)
     cv_bridge::CvImagePtr cv_ptr;
     try 
     {
-        cv_ptr = cv_bridge::toCvCopy(msg, "mono8");
+        cv_ptr = cv_bridge::toCvCopy(msg);
     }
     catch (cv_bridge::Exception& e)
     {
@@ -93,19 +93,12 @@ void receiveCameraFrame(const sensor_msgs::ImageConstPtr& msg)
         ROS_ERROR("cv_ptr error: invalid image frame received");
         exit(1);
     }
-    std::cout << cv_ptr->encoding << std::endl;
-    cv::imshow("depth image", cv_ptr->image);
-    cv::waitKey(3);
     
-    // For testing, this node is only receiving the depth images.
-    
-//    if (cv_ptr->encoding == sensor_msgs::image_encodings::BGR8)
-//        vision.setCameraFrame(*cv_ptr, Vision::RGB_IMAGE);
-//    else if (cv_ptr->encoding == sensor_msgs::image_encodings::MONO8)
-//    {
+    if (cv_ptr->encoding == sensor_msgs::image_encodings::BGR8)
+        vision.setCameraFrame(*cv_ptr, Vision::RGB_IMAGE);
+    else if (cv_ptr->encoding == sensor_msgs::image_encodings::TYPE_16UC1)
         vision.setCameraFrame(*cv_ptr, Vision::DEPTH_IMAGE);
-//    }
-//    else 
-//        ROS_ERROR("Error: invalid image encoding.");
+    else 
+        ROS_ERROR("Error: invalid image encoding.");
 }
 

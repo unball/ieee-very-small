@@ -93,6 +93,12 @@ void Vision::findFieldCenter()
 void Vision::segmentDepth()
 {
     ROS_DEBUG("Segmenting depth image");
+    /*
+    cv::Mat normed;
+    normalize(depth_frame_.image, normed, 0, 255, cv::NORM_MINMAX, CV_8UC1);
+    cv::imshow("Depth image", normed);
+    cv::waitKey(3);
+    */
 }
 
 /**
@@ -102,6 +108,8 @@ void Vision::segmentDepth()
 void Vision::segmentImage()
 {
     ROS_DEBUG("Segmenting rgb image");
+//    cv::imshow("RGB image", rgb_frame_.image);
+//    cv::waitKey(3);
 }
 
 /**
