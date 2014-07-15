@@ -74,7 +74,7 @@ void receiveRGBFrame(const sensor_msgs::ImageConstPtr& msg)
 
     try
     {
-        cv_ptr = cv_bridge::toCvCopy(msg, "bgr8");
+        cv_ptr = cv_bridge::toCvCopy(msg);
     }
     catch (cv_bridge::Exception& e)
     {

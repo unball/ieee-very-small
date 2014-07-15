@@ -4,19 +4,17 @@
 
 PlayStop::PlayStop()
 {
-	play_name_ = "PLAY STOP";
-}
-
-void PlayStop::initialRosMessage()
-{
-	ROS_INFO("PLAY STOP RUN");
+    play_name_ = "PLAY STOP";
 }
 
 void PlayStop::setUnfinishedActions() {}
 
+/**
+ * Stops all actions from all robots
+ */
 bool PlayStop::act()
 {
-	for (int i = 0; i < 6; ++i)
-		action_controller.stop(i);
+    for (int i = 0; i < 6; ++i)
+        action_controller.stop(i);
     return true;
 }

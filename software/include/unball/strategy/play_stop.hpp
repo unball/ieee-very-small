@@ -18,7 +18,6 @@ class PlayStop : public Play
   public:
 	PlayStop();
   private:
-	void initialRosMessage();
 	void setUnfinishedActions();
 	bool act();
 };

@@ -7,17 +7,21 @@
  *
  * @brief Ball class
  *
- * Defines ball methods for strategy
+ * Defines ball methods for strategy. Ball uses the singleton pattern, since there is only a single ball in the game.
  */
 
 #ifndef UNBALL_BALL_H_
 #define UNBALL_BALL_H_
 
+#include "../geometry/point.hpp"
+
 class Ball
 {
   public:
     Ball();
-  
+
+    static Ball& getInstance();
+    Point getPos();
     float getX();
     float getY();
     float getVelX();
@@ -33,14 +37,8 @@ class Ball
     void update(float x, float y);
     
   private:
-    float x_;
-    float y_;
-    float vel_x_;
-    float vel_y_;
-    float vel_abs_;
-    float vel_angle_;
+    Point pos_, vel_;
+    static Ball *instance;
 };
-
-extern Ball ball;
 
 #endif  // UNBALL_BALL_H_

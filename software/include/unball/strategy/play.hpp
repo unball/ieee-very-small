@@ -17,7 +17,11 @@
 #define INITIAL_PLAY_STATE 0
 
 #include <iostream>
+#include <cmath>
+#include <vector>
 #include "action_controller.hpp"
+#include "ball.hpp"
+#include "robot.hpp"
 
 class Play
 {
@@ -26,9 +30,13 @@ class Play
     bool run(); // Implement the code to execute the specific play
     
   protected:
+	//for those robots who have not finished their actions yet, set action_finished_ to false
 	virtual void setUnfinishedActions() = 0;
+	//moves the robots accoardingly to the play's objective. returns true if the action is done
 	virtual bool act() = 0;
-	virtual void initialRosMessage() = 0;
+	
+	void initialRosMessage();
+    int findRobotClosestToBall(std::vector<int> index);
 
     bool robots_action_finished_[6];
     int play_state_;

@@ -20,7 +20,6 @@ class Play1 : public Play
   public:
 	Play1();
   private:
-	void initialRosMessage();
 	void setUnfinishedActions();
 	bool act();
 };

@@ -17,11 +17,29 @@
 #include <sensor_msgs/image_encodings.h>
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv/cv.h>
+
 #include <iostream>
+#include <string>
 
 cv::VideoWriter rgb_writer;
-cv::VideoWriter depth_writer;
+//cv::VideoWriter depth_writer;
+int depth_counter;
+std::string depth_file;
 bool is_open_rgb, is_open_depth;
+
+/**
+ * Converts an integer to a string.
+ * 
+ * @param num the integer to be converted.
+ */
+std::string to_string(int num)
+{
+    std::string result;
+    char tmp[100];
+    sprintf(tmp, "%d\0", num);
+    result = tmp;
+    return result;
+}
 
 /**
  * Callback function for the rgb image. Saves each image received
@@ -90,6 +108,7 @@ void depthCallback(const sensor_msgs::ImageConstPtr &msg)
         exit(-1);
     }
     
+    /*
     // Opens the depth video writer if it's not opened yet.
     if (!is_open_depth)
     {
@@ -98,12 +117,18 @@ void depthCallback(const sensor_msgs::ImageConstPtr &msg)
         if (!depth_writer.isOpened()) ROS_ERROR("Error! Could not open depth video writer!");
         else is_open_depth = true;
     }
+    */
     
+    /*
     // Normalizes the depth image and converts it from 16-bit to 6-bit.
     cv::Mat normed;
     normalize(cv_ptr->image, normed, 0, 255, cv::NORM_MINMAX, CV_8UC1);
     
     depth_writer << normed; // Saves the normed image on the depth video.
+    */
+    
+    depth_counter++;
+    cv::imwrite(depth_file+to_string(depth_counter)+".png", cv_ptr->image);
 }
 
 int main(int argc, char **argv)
@@ -114,7 +139,8 @@ int main(int argc, char **argv)
     image_transport::Subscriber sub_rgb, sub_depth;
     is_open_rgb = false;
     is_open_depth = false;
-    
+    depth_counter = 0;
+    depth_file = "depth_images/depth";
     
     sub_rgb = it.subscribe("/camera/rgb/image_raw", 1, rgbCallback);
     sub_depth = it.subscribe("/camera/depth/image_raw", 1, depthCallback);

@@ -8,7 +8,9 @@
  *
  * @brief  Dummy camera node
  * 
- * Loads a video file and publishes it on the "camera/image_raw" topic.
+ * Loads the rgb video file and publishes it on the "/camera/rgb/image_raw" topic,
+ * and loads the depth images in sequence and publishes them on the
+ * "/camera/depth/image_raw" topic.
  */
 
 #include <ros/ros.h>
@@ -16,6 +18,22 @@
 #include <cv_bridge/cv_bridge.h>
 #include <sensor_msgs/image_encodings.h>
 #include <opencv2/highgui/highgui.hpp>
+
+#include <string>
+
+/**
+ * Converts an integer to a string.
+ * 
+ * @param num the integer to be converted.
+ */
+std::string to_string(int num)
+{
+    std::string result;
+    char tmp[100];
+    sprintf(tmp, "%d\0", num);
+    result = tmp;
+    return result;
+}
 
 int main(int argc, char **argv)
 {
@@ -31,7 +49,7 @@ int main(int argc, char **argv)
     // Check if enough arguments where given
     if( argc != 3)
     {
-        ROS_ERROR("Not enough arguments. Usage: dummy_camera <rgb video file> <depth video file>");
+        ROS_ERROR("Not enough arguments. Usage: dummy_camera <rgb video file> <depth image folder>");
         return -1;
     }
 
@@ -43,13 +61,10 @@ int main(int argc, char **argv)
         return -1;
     }
 
-    // Load depth video and check for errors
-    cv::VideoCapture depth_cap(argv[2]);
-    if (!depth_cap.isOpened())
-    {
-        ROS_ERROR("Could not open of find the depth video file");
-        return -1;
-    }
+    // Opens depth image and check for errors
+    std::string depth_image_file, folder(argv[2]);
+    depth_image_file = folder + "/depth";
+    int depth_counter = 0;
 
     // Set the loop rate, defined by the framerate of the video
     ros::Rate loop_rate(rgb_cap.get(CV_CAP_PROP_FPS));
@@ -57,10 +72,8 @@ int main(int argc, char **argv)
 
     // Set rgb and depth frame encoding
     rgb_frame.encoding = sensor_msgs::image_encodings::BGR8;
-    depth_frame.encoding = sensor_msgs::image_encodings::MONO8;
+    depth_frame.encoding = sensor_msgs::image_encodings::TYPE_16UC1;
     
-    // Set rgb and depth frame header
-
     // Retrieve amount of frames on the video
     num_frames = rgb_cap.get(CV_CAP_PROP_FRAME_COUNT);
     ROS_DEBUG("Frame number: %d", num_frames);
@@ -70,11 +83,17 @@ int main(int argc, char **argv)
     for (frame_counter = 0; ros::ok() && (frame_counter < num_frames); frame_counter++)
     {
         ROS_DEBUG("Frame counter: %d", frame_counter);
+        // Publish the rgb frame
+        ROS_DEBUG("Publishing the rgb frame");
         rgb_cap >> rgb_frame.image; // Get a new frame from the rgb video capture
-        depth_cap >> depth_frame.image; // Get a new frame from the depth video capture
         rgb_pub.publish(rgb_frame.toImageMsg());
         
+        // Publish the depth frame
+        ROS_DEBUG("Publishing the depth frame");
+        depth_counter++;
+        depth_frame.image = cv::imread(depth_image_file+to_string(depth_counter)+".png", CV_LOAD_IMAGE_ANYDEPTH);
         depth_pub.publish(depth_frame.toImageMsg());
+        
         ros::spinOnce();
         loop_rate.sleep();
     }

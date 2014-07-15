@@ -5,17 +5,16 @@
 
 Play1::Play1() : Play()
 {
-	play_name_ = "PLAY 1";
+    play_name_ = "PLAY 1";
 }
 
-void Play1::initialRosMessage()
-{
-	ROS_INFO("PLAY 1 RUN");
-}
-
+/**
+ *  In this example play, robots 3 and 4 (the counter starts at 0) should not finish their actions simultaniosly.
+ *  If both of them have finished their actions, they go back into acting.
+ */
 void Play1::setUnfinishedActions()
 {
-	if (robots_action_finished_[3] && robots_action_finished_[4])
+    if (robots_action_finished_[3] && robots_action_finished_[4])
     {
         robots_action_finished_[3] = false;
         robots_action_finished_[4] = false;
