@@ -15,7 +15,7 @@
 #ifndef UNBALL_BALL_H_
 #define UNBALL_BALL_H_
 
-#include "../geometry/point.hpp"
+#include <unball/geometry/point.hpp>
 
 class Ball
 {

@@ -19,9 +19,9 @@
 #include <iostream>
 #include <cmath>
 #include <vector>
-#include "action_controller.hpp"
-#include "ball.hpp"
-#include "robot.hpp"
+#include <unball/strategy/action_controller.hpp>
+#include <unball/strategy/ball.hpp>
+#include <unball/strategy/robot.hpp>
 
 class Play
 {

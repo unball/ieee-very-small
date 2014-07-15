@@ -1,3 +1,13 @@
+/**
+ * @file   play.cpp
+ * @author Icaro da Costa Mota
+ * @date   15/07/2014
+ *
+ * @attention Copyright (C) 2014 UnBall Robot Soccer Team
+ *
+ * @brief  Play formation 1 class
+ */
+
 #include <unball/strategy/play_formation_1.hpp>
 #include <ros/ros.h>
 #include <unball/strategy/action_controller.hpp> // ActionControler action_controller;

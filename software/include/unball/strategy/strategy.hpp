@@ -13,7 +13,7 @@
 #ifndef UNBALL_STRATEGY_H_
 #define UNBALL_STRATEGY_H_
 
-#include "play_controller.hpp"
+#include <unball/strategy/play_controller.hpp>
 
 enum GameState
 {

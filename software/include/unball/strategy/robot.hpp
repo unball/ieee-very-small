@@ -16,7 +16,7 @@
 #define ROBOT_SATURATION_LIN_VEL 5.0
 #define ROBOT_SATURATION_ANG_VEL 2.0
 
-#include "../geometry/point.hpp"
+#include <unball/geometry/point.hpp>
 
 enum MotionState
 {
