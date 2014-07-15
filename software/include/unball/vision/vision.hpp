@@ -14,41 +14,25 @@
 #ifndef UNBALL_VISION_H_
 #define UNBALL_VISION_H_
 
-#include <cv_bridge/cv_bridge.h>
 #include <opencv2/highgui/highgui.hpp>
-#include <vector>
-#include <iostream>
-
-struct Robot_Coordinates
-{
-    cv::Point robot_center_;
-    cv::Point robot_corner_[4];
-};
+ #include <unball/vision/segmenter.hpp>
+#include <unball/vision/gui.hpp>
 
 class Vision
 {
   public:
-    Vision();
-    void findFieldCenter();
     void run();
-    void setCameraFrame(cv_bridge::CvImage camera_frame, int image_type);
-    float getRobotLocation(int robot_index);
-    
-    bool has_field_center_;
-    
-    static const int RGB_IMAGE = 1, DEPTH_IMAGE = 2;
+    float getRobotPose(int robot_index);
+    void setRGBFrame(cv::Mat rgb_frame);
+    void setDepthFrame(cv::Mat depth_frame);
+    bool isValidSize(cv::Mat frame);
     
   private:
-    void segmentDepth();
-    void segmentImage();
-    void findAngle(int robot_number);
-    
-    cv_bridge::CvImage rgb_frame_;
-    cv_bridge::CvImage depth_frame_;
-    float robot_location_[6]; // Final robot location (in centimeters)
-    float ball_location_; // Final ball location (in centimeters)
-    float robot_angle_[6]; // The angle of each robot (relative to the center of the field)
-    std::vector<Robot_Coordinates> robot_coordinates_;
+    GUI gui_;
+    Segmenter segmenter_;
+
+    cv::Mat rgb_frame_;
+    cv::Mat depth_frame_;
 };
 
-#endif  // UNBALL_VISION_H_
+#endif // UNBALL_VISION_H_

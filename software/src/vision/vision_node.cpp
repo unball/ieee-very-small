@@ -15,16 +15,16 @@
 
 #include <ros/ros.h>
 #include <image_transport/image_transport.h>
-#include <sensor_msgs/image_encodings.h>
-#include <iostream>
+#include <cv_bridge/cv_bridge.h>
 
 #include <unball/VisionMessage.h>
 #include <unball/vision/vision.hpp>
 
 Vision vision;
 
-void publishRobotsLocations(ros::Publisher &publisher);
-void receiveCameraFrame(const sensor_msgs::ImageConstPtr& msg);
+void publishRobotsPoses(ros::Publisher &publisher);
+void receiveRGBFrame(const sensor_msgs::ImageConstPtr& msg);
+void receiveDepthFrame(const sensor_msgs::ImageConstPtr& msg);
 
 int main(int argc, char **argv)
 {
@@ -34,14 +34,14 @@ int main(int argc, char **argv)
     image_transport::ImageTransport it(n);
     ros::Rate loop_rate(10);
     
-    image_transport::Subscriber rgb_sub = it.subscribe("camera/rgb/image_raw", 1, receiveCameraFrame);
-    image_transport::Subscriber depth_sub = it.subscribe("camera/depth/image_raw", 1, receiveCameraFrame);
-    ros::Publisher publisher = n.advertise<unball::VisionMessage>("vision_topic", 1000);
+    image_transport::Subscriber rgb_sub = it.subscribe("camera/rgb/image_raw", 1, receiveRGBFrame);
+    image_transport::Subscriber depth_sub = it.subscribe("camera/depth/image_raw", 1, receiveDepthFrame);
+    ros::Publisher publisher = n.advertise<unball::VisionMessage>("vision_topic", 1);
     
     while (ros::ok())
     {
         vision.run();
-        publishRobotsLocations(publisher);
+        publishRobotsPoses(publisher);
         ros::spinOnce();
         loop_rate.sleep();
     }
@@ -49,36 +49,30 @@ int main(int argc, char **argv)
 }
 
 /**
- * Publishes the six robots locations to the vision topic.
- * Each location is separated by a space.
- * Example: 0.2 0.4 0.6 0.8 1.0 1.2
- * 
+ * Publishes the six robots poses (x, y, theta) to the vision topic.
  * @param publisher a ROS node publisher.
  */
-void publishRobotsLocations(ros::Publisher &publisher)
+void publishRobotsPoses(ros::Publisher &publisher)
 {
     unball::VisionMessage message;
  
-    ROS_DEBUG("Publishing robots locations");
+    ROS_DEBUG("Publishing robots poses");
+
     for (int i = 0; i < (int)message.x.size(); i++)
-    {
-        ROS_DEBUG("Robot %d: %f", i, vision.getRobotLocation(i));
-        message.x[i] = vision.getRobotLocation(i);
-    }
+        message.x[i] = vision.getRobotPose(i);
     
     publisher.publish(message);
 }
 
 /**
- * Receives both rgb and depth image frame from camera and gives it to
- * the vision object
- * 
+ * Receives the RGB frame and passes it to the vision object
  * @param msg a ROS image message pointer.
  */
-void receiveCameraFrame(const sensor_msgs::ImageConstPtr& msg)
+void receiveRGBFrame(const sensor_msgs::ImageConstPtr& msg)
 {
     cv_bridge::CvImagePtr cv_ptr;
-    try 
+
+    try
     {
         cv_ptr = cv_bridge::toCvCopy(msg);
     }
@@ -87,18 +81,27 @@ void receiveCameraFrame(const sensor_msgs::ImageConstPtr& msg)
         ROS_ERROR("cv_bridge exception: %s", e.what());
         return;
     }
-    
-    if (!(cv_ptr->image.rows) || !(cv_ptr->image.cols))
-    {
-        ROS_ERROR("cv_ptr error: invalid image frame received");
-        exit(1);
-    }
-    
-    if (cv_ptr->encoding == sensor_msgs::image_encodings::BGR8)
-        vision.setCameraFrame(*cv_ptr, Vision::RGB_IMAGE);
-    else if (cv_ptr->encoding == sensor_msgs::image_encodings::TYPE_16UC1)
-        vision.setCameraFrame(*cv_ptr, Vision::DEPTH_IMAGE);
-    else 
-        ROS_ERROR("Error: invalid image encoding.");
+
+    vision.setRGBFrame(cv_ptr->image);
 }
 
+/**
+ * Receives the depth frame and passes it to the vision object
+ * @param msg a ROS image message pointer.
+ */
+void receiveDepthFrame(const sensor_msgs::ImageConstPtr& msg)
+{
+    cv_bridge::CvImagePtr cv_ptr;
+
+    try
+    {
+        cv_ptr = cv_bridge::toCvCopy(msg, "mono8");
+    }
+    catch (cv_bridge::Exception& e)
+    {
+        ROS_ERROR("cv_bridge exception: %s", e.what());
+        return;
+    }
+
+    vision.setDepthFrame(cv_ptr->image);
+}

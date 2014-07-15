@@ -8,117 +8,66 @@
  *
  * @brief  Vision class
  *
- * Implements computer vision algorithms
+ * Implements vision, which consists in six parts:
+ * - Homography
+ * - Pre-processing
+ * - Segmentation
+ * - Tracking
+ * - Communication
+ * - GUI
  */
 
 #include <unball/vision/vision.hpp>
-
 #include <ros/ros.h>
 
-Vision::Vision()
+/**
+ * TODO (matheus.v.portela@gmail.com): Implement this method to return the robot pose (x, y, theta)
+ */
+float Vision::getRobotPose(int robot_number)
 {
-    has_field_center_ = false;
-    robot_coordinates_.resize(6);
+    return 0;
+}
+
+void Vision::setRGBFrame(cv::Mat rgb_frame)
+{
+    if (isValidSize(rgb_frame))
+        rgb_frame_ = rgb_frame;
+}
+
+void Vision::setDepthFrame(cv::Mat depth_frame)
+{
+    if (isValidSize(depth_frame))
+        depth_frame_ = depth_frame;
 }
 
 /**
- * Segments the depth and rgb images, and finds all the necessary data
- * from the state of the game.
+ * Check whether a frame has a valid size, i.e., neither the width nor the height can be zero.
+ * @param frame Image that will be checked.
+ * @return true is the image has proper size, false otherwise.
+ */
+bool Vision::isValidSize(cv::Mat frame)
+{
+    if (frame.rows == 0 || frame.cols == 0)
+        return false;
+    else
+        return true;
+}
+
+/**
+ * Execute vision processing.
  */
 void Vision::run()
 {
+    cv::Mat mask;
+
     ROS_DEBUG("Run vision");
-    
-    if (depth_frame_.image.rows == 0 && depth_frame_.image.cols == 0)
-    {
-        ROS_WARN("No image on camera_frame_. Nothing to do here.");
+
+    // When the frame does not have proper size, there is no need to execute the vision algorithms, since they will
+    // crash. This is not a bug, however, since it can happen when the system is started and no frame has been sent
+    // to the vision yet.
+    if ((not isValidSize(rgb_frame_)) or (not isValidSize(depth_frame_)))
         return;
-    }
-    
-    if (!has_field_center_) findFieldCenter();
-    
-    // Still to be implemented
-    segmentDepth();
-    segmentImage();
-}
 
-/**
- * Sets both the rgb frame and the depth frame.
- * @param camera_frame The frame to be set.
- * @param image_type Identifier for the image given,
- * either rgb or depth.
- */
-void Vision::setCameraFrame(cv_bridge::CvImage camera_frame, int image_type)
-{
-    ROS_DEBUG("Set camera frame");
-    switch(image_type)
-    {
-        case Vision::RGB_IMAGE:
-            rgb_frame_.header = camera_frame.header;
-            rgb_frame_.encoding = camera_frame.encoding;
-            camera_frame.image.copyTo(rgb_frame_.image);
-            break;
-        case Vision::DEPTH_IMAGE:
-            depth_frame_.header = camera_frame.header;
-            depth_frame_.encoding = camera_frame.encoding;
-            camera_frame.image.copyTo(depth_frame_.image);
-            break;
-        default:
-            ROS_ERROR("Invalid image type");
-            break;
-    } 
+    mask = segmenter_.segment(rgb_frame_);
+    gui_.show(rgb_frame_);
 }
-
-float Vision::getRobotLocation(int robot_number)
-{
-    ROS_DEBUG("Get robot %d location", robot_number);
-    return robot_location_[robot_number];
-}
-
-/**
- * Finds the pixel corresponding to the center of the field
- * TODO(gabri.navess@gmail.com): Implement this method properly.
- */
-void Vision::findFieldCenter()
-{
-    ROS_DEBUG("Finding the field center");
-    
-    has_field_center_ = true;
-}
-
-/**
- * Segments the deph image and finds the
- * center pixel of all robots and the ball.
- */
-void Vision::segmentDepth()
-{
-    ROS_DEBUG("Segmenting depth image");
-    /*
-    cv::Mat normed;
-    normalize(depth_frame_.image, normed, 0, 255, cv::NORM_MINMAX, CV_8UC1);
-    cv::imshow("Depth image", normed);
-    cv::waitKey(3);
-    */
-}
-
-/**
- * Segments the rgb image and finds the
- * front pixel of all robots.
- */
-void Vision::segmentImage()
-{
-    ROS_DEBUG("Segmenting rgb image");
-//    cv::imshow("RGB image", rgb_frame_.image);
-//    cv::waitKey(3);
-}
-
-/**
- * Uses the information found on the segmentation
- * to determine the angle of a given robot.
- * @param robot_number the number of the robot.
- */
-void Vision::findAngle(int robot_number)
-{
-    ROS_DEBUG("Find %d robot's angle", robot_number);
-}
-
