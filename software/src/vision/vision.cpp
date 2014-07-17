@@ -18,18 +18,7 @@
  */
 
 #include <unball/vision/vision.hpp>
-
-/**
- * Set the vision node handle pointer, which can be used to any ROS feature that requires ros::init, such as parameters
- * parsing.
- * Also, set the node handle to all objects that requires it.
- * @param n Initialized node handle
- */
-void Vision::setNodeHandle(ros::NodeHandle *n)
-{
-    n_ = n;
-    segmenter_.setNodeHandle(n);
-}
+#include <ros/ros.h>
 
 void Vision::setRGBFrame(cv::Mat rgb_frame)
 {
@@ -69,6 +58,14 @@ float Vision::getRobotPose(int robot_number)
 }
 
 /**
+ * Load configurations. This method must be called after initializing ROS using ros::init in the node main function.
+ */
+void Vision::loadConfig()
+{
+    segmenter_.loadConfig();
+}
+
+/**
  * Execute vision processing.
  */
 void Vision::run()
@@ -81,12 +78,14 @@ void Vision::run()
     // When the frame does not have proper size, there is no need to execute the vision algorithms, since they will
     // crash. This is not a bug, however, since it can happen when the system is started and no frame has been sent
     // to the vision yet.
-    if (not isValidSize(rgb_frame_) || not isValidSize(depth_frame_))
+    if (not isValidSize(rgb_frame_))
         return;
+
+    //if (not isValidSize(depth_frame_))
+    //    return;
 
     gui_.show(rgb_frame_);
 
-    preprocessor_.preprocessDepth(depth_frame_); // Preprocesses the depth image
     preprocessed = preprocessor_.preprocess(rgb_frame_);
     mask = segmenter_.segment(preprocessed);
 }

@@ -9,6 +9,7 @@
  */
 
 #include <unball/vision/segmenter.hpp>
+#include <ros/ros.h>
 
 Segmenter::Segmenter()
 {
@@ -26,19 +27,7 @@ Segmenter::~Segmenter()
 }
 
 /**
- * Set the s node hegmenterandle pointer, which can be used to any ROS feature that requires ros::init, such as parameters
- * parsing.
- * Also, call the method to load the configuration.
- * @param n Initialized node handle
- */
-void Segmenter::setNodeHandle(ros::NodeHandle *n)
-{
-    n_ = n;
-    loadConfig();
-}
-
-/**
- * Load all configurations
+ * Load configurations. This method must be called after initializing ROS using ros::init in the node main function.
  */
 void Segmenter::loadConfig()
 {
@@ -53,8 +42,8 @@ void Segmenter::loadConfig()
 void Segmenter::loadHSVAdjustConfig()
 {
     bool hsv_adjust;
-    n_->getParam("/vision/segmenter/hsv_adjust", hsv_adjust);
-    ROS_INFO("HSV adjust: %d", hsv_adjust);
+    ros::param::get("/vision/segmenter/hsv_adjust", hsv_adjust);
+    ROS_ERROR("HSV adjust: %d", hsv_adjust);
 
     if (hsv_adjust)
     {

@@ -13,7 +13,6 @@
 
 #include <string>
 #include <opencv2/opencv.hpp>
-#include <ros/ros.h>
 
 class Segmenter
 {
@@ -22,12 +21,9 @@ class Segmenter
     ~Segmenter();
     void loadConfig();
     void loadHSVAdjustConfig();
-    void setNodeHandle(ros::NodeHandle *n);
     cv::Mat segment(cv::Mat image);
 
   private:
-    ros::NodeHandle *n_;
-
     std::string window_name_;
     int s_min_;
     int v_min_;
