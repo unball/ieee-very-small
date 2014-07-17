@@ -11,7 +11,7 @@
 #ifndef UNBALL_PLAY_FORMATION_1_H_
 #define UNBALL_PLAY_FORMATION_1_H_
 
-#include "play.hpp"
+#include <unball/strategy/play.hpp>
 
 #define INITIAL_PLAY_STATE 0
 

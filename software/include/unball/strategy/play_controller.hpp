@@ -14,10 +14,10 @@
 #define UNBALL_PLAY_CONTROLLER_H_
 
 #include <queue>
-#include "play_stop.hpp"
-#include "play1.hpp"
-#include "play_formation_1.hpp"
-#include "play_formation_2.hpp"
+#include <unball/strategy/play_stop.hpp>
+#include <unball/strategy/play1.hpp>
+#include <unball/strategy/play_formation_1.hpp>
+#include <unball/strategy/play_formation_2.hpp>
 
 enum PlayId
 {

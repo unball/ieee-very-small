@@ -11,7 +11,7 @@
 #ifndef UNBALL_PLAY_STOP_H_
 #define UNBALL_PLAY_STOP_H_
 
-#include "play.hpp"
+#include <unball/strategy/play.hpp>
 
 class PlayStop : public Play
 {
