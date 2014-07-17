@@ -14,6 +14,7 @@
 #ifndef UNBALL_VISION_H_
 #define UNBALL_VISION_H_
 
+#include <ros/ros.h>
 #include <opencv2/highgui/highgui.hpp>
 #include <unball/vision/preprocessor.hpp>
 #include <unball/vision/segmenter.hpp>
@@ -22,13 +23,16 @@
 class Vision
 {
   public:
-    void run();
+    void setNodeHandle(ros::NodeHandle *n);
     void setRGBFrame(cv::Mat rgb_frame);
     void setDepthFrame(cv::Mat depth_frame);
     bool isValidSize(cv::Mat frame);
     float getRobotPose(int robot_index);
+    void run();
     
   private:
+    ros::NodeHandle *n_;
+
     GUI gui_;
     Preprocessor preprocessor_;
     Segmenter segmenter_;

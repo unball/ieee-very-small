@@ -18,7 +18,18 @@
  */
 
 #include <unball/vision/vision.hpp>
-#include <ros/ros.h>
+
+/**
+ * Set the vision node handle pointer, which can be used to any ROS feature that requires ros::init, such as parameters
+ * parsing.
+ * Also, set the node handle to all objects that requires it.
+ * @param n Initialized node handle
+ */
+void Vision::setNodeHandle(ros::NodeHandle *n)
+{
+    n_ = n;
+    segmenter_.setNodeHandle(n);
+}
 
 void Vision::setRGBFrame(cv::Mat rgb_frame)
 {

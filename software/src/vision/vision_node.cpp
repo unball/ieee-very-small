@@ -39,6 +39,8 @@ int main(int argc, char **argv)
     //image_transport::Subscriber depth_sub = it.subscribe("camera/depth/image_raw", 1, receiveDepthFrame);
     ros::Publisher publisher = n.advertise<unball::VisionMessage>("vision_topic", 1);
 
+    vision.setNodeHandle(&n);
+
     while (ros::ok())
     {
         vision.run();

@@ -15,18 +15,52 @@ Segmenter::Segmenter()
     window_name_ = "Segmentation";
     cv::namedWindow(window_name_);
 
-    // Used for training
-    //cv::createTrackbar("SMIN", window_name_, &s_min_,256);
-    //cv::createTrackbar("VMIN", window_name_, &v_min_,256);
-
     // Empirical values
-    s_min_ = 81;
-    v_min_ = 186;
+    s_min_ = 100;
+    v_min_ = 190;
 }
 
 Segmenter::~Segmenter()
 {
     cv::destroyWindow(window_name_);
+}
+
+/**
+ * Set the s node hegmenterandle pointer, which can be used to any ROS feature that requires ros::init, such as parameters
+ * parsing.
+ * Also, call the method to load the configuration.
+ * @param n Initialized node handle
+ */
+void Segmenter::setNodeHandle(ros::NodeHandle *n)
+{
+    n_ = n;
+    loadConfig();
+}
+
+/**
+ * Load all configurations
+ */
+void Segmenter::loadConfig()
+{
+    ROS_INFO("Loading segmenter configurations");
+    loadHSVAdjustConfig();
+}
+
+/**
+ * Load HSV adjust configuration. This configuration is used to set the minimum values for Saturation and Value in HSV
+ * segmentation by creating trackbars on the segmenter window.
+ */
+void Segmenter::loadHSVAdjustConfig()
+{
+    bool hsv_adjust;
+    n_->getParam("/vision/segmenter/hsv_adjust", hsv_adjust);
+    ROS_INFO("HSV adjust: %d", hsv_adjust);
+
+    if (hsv_adjust)
+    {
+        cv::createTrackbar("SMIN", window_name_, &s_min_, 256);
+        cv::createTrackbar("VMIN", window_name_, &v_min_, 256);
+    }
 }
 
 /**
