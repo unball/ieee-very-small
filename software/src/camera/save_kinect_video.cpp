@@ -140,7 +140,7 @@ int main(int argc, char **argv)
     is_open_rgb = false;
     is_open_depth = false;
     depth_counter = 0;
-    depth_file = "depth_images/depth";
+    depth_file = "data/depth/depth";
     
     sub_rgb = it.subscribe("/camera/rgb/image_raw", 1, rgbCallback);
     sub_depth = it.subscribe("/camera/depth/image_raw", 1, depthCallback);
