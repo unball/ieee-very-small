@@ -35,11 +35,20 @@ int main(int argc, char **argv)
     image_transport::ImageTransport it(n);
     ros::Rate loop_rate(10);
     
-    image_transport::Subscriber rgb_sub = it.subscribe("camera/rgb/image_raw", 1, receiveRGBFrame);
-    image_transport::Subscriber depth_sub = it.subscribe("camera/depth/image_raw", 1, receiveDepthFrame);
+    image_transport::Subscriber rgb_sub, depth_sub;
     ros::Publisher publisher = n.advertise<unball::VisionMessage>("vision_topic", 1);
 
+    // Load configurations
+    bool using_rgb, using_depth;
+    ros::param::get("/vision/using_rgb", using_rgb);
+    ros::param::get("/vision/using_depth", using_depth);
     vision.loadConfig();
+
+    // Subscribe
+    if (using_rgb)
+        rgb_sub = it.subscribe("camera/rgb/image_raw", 1, receiveRGBFrame);
+    if (using_depth)
+        depth_sub = it.subscribe("camera/depth/image_raw", 1, receiveDepthFrame);
 
     while (ros::ok())
     {

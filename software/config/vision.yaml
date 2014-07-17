@@ -1,3 +1,6 @@
 vision:
+    using_rgb: true
+    using_depth: true
+
     segmenter:
         hsv_adjust: true

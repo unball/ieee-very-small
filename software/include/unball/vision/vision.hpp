@@ -30,6 +30,9 @@ class Vision
     void run();
     
   private:
+    bool using_rgb_;
+    bool using_depth_;
+
     GUI gui_;
     Preprocessor preprocessor_;
     Segmenter segmenter_;

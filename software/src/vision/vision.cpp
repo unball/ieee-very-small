@@ -62,6 +62,9 @@ float Vision::getRobotPose(int robot_number)
  */
 void Vision::loadConfig()
 {
+    ros::param::get("/vision/using_rgb", using_rgb_);
+    ros::param::get("/vision/using_depth", using_depth_);
+
     segmenter_.loadConfig();
 }
 
@@ -78,14 +81,13 @@ void Vision::run()
     // When the frame does not have proper size, there is no need to execute the vision algorithms, since they will
     // crash. This is not a bug, however, since it can happen when the system is started and no frame has been sent
     // to the vision yet.
-    if (not isValidSize(rgb_frame_))
-        return;
+    if ((using_rgb_) and (isValidSize(rgb_frame_)))
+    {
+        gui_.show(rgb_frame_);
+        preprocessed = preprocessor_.preprocess(rgb_frame_);
+        mask = segmenter_.segment(preprocessed);
+    }
 
-    //if (not isValidSize(depth_frame_))
-    //    return;
-
-    gui_.show(rgb_frame_);
-
-    preprocessed = preprocessor_.preprocess(rgb_frame_);
-    mask = segmenter_.segment(preprocessed);
+    if ((using_depth_) and (isValidSize(depth_frame_)))
+        preprocessor_.preprocessDepth(depth_frame_);
 }
