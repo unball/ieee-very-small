@@ -3,4 +3,6 @@ vision:
     using_depth: true
 
     segmenter:
-        hsv_adjust: true
+        hsv_adjust: false
+        hsv_min_s: 100
+        hsv_min_v: 190

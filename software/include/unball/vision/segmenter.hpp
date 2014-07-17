@@ -20,13 +20,15 @@ class Segmenter
     Segmenter();
     ~Segmenter();
     void loadConfig();
+    void loadHSVMinSConfig();
+    void loadHSVMinVConfig();
     void loadHSVAdjustConfig();
     cv::Mat segment(cv::Mat image);
 
   private:
     std::string window_name_;
-    int s_min_;
-    int v_min_;
+    int hsv_min_s_;
+    int hsv_min_v_;
 };
 
 #endif // UNBALL_VISION_SEGMENTER_H_

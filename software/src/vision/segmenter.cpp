@@ -15,10 +15,6 @@ Segmenter::Segmenter()
 {
     window_name_ = "Segmentation";
     cv::namedWindow(window_name_);
-
-    // Empirical values
-    s_min_ = 100;
-    v_min_ = 190;
 }
 
 Segmenter::~Segmenter()
@@ -32,23 +28,48 @@ Segmenter::~Segmenter()
 void Segmenter::loadConfig()
 {
     ROS_INFO("Loading segmenter configurations");
+    loadHSVMinSConfig();
+    loadHSVMinVConfig();
     loadHSVAdjustConfig();
 }
 
 /**
- * Load HSV adjust configuration. This configuration is used to set the minimum values for Saturation and Value in HSV
+ * Load HSV minimum saturation configuration.
+ */
+void Segmenter::loadHSVMinSConfig()
+{
+    int hsv_min_s;
+    ros::param::get("/vision/segmenter/hsv_min_s", hsv_min_s);
+    ROS_INFO("HSV minimum saturation: %d", hsv_min_s);
+    hsv_min_s_ = hsv_min_s;
+}
+
+/**
+ * Load HSV minimum value configuration.
+ */
+void Segmenter::loadHSVMinVConfig()
+{
+    int hsv_min_v;
+    ros::param::get("/vision/segmenter/hsv_min_v", hsv_min_v);
+    ROS_INFO("HSV minimum value: %d", hsv_min_v);
+    hsv_min_v_ = hsv_min_v;
+}
+
+/**
+ * Load HSV adjust configuration. This configuration is used to set the minimum values for saturation and value in HSV
  * segmentation by creating trackbars on the segmenter window.
  */
 void Segmenter::loadHSVAdjustConfig()
 {
     bool hsv_adjust;
     ros::param::get("/vision/segmenter/hsv_adjust", hsv_adjust);
-    ROS_ERROR("HSV adjust: %d", hsv_adjust);
+    
+    ROS_INFO("HSV adjust: %d", hsv_adjust);
 
     if (hsv_adjust)
     {
-        cv::createTrackbar("SMIN", window_name_, &s_min_, 256);
-        cv::createTrackbar("VMIN", window_name_, &v_min_, 256);
+        cv::createTrackbar("SMIN", window_name_, &hsv_min_s_, 256);
+        cv::createTrackbar("VMIN", window_name_, &hsv_min_v_, 256);
     }
 }
 
@@ -70,7 +91,7 @@ cv::Mat Segmenter::segment(cv::Mat image)
 
     // Convert to HSV, which segments faster than HLS and better than BGR
     cv::cvtColor(image, hsv, CV_BGR2HSV);
-    cv::inRange(hsv, cv::Scalar(0, s_min_, v_min_), cv::Scalar(180, 256, 256), mask);
+    cv::inRange(hsv, cv::Scalar(0, hsv_min_s_, hsv_min_v_), cv::Scalar(180, 256, 256), mask);
 
     // It is faster to apply the morphologic transformation twice than do it one with a
     // larger structuring element
