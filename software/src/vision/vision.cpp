@@ -81,14 +81,12 @@ void Vision::run()
     // When the frame does not have proper size, there is no need to execute the vision algorithms, since they will
     // crash. This is not a bug, however, since it can happen when the system is started and no frame has been sent
     // to the vision yet.
-    if (not isValidSize(rgb_frame_))
+    if (not isValidSize(rgb_frame_) || not isValidSize(depth_frame_))
         return;
-
-    //if (not isValidSize(depth_frame_))
-    //    return;
 
     gui_.show(rgb_frame_);
 
+    preprocessor_.preprocessDepth(depth_frame_); // Preprocesses the depth image
     preprocessed = preprocessor_.preprocess(rgb_frame_);
     mask = segmenter_.segment(preprocessed);
 }
