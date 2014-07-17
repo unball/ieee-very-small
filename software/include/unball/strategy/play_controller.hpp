@@ -33,8 +33,8 @@ class PlayController
   public:
     PlayController();
     void run();
-    void setPlay(PlayId play_number);
-    void pushPlay(PlayId play_number);
+    void setPlay(Play *play);
+    void pushPlay(Play *play);
     void clearPlayQueue();
     void abortPlay();
     
@@ -46,12 +46,9 @@ class PlayController
     bool isMutexUnlocked();
     
     bool play_mutex_;
-    std::queue<PlayId> play_queue_;
-    PlayId current_play_;
-    PlayStop play_stop_;
-    Play1 play1_;
-    PlayFormation1 play_formation_1_;
-    PlayFormation2 play_formation_2_;
+    std::queue<Play*> play_queue_;
+    
+    Play *play_;
 };
 
 #endif  // UNBALL_PLAY_CONTROLLER_H_

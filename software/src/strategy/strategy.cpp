@@ -20,7 +20,7 @@ Strategy strategy;
 
 Strategy::Strategy()
 {
-    play_controller_.pushPlay(PLAY_1);
+    play_controller_.pushPlay(new Play1());
     setGameState(GAME_RUNNING);
 }
 
@@ -53,12 +53,12 @@ void Strategy::receiveKeyboardInput(char key)
         case '1':
             ROS_INFO("Formation 1");
             play_controller_.abortPlay();
-            play_controller_.pushPlay(PLAY_FORMATION_1);
+            play_controller_.pushPlay(new PlayFormation1());
             break;
         case '2':
             ROS_INFO("Formation 2");
             play_controller_.abortPlay();
-            play_controller_.pushPlay(PLAY_FORMATION_2);
+            play_controller_.pushPlay(new PlayFormation2());
             break;
     }
 }

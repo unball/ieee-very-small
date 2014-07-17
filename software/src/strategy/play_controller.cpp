@@ -16,7 +16,7 @@
 
 PlayController::PlayController()
 {
-    setPlay(NO_PLAY); // Don't have any initial play
+    setPlay(NULL); // Don't have any initial play
     mutexUnlock(); // Allow to change plays
 }
 
@@ -31,22 +31,26 @@ void PlayController::run()
 
 /**
  * Set the current play.
- * @param play_number Number of the play to set.
+ * @param *play new play to set.
  */
-void PlayController::setPlay(PlayId play_number)
+void PlayController::setPlay(Play *play)
 {
-    ROS_INFO("Set play: %d", play_number);
+    if (play == NULL) ROS_INFO("Set play: NONE");
+    //dont set if that is already the actual play. shouldnt be a problem, since we are controlling this with a mutex
+    else if (play->getPlayName() == play_->getPlayName()) return; 
+    else ROS_INFO("Set play: %s", play->getPlayName().c_str());
     
-    current_play_ = play_number;
+    delete play_;
+    play_ = play;
 }
 
 /**
  * Push a new play to the play queue.
- * @param play_number Number of the play that will be pushed.
+ * @param play new play that will be pushed.
  */
-void PlayController::pushPlay(PlayId play_number)
+void PlayController::pushPlay(Play *play)
 {
-    play_queue_.push(play_number);
+    play_queue_.push(play);
 }
 
 /**
@@ -56,7 +60,7 @@ void PlayController::pushPlay(PlayId play_number)
  */
 void PlayController::clearPlayQueue()
 {
-    std::queue<PlayId> empty_play_queue;
+    std::queue<Play*> empty_play_queue;
     std::swap(play_queue_, empty_play_queue);
 }
 
@@ -67,7 +71,7 @@ void PlayController::abortPlay()
 {
     ROS_INFO("Abort play");
     
-    setPlay(PLAY_STOP);
+    setPlay(new PlayStop());
     clearPlayQueue();
 }
 
@@ -76,7 +80,7 @@ void PlayController::abortPlay()
  */
 void PlayController::updatePlay()
 {
-    ROS_INFO("UPDATE PLAY: %d", current_play_);
+    ROS_INFO("UPDATE PLAY: %s", play_->getPlayName().c_str());
     
     if (isMutexUnlocked())
     {
@@ -87,12 +91,31 @@ void PlayController::updatePlay()
         }
         else
         {
-            setPlay(NO_PLAY);
+            setPlay(NULL);
         }
         
         mutexLock();
     }
 }
+
+/*
+void PlayController::selectPlay()
+{
+    std::string play_name = (play_==NULL) ? "NO PLAY" : play_->getPlayName();
+    if (play_name == "NO PLAY")
+        has_play_finished = true; // Always unlock for the next play
+    else if (play_name == "PLAY STOP")
+        has_play_finished = play_stop_.run();
+    else if (play_name == "PLAY 1")
+        has_play_finished = play1_.run();
+    else if (play_name == "PLAY FORMATION 1")
+        has_play_finished = play_formation_1_.run();
+    else if (play_name == "PLAY FORMATION 2")
+        has_play_finished = play_formation_2_.run();
+    else
+        ROS_ERROR("Unknown play ID number");
+}
+*/
 
 /**
  * Execute a play based on the current play ID number.
@@ -101,27 +124,7 @@ void PlayController::executePlay()
 {
     bool has_play_finished;
     
-    switch (current_play_)
-    {
-        case NO_PLAY:
-            has_play_finished = true; // Always unlock for the next play
-            break;
-        case PLAY_STOP:
-            has_play_finished = play_stop_.run();
-            break;
-        case PLAY_1:
-            has_play_finished = play1_.run();
-            break;
-        case PLAY_FORMATION_1:
-            has_play_finished = play_formation_1_.run();
-            break;
-        case PLAY_FORMATION_2:
-            has_play_finished = play_formation_2_.run();
-            break;
-        default:
-            ROS_ERROR("Unknown play ID number");
-            break;
-    }
+    has_play_finished = (play_ == NULL) ? true : play_->run();
     
     if (has_play_finished)
         mutexUnlock();
