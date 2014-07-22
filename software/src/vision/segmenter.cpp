@@ -1,6 +1,7 @@
 /**
  * @file   segmenter.cpp
  * @author Matheus Vieira Portela
+ * @author Gabriel Naves da Silva
  * @date   12/07/2014
  *
  * @attention Copyright (C) 2014 UnBall Robot Soccer Team
@@ -9,7 +10,6 @@
  */
 
 #include <unball/vision/segmenter.hpp>
-#include <ros/ros.h>
 
 Segmenter::Segmenter()
 {
@@ -23,11 +23,13 @@ Segmenter::~Segmenter()
 }
 
 /**
- * Load configurations. This method must be called after initializing ROS using ros::init in the node main function.
+ * Load configurations.
+ * @warning This method must be called after initializing ROS using ros::init in the node main function.
  */
 void Segmenter::loadConfig()
 {
     ROS_INFO("Loading segmenter configurations");
+    
     loadHSVMinSConfig();
     loadHSVMinVConfig();
     loadHSVAdjustConfig();
@@ -40,8 +42,9 @@ void Segmenter::loadHSVMinSConfig()
 {
     int hsv_min_s;
     ros::param::get("/vision/segmenter/hsv_min_s", hsv_min_s);
-    ROS_INFO("HSV minimum saturation: %d", hsv_min_s);
     hsv_min_s_ = hsv_min_s;
+    
+    ROS_INFO("HSV minimum saturation: %d", hsv_min_s);
 }
 
 /**
@@ -51,8 +54,9 @@ void Segmenter::loadHSVMinVConfig()
 {
     int hsv_min_v;
     ros::param::get("/vision/segmenter/hsv_min_v", hsv_min_v);
-    ROS_INFO("HSV minimum value: %d", hsv_min_v);
     hsv_min_v_ = hsv_min_v;
+    
+    ROS_INFO("HSV minimum value: %d", hsv_min_v);
 }
 
 /**
@@ -63,11 +67,12 @@ void Segmenter::loadHSVAdjustConfig()
 {
     bool hsv_adjust;
     ros::param::get("/vision/segmenter/hsv_adjust", hsv_adjust);
-    
+
     ROS_INFO("HSV adjust: %d", hsv_adjust);
 
     if (hsv_adjust)
     {
+        // The trackbar goes from 0 to 255, wich is the highest number for 8 bit values used by HSV
         cv::createTrackbar("SMIN", window_name_, &hsv_min_s_, 256);
         cv::createTrackbar("VMIN", window_name_, &hsv_min_v_, 256);
     }
@@ -80,7 +85,7 @@ void Segmenter::loadHSVAdjustConfig()
  * are set manually.
  * Finally, it applies a morphological open (erosion followed by dilation) to remove noise.
  *
- * @param image Image that will be segmented.
+ * @param image image that will be segmented.
  * @return Black and white segmentation mask.
  */
 cv::Mat Segmenter::segment(cv::Mat image)
@@ -90,11 +95,15 @@ cv::Mat Segmenter::segment(cv::Mat image)
     cv::Mat structuring_element;
 
     // Convert to HSV, which segments faster than HLS and better than BGR
+    // TODO: Where the hell are these values coming from? *Tcholas*
     cv::cvtColor(image, hsv, CV_BGR2HSV);
     cv::inRange(hsv, cv::Scalar(0, hsv_min_s_, hsv_min_v_), cv::Scalar(180, 256, 256), mask);
 
-    // It is faster to apply the morphologic transformation twice than do it one with a
-    // larger structuring element
+    /*
+     * It is faster to apply the morphologic transformation twice than do it one with a
+     * larger structuring element
+     */
+    // TODO: Where the hell are these values coming from? *Tcholas*
     structuring_element = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(3, 3));
     cv::morphologyEx(mask, mask, cv::MORPH_OPEN, structuring_element, cv::Point(-1,-1), 2);
 

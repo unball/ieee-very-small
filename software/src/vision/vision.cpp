@@ -6,7 +6,7 @@
  *
  * @attention Copyright (C) 2014 UnBall Robot Soccer Team
  *
- * @brief  Vision class
+ * @brief Vision class
  *
  * Implements vision, which consists in six parts:
  * - Homography
@@ -18,7 +18,6 @@
  */
 
 #include <unball/vision/vision.hpp>
-#include <ros/ros.h>
 
 void Vision::setRGBFrame(cv::Mat rgb_frame)
 {
@@ -38,17 +37,18 @@ void Vision::setDepthFrame(cv::Mat depth_frame)
 
 /**
  * Check whether a frame has a valid size, i.e., neither the width nor the height can be zero.
- * @param frame Image that will be checked.
- * @return true is the image has proper size, false otherwise.
+ * @param frame image that will be checked.
+ * @return true if the image has proper size, false otherwise.
  */
 bool Vision::isValidSize(cv::Mat frame)
 {
-    bool result = (frame.rows == 0 || frame.cols == 0) ? false : true;
+    bool result = (frame.rows == 0 or frame.cols == 0) ? false : true;
     return result;
 }
 
 /**
  * TODO (matheus.v.portela@gmail.com): Implement this method to return the robot pose (x, y, theta)
+ * @param robot_number number of the robot.
  */
 float Vision::getRobotPose(int robot_number)
 {
@@ -56,7 +56,8 @@ float Vision::getRobotPose(int robot_number)
 }
 
 /**
- * Load configurations. This method must be called after initializing ROS using ros::init in the node main function.
+ * Load configurations.
+ * @warning This method must be called after initializing ROS using ros::init in the node main function.
  */
 void Vision::loadConfig()
 {
@@ -73,12 +74,14 @@ void Vision::run()
 {
     cv::Mat preprocessed;
     cv::Mat mask;
-
+    
     ROS_DEBUG("Run vision");
 
-    // When the frame does not have proper size, there is no need to execute the vision algorithms, since they will
-    // crash. This is not a bug, however, since it can happen when the system is started and no frame has been sent
-    // to the vision yet.
+    /*
+     * When the frame does not have proper size, there is no need to execute the vision algorithms, since they will
+     * crash. This is not a bug, however, since it can happen when the system is started and no frame has been sent
+     * to the vision yet.
+     */
     if ((using_rgb_) and (isValidSize(rgb_frame_)))
     {
         gui_.show(rgb_frame_);

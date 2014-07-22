@@ -14,7 +14,10 @@
 #ifndef UNBALL_VISION_H_
 #define UNBALL_VISION_H_
 
+#include <ros/ros.h>
+
 #include <opencv2/highgui/highgui.hpp>
+
 #include <unball/vision/preprocessor.hpp>
 #include <unball/vision/segmenter.hpp>
 #include <unball/vision/gui.hpp>

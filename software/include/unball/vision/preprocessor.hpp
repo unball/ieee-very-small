@@ -12,9 +12,10 @@
 #ifndef UNBALL_VISION_PREPROCESSOR_H_
 #define UNBALL_VISION_PREPROCESSOR_H_
 
-#include <ros/ros.h>
 #include <string>
-#include <iostream>
+
+#include <ros/ros.h>
+
 #include <opencv2/opencv.hpp>
 
 class Preprocessor
@@ -27,6 +28,7 @@ class Preprocessor
 
   private:
     void printMeanMinMax(cv::Mat image);
+    
     std::string window_name_;
 };
 

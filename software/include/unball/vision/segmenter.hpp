@@ -1,6 +1,7 @@
 /**
  * @file   segmenter.hpp
  * @author Matheus Vieira Portela
+ * @author Gabriel Naves da Silva
  * @date   12/07/2014
  *
  * @attention Copyright (C) 2014 UnBall Robot Soccer Team
@@ -12,6 +13,9 @@
 #define UNBALL_VISION_SEGMENTER_H_
 
 #include <string>
+
+#include <ros/ros.h>
+
 #include <opencv2/opencv.hpp>
 
 class Segmenter
@@ -27,6 +31,7 @@ class Segmenter
 
   private:
     std::string window_name_;
+    
     int hsv_min_s_;
     int hsv_min_v_;
 };

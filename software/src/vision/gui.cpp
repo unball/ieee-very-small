@@ -9,7 +9,6 @@
  */
 
 #include <unball/vision/gui.hpp>
-#include <ros/ros.h>
 
 GUI::GUI()
 {
@@ -29,9 +28,9 @@ GUI::~GUI()
 void GUI::show(cv::Mat image)
 {
     // Check frame size
-    if (image.cols == 0 || image.rows == 0)
+    if (image.cols == 0 or image.rows == 0)
     {
-        ROS_ERROR("Cannot show image of size %d x %d", image.cols, image.rows);
+        ROS_WARN("Cannot show image of size %d x %d", image.cols, image.rows);
         return;
     }
 

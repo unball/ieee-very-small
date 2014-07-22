@@ -10,7 +10,8 @@
  */
 
 #include <unball/vision/preprocessor.hpp>
-#include <opencv2/highgui/highgui.hpp>
+
+#include <iostream> // TODO: Remove this when printMeanMinMax is removed
 
 Preprocessor::Preprocessor()
 {
@@ -23,6 +24,9 @@ Preprocessor::~Preprocessor()
     cv::destroyWindow(window_name_);
 }
 
+/**
+ * TODO: Comment this later
+ */
 cv::Mat Preprocessor::preprocess(cv::Mat image)
 {
     cv::Mat preprocessed;
@@ -41,6 +45,8 @@ cv::Mat Preprocessor::preprocess(cv::Mat image)
  * TODO (gabri.navess@gmail.com): This is a temporary method.
  * It is here so I don't forget how to do this. ;P
  * It will be removed later.
+ * 
+ * @param image the image to be preprocessed
  */
 void Preprocessor::printMeanMinMax(cv::Mat image)
 {
@@ -69,10 +75,10 @@ void Preprocessor::printMeanMinMax(cv::Mat image)
 }
 
 /**
- * Prototype method for the preprocessing of the depth
- * images. For now, it doesn't do much, just prints
- * the maximum and minimum pixel values, and the mean,
- * on the screen.
+ * Prototype method for the preprocessing of the depth images. For now, it doesn't do much, just prints
+ * the maximum and minimum pixel values, and the mean, on the screen.
+ * 
+ * @param image the depth image to be preprocessed, it has to be a 16-bit unsigned image with one dimension (16UC1)
  */
 void Preprocessor::preprocessDepth(cv::Mat image)
 {
