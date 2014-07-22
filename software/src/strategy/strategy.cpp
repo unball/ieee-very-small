@@ -21,10 +21,11 @@ Strategy strategy;
 Strategy::Strategy()
 {
     play_controller_.pushPlay(PLAY_1);
-    setGameState(GAME_RUNNING);
+    setGameState(GameState::GAME_RUNNING);
+    score = 0;
 }
 
-void Strategy::setGameState(GameState game_state)
+void Strategy::setGameState(GameState::GlobalState game_state)
 {
     game_state_ = game_state;
 }
@@ -39,15 +40,15 @@ void Strategy::receiveKeyboardInput(char key)
     {
         case 'r': case 'R':
             ROS_INFO("Setting game state: RUNNING");
-            setGameState(GAME_RUNNING);
+            setGameState(GameState::GAME_RUNNING);
             break;
         case 'p': case 'P':
             ROS_INFO("Setting game state: PAUSED");
-            setGameState(GAME_PAUSED);
+            setGameState(GameState::GAME_PAUSED);
             break;
         case 'a': case 'A':
             ROS_INFO("Setting game state: ABORT");
-            setGameState(GAME_ABORTED);
+            setGameState(GameState::GAME_ABORTED);
             play_controller_.abortPlay();
             break;
         case '1':
@@ -68,7 +69,7 @@ void Strategy::receiveKeyboardInput(char key)
  */
 void Strategy::run()
 {
-    if (game_state_ != GAME_PAUSED)
+    if (game_state_ != GameState::GAME_PAUSED)
     {
         choosePlay();
         play_controller_.run();
@@ -81,4 +82,17 @@ void Strategy::run()
 void Strategy::choosePlay()
 {
     
+}
+
+void Strategy::updateBallState(GameState::BallState ball_state)
+{
+    ball_state_ = ball_state;
+}
+
+void Strategy::chooseStrategyState()
+{
+}
+
+void Strategy::updateScore()
+{
 }
