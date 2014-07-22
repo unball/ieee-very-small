@@ -43,10 +43,8 @@ void Vision::setDepthFrame(cv::Mat depth_frame)
  */
 bool Vision::isValidSize(cv::Mat frame)
 {
-    if (frame.rows == 0 || frame.cols == 0)
-        return false;
-    else
-        return true;
+    bool result = (frame.rows == 0 || frame.cols == 0) ? false : true;
+    return result;
 }
 
 /**

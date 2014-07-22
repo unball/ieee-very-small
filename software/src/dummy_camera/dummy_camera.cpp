@@ -63,6 +63,7 @@ int main(int argc, char **argv)
 
     // Opens depth image and check for errors
     std::string depth_image_file, folder(argv[2]);
+    if (depth_image_file[depth_image_file.size()-1] == '/') depth_image_file.erase(depth_image_file.end());
     depth_image_file = folder + "/depth";
     int depth_counter = 0;
 
@@ -93,6 +94,11 @@ int main(int argc, char **argv)
         depth_counter++;
         depth_frame.image = cv::imread(depth_image_file+to_string(depth_counter)+".png", CV_LOAD_IMAGE_ANYDEPTH);
         depth_pub.publish(depth_frame.toImageMsg());
+        
+        cv::Mat normed;
+        normalize(depth_frame.image, normed, 0, 255, cv::NORM_MINMAX, CV_8UC1);
+        cv::imshow("Depth image dummy camera", normed);
+        cv::waitKey(1);
         
         ros::spinOnce();
         loop_rate.sleep();
