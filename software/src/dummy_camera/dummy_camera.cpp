@@ -95,11 +95,6 @@ int main(int argc, char **argv)
         depth_frame.image = cv::imread(depth_image_file+to_string(depth_counter)+".png", CV_LOAD_IMAGE_ANYDEPTH);
         depth_pub.publish(depth_frame.toImageMsg());
         
-        cv::Mat normed;
-        normalize(depth_frame.image, normed, 0, 255, cv::NORM_MINMAX, CV_8UC1);
-        cv::imshow("Depth image dummy camera", normed);
-        cv::waitKey(1);
-        
         ros::spinOnce();
         loop_rate.sleep();
     }
