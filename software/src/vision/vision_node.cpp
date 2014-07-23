@@ -19,6 +19,7 @@
 #include <cv_bridge/cv_bridge.h>
 
 #include <unball/VisionMessage.h>
+
 #include <unball/vision/vision.hpp>
 
 // TODO: Implement this with singleton
