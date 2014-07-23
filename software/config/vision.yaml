@@ -1,8 +1,22 @@
 vision:
+    # Indicates whether the vision module will process RGB images or ignore them.
+    # true: process RGB images.
+    # false: ignore RGB images.
     using_rgb: true
+
+    # Indicates whether the vision module will process depth images or ignore them.
+    # true: process depth images.
+    # false: ignore depth images.
     using_depth: true
 
     segmenter:
+        # Show trackbars to manually set the minimum saturation and value for HSV segmentation.
+        # true: Show trackbars.
+        # false: Don't show trackbars.
         hsv_adjust: false
+
+        # Minimum saturation for HSV segmentation.
         hsv_min_s: 100
+
+        # Minimum value for HSV segmentation.
         hsv_min_v: 190
