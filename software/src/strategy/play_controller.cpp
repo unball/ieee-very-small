@@ -80,6 +80,7 @@ void PlayController::abortPlay()
  */
 void PlayController::updatePlay()
 {
+    if (play_ == NULL) return;
     ROS_INFO("UPDATE PLAY: %s", play_->getPlayName().c_str());
     
     if (isMutexUnlocked())
