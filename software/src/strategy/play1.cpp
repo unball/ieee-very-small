@@ -5,12 +5,10 @@
  *
  * @attention Copyright (C) 2014 UnBall Robot Soccer Team
  *
- * @brief  Play 1 class
+ * @brief Play 1 class
  */
 
 #include <unball/strategy/play1.hpp>
-#include <ros/ros.h>
-#include <unball/strategy/action_controller.hpp> // ActionControler action_controller;
 
 Play1::Play1() : Play()
 {
@@ -35,7 +33,7 @@ bool Play1::act()
 {
     switch (play_state_)
     {
-		// force initial stop (in case the last play was interrupted)
+        // force initial stop (in case the last play was interrupted)
         case 0:
             ROS_INFO("PLAY 1 STATE 0");
             action_controller.stop(3);

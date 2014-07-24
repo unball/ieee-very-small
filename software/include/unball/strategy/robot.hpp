@@ -13,10 +13,14 @@
 #ifndef UNBALL_ROBOT_H_
 #define UNBALL_ROBOT_H_
 
-#define ROBOT_SATURATION_LIN_VEL 5.0
-#define ROBOT_SATURATION_ANG_VEL 2.0
+#include <cmath>
+
+#include <ros/ros.h>
 
 #include <unball/geometry/point.hpp>
+
+#define ROBOT_SATURATION_LIN_VEL 5.0
+#define ROBOT_SATURATION_ANG_VEL 2.0
 
 enum MotionState
 {

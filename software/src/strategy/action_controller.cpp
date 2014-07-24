@@ -11,8 +11,6 @@
  */
 
 #include <unball/strategy/action_controller.hpp>
-#include <ros/ros.h>
-#include <unball/strategy/robot.hpp> // Robot robot[6];
 
 /**
  * Action controller global object

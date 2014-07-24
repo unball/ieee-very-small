@@ -13,6 +13,10 @@
 #ifndef UNBALL_ACTION_CONTROLLER_H_
 #define UNBALL_ACTION_CONTROLLER_H_
 
+#include <ros/ros.h>
+
+#include <unball/strategy/robot.hpp>
+
 class ActionController
 {
   public:

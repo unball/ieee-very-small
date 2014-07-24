@@ -11,7 +11,6 @@
  */
 
 #include <unball/strategy/strategy.hpp>
-#include <ros/ros.h>
 
 /**
  * Strategy global object

@@ -5,7 +5,7 @@
  *
  * @attention Copyright (C) 2014 UnBall Robot Soccer Team
  *
- * @brief  Play class
+ * @brief Play class
  *
  * Defines the requisits of any given play. All plays will inherit from Play
  * Uses the State Pattern to implement the run() method.
@@ -16,9 +16,10 @@
 
 #define INITIAL_PLAY_STATE 0
 
-#include <iostream>
 #include <cmath>
-#include <vector>
+
+#include <ros/ros.h>
+
 #include <unball/strategy/action_controller.hpp>
 #include <unball/strategy/ball.hpp>
 #include <unball/strategy/robot.hpp>
@@ -30,12 +31,12 @@ class Play
     bool run(); // Implement the code to execute the specific play
     
   protected:
-	//for those robots who have not finished their actions yet, set action_finished_ to false
-	virtual void setUnfinishedActions() = 0;
-	//moves the robots accoardingly to the play's objective. returns true if the action is done
-	virtual bool act() = 0;
-	
-	void initialRosMessage();
+    //for those robots who have not finished their actions yet, set action_finished_ to false
+    virtual void setUnfinishedActions() = 0;
+    //moves the robots accoardingly to the play's objective. returns true if the action is done
+    virtual bool act() = 0;
+
+    void initialRosMessage();
     int findRobotClosestToBall(std::vector<int> index);
 
     bool robots_action_finished_[6];
@@ -43,7 +44,7 @@ class Play
     std::string play_name_;
     
   private:
-	void finishRobotAction(int i);
+    void finishRobotAction(int i);
 };
 
 #endif  // UNBALL_PLAY_H_

@@ -13,12 +13,26 @@
 #ifndef UNBALL_STRATEGY_H_
 #define UNBALL_STRATEGY_H_
 
+#include <ros/ros.h>
+
 #include <unball/strategy/play_controller.hpp>
 
 namespace GameState
 {
-    enum BallState {OURS, THEIRS};
-    enum StrategyState {OFFENSIVE, DEFENSIVE, STALLING, VERY_OFFENSIVE};
+    enum BallState
+    {
+        OURS,
+        THEIRS
+    };
+
+    enum StrategyState
+    {
+        OFFENSIVE,
+        DEFENSIVE,
+        STALLING,
+        VERY_OFFENSIVE
+    };
+    
     enum GlobalState
     {
         GAME_RUNNING,

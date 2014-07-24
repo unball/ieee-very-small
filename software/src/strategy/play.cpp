@@ -5,10 +5,9 @@
  *
  * @attention Copyright (C) 2014 UnBall Robot Soccer Team
  *
- * @brief  play class
+ * @brief Play class
  */
 
-#include <ros/ros.h>
 #include <unball/strategy/play.hpp>
 
 Play::Play()
@@ -25,7 +24,7 @@ Play::Play()
 
 void Play::initialRosMessage()
 {
-	std::string message = play_name_ + " RUN";
+    std::string message = play_name_ + " RUN";
     ROS_INFO(message.c_str());
 }
 

@@ -11,8 +11,6 @@
  */
 
 #include <unball/strategy/ball.hpp>
-#include <cmath>
-#include <ros/ros.h>
 
 /**
  * Ball instance.

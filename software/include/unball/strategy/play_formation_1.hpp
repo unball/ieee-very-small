@@ -11,6 +11,9 @@
 #ifndef UNBALL_PLAY_FORMATION_1_H_
 #define UNBALL_PLAY_FORMATION_1_H_
 
+#include <ros/ros.h>
+
+#include <unball/strategy/action_controller.hpp>
 #include <unball/strategy/play.hpp>
 
 #define INITIAL_PLAY_STATE 0
@@ -18,10 +21,10 @@
 class PlayFormation1 : public Play
 {
   public:
-	PlayFormation1();
+    PlayFormation1();
   private:
-	void setUnfinishedActions();
-	bool act();
+    void setUnfinishedActions();
+    bool act();
 };
 
 #endif  // UNBALL_PLAY_FORMATION_1_H_

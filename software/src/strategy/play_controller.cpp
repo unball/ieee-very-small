@@ -11,8 +11,6 @@
  */
 
 #include <unball/strategy/play_controller.hpp>
-#include <ros/ros.h>
-#include <unball/strategy/action_controller.hpp> // ActionControler action_controller
 
 PlayController::PlayController()
 {

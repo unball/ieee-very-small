@@ -11,8 +11,6 @@
  */
 
 #include <unball/strategy/robot.hpp>
-#include <cmath>
-#include <ros/ros.h>
 
 /**
  * Robot global object

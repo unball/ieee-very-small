@@ -15,6 +15,10 @@
 #ifndef UNBALL_BALL_H_
 #define UNBALL_BALL_H_
 
+#include <cmath>
+
+#include <ros/ros.h>
+
 #include <unball/geometry/point.hpp>
 
 class Ball

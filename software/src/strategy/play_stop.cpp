@@ -5,19 +5,19 @@
  *
  * @attention Copyright (C) 2014 UnBall Robot Soccer Team
  *
- * @brief  Play stop class
+ * @brief Play stop class
  */
 
 #include <unball/strategy/play_stop.hpp>
-#include <ros/ros.h>
-#include <unball/strategy/action_controller.hpp> // ActionControler action_controller;
 
 PlayStop::PlayStop()
 {
     play_name_ = "PLAY STOP";
 }
 
-void PlayStop::setUnfinishedActions() {}
+void PlayStop::setUnfinishedActions()
+{
+}
 
 /**
  * Stops all actions from all robots

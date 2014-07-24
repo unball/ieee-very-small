@@ -5,12 +5,10 @@
  *
  * @attention Copyright (C) 2014 UnBall Robot Soccer Team
  *
- * @brief  Play formation 1 class
+ * @brief Play formation 1 class
  */
 
 #include <unball/strategy/play_formation_1.hpp>
-#include <ros/ros.h>
-#include <unball/strategy/action_controller.hpp> // ActionControler action_controller;
 
 PlayFormation1::PlayFormation1() : Play()
 {
@@ -62,5 +60,5 @@ bool PlayFormation1::act()
             return true;
     }
     
-    return false;	
+    return false;
 }
