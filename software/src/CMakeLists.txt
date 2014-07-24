@@ -100,3 +100,8 @@ target_link_libraries(simulator_node ${catkin_LIBRARIES})
 add_executable(keyboard_node keyboard/keyboard_node.cpp)
 add_dependencies(keyboard_node unball_gencpp)
 target_link_libraries(keyboard_node ${catkin_LIBRARIES})
+
+catkin_add_gtest(test_point
+  test/geometry/test_point.cpp
+  geometry/point.cpp)
+target_link_libraries(test_point ${catkin_LIBRARIES})
