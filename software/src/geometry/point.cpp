@@ -29,7 +29,7 @@ void Point::set(float x, float y)
     this->y = y;
 }
 
-void Point::set(const Point& point)
+void Point::set(const Point &point)
 {
     x = point.x;
     y = point.y;
@@ -54,7 +54,7 @@ void Point::movePointWithAngle(float distance, float angle)
 * relative to the positive x axis.
 * @param point The other point that defines the semiline
 */
-float Point::findAngle(const Point& point) const
+float Point::findAngle(const Point &point) const
 {
     if (point.y == y)
         return (point.x >= x ? 0 : M_PI);
@@ -68,6 +68,7 @@ float Point::findAngle(const Point& point) const
         return (M_PI + atan((y - point.y)/(x-point.x)));
     if (point.x < x && point.y > y)
         return (M_PI - atan((point.y - y)/(x-point.x)));
+
     return 0;
 }
 
@@ -77,7 +78,7 @@ float Point::findAngle(const Point& point) const
 */
 bool Point::equals(const Point& point)
 {
-    return distance(point) < 10 ? true : false;
+    return (distance(point) < 10);
 }
 
 float Point::distance(const Point& point)
@@ -102,11 +103,11 @@ Point Point::operator*(const float rhs) const
 
 Point Point::operator/(const float rhs) const
 {
-    //beware: does not treat divisions by 0
+    // beware: does not treat divisions by 0
     return Point(x / rhs, y / rhs);
 }
 
 bool Point::operator==(const Point& rhs) const
 {
-    return x == rhs.x and y == rhs.y ? true : false;
+    return (x == rhs.x and y == rhs.y);
 }
