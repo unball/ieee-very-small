@@ -53,6 +53,12 @@ int main(int argc, char **argv)
     return 0;
 }
 
+/**
+ * Loads configurations.
+ * @param rgb_sub the subscriber for the rgb frames
+ * @param depth_dub the subscriber for the depth frames
+ * @param img_transport the image transport handler
+ */
 void loadConfig(image_transport::Subscriber &rgb_sub, image_transport::Subscriber &depth_sub,
                 image_transport::ImageTransport &img_transport)
 {
