@@ -2,7 +2,7 @@
   <!-- start gazebo server-->
   <!-- to start the server paused, include a -u flag -->
   <node name="gazebo" pkg="gazebo_ros" type="gzserver" respawn="false" output="screen"
-	args="-u $(find unball)/simulator/ieee_very_small_field.world" />
+	args="-u $(find unball)/model/ieee_very_small_field.world" />
 	
   <!-- start gazebo client -->
   <node name="gazebo_gui" pkg="gazebo_ros" type="gzclient" respawn="false" output="screen" />
@@ -10,31 +10,31 @@
   <!-- spawn robots -->
   <group ns="robot_1">
   <node name="robot_1" pkg="gazebo_ros" type="spawn_model"
-  args="-file $(find unball)/simulator/unball_robot.urdf -urdf -x 0.37 -y 0.40 -z 0.05 -model robot_1" />
+  args="-file $(find unball)/model/unball_robot.urdf -urdf -x 0.37 -y 0.40 -z 0.05 -model robot_1" />
   </group>
   
   <group ns="robot_2">
   <node name="robot_2" pkg="gazebo_ros" type="spawn_model"
-  args="-file $(find unball)/simulator/unball_robot.urdf -urdf -x 0.37 -y -0.40 -z 0.05 -model robot_2" />
+  args="-file $(find unball)/model/unball_robot.urdf -urdf -x 0.37 -y -0.40 -z 0.05 -model robot_2" />
   </group>
   
   <group ns="robot_3">
   <node name="robot_3" pkg="gazebo_ros" type="spawn_model"
-  args="-file $(find unball)/simulator/unball_robot.urdf -urdf -x 0.60 -y 0 -z 0.05 -model robot_3" />
+  args="-file $(find unball)/model/unball_robot.urdf -urdf -x 0.60 -y 0 -z 0.05 -model robot_3" />
   </group>
   
   <group ns="robot_4">
   <node name="robot_4" pkg="gazebo_ros" type="spawn_model"
-  args="-file $(find unball)/simulator/unball_robot.urdf -urdf -x -0.37 -y 0.40 -z 0.05 -Y 3.14 -model robot_4" />
+  args="-file $(find unball)/model/unball_robot.urdf -urdf -x -0.37 -y 0.40 -z 0.05 -Y 3.14 -model robot_4" />
   </group>
   
   <group ns="robot_5">
   <node name="robot_5" pkg="gazebo_ros" type="spawn_model"
-  args="-file $(find unball)/simulator/unball_robot.urdf -urdf -x -0.37 -y -0.40 -z 0.05 -Y 3.14 -model robot_5" />
+  args="-file $(find unball)/model/unball_robot.urdf -urdf -x -0.37 -y -0.40 -z 0.05 -Y 3.14 -model robot_5" />
   </group>
   
   <group ns="robot_6">
   <node name="robot_6" pkg="gazebo_ros" type="spawn_model"
-  args="-file $(find unball)/simulator/unball_robot.urdf -urdf -x -0.60 -y 0 -z 0.05 -Y 3.14 -model robot_6" />
+  args="-file $(find unball)/model/unball_robot.urdf -urdf -x -0.60 -y 0 -z 0.05 -Y 3.14 -model robot_6" />
   </group>
 </launch>
