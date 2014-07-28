@@ -32,6 +32,8 @@ class Vision
     void loadConfig();
     void run();
     
+    static Vision& getInstance();
+
   private:
     bool using_rgb_;
     bool using_depth_;

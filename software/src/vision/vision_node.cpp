@@ -22,9 +22,6 @@
 
 #include <unball/vision/vision.hpp>
 
-// TODO: Implement this with singleton
-Vision vision;
-
 void publishRobotsPoses(ros::Publisher &publisher);
 void receiveRGBFrame(const sensor_msgs::ImageConstPtr& msg);
 void receiveDepthFrame(const sensor_msgs::ImageConstPtr& msg);
@@ -52,12 +49,12 @@ int main(int argc, char **argv)
     if (using_depth)
         depth_sub = img_transport.subscribe("camera/depth/image_raw", 1, receiveDepthFrame);
     
-    vision.loadConfig();
+    Vision::getInstance().loadConfig();
     
     // Main loop
     while (ros::ok())
     {
-        vision.run();
+        Vision::getInstance().run();
         publishRobotsPoses(publisher);
         ros::spinOnce();
         loop_rate.sleep();
@@ -78,7 +75,7 @@ void publishRobotsPoses(ros::Publisher &publisher)
     
     // TODO: Include y and theta in the loop
     for (unsigned int i = 0; i < message.x.size(); ++i)
-        message.x[i] = vision.getRobotPose(i);
+        message.x[i] = Vision::getInstance().getRobotPose(i);
     
     publisher.publish(message);
 }
@@ -101,7 +98,7 @@ void receiveRGBFrame(const sensor_msgs::ImageConstPtr &msg)
         return;
     }
     
-    vision.setRGBFrame(cv_ptr->image);
+    Vision::getInstance().setRGBFrame(cv_ptr->image);
 }
 
 /**
@@ -122,5 +119,5 @@ void receiveDepthFrame(const sensor_msgs::ImageConstPtr &msg)
         return;
     }
 
-    vision.setDepthFrame(cv_ptr->image);
+    Vision::getInstance().setDepthFrame(cv_ptr->image);
 }

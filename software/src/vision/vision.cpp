@@ -19,6 +19,12 @@
 
 #include <unball/vision/vision.hpp>
 
+Vision& Vision::getInstance()
+{
+    static Vision instance;
+    return instance;
+}
+
 void Vision::setRGBFrame(cv::Mat rgb_frame)
 {
     if (isValidSize(rgb_frame))
