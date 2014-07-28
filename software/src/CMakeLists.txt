@@ -55,6 +55,7 @@ link_directories(
 add_executable(strategy_node
   geometry/point.cpp
   strategy/strategy_node.cpp
+  strategy/state_estimator.cpp
   strategy/strategy.cpp
   strategy/robot.cpp
   strategy/ball.cpp

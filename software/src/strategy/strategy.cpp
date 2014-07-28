@@ -1,6 +1,7 @@
 /**
  * @file   strategy.cpp
  * @author Matheus Vieira Portela
+ * @author Icaro da Costa Mota
  * @date   23/03/2014
  *
  * @attention Copyright (C) 2014 UnBall Robot Soccer Team
@@ -20,13 +21,6 @@ Strategy strategy;
 Strategy::Strategy()
 {
     play_controller_.pushPlay(PLAY_1);
-    setGameState(GameState::GAME_RUNNING);
-    score = 0;
-}
-
-void Strategy::setGameState(GameState::GlobalState game_state)
-{
-    game_state_ = game_state;
 }
 
 /**
@@ -39,15 +33,15 @@ void Strategy::receiveKeyboardInput(char key)
     {
         case 'r': case 'R':
             ROS_INFO("Setting game state: RUNNING");
-            setGameState(GameState::GAME_RUNNING);
+            state_estimator_.setGameState(WorldState::GAME_RUNNING);
             break;
         case 'p': case 'P':
             ROS_INFO("Setting game state: PAUSED");
-            setGameState(GameState::GAME_PAUSED);
+            state_estimator_.setGameState(WorldState::GAME_PAUSED);
             break;
         case 'a': case 'A':
             ROS_INFO("Setting game state: ABORT");
-            setGameState(GameState::GAME_ABORTED);
+            state_estimator_.setGameState(WorldState::GAME_ABORTED);
             play_controller_.abortPlay();
             break;
         case '1':
@@ -68,7 +62,7 @@ void Strategy::receiveKeyboardInput(char key)
  */
 void Strategy::run()
 {
-    if (game_state_ != GameState::GAME_PAUSED)
+    if (state_estimator_.getGameState() != WorldState::GAME_PAUSED)
     {
         choosePlay();
         play_controller_.run();
@@ -83,15 +77,9 @@ void Strategy::choosePlay()
     
 }
 
-void Strategy::updateBallState(GameState::BallState ball_state)
-{
-    ball_state_ = ball_state;
-}
-
+/**
+ * Choose the best strategy state depending on the state of the game
+ */
 void Strategy::chooseStrategyState()
-{
-}
-
-void Strategy::updateScore()
 {
 }
