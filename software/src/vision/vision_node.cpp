@@ -22,6 +22,8 @@
 
 #include <unball/vision/vision.hpp>
 
+void loadConfig(image_transport::Subscriber &rgb_sub, image_transport::Subscriber &depth_sub,
+                image_transport::ImageTransport &img_transport);
 void publishRobotsPoses(ros::Publisher &publisher);
 void receiveRGBFrame(const sensor_msgs::ImageConstPtr& msg);
 void receiveDepthFrame(const sensor_msgs::ImageConstPtr& msg);
@@ -37,7 +39,23 @@ int main(int argc, char **argv)
     image_transport::ImageTransport img_transport(node_handle);
     image_transport::Subscriber rgb_sub, depth_sub;
     
-    // TODO: Create a function to do this
+    loadConfig(rgb_sub, depth_sub, img_transport);
+    
+    // Main loop
+    while (ros::ok())
+    {
+        Vision::getInstance().run();
+        publishRobotsPoses(publisher);
+        ros::spinOnce();
+        loop_rate.sleep();
+    }
+    
+    return 0;
+}
+
+void loadConfig(image_transport::Subscriber &rgb_sub, image_transport::Subscriber &depth_sub,
+                image_transport::ImageTransport &img_transport)
+{
     // Load configurations
     bool using_rgb, using_depth;
     
@@ -50,17 +68,6 @@ int main(int argc, char **argv)
         depth_sub = img_transport.subscribe("camera/depth/image_raw", 1, receiveDepthFrame);
     
     Vision::getInstance().loadConfig();
-    
-    // Main loop
-    while (ros::ok())
-    {
-        Vision::getInstance().run();
-        publishRobotsPoses(publisher);
-        ros::spinOnce();
-        loop_rate.sleep();
-    }
-    
-    return 0;
 }
 
 /**
