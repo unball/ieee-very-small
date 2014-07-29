@@ -85,6 +85,7 @@ void Vision::loadConfig()
 
     preprocessor_.loadConfig();
     segmenter_.loadConfig();
+    tracker_.loadConfig();
 }
 
 /**
@@ -93,7 +94,7 @@ void Vision::loadConfig()
 void Vision::run()
 {
     cv::Mat preprocessed;
-    cv::Mat mask;
+    cv::Mat segmented;
     
     ROS_DEBUG("Run vision");
 
@@ -106,7 +107,8 @@ void Vision::run()
     {
         gui_.show(rgb_frame_);
         preprocessed = preprocessor_.preprocess(rgb_frame_);
-        mask = segmenter_.segment(preprocessed);
+        segmented = segmenter_.segment(preprocessed);
+        tracker_.track(segmented);
     }
 
     if ((using_depth_) and (isValidSize(depth_frame_)))

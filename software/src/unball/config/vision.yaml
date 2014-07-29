@@ -11,11 +11,11 @@ vision:
 
     preprocessor:
         # Show image with the results of preprocessing
-        show_image: true
+        show_image: false
 
     segmenter:
         # Show image with the results of segmentation
-        show_image: true
+        show_image: false
 
         # Show trackbars to manually set the minimum saturation and value for HSV segmentation.
         # true: Show trackbars.
@@ -27,3 +27,7 @@ vision:
 
         # Minimum value for HSV segmentation.
         hsv_min_v: 190
+
+    tracker:
+        # Show image with the results of tracking
+        show_image: true

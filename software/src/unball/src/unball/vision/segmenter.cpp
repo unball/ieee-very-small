@@ -13,12 +13,13 @@
 
 Segmenter::Segmenter()
 {
-    window_name_ = "Segmentation";
+    window_name_ = "Segmenter";
 }
 
 Segmenter::~Segmenter()
 {
-    cv::destroyWindow(window_name_);
+    if (show_image_)
+        cv::destroyWindow(window_name_);
 }
 
 /**
@@ -40,8 +41,8 @@ void Segmenter::loadConfig()
  */
 void Segmenter::loadShowImage()
 {
-    ros::param::get("/vision/segmenter/hsv_min_s", show_image_);
-    ROS_INFO("Saturation show image: %d", hsv_min_s_);
+    ros::param::get("/vision/segmenter/show_image", show_image_);
+    ROS_INFO("Saturation show image: %d", show_image_);
 
     if (show_image_)
         cv::namedWindow(window_name_);

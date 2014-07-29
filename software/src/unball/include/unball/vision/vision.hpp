@@ -20,9 +20,10 @@
 
 #include <opencv2/opencv.hpp>
 
+#include <unball/vision/gui.hpp>
 #include <unball/vision/preprocessor.hpp>
 #include <unball/vision/segmenter.hpp>
-#include <unball/vision/gui.hpp>
+#include <unball/vision/tracker.hpp>
 
 class Vision
 {
@@ -45,6 +46,7 @@ class Vision
     GUI gui_;
     Preprocessor preprocessor_;
     Segmenter segmenter_;
+    Tracker tracker_;
 
     cv::Mat rgb_frame_;
     cv::Mat depth_frame_;

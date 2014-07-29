@@ -20,7 +20,8 @@ Preprocessor::Preprocessor()
 
 Preprocessor::~Preprocessor()
 {
-    cv::destroyWindow(window_name_);
+    if (show_image_)
+        cv::destroyWindow(window_name_);
 }
 
 /**
