@@ -19,10 +19,17 @@
 
 #include <unball/vision/vision.hpp>
 
+/**
+ * Vision singleton instance.
+ */
+Vision* Vision::instance = NULL;
+
 Vision& Vision::getInstance()
 {
-    static Vision instance;
-    return instance;
+    if (instance == NULL)
+        instance = new Vision();
+
+    return *instance;
 }
 
 void Vision::setRGBFrame(cv::Mat rgb_frame)

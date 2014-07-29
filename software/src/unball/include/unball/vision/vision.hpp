@@ -37,6 +37,8 @@ class Vision
     static Vision& getInstance();
 
   private:
+    static Vision *instance; // Singleton instance
+
     bool using_rgb_;
     bool using_depth_;
 

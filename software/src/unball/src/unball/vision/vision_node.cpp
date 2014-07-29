@@ -90,7 +90,6 @@ void publishRobotsPoses(ros::Publisher &publisher)
     for (unsigned int i = 0; i < message.x.size(); ++i)
     {
         pose = Vision::getInstance().getRobotPose(i);
-        ROS_ERROR("x: %f y: %f th: %f", pose[0], pose[1], pose[2]);
         message.x[i] = pose[0];
         message.y[i] = pose[1];
         message.th[i] = pose[2];
