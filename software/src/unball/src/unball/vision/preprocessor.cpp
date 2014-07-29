@@ -25,13 +25,16 @@ Preprocessor::~Preprocessor()
 }
 
 /**
- * TODO: Comment this later
+ * Preprocessing is simply applying a median blur to smooth out the image and, afterwards, get better segmentation results.
  */
 cv::Mat Preprocessor::preprocess(cv::Mat image)
 {
     cv::Mat preprocessed;
 
-    // Smoother images are better for segmentation
+    /*
+     * Smoother images are better for segmentation
+     * The last parameter is the aperture linear size K, which must be an odd number. A kernel of size K x K will be applied to the image.
+     */ 
     cv::medianBlur(image, preprocessed, 5);
 
     // Show results

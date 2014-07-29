@@ -83,12 +83,18 @@ void loadConfig(image_transport::Subscriber &rgb_sub, image_transport::Subscribe
 void publishRobotsPoses(ros::Publisher &publisher)
 {
     unball::VisionMessage message;
+    std::vector<float> pose;
     
     ROS_DEBUG("Publishing robots poses");
     
-    // TODO: Include y and theta in the loop
     for (unsigned int i = 0; i < message.x.size(); ++i)
-        message.x[i] = Vision::getInstance().getRobotPose(i);
+    {
+        pose = Vision::getInstance().getRobotPose(i);
+        ROS_ERROR("x: %f y: %f th: %f", pose[0], pose[1], pose[2]);
+        message.x[i] = pose[0];
+        message.y[i] = pose[1];
+        message.th[i] = pose[2];
+    }
     
     publisher.publish(message);
 }

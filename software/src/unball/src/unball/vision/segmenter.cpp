@@ -94,17 +94,32 @@ cv::Mat Segmenter::segment(cv::Mat image)
     cv::Mat hsv;
     cv::Mat structuring_element;
 
-    // Convert to HSV, which segments faster than HLS and better than BGR
-    // TODO: Where the hell are these values coming from? *Tcholas*
+    // Convert to HSV, which segments faster than HLS and better than BGR for color segmentation
     cv::cvtColor(image, hsv, CV_BGR2HSV);
+
+    /*
+     * (180, 256, 256) is the HSV coordinate for cyan. From 0 to 180, we have the following colors:
+     * - 0: Red
+     * - 30: Orange 
+     * - 60: Yellow
+     * - 120: Green
+     * - 150: Cyan
+     * If we need any color that lies out of this scope, we should change the Hue value.
+     * This range was chosen due to the colors that are most commonly present in the game field.
+     */
     cv::inRange(hsv, cv::Scalar(0, hsv_min_s_, hsv_min_v_), cv::Scalar(180, 256, 256), mask);
 
     /*
-     * It is faster to apply the morphologic transformation twice than do it one with a
-     * larger structuring element
+     * Creating a kernel for morphologic transformations. The second parameter is the size of this kernel.
+     * Empirically, a kernel of 3x3 generates good results for our application.
      */
-    // TODO: Where the hell are these values coming from? *Tcholas*
     structuring_element = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(3, 3));
+
+    /* The first parameter is the anchor point, which OpenCV defined as (-1, -1) by default. This indicates that the
+     * operation will be evaluated with respect to the kernel's center.
+     * The second parameter is the number of iterations for this operation. It is faster to apply the morphologic
+     * transformation twice than do it one with a larger kernel.
+     */
     cv::morphologyEx(mask, mask, cv::MORPH_OPEN, structuring_element, cv::Point(-1,-1), 2);
 
     // Show results

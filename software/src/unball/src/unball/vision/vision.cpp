@@ -53,12 +53,18 @@ bool Vision::isValidSize(cv::Mat frame)
 }
 
 /**
- * TODO (matheus.v.portela@gmail.com): Implement this method to return the robot pose (x, y, theta)
  * @param robot_number number of the robot.
  */
-float Vision::getRobotPose(int robot_number)
+std::vector<float> Vision::getRobotPose(int robot_number)
 {
-    return 0;
+    std::vector<float> pose(3);
+    
+    // Returning dummy values. This should be removed when positions are correctly extracted from the image.
+    pose[0] = 0;
+    pose[1] = 1;
+    pose[2] = 2;
+
+    return pose;
 }
 
 /**

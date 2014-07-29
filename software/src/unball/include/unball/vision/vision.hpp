@@ -14,6 +14,8 @@
 #ifndef UNBALL_VISION_H_
 #define UNBALL_VISION_H_
 
+#include <vector>
+
 #include <ros/ros.h>
 
 #include <opencv2/opencv.hpp>
@@ -28,7 +30,7 @@ class Vision
     void setRGBFrame(cv::Mat rgb_frame);
     void setDepthFrame(cv::Mat depth_frame);
     bool isValidSize(cv::Mat frame);
-    float getRobotPose(int robot_index);
+    std::vector<float> getRobotPose(int robot_index);
     void loadConfig();
     void run();
     
