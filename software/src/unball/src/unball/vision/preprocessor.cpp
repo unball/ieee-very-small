@@ -16,7 +16,6 @@
 Preprocessor::Preprocessor()
 {
     window_name_ = "Preprocessor";
-    cv::namedWindow(window_name_);
 }
 
 Preprocessor::~Preprocessor()
@@ -25,7 +24,21 @@ Preprocessor::~Preprocessor()
 }
 
 /**
- * Preprocessing is simply applying a median blur to smooth out the image and, afterwards, get better segmentation results.
+ * Load configurations.
+ * @warning This method must be called after initializing ROS using ros::init in the node main function.
+ */
+void Preprocessor::loadConfig()
+{
+    ros::param::get("/vision/preprocessor/show_image", show_image_);
+    ROS_INFO("Preprocessor show image: %d", show_image_);
+
+    if (show_image_)
+        cv::namedWindow(window_name_);
+}
+
+/**
+ * Preprocessing is simply applying a median blur to smooth out the image and, afterwards, get better segmentation
+ * results.
  */
 cv::Mat Preprocessor::preprocess(cv::Mat image)
 {
@@ -33,13 +46,18 @@ cv::Mat Preprocessor::preprocess(cv::Mat image)
 
     /*
      * Smoother images are better for segmentation
-     * The last parameter is the aperture linear size K, which must be an odd number. A kernel of size K x K will be applied to the image.
+     * The last parameter is the aperture linear size K, which must be an odd number. A kernel of size K x K will be
+     * applied to the image.
      */ 
     cv::medianBlur(image, preprocessed, 5);
 
+    // TODO(matheus.v.portela@gmail.com): GUI show be the only one to deal with showing images.
     // Show results
-    cv::imshow(window_name_, preprocessed);
-    cv::waitKey(1);
+    if (show_image_)
+    {
+        cv::imshow(window_name_, preprocessed);
+        cv::waitKey(1);
+    }
 
     return preprocessed;
 }

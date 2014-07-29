@@ -24,6 +24,7 @@ class Segmenter
     Segmenter();
     ~Segmenter();
     void loadConfig();
+    void loadShowImage();
     void loadHSVMinSConfig();
     void loadHSVMinVConfig();
     void loadHSVAdjustConfig();
@@ -31,7 +32,7 @@ class Segmenter
 
   private:
     std::string window_name_;
-    
+    bool show_image_;
     int hsv_min_s_;
     int hsv_min_v_;
 };

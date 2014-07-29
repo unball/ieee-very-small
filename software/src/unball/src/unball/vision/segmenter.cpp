@@ -14,7 +14,6 @@
 Segmenter::Segmenter()
 {
     window_name_ = "Segmentation";
-    cv::namedWindow(window_name_);
 }
 
 Segmenter::~Segmenter()
@@ -30,9 +29,22 @@ void Segmenter::loadConfig()
 {
     ROS_INFO("Loading segmenter configurations");
     
+    loadShowImage();
     loadHSVMinSConfig();
     loadHSVMinVConfig();
     loadHSVAdjustConfig();
+}
+
+/**
+ * Load show image configuration.
+ */
+void Segmenter::loadShowImage()
+{
+    ros::param::get("/vision/segmenter/hsv_min_s", show_image_);
+    ROS_INFO("Saturation show image: %d", hsv_min_s_);
+
+    if (show_image_)
+        cv::namedWindow(window_name_);
 }
 
 /**
@@ -40,11 +52,8 @@ void Segmenter::loadConfig()
  */
 void Segmenter::loadHSVMinSConfig()
 {
-    int hsv_min_s;
-    ros::param::get("/vision/segmenter/hsv_min_s", hsv_min_s);
-    hsv_min_s_ = hsv_min_s;
-    
-    ROS_INFO("HSV minimum saturation: %d", hsv_min_s);
+    ros::param::get("/vision/segmenter/hsv_min_s", hsv_min_s_);
+    ROS_INFO("HSV minimum saturation: %d", hsv_min_s_);
 }
 
 /**
@@ -52,11 +61,8 @@ void Segmenter::loadHSVMinSConfig()
  */
 void Segmenter::loadHSVMinVConfig()
 {
-    int hsv_min_v;
-    ros::param::get("/vision/segmenter/hsv_min_v", hsv_min_v);
-    hsv_min_v_ = hsv_min_v;
-    
-    ROS_INFO("HSV minimum value: %d", hsv_min_v);
+    ros::param::get("/vision/segmenter/hsv_min_v", hsv_min_v_);
+    ROS_INFO("HSV minimum value: %d", hsv_min_v_);
 }
 
 /**
@@ -122,9 +128,13 @@ cv::Mat Segmenter::segment(cv::Mat image)
      */
     cv::morphologyEx(mask, mask, cv::MORPH_OPEN, structuring_element, cv::Point(-1,-1), 2);
 
+    // TODO(matheus.v.portela@gmail.com): GUI show be the only one to deal with showing images.
     // Show results
-    cv::imshow(window_name_, mask);
-    cv::waitKey(1);
+    if (show_image_)
+    {
+        cv::imshow(window_name_, mask);
+        cv::waitKey(1);
+    }
 
     return mask;
 }

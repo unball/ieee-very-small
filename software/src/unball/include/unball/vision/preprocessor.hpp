@@ -23,12 +23,13 @@ class Preprocessor
   public:
     Preprocessor();
     ~Preprocessor();
+    void loadConfig();
     cv::Mat preprocess(cv::Mat image);
     void preprocessDepth(cv::Mat image);
 
   private:
     void printMeanMinMax(cv::Mat image);
-    
+    bool show_image_;
     std::string window_name_;
 };
 

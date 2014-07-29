@@ -83,6 +83,7 @@ void Vision::loadConfig()
     ros::param::get("/vision/using_rgb", using_rgb_);
     ros::param::get("/vision/using_depth", using_depth_);
 
+    preprocessor_.loadConfig();
     segmenter_.loadConfig();
 }
 

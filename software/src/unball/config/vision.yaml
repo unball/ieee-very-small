@@ -9,7 +9,14 @@ vision:
     # false: ignore depth images.
     using_depth: true
 
+    preprocessor:
+        # Show image with the results of preprocessing
+        show_image: true
+
     segmenter:
+        # Show image with the results of segmentation
+        show_image: true
+
         # Show trackbars to manually set the minimum saturation and value for HSV segmentation.
         # true: Show trackbars.
         # false: Don't show trackbars.
