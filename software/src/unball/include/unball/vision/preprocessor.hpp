@@ -24,7 +24,7 @@ class Preprocessor
     Preprocessor();
     ~Preprocessor();
     void loadConfig();
-    cv::Mat preprocess(cv::Mat image);
+    cv::Mat preprocessRGB(cv::Mat image);
     void preprocessDepth(cv::Mat image);
 
   private:

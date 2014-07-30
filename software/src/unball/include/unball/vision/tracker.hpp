@@ -12,10 +12,13 @@
 #define UNBALL_VISION_TRACKER_H_
 
 #include <string>
+#include <vector>
 
 #include <ros/ros.h>
 
 #include <opencv2/opencv.hpp>
+
+#include <unball/vision/tracked_object.hpp>
 
 class Tracker
 {
@@ -23,7 +26,7 @@ class Tracker
     Tracker();
     ~Tracker();
     void loadConfig();
-    void track(cv::Mat image);
+    void track(cv::Mat preprocessed, cv::Mat segmented);
 
   private:
     std::string window_name_;

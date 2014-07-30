@@ -37,11 +37,20 @@ void Tracker::loadConfig()
 /**
  * @param image segmented OpenCV image
  */
-void Tracker::track(cv::Mat image)
+void Tracker::track(cv::Mat preprocessed, cv::Mat segmented)
 {
+    cv::Mat tracked;
+    std::vector<cv::Mat> bgr_channels;
+
+    // Apply the segmented image mask to the processed image channel by channel
+    cv::split(preprocessed, bgr_channels);
+    for (int i = 0; i < bgr_channels.size(); ++i)
+        bgr_channels[i] &= segmented;
+    cv::merge(bgr_channels, tracked);
+
     if (show_image_)
     {
-        cv::imshow(window_name_, image);
+        cv::imshow(window_name_, tracked);
         cv::waitKey(1);
     }
 }

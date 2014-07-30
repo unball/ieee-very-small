@@ -25,12 +25,15 @@
 class GUI
 {
   public:
-    GUI();
-    ~GUI();
+    void setRGBFrame(cv::Mat rgb_frame);
+    void setDepthFrame(cv::Mat depth_frame);
     void show(cv::Mat image);
+    void showRGBFrame();
+    void showDepthFrame();
 
   private:
-    std::string window_name_;
+    cv::Mat rgb_frame_;
+    cv::Mat depth_frame_;
 };
 
 #endif // UNBALL_VISION_GUI_H_

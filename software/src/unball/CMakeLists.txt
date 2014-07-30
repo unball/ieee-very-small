@@ -75,7 +75,8 @@ add_executable(vision_node
   src/unball/vision/gui.cpp
   src/unball/vision/preprocessor.cpp
   src/unball/vision/segmenter.cpp
-  src/unball/vision/tracker.cpp)
+  src/unball/vision/tracker.cpp
+  src/unball/vision/tracked_object.cpp)
 add_dependencies(vision_node unball_gencpp)
 target_link_libraries(vision_node ${catkin_LIBRARIES})
 

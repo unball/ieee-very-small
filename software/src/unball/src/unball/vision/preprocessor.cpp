@@ -41,7 +41,7 @@ void Preprocessor::loadConfig()
  * Preprocessing is simply applying a median blur to smooth out the image and, afterwards, get better segmentation
  * results.
  */
-cv::Mat Preprocessor::preprocess(cv::Mat image)
+cv::Mat Preprocessor::preprocessRGB(cv::Mat image)
 {
     cv::Mat preprocessed;
 
@@ -72,9 +72,8 @@ cv::Mat Preprocessor::preprocess(cv::Mat image)
  */
 void Preprocessor::printMeanMinMax(cv::Mat image)
 {
-    unsigned short int min, max;
-    unsigned int mean, counter;
-    max = 0; min = 10000; mean = counter = 0;
+    unsigned short int min = 65535, max = 0;
+    unsigned int mean = 0, counter = 0;
 
     for (int i = 0; i < image.rows; i++)
     {
@@ -84,16 +83,20 @@ void Preprocessor::printMeanMinMax(cv::Mat image)
             {
                 counter++;
                 mean += image.at<unsigned short int>(i, j);
-                if (image.at<unsigned short int>(i, j) < min) min = image.at<unsigned short int>(i, j);
-                if (image.at<unsigned short int>(i, j) > max) max = image.at<unsigned short int>(i, j);
+                
+                if (image.at<unsigned short int>(i, j) < min)
+                    min = image.at<unsigned short int>(i, j);
+
+                if (image.at<unsigned short int>(i, j) > max)
+                    max = image.at<unsigned short int>(i, j);
             }
         }
     }
 
     mean = mean/counter;
-    //std::cout << "mean: " << mean << std::endl;
-    //std::cout << "Max: " << max << std::endl;
-    //std::cout << "Min: " << min << std::endl << std::endl;
+    ROS_INFO("Mean: %d", mean);
+    ROS_INFO("Max: %d", max);
+    ROS_INFO("Min: %d", min);
 }
 
 /**

@@ -98,6 +98,9 @@ void Vision::run()
     
     ROS_DEBUG("Run vision");
 
+    gui_.setRGBFrame(rgb_frame_);
+    gui_.setDepthFrame(depth_frame_);
+
     /*
      * When the frame does not have proper size, there is no need to execute the vision algorithms, since they will
      * crash. This is not a bug, however, since it can happen when the system is started and no frame has been sent
@@ -105,12 +108,48 @@ void Vision::run()
      */
     if ((using_rgb_) and (isValidSize(rgb_frame_)))
     {
-        gui_.show(rgb_frame_);
-        preprocessed = preprocessor_.preprocess(rgb_frame_);
+        preprocessed = preprocessor_.preprocessRGB(rgb_frame_);
         segmented = segmenter_.segment(preprocessed);
-        tracker_.track(segmented);
+        tracker_.track(preprocessed, segmented);
+
+        gui_.showRGBFrame();
     }
 
     if ((using_depth_) and (isValidSize(depth_frame_)))
+    {
         preprocessor_.preprocessDepth(depth_frame_);
+
+        gui_.showDepthFrame();
+    }
+
+    // Automatically find the soccer field
+    if ((using_rgb_) and (isValidSize(rgb_frame_)))
+    {
+        cv::Mat gray_frame;
+        cv::Mat edges_frame;
+        cv::Mat contours_frame;
+        std::vector< std::vector<cv::Point> > contours;
+        std::vector< std::vector<cv::Vec4i> > hierarchy;
+        cv::Scalar color;
+        cv::RNG rng(12345);
+
+        // Convert to grayscale
+        cv::cvtColor(preprocessed, gray_frame, CV_BGR2GRAY);
+
+        // Detect edges
+        cv::Canny(gray_frame, edges_frame, 100, 200, 3);
+
+        // Find contours
+        cv::findContours(edges_frame, contours, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_SIMPLE);
+
+        // Draw contours
+        contours_frame = cv::Mat::zeros(edges_frame.size(), CV_8UC3);
+        for (int i = 0; i < contours.size(); ++i)
+        {
+            color = cv::Scalar(rng.uniform(0, 255), rng.uniform(0, 255), rng.uniform(0, 255));
+            cv::drawContours(contours_frame, contours, i, color);
+        }
+
+        gui_.show(contours_frame);
+    }
 }
