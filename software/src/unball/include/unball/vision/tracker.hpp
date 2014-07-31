@@ -26,11 +26,14 @@ class Tracker
     Tracker();
     ~Tracker();
     void loadConfig();
+    void trackField(cv::Mat rgb_frame);
+    void updateFieldCenter(cv::Point field_center);
     void track(cv::Mat preprocessed, cv::Mat segmented);
 
   private:
     std::string window_name_;
     bool show_image_;
+    cv::Point field_center_;
 };
 
 #endif // UNBALL_VISION_TRACKER_H_

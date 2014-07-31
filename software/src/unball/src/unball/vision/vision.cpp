@@ -121,35 +121,4 @@ void Vision::run()
 
         gui_.showDepthFrame();
     }
-
-    // Automatically find the soccer field
-    if ((using_rgb_) and (isValidSize(rgb_frame_)))
-    {
-        cv::Mat gray_frame;
-        cv::Mat edges_frame;
-        cv::Mat contours_frame;
-        std::vector< std::vector<cv::Point> > contours;
-        std::vector< std::vector<cv::Vec4i> > hierarchy;
-        cv::Scalar color;
-        cv::RNG rng(12345);
-
-        // Convert to grayscale
-        cv::cvtColor(preprocessed, gray_frame, CV_BGR2GRAY);
-
-        // Detect edges
-        cv::Canny(gray_frame, edges_frame, 100, 200, 3);
-
-        // Find contours
-        cv::findContours(edges_frame, contours, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_SIMPLE);
-
-        // Draw contours
-        contours_frame = cv::Mat::zeros(edges_frame.size(), CV_8UC3);
-        for (int i = 0; i < contours.size(); ++i)
-        {
-            color = cv::Scalar(rng.uniform(0, 255), rng.uniform(0, 255), rng.uniform(0, 255));
-            cv::drawContours(contours_frame, contours, i, color);
-        }
-
-        gui_.show(contours_frame);
-    }
 }
