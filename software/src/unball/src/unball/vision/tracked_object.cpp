@@ -9,11 +9,3 @@
  */
 
 #include <unball/vision/tracked_object.hpp>
-
-TrackedObject::TrackedObject()
-{
-}
-
-TrackedObject::~TrackedObject()
-{
-}

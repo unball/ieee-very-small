@@ -82,38 +82,24 @@ void Tracker::trackField(cv::Mat tracking_frame)
         field_center.x = (top_left.x + bottom_right.x)/2;
         field_center.y = (top_left.y + bottom_right.y)/2;
 
-        // Update field center with exponential average
-        updateFieldCenter(field_center);
-
-        // Draw results on the image
-        cv::rectangle(tracking_frame, bounding_rect, cv::Scalar(0, 255, 0));
-        cv::circle(tracking_frame, field_center_, 60, cv::Scalar(0, 0, 255)); // arbitrary value for circle radius
-}
-
-/**
- * Applys exponential moving average to update field center.
- * @param field_center new value for field center
- */
-void Tracker::updateFieldCenter(cv::Point field_center)
-{
-    const float avg_constant = 0.25;
-
-    field_center_.x = (int)(avg_constant*field_center.x + (1.0 - avg_constant)*field_center_.x);
-    field_center_.y = (int)(avg_constant*field_center.y + (1.0 - avg_constant)*field_center_.y);
+        // Update
+        tracked_field_.updatePosition(field_center);
+        tracked_field_.updateBoundingRect(bounding_rect);
 }
 
 /**
  * @param preprocessed OpenCV BGR image
  * @param segmented OpenCV segmented image
  */
-void Tracker::track(cv::Mat preprocessed, cv::Mat segmented)
+void Tracker::track(cv::Mat rgb_frame, cv::Mat depth_frame)
 {
-    cv::Mat tracking_frame(preprocessed);
+    cv::Mat tracking_frame(rgb_frame);
 
     trackField(tracking_frame);
 
     if (show_image_)
     {
+        tracked_field_.drawMarker(tracking_frame);
         cv::imshow(window_name_, tracking_frame);
         cv::waitKey(1);
     }

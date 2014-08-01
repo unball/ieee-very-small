@@ -93,9 +93,6 @@ void Vision::loadConfig()
  */
 void Vision::run()
 {
-    cv::Mat preprocessed;
-    cv::Mat segmented;
-    
     ROS_DEBUG("Run vision");
 
     gui_.setRGBFrame(rgb_frame_);
@@ -106,19 +103,13 @@ void Vision::run()
      * crash. This is not a bug, however, since it can happen when the system is started and no frame has been sent
      * to the vision yet.
      */
-    if ((using_rgb_) and (isValidSize(rgb_frame_)))
+    if (isValidSize(rgb_frame_) and isValidSize(depth_frame_))
     {
-        preprocessed = preprocessor_.preprocessRGB(rgb_frame_);
-        segmented = segmenter_.segment(preprocessed);
-        tracker_.track(preprocessed, segmented);
+        preprocessor_.preprocess(rgb_frame_, depth_frame_);
+        //segmenter_.segment(rgb_preprocessed);
+        tracker_.track(rgb_frame_, depth_frame_);
 
         gui_.showRGBFrame();
-    }
-
-    if ((using_depth_) and (isValidSize(depth_frame_)))
-    {
-        preprocessor_.preprocessDepth(depth_frame_);
-
         gui_.showDepthFrame();
     }
 }

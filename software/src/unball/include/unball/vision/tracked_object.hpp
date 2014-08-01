@@ -11,14 +11,18 @@
 #ifndef UNBALL_VISION_TRACKED_OBJECT_H_
 #define UNBALL_VISION_TRACKED_OBJECT_H_
 
+#include <opencv2/opencv.hpp>
+
 class TrackedObject
 {
   public:
-    TrackedObject();
-    ~TrackedObject();
+    virtual void updatePosition(cv::Point position) = 0;
+    virtual void updateBoundingRect(cv::Rect bounding_rect) = 0;
+    virtual void drawMarker(cv::Mat &frame) = 0;
 
-  private:
-    
+  protected:
+    cv::Point position_;
+    cv::Rect bounding_rect_;
 };
 
 #endif // UNBALL_VISION_TRACKED_OBJECT_H_

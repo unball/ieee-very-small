@@ -41,26 +41,22 @@ void Preprocessor::loadConfig()
  * Preprocessing is simply applying a median blur to smooth out the image and, afterwards, get better segmentation
  * results.
  */
-cv::Mat Preprocessor::preprocessRGB(cv::Mat image)
+void Preprocessor::preprocessRGB(cv::Mat &rgb_frame)
 {
-    cv::Mat preprocessed;
-
     /*
      * Smoother images are better for segmentation
      * The last parameter is the aperture linear size K, which must be an odd number. A kernel of size K x K will be
      * applied to the image.
      */ 
-    cv::medianBlur(image, preprocessed, 5);
+    cv::medianBlur(rgb_frame, rgb_frame, 5);
 
     // TODO(matheus.v.portela@gmail.com): GUI show be the only one to deal with showing images.
     // Show results
     if (show_image_)
     {
-        cv::imshow(window_name_, preprocessed);
+        cv::imshow(window_name_, rgb_frame);
         cv::waitKey(1);
     }
-
-    return preprocessed;
 }
 
 /**
@@ -105,8 +101,18 @@ void Preprocessor::printMeanMinMax(cv::Mat image)
  * 
  * @param image the depth image to be preprocessed, it has to be a 16-bit unsigned image with one dimension (16UC1)
  */
-void Preprocessor::preprocessDepth(cv::Mat image)
+void Preprocessor::preprocessDepth(cv::Mat &depth_frame)
 {
-    printMeanMinMax(image);
+    printMeanMinMax(depth_frame);
 }
 
+/**
+ * Executing preprocessing
+ * @param rgb_frame OpenCV BGR frame
+ * @param depth_frame OpenCV depth frame, in CV_16UC1 with pixels representing distances in milimeters
+ */
+void Preprocessor::preprocess(cv::Mat &rgb_frame, cv::Mat &depth_frame)
+{
+    preprocessRGB(rgb_frame);
+    preprocessDepth(depth_frame);
+}

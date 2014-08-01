@@ -24,8 +24,9 @@ class Preprocessor
     Preprocessor();
     ~Preprocessor();
     void loadConfig();
-    cv::Mat preprocessRGB(cv::Mat image);
-    void preprocessDepth(cv::Mat image);
+    void preprocessRGB(cv::Mat &rgb_frame);
+    void preprocessDepth(cv::Mat &depth_frame);
+    void preprocess(cv::Mat &rgb_frame, cv::Mat &depth_frame);
 
   private:
     void printMeanMinMax(cv::Mat image);

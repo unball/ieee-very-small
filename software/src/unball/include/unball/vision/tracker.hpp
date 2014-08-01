@@ -18,7 +18,7 @@
 
 #include <opencv2/opencv.hpp>
 
-#include <unball/vision/tracked_object.hpp>
+#include <unball/vision/tracked_field.hpp>
 
 class Tracker
 {
@@ -28,12 +28,13 @@ class Tracker
     void loadConfig();
     void trackField(cv::Mat rgb_frame);
     void updateFieldCenter(cv::Point field_center);
-    void track(cv::Mat preprocessed, cv::Mat segmented);
+    void track(cv::Mat rgb_frame, cv::Mat depth_frame);
 
   private:
     std::string window_name_;
     bool show_image_;
     cv::Point field_center_;
+    TrackedField tracked_field_;
 };
 
 #endif // UNBALL_VISION_TRACKER_H_
