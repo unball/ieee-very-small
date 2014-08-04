@@ -34,17 +34,14 @@ class ActionController
     
   private:
     // Move attributes
-    float move_initial_x_[6];
-    float move_initial_y_[6];
+    Point move_initial_[6];
     float move_distance_[6];
     
     // Look at attributes
-    float look_at_x_[6];
-    float look_at_y_[6];
+    Point look_at_[6];
     
     // Go to attributes
-    float go_to_x_[6];
-    float go_to_y_[6];
+    Point go_to_[6];
     float go_to_error_dist_i_[6];
     float go_to_error_dist_d_[6];
     float go_to_error_ang_i_[6];

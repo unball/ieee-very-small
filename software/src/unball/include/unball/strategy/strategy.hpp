@@ -40,6 +40,7 @@ class Strategy
   private:
     void choosePlay();
     void chooseStrategyState();
+    void findRobotClosestToBall();
 
     StateEstimator state_estimator_;
     PlayController play_controller_;

@@ -24,15 +24,6 @@
 #include <unball/strategy/play_formation_1.hpp>
 #include <unball/strategy/play_formation_2.hpp>
 
-enum PlayId
-{
-    NO_PLAY = -1,
-    PLAY_STOP,
-    PLAY_1,
-    PLAY_FORMATION_1,
-    PLAY_FORMATION_2,
-};
-
 class PlayController
 {
   public:
