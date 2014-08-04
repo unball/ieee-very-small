@@ -1,6 +1,7 @@
 /**
  * @file   action_controller.hpp
  * @author Matheus Vieira Portela
+ * @author Icaro da Costa Mota
  * @date   25/04/2014
  *
  * @attention Copyright (C) 2014 UnBall Robot Soccer Team

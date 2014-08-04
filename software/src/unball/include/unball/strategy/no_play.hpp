@@ -1,31 +1,28 @@
 /**
  * @file   play1.hpp
- * @author Matheus Vieira Portela
  * @author Icaro da Costa Mota
- * @date   13/05/2014
+ * @date   4/08/2014
  *
  * @attention Copyright (C) 2014 UnBall Robot Soccer Team
  *
- * @brief Example play
+ * @brief Empty play
  */
 
-#ifndef UNBALL_PLAY1_H_
-#define UNBALL_PLAY1_H_
+#ifndef UNBALL_NO_PLAY_H_
+#define UNBALL_NO_PLAY_H_
 
 #include <ros/ros.h>
 
 #include <unball/strategy/play.hpp>
 #include <unball/strategy/action_controller.hpp>
 
-#define INITIAL_PLAY_STATE 0
-
-class Play1 : public Play
+class NoPlay : public Play
 {
   public:
-    Play1();
+    NoPlay();
   private:
     void setUnfinishedActions();
     bool act();
 };
 
-#endif  // UNBALL_PLAY1_H_
+#endif  // UNBALL_NO_PLAY_H_

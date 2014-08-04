@@ -1,5 +1,6 @@
 /**
- * @file   play.cpp
+ * @file   play1.cpp
+ * @author Matheus Vieira Portela
  * @author Icaro da Costa Mota
  * @date   15/07/2014
  *

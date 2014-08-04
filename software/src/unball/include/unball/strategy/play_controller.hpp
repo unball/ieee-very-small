@@ -18,6 +18,7 @@
 #include <ros/ros.h>
 
 #include <unball/strategy/action_controller.hpp>
+ #include <unball/strategy/no_play.hpp>
 #include <unball/strategy/play_stop.hpp>
 #include <unball/strategy/play1.hpp>
 #include <unball/strategy/play_formation_1.hpp>

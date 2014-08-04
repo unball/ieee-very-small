@@ -14,7 +14,7 @@
 
 PlayController::PlayController()
 {
-    setPlay(NULL); // Don't have any initial play
+    setPlay(new NoPlay()); // Don't have any initial play
     mutexUnlock(); // Allow to change plays
 }
 
@@ -33,9 +33,7 @@ void PlayController::run()
  */
 void PlayController::setPlay(Play *play)
 {
-    if (play == NULL) ROS_INFO("Set play: NONE");
-    // Dont set if that is already the actual play. shouldnt be a problem, since we are controlling this with a mutex
-    else ROS_INFO("Set play: %s", play->getPlayName().c_str());
+    ROS_INFO("Set play: %s", play->getPlayName().c_str());
     delete play_;
     play_ = play;
 }
@@ -76,10 +74,7 @@ void PlayController::abortPlay()
  */
 void PlayController::updatePlay()
 {
-    if (play_ != NULL)
-        ROS_INFO("UPDATE PLAY: %s", play_->getPlayName().c_str());
-    else
-        ROS_INFO("UPDATE PLAY: NONE");
+    ROS_INFO("UPDATE PLAY: %s", play_->getPlayName().c_str());
 
     if (isMutexUnlocked())
     {
@@ -90,7 +85,7 @@ void PlayController::updatePlay()
         }
         else
         {
-            setPlay(NULL);
+            setPlay(new NoPlay);
         }
 
         mutexLock();
@@ -104,7 +99,7 @@ void PlayController::executePlay()
 {
     bool has_play_finished;
     
-    has_play_finished = (play_ == NULL) ? true : play_->run();
+    has_play_finished = play_->run();
     
     if (has_play_finished)
         mutexUnlock();
