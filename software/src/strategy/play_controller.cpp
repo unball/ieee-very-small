@@ -37,7 +37,6 @@ void PlayController::setPlay(Play *play)
 {
     if (play == NULL) ROS_INFO("Set play: NONE");
     // Dont set if that is already the actual play. shouldnt be a problem, since we are controlling this with a mutex
-    else if (play->getPlayName() == play_->getPlayName()) return; 
     else ROS_INFO("Set play: %s", play->getPlayName().c_str());
     delete play_;
     play_ = play;
