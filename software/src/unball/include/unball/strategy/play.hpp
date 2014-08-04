@@ -29,6 +29,7 @@ class Play
   public:
     Play();
     bool run(); // Implement the code to execute the specific play
+    std::string getPlayName();
     
   protected:
     //for those robots who have not finished their actions yet, set action_finished_ to false

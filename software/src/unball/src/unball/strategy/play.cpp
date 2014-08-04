@@ -22,6 +22,11 @@ Play::Play()
     play_state_ = INITIAL_PLAY_STATE;
 }
 
+std::string Play::getPlayName()
+{
+    return(play_name_);
+}
+
 void Play::initialRosMessage()
 {
     std::string message = play_name_ + " RUN";
