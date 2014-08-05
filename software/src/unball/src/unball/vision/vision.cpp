@@ -106,7 +106,7 @@ void Vision::run()
     if (isValidSize(rgb_frame_) and isValidSize(depth_frame_))
     {
         preprocessor_.preprocess(rgb_frame_, depth_frame_);
-        //segmenter_.segment(rgb_preprocessed);
+        // segmenter_.segment(rgb_frame_);
         tracker_.track(rgb_frame_, depth_frame_);
 
         gui_.showRGBFrame();

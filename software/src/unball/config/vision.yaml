@@ -30,4 +30,8 @@ vision:
 
     tracker:
         # Show image with the results of tracking
-        show_image: true
+        show_image: false
+
+        # Select which method will be used to track the soccer field
+        # Options: "rgb" or "depth"
+        field_tracking_mode: "rgb"

@@ -20,20 +20,25 @@
 
 #include <unball/vision/tracked_field.hpp>
 
+#define BAD_CONFIG 1
+
 class Tracker
 {
   public:
     Tracker();
     ~Tracker();
+    void loadShowImage();
+    void loadFieldTrackingMode();
     void loadConfig();
-    void trackField(cv::Mat rgb_frame);
-    void updateFieldCenter(cv::Point field_center);
+    void trackFieldWithRGB(cv::Mat rgb_frame);
+    void trackFieldWithDepth(cv::Mat depth_frame);
+    void trackField(cv::Mat rgb_frame, cv::Mat depth_frame);
     void track(cv::Mat rgb_frame, cv::Mat depth_frame);
 
   private:
     std::string window_name_;
     bool show_image_;
-    cv::Point field_center_;
+    std::string field_tracking_mode_;
     TrackedField tracked_field_;
 };
 
