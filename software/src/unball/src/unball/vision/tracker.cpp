@@ -210,11 +210,58 @@ void Tracker::trackField(cv::Mat rgb_frame, cv::Mat depth_frame)
 }
 
 /**
+ * Track robots
+ * @param rgb_frame OpenCV BGR image containing a soccer field
+ * @param depth_frame 16UC1 image from depth sensor
+ * @param rgb_segmented_frame Binary image from segmenter 
+ */
+void Tracker::trackRobots(cv::Mat rgb_frame, cv::Mat depth_frame, cv::Mat rgb_segmented_frame)
+{
+    cv::Mat track_robots_image = cv::Mat::zeros(rgb_segmented_frame.size(), CV_8UC3);
+    std::vector< std::vector<cv::Point> > contours;
+    cv::Rect bounding_rect;
+    cv::Scalar TEAM_1_COLOR(0, 0, 255); // Red team
+    cv::Scalar TEAM_2_COLOR(255, 0, 255); // Pink team
+    cv::Point top_left;
+    cv::Point bottom_right;
+    cv::Point center;
+    std::vector<cv::Mat> robots_frame;
+    std::vector<cv::Point> robots_positions;
+    
+    // Find blobs from segmented image and extract images
+    cv::findContours(rgb_segmented_frame, contours, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_SIMPLE);
+    for (int i = 0; i < contours.size(); ++i)
+    {
+        // Find bounding rectangle
+        bounding_rect = cv::boundingRect(contours[i]);
+        robots_frame.push_back(cv::Mat(rgb_frame(bounding_rect)));
+
+        // Find center
+        top_left = bounding_rect.tl();
+        bottom_right = bounding_rect.br();
+        center.x = (top_left.x + bottom_right.x)/2;
+        center.y = (top_left.y + bottom_right.y)/2;
+        robots_positions.push_back(cv::Point(center));
+
+        // Detect team
+        TrackedRobot(rgb_frame(bounding_rect));
+
+        // Results
+        cv::rectangle(rgb_frame, bounding_rect, TEAM_2_COLOR, 2);
+        ROS_ERROR("Robot %d: (%d,%d)", i, center.x, center.y);
+    }
+
+    // cv::imshow("Track robots", robots_frame[0]);
+    // cv::waitKey(1);
+}
+
+/**
  * Track objects in RGB and depth images
  * @param preprocessed OpenCV BGR image
  * @param segmented OpenCV segmented image
  */
-void Tracker::track(cv::Mat rgb_frame, cv::Mat depth_frame)
+void Tracker::track(cv::Mat rgb_frame, cv::Mat depth_frame, cv::Mat rgb_segmented_frame)
 {
     trackField(rgb_frame, depth_frame);
+    trackRobots(rgb_frame, depth_frame, rgb_segmented_frame);
 }

@@ -125,9 +125,11 @@ cv::Mat Segmenter::segment(cv::Mat image)
     /* The first parameter is the anchor point, which OpenCV defined as (-1, -1) by default. This indicates that the
      * operation will be evaluated with respect to the kernel's center.
      * The second parameter is the number of iterations for this operation. It is faster to apply the morphologic
-     * transformation twice than do it one with a larger kernel.
+     * transformation multiple times than do it one with a larger kernel.
+     * Dilate more times than erode to merge the robot's squares as a single blob.
      */
-    cv::morphologyEx(mask, mask, cv::MORPH_OPEN, structuring_element, cv::Point(-1,-1), 2);
+    cv::morphologyEx(mask, mask, cv::MORPH_ERODE, structuring_element, cv::Point(-1,-1), 3);
+    cv::morphologyEx(mask, mask, cv::MORPH_DILATE, structuring_element, cv::Point(-1,-1), 5);
 
     // TODO(matheus.v.portela@gmail.com): GUI show be the only one to deal with showing images.
     // Show results

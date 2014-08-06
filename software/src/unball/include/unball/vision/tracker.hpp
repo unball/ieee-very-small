@@ -19,6 +19,7 @@
 #include <opencv2/opencv.hpp>
 
 #include <unball/vision/tracked_field.hpp>
+#include <unball/vision/tracked_robot.hpp>
 
 #define BAD_CONFIG 1
 
@@ -33,7 +34,8 @@ class Tracker
     void trackFieldWithRGB(cv::Mat rgb_frame);
     void trackFieldWithDepth(cv::Mat depth_frame);
     void trackField(cv::Mat rgb_frame, cv::Mat depth_frame);
-    void track(cv::Mat rgb_frame, cv::Mat depth_frame);
+    void trackRobots(cv::Mat rgb_frame, cv::Mat depth_frame, cv::Mat rgb_segmented_frame);
+    void track(cv::Mat rgb_frame, cv::Mat depth_frame, cv::Mat rgb_segmented_frame);
 
   private:
     std::string window_name_;

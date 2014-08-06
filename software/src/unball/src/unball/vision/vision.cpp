@@ -93,6 +93,8 @@ void Vision::loadConfig()
  */
 void Vision::run()
 {
+    cv::Mat rgb_segmented_frame;
+
     ROS_DEBUG("Run vision");
 
     gui_.setRGBFrame(rgb_frame_);
@@ -106,8 +108,8 @@ void Vision::run()
     if (isValidSize(rgb_frame_) and isValidSize(depth_frame_))
     {
         preprocessor_.preprocess(rgb_frame_, depth_frame_);
-        // segmenter_.segment(rgb_frame_);
-        tracker_.track(rgb_frame_, depth_frame_);
+        rgb_segmented_frame = segmenter_.segment(rgb_frame_);
+        tracker_.track(rgb_frame_, depth_frame_, rgb_segmented_frame);
 
         gui_.showRGBFrame();
         gui_.showDepthFrame();
