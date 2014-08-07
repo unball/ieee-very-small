@@ -30,7 +30,7 @@ std::string Play::getPlayName()
 void Play::initialRosMessage()
 {
     std::string message = play_name_ + " RUN";
-    ROS_INFO(message.c_str());
+    ROS_INFO("%s", message.c_str());
 }
 
 /**
