@@ -38,14 +38,14 @@ class Tactic
     virtual bool act() = 0;
 
     void initialRosMessage();
-    int findRobotClosestToBall(std::vector<int> index);
 
-    bool robots_action_finished_[6];
+    bool robot_action_finished_;
+    int robot_num_;
     int tactic_state_;
     std::string tactic_name_;
     
   private:
-    void finishRobotAction(int i);
+    void finishRobotAction();
 };
 
 #endif  // UNBALL_TACTIC_H_
