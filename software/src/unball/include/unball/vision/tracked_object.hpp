@@ -13,16 +13,23 @@
 
 #include <opencv2/opencv.hpp>
 
+#include <unball/vision/tracked_object_type.hpp>
+
 class TrackedObject
 {
   public:
-    virtual void updatePosition(cv::Point position) = 0;
-    virtual void updateBoundingRect(cv::Rect bounding_rect) = 0;
-    virtual void drawMarker(cv::Mat &frame) = 0;
+    TrackedObject();
+    ~TrackedObject();
+    
+    virtual void init(cv::Rect &tracking_window);
+    virtual void track(cv::Mat &rgb_frame, cv::Mat &depth_frame, cv::Mat &rgb_segmented_frame);
+    virtual void draw(cv::Mat &frame);
 
   protected:
+    TrackedObjectType type_;
     cv::Point position_;
-    cv::Rect bounding_rect_;
+    float orientation_;
+    cv::Rect tracking_window_;
 };
 
 #endif // UNBALL_VISION_TRACKED_OBJECT_H_

@@ -62,6 +62,7 @@ add_executable(strategy_node
   src/unball/strategy/action_controller.cpp
   src/unball/strategy/play_controller.cpp
   src/unball/strategy/play.cpp
+  src/unball/strategy/tactic.cpp
   src/unball/strategy/no_play.cpp
   src/unball/strategy/play_stop.cpp
   src/unball/strategy/play1.cpp

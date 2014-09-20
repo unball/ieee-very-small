@@ -10,61 +10,41 @@
 
 #include <unball/vision/tracked_robot.hpp>
 
-// Exponential moving average constant
-const float TrackedRobot::AVG_CONSTANT = 0.25;
-
-// Bounding rectangle color in BGR
-const cv::Scalar TrackedRobot::TEAM_1_COLOR(0, 0, 255);
-
-// Bounding rectangle color in BGR
-const cv::Scalar TrackedRobot::TEAM_2_COLOR(255, 0, 255);
-
-TrackedRobot::TrackedRobot(cv::Mat frame)
+TrackedRobot::TrackedRobot()
 {
-    frame.copyTo(frame_);
+    type_ = ROBOT;
 }
 
-/**
- * Calculates exponential moving average. This filter updates the value by giving more importance to new values than
- * older ones according to a constant value.
- * The average constant indicates the level of confidence in the measured values, from 0 to 1. Higher values indicate
- * that new measurements are relatively precise and should receive more importance than older ones.
- * @param old_value Previous accumulated value
- * @param new_value Measured value
- * @return Averaged value according to the constant
- */
-int TrackedRobot::exponentialMovingAvg(int old_value, int new_value)
+TrackedRobot::~TrackedRobot()
 {
-    return (AVG_CONSTANT*new_value + (1.0-AVG_CONSTANT)*old_value);
 }
 
-/**
- * Updates the field position using an exponential moving average.
- * @param position measured position
- */
-void TrackedRobot::updatePosition(cv::Point position)
+void TrackedRobot::track(cv::Mat &rgb_frame, cv::Mat &depth_frame, cv::Mat &rgb_segmented_frame)
 {
-    position_.x = exponentialMovingAvg(position_.x, position.x);
-    position_.y = exponentialMovingAvg(position_.y, position.y);
-}
+    std::vector< std::vector<cv::Point> > contours;
+    cv::Rect tracking_window;
+    cv::Point top_left;
+    cv::Point bottom_right;
+    cv::Point center;
+    std::vector<cv::Mat> robots_frame;
+    std::vector<cv::Point> robots_positions;
+    
+    // Find blobs from segmented image and extract images
+    cv::findContours(rgb_segmented_frame, contours, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_SIMPLE);
+    for (int i = 0; i < contours.size(); ++i)
+    {
+        // Find bounding rectangle
+        tracking_window = cv::boundingRect(contours[i]);
+        robots_frame.push_back(cv::Mat(rgb_frame(tracking_window)));
 
-/**
- * Updates the field bounding rectangle using an exponential moving average.
- * @param bounding_rect new bounding rectangle
- */
-void TrackedRobot::updateBoundingRect(cv::Rect bounding_rect)
-{
-    bounding_rect_.x = exponentialMovingAvg(bounding_rect_.x, bounding_rect.x);
-    bounding_rect_.y = exponentialMovingAvg(bounding_rect_.y, bounding_rect.y);
-    bounding_rect_.width = exponentialMovingAvg(bounding_rect_.width, bounding_rect.width);
-    bounding_rect_.height = exponentialMovingAvg(bounding_rect_.height, bounding_rect.height);
-}
+        // Calculate position
+        top_left = tracking_window.tl();
+        bottom_right = tracking_window.br();
+        center.x = (top_left.x + bottom_right.x)/2;
+        center.y = (top_left.y + bottom_right.y)/2;
+        robots_positions.push_back(cv::Point(center));
 
-/**
- * Draw bounding rectangle and central circle
- * @param frame OpenCV image frame to draw on
- */
-void TrackedRobot::drawMarker(cv::Mat &frame)
-{
-    cv::rectangle(frame, bounding_rect_, TEAM_1_COLOR);
+        cv::rectangle(rgb_frame, tracking_window, (255, 0, 255), 2);
+        ROS_ERROR("Robot %d: (%d,%d)", i, center.x, center.y);
+    }
 }
