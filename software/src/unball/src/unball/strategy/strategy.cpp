@@ -20,7 +20,7 @@ Strategy strategy;
 
 Strategy::Strategy()
 {
-    play_controller_.pushPlay(new Play1());
+    play_controller_.pushPlay(new PlayFormation2());
 }
 
 /**
