@@ -24,7 +24,8 @@ void PlayFormation2::setUnfinishedActions()
     {
         robots_action_finished_[3] = false;
         robots_action_finished_[4] = false;
-        ++play_state_;
+        ++play_state_[3];
+        ++play_state_[4];        
     }
 }
 
@@ -35,7 +36,7 @@ void PlayFormation2::setUnfinishedActions()
  */
 bool PlayFormation2::act()
 {
-    switch (play_state_)
+    switch (play_state_[3])
     {
         // force initial stop (in case the last play was interrupted)
         case 0:
@@ -55,7 +56,8 @@ bool PlayFormation2::act()
             break;
         default:
             ROS_INFO("PLAY FORMATION 2 FINISHED");
-            play_state_ = 0; // Reseting play state for the next time the play is called
+            for (int i = 0; i < 6; i++)
+                play_state_[i] = 0; // Reseting play state for the next time the play is called
             return true;
     }
     

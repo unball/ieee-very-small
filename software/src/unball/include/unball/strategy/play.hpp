@@ -41,7 +41,7 @@ class Play
     int findRobotClosestToBall(std::vector<int> index);
 
     bool robots_action_finished_[6];
-    int play_state_;
+    int play_state_[6];
     std::string play_name_;
     
   private:

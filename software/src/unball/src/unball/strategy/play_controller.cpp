@@ -85,7 +85,7 @@ void PlayController::updatePlay()
         }
         else
         {
-            setPlay(new NoPlay);
+            setPlay(new NoPlay());
         }
 
         mutexLock();
