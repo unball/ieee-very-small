@@ -47,26 +47,53 @@ bool PlayFormation1::act()
             // force initial stop (in case the last play was interrupted)
             case 0:
                 ROS_INFO("PLAY FORMATION 1 STATE 0");
-                action_controller.stop(3);
-                action_controller.stop(4);
+                actState0(i);
                 break;
             case 1:
                 ROS_INFO("PLAY FORMATION 1 STATE 1");
-                action_controller.goTo(3, -0.30, 0);
-                action_controller.goTo(4, 0.30, 0);
+                actState1(i);
                 break;
             case 2:
                 ROS_INFO("PLAY FORMATION 1 STATE 2");
-                action_controller.lookAt(3, 0, 0);
-                action_controller.lookAt(4, 0, 0);
+                actState2(i);
                 break;
             default:;
                 ROS_INFO("PLAY FORMATION 1 FINISHED");
-                play_state_[3] = 0; // Reseting play state for the next time the play is called
-                play_state_[4] = 0; // Reseting play state for the next time the play is called
+                play_state_[i] = 0; // Reseting play state for the next time the play is called
                 return true;
         }
     }
     
     return false;
+}
+
+void PlayFormation1::actState0(int robot)
+{
+    if (robot == 3 or robot == 4)
+        action_controller.stop(robot);
+}
+
+void PlayFormation1::actState1(int robot)
+{
+    int x,y;
+    switch (robot)
+    {
+        case 3:
+            x = -0.30;
+            y = 0;
+            break;
+        case 4:
+            x = 0.30;
+            y = 0;
+            break;
+        default:
+            return;
+    }
+    action_controller.goTo(robot, x, y);
+}
+
+void PlayFormation1::actState2(int robot)
+{
+    if (robot == 3 or robot == 4)
+        action_controller.lookAt(robot, 0, 0);    
 }

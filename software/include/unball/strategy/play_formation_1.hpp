@@ -25,6 +25,9 @@ class PlayFormation1 : public Play
   private:
     void setUnfinishedActions();
     bool act();
+    void actState0(int robot);
+    void actState1(int robot);
+    void actState2(int robot);
 };
 
 #endif  // UNBALL_PLAY_FORMATION_1_H_

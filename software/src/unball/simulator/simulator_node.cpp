@@ -29,7 +29,8 @@ void publishVisionMessage(ros::Publisher &publisher, std::vector<float> &x, std:
 
 ros::Publisher publisher[6], poses_publisher;
 
-int main(int argc, char **argv){
+int main(int argc, char **argv)
+{
     ros::init(argc, argv, "simulator_node");
    
     ros::NodeHandle n;
