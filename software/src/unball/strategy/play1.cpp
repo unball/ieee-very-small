@@ -33,7 +33,7 @@ void Play1::setUnfinishedActions()
 
 bool Play1::act()
 {
-    for (int i=0; i<6; i++)
+    for (int i = 0; i < 6; ++i)
     {
         switch (play_state_[i])
         {
@@ -52,7 +52,7 @@ bool Play1::act()
             default:
                 ROS_INFO("PLAY 1 FINISHED");
                 play_state_[i] = 0; // Reseting play state for the next time the play is called
-            return true;
+                return true;
         }
     }
     
@@ -67,7 +67,8 @@ void Play1::actState0(int robot)
 
 void Play1::actState1(int robot)
 {
-    int x,y;
+    int x, y;
+
     switch (robot)
     {
         case 3:
@@ -81,12 +82,14 @@ void Play1::actState1(int robot)
         default:
             return;
     }
+
     action_controller.goTo(robot, x, y);
 }
 
 void Play1::actState2(int robot)
 {
-    int x,y;
+    int x, y;
+
     switch (robot)
     {
         case 3:
@@ -100,5 +103,6 @@ void Play1::actState2(int robot)
         default:
             return;
     }
+    
     action_controller.goTo(robot, x, y);
 }

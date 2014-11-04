@@ -7,7 +7,8 @@
  *
  * @brief Play class
  *
- * Defines strategy plays
+ * Plays are sequences of asynchronous actions for multiple robots.
+ * PlayController controls sequences of plays that will be executed by the strategy module.
  */
 
 #ifndef UNBALL_PLAY_CONTROLLER_H_
@@ -18,7 +19,7 @@
 #include <ros/ros.h>
 
 #include <unball/strategy/action_controller.hpp>
- #include <unball/strategy/no_play.hpp>
+#include <unball/strategy/no_play.hpp>
 #include <unball/strategy/play_stop.hpp>
 #include <unball/strategy/play1.hpp>
 #include <unball/strategy/play_formation_1.hpp>

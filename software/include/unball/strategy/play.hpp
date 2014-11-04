@@ -7,16 +7,12 @@
  *
  * @brief Play class
  *
- * Defines the requisits of any given play. All plays will inherit from Play
+ * Abstract class that defines the required methods of any given play. All plays must inherit from Play.
  * Uses the State Pattern to implement the run() method.
  */
 
 #ifndef UNBALL_PLAY_H_
 #define UNBALL_PLAY_H_
-
-#define INITIAL_PLAY_STATE 0
-
-#include <cmath>
 
 #include <ros/ros.h>
 
@@ -24,17 +20,22 @@
 #include <unball/strategy/ball.hpp>
 #include <unball/strategy/robot.hpp>
 
+#define INITIAL_PLAY_STATE 0
+
 class Play
 {
   public:
     Play();
-    bool run(); // Implement the code to execute the specific play
+    bool run();
     std::string getPlayName();
     
   protected:
-    //for those robots who have not finished their actions yet, set action_finished_ to false
+    // [matheus.v.portela@gmail.com - 04/11/2014] Why is this method virtual?
+    // For those robots who have not finished their actions yet, set action_finished_ to false
     virtual void setUnfinishedActions() = 0;
-    //moves the robots accoardingly to the play's objective. returns true if the action is done
+    
+    // Method to implement robots actions according to the Play's objective.
+    // Must return true when the play is finished.
     virtual bool act() = 0;
 
     void initialRosMessage();

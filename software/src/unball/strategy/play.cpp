@@ -18,13 +18,14 @@ Play::Play()
      */
     for (int i = 0; i < 6; ++i)
         robots_action_finished_[i] = false;
-    for (int i = 0; i < 6; i++)
+
+    for (int i = 0; i < 6; ++i)
          play_state_[i] = INITIAL_PLAY_STATE;
 }
 
 std::string Play::getPlayName()
 {
-    return(play_name_);
+    return play_name_;
 }
 
 void Play::initialRosMessage()
@@ -40,12 +41,15 @@ bool Play::run()
 {
     initialRosMessage();
     
-    // finish the action of all robots that have ended their actions
+    // Finish the action of all robots that have ended their actions
     for (int i = 0; i < 6; ++i)	
         finishRobotAction(i);
-    // for those who have not finished their actions yet, set action_finished_ to false
+
+    // For those who have not finished their actions yet, set action_finished_ to false
     setUnfinishedActions();
-    return act(); //return true if action has finished
+
+    // Return true if action has finished
+    return act();
 }
 
 /**

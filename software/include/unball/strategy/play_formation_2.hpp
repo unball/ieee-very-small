@@ -22,6 +22,7 @@ class PlayFormation2 : public Play
 {
   public:
     PlayFormation2();
+    
   private:
     void setUnfinishedActions();
     bool act();

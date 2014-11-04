@@ -15,12 +15,15 @@
 
 #include <ros/ros.h>
 
+#include <unball/strategy/ball.hpp>
+
 namespace WorldState
 {
     enum BallState
     {
-        OURS,
-        THEIRS
+        BALL_ATTACK_FIELD,
+        BALL_DEFENSE_FIELD,
+        BALL_MIDDLE_FIELD
     };
     
     enum GameState
@@ -43,11 +46,13 @@ class StateEstimator
     void setGameState(WorldState::GameState game_state);
     WorldState::GameState getGameState();
 
-    int score;  	
+    void update();
+
   private:
   	void updateBallState();
     void updateScore();
 
+    int score;
     WorldState::GameState game_state_;
     WorldState::BallState ball_state_;
 };

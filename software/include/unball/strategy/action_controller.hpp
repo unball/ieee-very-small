@@ -8,7 +8,10 @@
  *
  * @brief Action class
  *
- * Defines robots actions for strategy
+ * Actions are the basic movement unit for our robots, hence, every play must execute actions sequentially.
+ * Each robot has its own action controller: a module that asynchronously coordinate robots actions.
+ * Every action must be implemented by a boolean method, which returns "true" only when the required action has
+ * finished.
  */
 
 #ifndef UNBALL_ACTION_CONTROLLER_H_

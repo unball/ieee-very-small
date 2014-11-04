@@ -5,7 +5,7 @@
  *
  * @attention Copyright (C) 2014 UnBall Robot Soccer Team
  *
- * @brief Empty play
+ * @brief Empty play necessary for PlayController
  */
 
 #ifndef UNBALL_NO_PLAY_H_

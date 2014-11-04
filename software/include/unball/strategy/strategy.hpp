@@ -17,16 +17,16 @@
 #include <ros/ros.h>
 
 #include <unball/strategy/play_controller.hpp>
-#include "state_estimator.hpp"
+#include <unball/strategy/state_estimator.hpp>
 
 namespace TeamState
 {
     enum StrategyState
     {
+        VERY_OFFENSIVE,
         OFFENSIVE,
         DEFENSIVE,
-        STALLING,
-        VERY_OFFENSIVE
+        STALLING
     };
 };
 

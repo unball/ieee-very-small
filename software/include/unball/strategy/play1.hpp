@@ -6,7 +6,7 @@
  *
  * @attention Copyright (C) 2014 UnBall Robot Soccer Team
  *
- * @brief Example play
+ * @brief Example play moving two robots to arbitrary positions
  */
 
 #ifndef UNBALL_PLAY1_H_
@@ -17,12 +17,11 @@
 #include <unball/strategy/play.hpp>
 #include <unball/strategy/action_controller.hpp>
 
-#define INITIAL_PLAY_STATE 0
-
 class Play1 : public Play
 {
   public:
     Play1();
+    
   private:
     void setUnfinishedActions();
     bool act();

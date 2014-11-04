@@ -7,6 +7,9 @@
  *
  * @brief Tactic class
  *
+ * Tactics are sequences of actions that must be followed by all robots. A tactic may be interrupted by a smaller
+ * individual play whenever necessary.
+ *
  * Defines the requisits of any given tactic. All plays will inherit from this
  * Uses the State Pattern to implement the run() method.
  */

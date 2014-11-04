@@ -26,5 +26,6 @@ bool PlayStop::act()
 {
     for (int i = 0; i < 6; ++i)
         action_controller.stop(i);
+    
     return true;
 }

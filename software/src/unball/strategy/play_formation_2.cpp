@@ -20,7 +20,7 @@ PlayFormation2::PlayFormation2() : Play()
  */
 void PlayFormation2::setUnfinishedActions()
 {
-    if (robots_action_finished_[3] && robots_action_finished_[4])
+    if (robots_action_finished_[3] and robots_action_finished_[4])
     {
         robots_action_finished_[3] = false;
         robots_action_finished_[4] = false;
@@ -36,7 +36,7 @@ void PlayFormation2::setUnfinishedActions()
  */
 bool PlayFormation2::act()
 {
-    for (int i = 0; i < 6; i++)
+    for (int i = 0; i < 6; ++i)
     {
         switch (play_state_[i])
         {
@@ -71,7 +71,8 @@ void PlayFormation2::actState0(int robot)
 
 void PlayFormation2::actState1(int robot)
 {
-    int x,y;
+    int x, y;
+    
     switch (robot)
     {
         case 3:
@@ -85,6 +86,7 @@ void PlayFormation2::actState1(int robot)
         default:
             return;
     }
+
     action_controller.goTo(robot, x, y);
 }
 
