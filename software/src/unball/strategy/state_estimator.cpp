@@ -25,12 +25,22 @@ void StateEstimator::setGameState(WorldState::GameState game_state)
 
 WorldState::GameState StateEstimator::getGameState()
 {
-	return game_state_;
+    return game_state_;
 }
 
 WorldState::BallState StateEstimator::getBallState()
 {
     return ball_state_;
+}
+
+WorldState::BallPossessionState StateEstimator::getBallPossessionState()
+{
+    return ball_possession_state_;
+}
+
+bool StateEstimator::hasStateChanged()
+{
+    return (ball_possession_state_ != prev_ball_possession_state_);
 }
 
 /**
@@ -39,7 +49,7 @@ WorldState::BallState StateEstimator::getBallState()
 void StateEstimator::update()
 {
     updateBallState();
-    updateBallPossession();
+    updateBallPossessionState();
 }
 
 /**
@@ -97,7 +107,7 @@ int StateEstimator::closestRobotToBall()
  * Ball possession may be from our team, from the adversary team, or neither of them.
  * We define that the closest robot to the ball, within an arbitrary 0.2 radius, maintains its possession.
  */
-void StateEstimator::updateBallPossession()
+void StateEstimator::updateBallPossessionState()
 {
     float ball_x = Ball::getInstance().getX();
     float ball_y = Ball::getInstance().getY();
@@ -106,6 +116,8 @@ void StateEstimator::updateBallPossession()
 
     if (dist > 0.2)
         closest_index = -1;
+
+    prev_ball_possession_state_ = ball_possession_state_;
 
     if (closest_index == -1)
     {

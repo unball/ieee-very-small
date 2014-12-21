@@ -74,14 +74,24 @@ void Strategy::run()
  */
 void Strategy::choosePlay()
 {
-    /*
     WorldState::BallState ball_state = state_estimator_.getBallState();
+    WorldState::BallPossessionState ball_possession_state = state_estimator_.getBallPossessionState();
     
-    if (ball_state == WorldState::BALL_ATTACK_FIELD)
-        play_controller_.pushPlay(new PlayFormation1());
-    else if (ball_state == WorldState::BALL_DEFENSE_FIELD)
-        play_controller_.pushPlay(new PlayFormation2());
-    */
+    // Only evaluate plays when there is a change in the state estimation
+    if (state_estimator_.hasStateChanged())
+    {
+        // Abort any on-going play and replace it with the new play
+        if (ball_possession_state == WorldState::BALL_POSSESSION_NONE)
+        {
+            play_controller_.abortPlay();
+            play_controller_.pushPlay(new PlayFormation1());
+        }
+        else if (ball_possession_state == WorldState::BALL_POSSESSION_THEIRS)
+        {
+            play_controller_.abortPlay();
+            play_controller_.pushPlay(new PlayFormation2());
+        }
+    }
 }
 
 /**

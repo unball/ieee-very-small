@@ -29,7 +29,7 @@ namespace WorldState
         BALL_MIDDLE_FIELD
     };
     
-    enum BallPossesionState
+    enum BallPossessionState
     {
         BALL_POSSESSION_OURS,
         BALL_POSSESSION_THEIRS,
@@ -56,19 +56,21 @@ class StateEstimator
     void setGameState(WorldState::GameState game_state);
     WorldState::GameState getGameState();
     WorldState::BallState getBallState();
-
+    WorldState::BallPossessionState getBallPossessionState();
+    bool hasStateChanged();
     void update();
 
   private:
   	void updateBallState();
     int closestRobotToBall();
-    void updateBallPossession();
+    void updateBallPossessionState();
     void updateScore();
 
     int score;
     WorldState::GameState game_state_;
     WorldState::BallState ball_state_;
-    WorldState::BallPossesionState ball_possession_state_;
+    WorldState::BallPossessionState ball_possession_state_;
+    WorldState::BallPossessionState prev_ball_possession_state_;
 };
 
 #endif  // UNBALL_STATE_ESTIMATOR_H_
