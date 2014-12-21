@@ -39,6 +39,7 @@ WorldState::BallState StateEstimator::getBallState()
 void StateEstimator::update()
 {
     updateBallState();
+    updateBallPossession();
 }
 
 /**
@@ -52,17 +53,74 @@ void StateEstimator::updateBallState()
     if (ball_x > 0.25)
     {
         ball_state_ = WorldState::BALL_ATTACK_FIELD;
-        ROS_INFO("Ball state: Attack");
+        ROS_INFO("[StateEstimator] Ball state: Attack");
     }
     else if (ball_x < -0.25)
     {
         ball_state_ = WorldState::BALL_DEFENSE_FIELD;
-        ROS_INFO("Ball state: Defense");
+        ROS_INFO("[StateEstimator] Ball state: Defense");
     }
     else
     {
         ball_state_ = WorldState::BALL_MIDDLE_FIELD;
-        ROS_INFO("Ball state: Middle");
+        ROS_INFO("[StateEstimator] Ball state: Middle");
+    }
+}
+
+/**
+ * Calculate the closest robot to the ball.
+ */
+int StateEstimator::closestRobotToBall()
+{
+    float ball_x = Ball::getInstance().getX();
+    float ball_y = Ball::getInstance().getY();
+
+    float dist;
+    float min_dist = 1000;
+    int closest_index;
+
+    for (int i = 0; i < 6; ++i)
+    {
+        dist = robot[i].calculateDistance(ball_x, ball_y);
+
+        if (dist < min_dist)
+        {
+            min_dist = dist;
+            closest_index = i;
+        }
+    }
+
+    return closest_index;
+}
+
+/**
+ * Ball possession may be from our team, from the adversary team, or neither of them.
+ * We define that the closest robot to the ball, within an arbitrary 0.2 radius, maintains its possession.
+ */
+void StateEstimator::updateBallPossession()
+{
+    float ball_x = Ball::getInstance().getX();
+    float ball_y = Ball::getInstance().getY();
+    int closest_index = closestRobotToBall();
+    float dist = robot[closest_index].calculateDistance(ball_x, ball_y);
+
+    if (dist > 0.2)
+        closest_index = -1;
+
+    if (closest_index == -1)
+    {
+        ball_possession_state_ = WorldState::BALL_POSSESSION_NONE;
+        ROS_INFO("[StateEstimator] Ball possession: no one");
+    }
+    else if ((closest_index >= 0) and (closest_index < 3))
+    {
+        ball_possession_state_ = WorldState::BALL_POSSESSION_THEIRS;
+        ROS_INFO("[StateEstimator] Ball possession: theirs");
+    }
+    else if (closest_index >= 3)
+    {
+        ball_possession_state_ = WorldState::BALL_POSSESSION_OURS;
+        ROS_INFO("[StateEstimator] Ball possession: ours");
     }
 }
 

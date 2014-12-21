@@ -32,25 +32,24 @@ void Strategy::receiveKeyboardInput(char key)
     switch (key)
     {
         case 'r': case 'R':
-            ROS_INFO("Setting game state: RUNNING");
+            ROS_INFO("[Strategy] Keyboard input: Setting game state RUNNING");
             state_estimator_.setGameState(WorldState::GAME_RUNNING);
             break;
         case 'p': case 'P':
-            ROS_INFO("Setting game state: PAUSED");
+            ROS_INFO("[Strategy] Keyboard input: Setting game state PAUSED");
             state_estimator_.setGameState(WorldState::GAME_PAUSED);
             break;
         case 'a': case 'A':
-            ROS_INFO("Setting game state: ABORT");
-            state_estimator_.setGameState(WorldState::GAME_ABORTED);
+            ROS_INFO("[Strategy] Keyboard input: Abort play");
             play_controller_.abortPlay();
             break;
         case '1':
-            ROS_INFO("Formation 1");
+            ROS_INFO("[Strategy] Keyboard input: Play Formation 1");
             play_controller_.abortPlay();
             play_controller_.pushPlay(new PlayFormation1());
             break;
         case '2':
-            ROS_INFO("Formation 2");
+            ROS_INFO("[Strategy] Keyboard input: Play Formation 2");
             play_controller_.abortPlay();
             play_controller_.pushPlay(new PlayFormation2());
             break;
