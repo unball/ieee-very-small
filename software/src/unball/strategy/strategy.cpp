@@ -101,11 +101,3 @@ void Strategy::chooseStrategyState()
 {
 
 }
-
-/**
- * Find the robot that is closest to the ball
- */
-void Strategy::findRobotClosestToBall()
-{
-
-}
