@@ -20,7 +20,7 @@ Strategy strategy;
 
 Strategy::Strategy()
 {
-    play_controller_.pushPlay(new PlayFormation2());
+    play_controller_.pushPlay(new NoPlay());
 }
 
 /**
@@ -75,7 +75,14 @@ void Strategy::run()
  */
 void Strategy::choosePlay()
 {
+    /*
+    WorldState::BallState ball_state = state_estimator_.getBallState();
     
+    if (ball_state == WorldState::BALL_ATTACK_FIELD)
+        play_controller_.pushPlay(new PlayFormation1());
+    else if (ball_state == WorldState::BALL_DEFENSE_FIELD)
+        play_controller_.pushPlay(new PlayFormation2());
+    */
 }
 
 /**

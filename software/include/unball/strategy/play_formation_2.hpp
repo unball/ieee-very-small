@@ -16,16 +16,13 @@
 #include <unball/strategy/action_controller.hpp>
 #include <unball/strategy/play.hpp>
 
-#define INITIAL_PLAY_STATE 0
-
 class PlayFormation2 : public Play
 {
   public:
     PlayFormation2();
     
   private:
-    void setUnfinishedActions();
-    bool act();
+    void act();
     void actState0(int robot);
     void actState1(int robot);
     void actState2(int robot);

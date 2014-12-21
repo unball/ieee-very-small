@@ -20,9 +20,9 @@ class NoPlay : public Play
 {
   public:
     NoPlay();
+    
   private:
-    void setUnfinishedActions();
-    bool act();
+    void act();
 };
 
 #endif  // UNBALL_NO_PLAY_H_

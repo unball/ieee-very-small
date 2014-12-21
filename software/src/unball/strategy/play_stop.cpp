@@ -10,22 +10,20 @@
 
 #include <unball/strategy/play_stop.hpp>
 
-PlayStop::PlayStop()
+PlayStop::PlayStop() : Play()
 {
     play_name_ = "PLAY STOP";
-}
-
-void PlayStop::setUnfinishedActions()
-{
+    num_states_ = 1;
 }
 
 /**
  * Stops all actions from all robots
  */
-bool PlayStop::act()
+void PlayStop::act()
 {
     for (int i = 0; i < 6; ++i)
+    {
+        ROS_INFO("[PlayStop] Robot %d state %d", i, play_state_[i]);
         action_controller.stop(i);
-    
-    return true;
+    }
 }

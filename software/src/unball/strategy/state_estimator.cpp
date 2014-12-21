@@ -28,6 +28,11 @@ WorldState::GameState StateEstimator::getGameState()
 	return game_state_;
 }
 
+WorldState::BallState StateEstimator::getBallState()
+{
+    return ball_state_;
+}
+
 /**
  * Updates all state estimations.
  */

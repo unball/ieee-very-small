@@ -45,6 +45,7 @@ class StateEstimator
     
     void setGameState(WorldState::GameState game_state);
     WorldState::GameState getGameState();
+    WorldState::BallState getBallState();
 
     void update();
 

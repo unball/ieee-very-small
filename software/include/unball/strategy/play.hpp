@@ -20,33 +20,22 @@
 #include <unball/strategy/ball.hpp>
 #include <unball/strategy/robot.hpp>
 
-#define INITIAL_PLAY_STATE 0
-
 class Play
 {
   public:
     Play();
     bool run();
     std::string getPlayName();
+    bool hasFinished();
     
   protected:
-    // [matheus.v.portela@gmail.com - 04/11/2014] Why is this method virtual?
-    // For those robots who have not finished their actions yet, set action_finished_ to false
-    virtual void setUnfinishedActions() = 0;
-    
-    // Method to implement robots actions according to the Play's objective.
-    // Must return true when the play is finished.
-    virtual bool act() = 0;
-
-    void initialRosMessage();
-    int findRobotClosestToBall(std::vector<int> index);
+    void updateStates();
+    virtual void act() = 0; // Method to implement robots actions according to the Play's objective.
 
     bool robots_action_finished_[6];
     int play_state_[6];
+    int num_states_;
     std::string play_name_;
-    
-  private:
-    void finishRobotAction(int i);
 };
 
 #endif  // UNBALL_PLAY_H_

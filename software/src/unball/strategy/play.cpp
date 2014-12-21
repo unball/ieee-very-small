@@ -20,7 +20,7 @@ Play::Play()
         robots_action_finished_[i] = false;
 
     for (int i = 0; i < 6; ++i)
-         play_state_[i] = INITIAL_PLAY_STATE;
+         play_state_[i] = 0;
 }
 
 std::string Play::getPlayName()
@@ -28,35 +28,44 @@ std::string Play::getPlayName()
     return play_name_;
 }
 
-void Play::initialRosMessage()
+/**
+ * Update robot states based on whether they have finished their actions. Also, only update if it has not reached the
+ * last play state.
+ */
+void Play::updateStates()
 {
-    std::string message = play_name_ + " RUN";
-    ROS_INFO("%s", message.c_str());
+    for (int i = 0; i < 6; ++i)
+    {
+        if ((action_controller.hasRobotFinished(i)) and (play_state_[i] < num_states_))
+            ++play_state_[i];
+    }
+}
+
+/**
+ * Play is finished when all robots are in the last state.
+ */
+bool Play::hasFinished()
+{
+    for (int i = 0; i < 6; ++i)
+    {
+        if (play_state_[i] < num_states_)
+            return false;
+    }
+
+    ROS_INFO("[%s] Finished", play_name_.c_str());
+    return true;
 }
 
 /**
  * Implements the basic structure the plays must follow.
+ * First, it updates the play state for each robots. Then, execute the robots actions. Finally, it checks whether the
+ * play has finished.
  */
 bool Play::run()
 {
-    initialRosMessage();
-    
-    // Finish the action of all robots that have ended their actions
-    for (int i = 0; i < 6; ++i)	
-        finishRobotAction(i);
+    ROS_INFO("[%s] Run", play_name_.c_str());
 
-    // For those who have not finished their actions yet, set action_finished_ to false
-    setUnfinishedActions();
-
-    // Return true if action has finished
-    return act();
-}
-
-/**
- * Finish the action of the robot if the actionController says it should finish
- */
-void Play::finishRobotAction(int i)
-{
-    if (action_controller.hasRobotFinished(i))
-        robots_action_finished_[i] = true;
+    updateStates();
+    act();
+    return hasFinished();
 }

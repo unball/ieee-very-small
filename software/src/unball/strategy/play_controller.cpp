@@ -20,7 +20,7 @@ PlayController::PlayController()
 
 void PlayController::run()
 {
-    ROS_INFO("Run play controller");
+    ROS_INFO("[PlayController] Run");
     
     updatePlay();
     executePlay();
@@ -33,7 +33,7 @@ void PlayController::run()
  */
 void PlayController::setPlay(Play *play)
 {
-    ROS_INFO("Set play: %s", play->getPlayName().c_str());
+    ROS_INFO("[PlayController] Set play: %s", play->getPlayName().c_str());
     delete play_;
     play_ = play;
 }
@@ -44,6 +44,7 @@ void PlayController::setPlay(Play *play)
  */
 void PlayController::pushPlay(Play *play)
 {
+    ROS_INFO("[PlayController] Push play: %s", play_->getPlayName().c_str());
     play_queue_.push(play);
 }
 
@@ -63,7 +64,7 @@ void PlayController::clearPlayQueue()
  */
 void PlayController::abortPlay()
 {
-    ROS_INFO("Abort play");
+    ROS_INFO("[PlayController] Abort play");
     
     setPlay(new PlayStop());
     clearPlayQueue();
@@ -74,10 +75,10 @@ void PlayController::abortPlay()
  */
 void PlayController::updatePlay()
 {
-    ROS_INFO("UPDATE PLAY: %s", play_->getPlayName().c_str());
-
     if (isMutexUnlocked())
     {
+        ROS_INFO("[PlayController] Update play: %s", play_->getPlayName().c_str());
+
         if (not play_queue_.empty())
         {
             setPlay(play_queue_.front());
@@ -85,10 +86,11 @@ void PlayController::updatePlay()
         }
         else
         {
+            ROS_INFO("[PlayController] Empty play queue");
             setPlay(new NoPlay());
         }
 
-        mutexLock();
+        mutexLock(); // Lock until the play finishes
     }
 }
 
@@ -98,6 +100,8 @@ void PlayController::updatePlay()
 void PlayController::executePlay()
 {
     bool has_play_finished;
+
+    ROS_INFO("[PlayController] Execute play: %s", play_->getPlayName().c_str());
     
     has_play_finished = play_->run();
     

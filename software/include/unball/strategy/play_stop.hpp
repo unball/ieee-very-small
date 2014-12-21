@@ -20,9 +20,9 @@ class PlayStop : public Play
 {
   public:
     PlayStop();
+
   private:
-    void setUnfinishedActions();
-    bool act();
+    void act();
 };
 
 #endif  // UNBALL_PLAY_STOP_H_

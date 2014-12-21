@@ -12,18 +12,10 @@
 
  NoPlay::NoPlay() : Play()
 {
-    play_name_ = "PLAY 1";
+    play_name_ = "NO PLAY";
+    num_states_ = 0;
 }
 
-/**
- *  In this empty play, there is no need to set unfinished actions
- */
-void NoPlay::setUnfinishedActions() 
+void NoPlay::act()
 {
-
-}
-
-bool NoPlay::act()
-{
-    return true;
 }

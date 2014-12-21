@@ -28,13 +28,14 @@ void ActionController::run()
     
     for (int i = 0; i < 6; ++i)
     {
-        ROS_DEBUG("Robot action state: %d", robot[i].getMotionState());
+        ROS_DEBUG("[ActionController] Robot action state: %d", robot[i].getMotionState());
         
         // Update previous motion state
         robot[i].setPreviousMotionState(robot[i].getMotionState());
         
         switch (robot[i].getMotionState())
         {
+            case UNDEFINED:
             case STOP:
                 has_action_finished = executeStop(i);
                 break;
@@ -50,19 +51,17 @@ void ActionController::run()
         }
         
         if (has_action_finished)
-            robot[i].setMotionState(STOP);
+            robot[i].setMotionState(UNDEFINED);
     }
 }
 
 /**
- * Check whether a robot has finished its action, which is characterized by a change in the motion state.
+ * Check whether a robot has finished its action, which is characterized by the state UNDEFINED.
  * @param robot_number Number of the robot to be checked.
  */
 bool ActionController::hasRobotFinished(int robot_number)
 {
-    // TODO [matheus.v.portela@gmail.com]: Choose which method will be used as a finishing criteria by 10-jun-2014.
-    return (robot[robot_number].getMotionState() == STOP);
-    //return robot[robot_number].hasMotionStateChanged();
+    return (robot[robot_number].getMotionState() == UNDEFINED);
 }
 
 /**
