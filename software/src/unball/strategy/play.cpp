@@ -30,7 +30,7 @@ void Play::updateStates()
 {
     for (int i = 0; i < 6; ++i)
     {
-        if ((action_controller.hasRobotFinished(i)) and (play_state_[i] < num_states_))
+        if ((ActionController::getInstance().hasRobotFinished(i)) and (play_state_[i] < num_states_))
             ++play_state_[i];
     }
 }

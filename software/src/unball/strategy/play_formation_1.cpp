@@ -36,7 +36,7 @@ void PlayFormation1::act()
                 actState2(i);
                 break;
             default:
-                action_controller.stop(i);
+                ActionController::getInstance().stop(i);
                 break;
         }
     }
@@ -48,7 +48,7 @@ void PlayFormation1::act()
 void PlayFormation1::actState0(int robot)
 {
     if (robot == 3 or robot == 4)
-        action_controller.stop(robot);
+        ActionController::getInstance().stop(robot);
 }
 
 /**
@@ -58,9 +58,9 @@ void PlayFormation1::actState0(int robot)
 void PlayFormation1::actState1(int robot)
 {
     if (robot == 3)
-        action_controller.goTo(3, 0.20, 0.0);
+        ActionController::getInstance().goTo(3, 0.20, 0.0);
     else if (robot == 4)
-        action_controller.goTo(4, -0.20, 0.0);
+        ActionController::getInstance().goTo(4, -0.20, 0.0);
 }
 
 /**
@@ -69,5 +69,5 @@ void PlayFormation1::actState1(int robot)
 void PlayFormation1::actState2(int robot)
 {
     if (robot == 3 or robot == 4)
-        action_controller.lookAt(robot, 0, 0);
+        ActionController::getInstance().lookAt(robot, 0, 0);
 }

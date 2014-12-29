@@ -24,7 +24,7 @@ void PlayController::run()
     
     updatePlay();
     executePlay();
-    action_controller.run();
+    ActionController::getInstance().run();
 }
 
 /**

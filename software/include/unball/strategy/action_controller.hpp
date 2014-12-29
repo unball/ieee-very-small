@@ -8,8 +8,9 @@
  *
  * @brief Action class
  *
+ * ActionController is a singleton.
  * Actions are the basic movement unit for our robots, hence, every play must execute actions sequentially.
- * Each robot has its own action controller: a module that asynchronously coordinate robots actions.
+ * There is a single action controller that controls each robot asynchronously.
  * Every action must be implemented by a boolean method, which returns "true" only when the required action has
  * finished.
  */
@@ -24,6 +25,7 @@
 class ActionController
 {
   public:
+    static ActionController& getInstance();
     void run();
     bool hasRobotFinished(int robot_number);
     void stop(int robot_number);
@@ -36,6 +38,7 @@ class ActionController
     bool executeGoTo(int robot_number);
     
   private:
+    static ActionController *instance; // singleton instance
     // Move attributes
     Point move_initial_[6];
     float move_distance_[6];

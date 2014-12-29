@@ -14,9 +14,17 @@
 #include <unball/strategy/action_controller.hpp>
 
 /**
- * Action controller global object
+ * Strategy instance.
  */
-ActionController action_controller;
+ActionController* ActionController::instance = NULL;
+
+ActionController& ActionController::getInstance()
+{
+    if (instance == NULL)
+        instance = new ActionController();
+
+    return *instance;
+}
 
 /**
  * Execute an action with respect to the current motion state. Whenever an execution returns true, meaning that it has

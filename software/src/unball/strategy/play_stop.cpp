@@ -24,6 +24,6 @@ void PlayStop::act()
     for (int i = 0; i < 6; ++i)
     {
         ROS_INFO("[PlayStop] Robot %d state %d", i, play_state_[i]);
-        action_controller.stop(i);
+        ActionController::getInstance().stop(i);
     }
 }

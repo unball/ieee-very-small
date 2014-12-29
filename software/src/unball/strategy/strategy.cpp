@@ -13,10 +13,20 @@
 
 #include <unball/strategy/strategy.hpp>
 
-/**
- * Strategy global object
- */
 Strategy strategy;
+
+/**
+ * Strategy instance.
+ */
+Strategy* Strategy::instance = NULL;
+
+Strategy& Strategy::getInstance()
+{
+    if (instance == NULL)
+        instance = new Strategy();
+
+    return *instance;
+}
 
 Strategy::Strategy()
 {

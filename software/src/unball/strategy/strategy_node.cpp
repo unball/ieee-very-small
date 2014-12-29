@@ -42,8 +42,9 @@ int main(int argc, char **argv)
     
     while (ros::ok())
     {
+        // Strategy::getInstance().run();
         strategy.run();
-        
+
         publishRobotsVelocities(publisher);
         
         ros::spinOnce();
@@ -117,5 +118,6 @@ void receiveKeyboardMessage(const unball::KeyboardMessage::ConstPtr &msg)
 {
     ROS_INFO("Received key: %c", msg->key);
     
+    // Strategy::getInstance().receiveKeyboardInput(msg->key);
     strategy.receiveKeyboardInput(msg->key);
 }

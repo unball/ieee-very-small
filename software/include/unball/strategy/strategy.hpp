@@ -8,7 +8,7 @@
  *
  * @brief Strategy class
  *
- * Defines strategy for robots
+ * Defines strategy for robots. Strategy is a singleton.
  */
 
 #ifndef UNBALL_STRATEGY_H_
@@ -33,11 +33,13 @@ namespace TeamState
 class Strategy
 {
   public:
+    static Strategy& getInstance();
     Strategy();
     void receiveKeyboardInput(char key);
     void run();
     
   private:
+    static Strategy *instance; // singleton instance
     void choosePlay();
     void chooseStrategyState();
 
