@@ -32,7 +32,6 @@ class Play
     void updateStates();
     virtual void act() = 0; // Method to implement robots actions according to the Play's objective.
 
-    bool robots_action_finished_[6];
     int play_state_[6];
     int num_states_;
     std::string play_name_;

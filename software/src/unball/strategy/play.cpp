@@ -1,6 +1,7 @@
 /**
  * @file   play.cpp
  * @author Icaro da Costa Mota
+ * @author Matheus Vieira Portela
  * @date   13/05/2014
  *
  * @attention Copyright (C) 2014 UnBall Robot Soccer Team
@@ -12,13 +13,6 @@
 
 Play::Play()
 {
-    /**
-     * robots_action_finished_ is true when the last action has finished. Therefore, it must be initialized with false
-     * indicating that no action was completed yet.
-     */
-    for (int i = 0; i < 6; ++i)
-        robots_action_finished_[i] = false;
-
     for (int i = 0; i < 6; ++i)
          play_state_[i] = 0;
 }

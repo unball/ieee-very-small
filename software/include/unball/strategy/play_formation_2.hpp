@@ -1,6 +1,7 @@
 /**
  * @file   play_formation_2.hpp
  * @author Matheus Vieira Portela
+ * @author Icaro da Costa Mota
  * @date   13/05/2014
  *
  * @attention Copyright (C) 2014 UnBall Robot Soccer Team

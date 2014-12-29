@@ -1,6 +1,7 @@
 /**
  * @file   play.cpp
  * @author Icaro da Costa Mota
+ * @author Matheus Vieira Portela
  * @date   15/07/2014
  *
  * @attention Copyright (C) 2014 UnBall Robot Soccer Team
