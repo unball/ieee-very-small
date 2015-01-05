@@ -21,7 +21,11 @@ class TrackedRobot : public TrackedObject
     TrackedRobot();
     ~TrackedRobot();
     
+    void draw(cv::Mat &frame);
     void track(cv::Mat &rgb_frame, cv::Mat &depth_frame, cv::Mat &rgb_segmented_frame);
+    void updatePosition(cv::Point position);
+    void setPosition(cv::Point position);
+    int exponentialMovingAvg(int old_value, int new_value);
 
   private:
     

@@ -21,30 +21,25 @@ TrackedRobot::~TrackedRobot()
 
 void TrackedRobot::track(cv::Mat &rgb_frame, cv::Mat &depth_frame, cv::Mat &rgb_segmented_frame)
 {
-    std::vector< std::vector<cv::Point> > contours;
-    cv::Rect tracking_window;
-    cv::Point top_left;
-    cv::Point bottom_right;
-    cv::Point center;
-    std::vector<cv::Mat> robots_frame;
-    std::vector<cv::Point> robots_positions;
-    
-    // Find blobs from segmented image and extract images
-    cv::findContours(rgb_segmented_frame, contours, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_SIMPLE);
-    for (int i = 0; i < contours.size(); ++i)
-    {
-        // Find bounding rectangle
-        tracking_window = cv::boundingRect(contours[i]);
-        robots_frame.push_back(cv::Mat(rgb_frame(tracking_window)));
+}
 
-        // Calculate position
-        top_left = tracking_window.tl();
-        bottom_right = tracking_window.br();
-        center.x = (top_left.x + bottom_right.x)/2;
-        center.y = (top_left.y + bottom_right.y)/2;
-        robots_positions.push_back(cv::Point(center));
+void TrackedRobot::updatePosition(cv::Point position)
+{
+    position_.x = exponentialMovingAvg(position_.x, position.x);
+    position_.y = exponentialMovingAvg(position_.y, position.y);
+}
 
-        cv::rectangle(rgb_frame, tracking_window, (255, 0, 255), 2);
-        ROS_ERROR("Robot %d: (%d,%d)", i, center.x, center.y);
-    }
+void TrackedRobot::setPosition(cv::Point position)
+{
+	position_ = position;
+}
+
+int TrackedRobot::exponentialMovingAvg(int old_value, int new_value)
+{
+    return (0.25*new_value + (1.0-0.25)*old_value);
+}
+
+void TrackedRobot::draw(cv::Mat &frame)
+{
+	cv::circle(frame, position_, 10, (255, 0, 255));
 }

@@ -31,14 +31,16 @@ class Tracker
     void loadShowImage();
     void loadFieldTrackingMode();
     void loadConfig();
-    void trackRobots(cv::Mat rgb_frame, cv::Mat depth_frame, cv::Mat rgb_segmented_frame);
+    void findRobots(cv::Mat rgb_segmented_frame, cv::Point robots_positions[6]);
     void track(cv::Mat rgb_frame, cv::Mat depth_frame, cv::Mat rgb_segmented_frame);
+    int identifyRobot(cv::Mat rgb_frame, cv::Point robot_position);
 
   private:
     std::string window_name_;
     bool show_image_;
     TrackedField tracked_field_;
-    TrackedRobot tracked_robot_;
+    TrackedRobot tracked_robot_[6];
+    int min, max;
 };
 
 #endif // UNBALL_VISION_TRACKER_H_
