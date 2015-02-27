@@ -17,6 +17,15 @@ PlayFormation2::PlayFormation2() : Play()
 {
     play_name_ = "PLAY FORMATION 2";
     num_states_ = 3;
+
+    defineRobotNumbers();
+}
+
+void PlayFormation2::defineRobotNumbers()
+{
+    left_defensive_robot_ = 3;
+    right_defensive_robot_ = 4;
+    neutral_robot_ = 5;
 }
 
 void PlayFormation2::act()
@@ -49,7 +58,7 @@ void PlayFormation2::act()
  */
 void PlayFormation2::actState0(int robot)
 {
-    if (robot == 3 or robot == 4)
+    if (robot == left_defensive_robot_ or robot == right_defensive_robot_)
         // action_controller.stop(robot);
         ActionController::getInstance().stop(robot);
 }
@@ -59,10 +68,10 @@ void PlayFormation2::actState0(int robot)
  */
 void PlayFormation2::actState1(int robot)
 {
-    if (robot == 3)
-        ActionController::getInstance().goTo(3, -0.45, 0.40);
-    else if (robot == 4)
-        ActionController::getInstance().goTo(4, -0.45, -0.40);
+    if (robot == left_defensive_robot_)
+        ActionController::getInstance().goTo(left_defensive_robot_, -0.45, 0.40);
+    else if (robot == right_defensive_robot_)
+        ActionController::getInstance().goTo(right_defensive_robot_, -0.45, -0.40);
 }
 
 /**
@@ -70,6 +79,6 @@ void PlayFormation2::actState1(int robot)
  */
 void PlayFormation2::actState2(int robot)
 {
-    if (robot == 3 or robot == 4)
+    if (robot == left_defensive_robot_ or robot == right_defensive_robot_)
         ActionController::getInstance().lookAt(robot,0,0);
 }
