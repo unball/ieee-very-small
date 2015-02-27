@@ -22,6 +22,7 @@ class PlayStop : public Play
     PlayStop();
 
   private:
+  	void defineRobotNumbers();
     void act();
 };
 

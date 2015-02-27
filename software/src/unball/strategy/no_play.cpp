@@ -16,6 +16,6 @@
     num_states_ = 0;
 }
 
-void NoPlay::act()
-{
-}
+void NoPlay::defineRobotNumbers() {}
+
+void NoPlay::act() {}

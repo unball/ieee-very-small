@@ -22,6 +22,7 @@ class NoPlay : public Play
     NoPlay();
     
   private:
+  	void defineRobotNumbers();
     void act();
 };
 

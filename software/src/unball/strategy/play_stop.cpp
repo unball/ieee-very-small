@@ -16,6 +16,8 @@ PlayStop::PlayStop() : Play()
     num_states_ = 1;
 }
 
+void PlayStop::defineRobotNumbers() {}
+
 /**
  * Stops all actions from all robots
  */

@@ -23,10 +23,13 @@ class PlayFormation2 : public Play
     PlayFormation2();
     
   private:
+  	void defineRobotNumbers();
     void act();
     void actState0(int robot);
     void actState1(int robot);
     void actState2(int robot);
+
+    int left_defensive_robot_, right_defensive_robot_, neutral_robot_;
 };
 
 #endif  // UNBALL_PLAY_FORMATION_2_H_

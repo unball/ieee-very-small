@@ -30,6 +30,7 @@ class Play
     
   protected:
     void updateStates();
+    virtual void defineRobotNumbers() = 0; // Method to decide which robot is in a position more appropriate to follow the play.
     virtual void act() = 0; // Method to implement robots actions according to the Play's objective.
 
     int play_state_[6];
