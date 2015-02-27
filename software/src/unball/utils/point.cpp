@@ -11,7 +11,7 @@
  * Implements geometry methods for dealing with points in 2D
  */
 
-#include <unball/geometry/point.hpp>
+#include <unball/utils/point.hpp>
 
 Point::Point()
 {

@@ -120,8 +120,8 @@ bool ActionController::executeMove(int robot_number)
 {
     const float tolerance = 0.02; // 2 cm
     
-    float travelled_distance = robot[robot_number].calculateDistance(move_initial_[robot_number].getX(),
-                                                                     move_initial_[robot_number].getY());
+    float travelled_distance = math::calculateDistance(robot[robot_number].getX(), robot[robot_number].getY(),
+        move_initial_[robot_number].getX(), move_initial_[robot_number].getY());
     float error = fabs(move_distance_[robot_number]) - travelled_distance;
     float vel = (move_distance_[robot_number] >= 0) ? 1 : -1;
     
@@ -163,8 +163,9 @@ bool ActionController::executeLookAt(int robot_number)
 {
     const float tolerance = 0.1; // ~ 5.72 degrees
     
-    float target_angle = robot[robot_number].calculateAngle(look_at_[robot_number].getX(), look_at_[robot_number].getY());
-    float error = robot[robot_number].reduceAngle(robot[robot_number].getTh() - target_angle);
+    float target_angle = math::calculateAngle(robot[robot_number].getX(), robot[robot_number].getY(),
+        look_at_[robot_number].getX(), look_at_[robot_number].getY());
+    float error = math::reduceAngle(robot[robot_number].getTh() - target_angle);
     float vel = (error > 0) ? 0.05 : -0.05;
     
     if (fabs(error) > tolerance)
@@ -215,9 +216,11 @@ bool ActionController::executeGoTo(int robot_number)
     
     const float distance_tolerance = 0.05; // m
     
-    float target_angle = robot[robot_number].calculateAngle(go_to_[robot_number].getX(), go_to_[robot_number].getY());
-    float distance_error = robot[robot_number].calculateDistance(go_to_[robot_number].getX(), go_to_[robot_number].getY());
-    float angle_error = robot[robot_number].reduceAngle(robot[robot_number].getTh() - target_angle);
+    float target_angle = math::calculateAngle(robot[robot_number].getX(), robot[robot_number].getY(),
+        go_to_[robot_number].getX(), go_to_[robot_number].getY());
+    float distance_error = math::calculateDistance(robot[robot_number].getX(), robot[robot_number].getY(),
+        go_to_[robot_number].getX(), go_to_[robot_number].getY());
+    float angle_error = math::reduceAngle(robot[robot_number].getTh() - target_angle);
     float ang_vel = ANG_KP*(angle_error + (angle_error - ANG_KD*go_to_error_ang_d_[robot_number])); // PD control
     float lin_vel = DIST_KP*distance_error + DIST_KD*go_to_error_dist_i_[robot_number]; // PD control
     

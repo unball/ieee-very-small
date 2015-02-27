@@ -19,6 +19,7 @@
 
 #include <unball/strategy/robot.hpp>
 #include <unball/strategy/ball.hpp>
+#include <unball/utils/math.hpp>
 
 namespace WorldState
 {

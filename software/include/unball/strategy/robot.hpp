@@ -17,7 +17,8 @@
 
 #include <ros/ros.h>
 
-#include <unball/geometry/point.hpp>
+#include <unball/utils/point.hpp>
+#include <unball/utils/math.hpp>
 
 #define ROBOT_SATURATION_LIN_VEL 5.0
 #define ROBOT_SATURATION_ANG_VEL 2.0
@@ -53,11 +54,6 @@ class Robot
     void setMotionState(MotionState motion_state);
     void setPreviousMotionState(MotionState previous_motion_state);
     bool hasMotionStateChanged();
-    
-    float saturate(float x, float limit);
-    float reduceAngle(float angle);
-    float calculateDistance(float x, float y);
-    float calculateAngle(float x, float y);
     
   private:
     // Location attributes

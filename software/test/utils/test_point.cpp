@@ -8,11 +8,9 @@
  * @brief Tests for point class
  */
 
-#include <iostream>
-
 #include <gtest/gtest.h>
 
-#include <unball/geometry/point.hpp>
+#include <unball/utils/point.hpp>
 
 TEST(TestPointClass, testDefaultConstructor)
 {

@@ -89,7 +89,7 @@ void Robot::setPose(float x, float y, float th)
  */
 void Robot::setLinVel(float lin_vel)
 {
-    lin_vel = saturate(lin_vel, ROBOT_SATURATION_LIN_VEL);
+    lin_vel = math::saturate(lin_vel, ROBOT_SATURATION_LIN_VEL);
     lin_vel_ = lin_vel;
 }
 
@@ -99,7 +99,7 @@ void Robot::setLinVel(float lin_vel)
  */
 void Robot::setAngVel(float ang_vel)
 {
-    ang_vel = saturate(ang_vel, ROBOT_SATURATION_ANG_VEL);
+    ang_vel = math::saturate(ang_vel, ROBOT_SATURATION_ANG_VEL);
     ang_vel_ = ang_vel;
 }
 
@@ -123,61 +123,4 @@ bool Robot::hasMotionStateChanged()
         return false;
     
     return (previous_motion_state_ != motion_state_);
-}
-
-/**
- * Saturate a number x, forcing it to the interval (-limit) <= x <= (limit).
- * @param x The number to saturate.
- * @param limit The limit of the saturation interval.
- * @return The saturated number.
- */
-float Robot::saturate(float x, float limit)
-{
-    if (x > limit)
-        x = limit;
-    else if (x < -limit)
-        x = -limit;
-    
-    return x;
-}
-
-/**
- * Reduce an angle to the interval (-M_PI) <= angle < (M_PI).
- * @param angle The angle to saturate.
- * @return The reduced angle.
- */
-float Robot::reduceAngle(float angle)
-{
-    while (angle < -M_PI)
-        angle += 2*M_PI;
-    while (angle >= M_PI)
-        angle -= 2*M_PI;
-        
-    return angle;
-}
-
-/**
- * Calculate the distance from the robot's current position to a (x, y) coordinate by using the Pythagorean theorem.
- * @param x The x coordinate.
- * @param y The y coordinate.
- * @return The calculated distance.
- */
-float Robot::calculateDistance(float x, float y)
-{
-    float dx = getX() - x;
-    float dy = getY() - y;
-    return sqrt(pow(dx, 2) + pow(dy, 2));
-}
-
-/**
- * Calculate the angle from the robot's current position to a (x, y) coordinate by using arc-tangent.
- * @param x The x coordinate.
- * @param y The y coordinate.
- * @return The calculated angle.
- */
-float Robot::calculateAngle(float x, float y)
-{
-    float dx = getX() - x;
-    float dy = getY() - y;
-    return atan2(dy, dx);
 }

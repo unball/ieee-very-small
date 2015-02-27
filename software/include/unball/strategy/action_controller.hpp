@@ -21,6 +21,7 @@
 #include <ros/ros.h>
 
 #include <unball/strategy/robot.hpp>
+#include <unball/utils/math.hpp>
 
 class ActionController
 {
@@ -38,7 +39,9 @@ class ActionController
     bool executeGoTo(int robot_number);
     
   private:
-    static ActionController *instance; // singleton instance
+    // singleton instance
+    static ActionController *instance;
+
     // Move attributes
     Point move_initial_[6];
     float move_distance_[6];

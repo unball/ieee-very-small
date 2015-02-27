@@ -53,7 +53,8 @@ link_directories(
 )
 
 add_executable(strategy_node
-  src/unball/geometry/point.cpp
+  src/unball/utils/point.cpp
+  src/unball/utils/math.cpp
   src/unball/strategy/strategy_node.cpp
   src/unball/strategy/strategy.cpp
   src/unball/strategy/state_estimator.cpp
@@ -113,6 +114,6 @@ add_dependencies(keyboard_node unball_gencpp)
 target_link_libraries(keyboard_node ${catkin_LIBRARIES})
 
 catkin_add_gtest(test_point
-  test/geometry/test_point.cpp
-  src/unball/geometry/point.cpp)
+  test/utils/test_point.cpp
+  src/unball/utils/point.cpp)
 target_link_libraries(test_point ${catkin_LIBRARIES})

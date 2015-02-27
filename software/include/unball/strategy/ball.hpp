@@ -19,7 +19,7 @@
 
 #include <ros/ros.h>
 
-#include <unball/geometry/point.hpp>
+#include <unball/utils/point.hpp>
 
 class Ball
 {
@@ -45,7 +45,9 @@ class Ball
     Ball();
 
   private:
-    static Ball *instance; // singleton instance
+     // singleton instance
+    static Ball *instance;
+    
     Point pos_, vel_;
 };
 
