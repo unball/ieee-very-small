@@ -1,5 +1,5 @@
 /**
- * @file   play.cpp
+ * @file   play_formation_2.cpp
  * @author Icaro da Costa Mota
  * @author Matheus Vieira Portela
  * @date   15/07/2014
