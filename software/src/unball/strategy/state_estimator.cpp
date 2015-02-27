@@ -82,16 +82,13 @@ void StateEstimator::updateBallState()
  */
 int StateEstimator::closestRobotToBall()
 {
-    float ball_x = Ball::getInstance().getX();
-    float ball_y = Ball::getInstance().getY();
-
     float dist;
     float min_dist = 1000;
     int closest_index;
 
     for (int i = 0; i < 6; ++i)
     {
-        dist = math::calculateDistance(robot[i].getX(), robot[i].getY(), ball_x, ball_y);
+        dist = math::calculateDistance(robot[i].getPos(), Ball::getInstance().getPos());
 
         if (dist < min_dist)
         {
@@ -109,10 +106,8 @@ int StateEstimator::closestRobotToBall()
  */
 void StateEstimator::updateBallPossessionState()
 {
-    float ball_x = Ball::getInstance().getX();
-    float ball_y = Ball::getInstance().getY();
     int closest_index = closestRobotToBall();
-    float dist = math::calculateDistance(robot[closest_index].getX(), robot[closest_index].getY(), ball_x, ball_y);
+    float dist = math::calculateDistance(robot[closest_index].getPos(), Ball::getInstance().getPos());
 
     if (dist > 0.2)
         closest_index = -1;

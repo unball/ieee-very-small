@@ -59,6 +59,17 @@ float math::calculateDistance(float x1, float y1, float x2, float y2)
 }
 
 /**
+ * Calculate the distance from point1 to point2 by using the Pythagorean theorem.
+ * @param point1 The first point.
+ * @param point2 The second point.
+ * @return The calculated distance.
+ */
+float math::calculateDistance(Point point1, Point point2)
+{
+    return calculateDistance(point1.getX(), point1.getY(), point2.getX(), point2.getY());
+}
+
+/**
  * Calculate the angle from (x1, y1) to (x2, y2) by using arc-tangent.
  * @param x1 The x coordinate of the first point.
  * @param y1 The y coordinate of the first point.
@@ -71,4 +82,15 @@ float math::calculateAngle(float x1, float y1, float x2, float y2)
     float dx = x1 - x2;
     float dy = y1 - y2;
     return atan2(dy, dx);
+}
+
+/**
+ * Calculate the angle from point1 to point2 by using arc-tangent.
+ * @param point1 The first point.
+ * @param point2 The second point.
+ * @return The calculated angle.
+ */
+float math::calculateAngle(Point point1, Point point2)
+{
+    return calculateAngle(point1.getX(), point1.getY(), point2.getX(), point2.getY());
 }

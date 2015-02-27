@@ -15,12 +15,16 @@
 
 #include <cmath>
 
+#include <unball/utils/point.hpp>
+
 namespace math
 {
     float saturate(float x, float limit);
     float reduceAngle(float angle);
     float calculateDistance(float x1, float y1, float x2, float y2);
+    float calculateDistance(Point point1, Point point2);
     float calculateAngle(float x1, float y1, float x2, float y2);
+    float calculateAngle(Point point1, Point point2);
 }
 
 #endif // MATH_H_
