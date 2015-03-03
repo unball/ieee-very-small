@@ -97,9 +97,6 @@ void Vision::run()
 
     ROS_DEBUG("Run vision");
 
-    gui_.setRGBFrame(rgb_frame_);
-    gui_.setDepthFrame(depth_frame_);
-
     /*
      * When the frame does not have proper size, there is no need to execute the vision algorithms, since they will
      * crash. This is not a bug, however, since it can happen when the system is started and no frame has been sent
@@ -118,6 +115,8 @@ void Vision::run()
             rgb_segmented_frame = segmenter_.segment(rgb_frame_);
             tracker_.track(rgb_frame_, depth_frame_, rgb_segmented_frame);
         }
+        gui_.setRGBFrame(rgb_frame_);
+        gui_.setDepthFrame(depth_frame_);
         gui_.showRGBFrame();
         gui_.showDepthFrame();
     }
