@@ -11,14 +11,28 @@
 #ifndef UNBALL_VISION_HOMOGRAPHY_H_
 #define UNBALL_VISION_HOMOGRAPHY_H_
 
+#include <vector>
+
+#include <ros/ros.h>
+
 #include <opencv2/opencv.hpp>
 
 class Homography
 {
   public:
-    Homography();
-    ~Homography();
+    Homography(float scale = 4.0);
+    void calcHomographyMat(std::vector<cv::Point2f> src_points);
+    cv::Mat transform(cv::Mat image);
+
+    bool isHomographyDone();
+
   private:
+    float scale_;
+    bool is_done_;
+
+    std::vector<cv::Point2f> dst_points_;
+    
+    cv::Mat homography_matrix_;
 };
 
 #endif // UNBALL_VISION_HOMOGRAPHY_H_
