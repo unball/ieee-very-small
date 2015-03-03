@@ -10,6 +10,17 @@
 
 #include <unball/vision/gui.hpp>
 
+std::vector<cv::Point2f> GUI::rgb_points_;
+
+GUI::GUI()
+{
+    rgb_frame_title_ = "RGB frame";
+    depth_frame_title_ = "Depth frame";
+    cv::namedWindow(rgb_frame_title_);
+    cv::namedWindow(depth_frame_title_);
+    cv::setMouseCallback(rgb_frame_title_, rgbMouseCallback, NULL);
+}
+
 void GUI::setRGBFrame(cv::Mat rgb_frame)
 {
     // Check frame size
@@ -46,7 +57,7 @@ void GUI::show(cv::Mat image)
 
 void GUI::showRGBFrame()
 {
-    cv::imshow("RGB frame", rgb_frame_);
+    cv::imshow(rgb_frame_title_, rgb_frame_);
     cv::waitKey(1); // Must be called to show images sequentially
 }
 
@@ -62,6 +73,20 @@ void GUI::showDepthFrame()
      */
     cv::normalize(depth_frame_, normalized_depth_frame, 0, 65535, cv::NORM_MINMAX, CV_16UC1);
 
-    cv::imshow("Depth frame", normalized_depth_frame);
+    cv::imshow(depth_frame_title_, normalized_depth_frame);
     cv::waitKey(1); // Must be called to show images sequentially
+}
+
+void GUI::rgbMouseCallback(int event, int x, int y, int, void*)
+{
+    if (event == cv::EVENT_LBUTTONDOWN)
+    {
+        ROS_INFO("RGB frame button click at: (%d,%d)", x, y);
+        rgb_points_.push_back(cv::Point2f(x, y));
+    }
+}
+
+std::vector<cv::Point2f> GUI::getRGBPoints()
+{
+    return rgb_points_;
 }

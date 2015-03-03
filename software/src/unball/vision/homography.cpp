@@ -28,7 +28,8 @@ void Homography::calcHomographyMat(std::vector<cv::Point2f> src_points)
 {
     if (src_points.size() != 6)
     {
-        ROS_ERROR("6 points are needed for homography.");
+        ROS_WARN("6 points are needed for homography.");
+        return;
     }
 
     cv::Mat srcp(src_points);

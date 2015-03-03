@@ -25,15 +25,25 @@
 class GUI
 {
   public:
+    GUI();
     void setRGBFrame(cv::Mat rgb_frame);
     void setDepthFrame(cv::Mat depth_frame);
     void show(cv::Mat image);
     void showRGBFrame();
     void showDepthFrame();
 
+    std::vector<cv::Point2f> getRGBPoints();
+
+    static void rgbMouseCallback(int event, int x, int y, int, void*);
+
   private:
     cv::Mat rgb_frame_;
     cv::Mat depth_frame_;
+
+    std::string rgb_frame_title_;
+    std::string depth_frame_title_;
+
+    static std::vector<cv::Point2f> rgb_points_;
 };
 
 #endif // UNBALL_VISION_GUI_H_

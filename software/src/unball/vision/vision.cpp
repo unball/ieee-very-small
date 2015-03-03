@@ -109,8 +109,7 @@ void Vision::run()
     {
         if (not homography_.isHomographyDone())
         {
-            // Somehow get the points from gui
-            // If all the points were gathered from gui, then calculate the homography matrix
+            homography_.calcHomographyMat(gui_.getRGBPoints());
         }
         else
         {
@@ -118,7 +117,6 @@ void Vision::run()
             preprocessor_.preprocess(rgb_frame_, depth_frame_);
             rgb_segmented_frame = segmenter_.segment(rgb_frame_);
             tracker_.track(rgb_frame_, depth_frame_, rgb_segmented_frame);
-    
         }
         gui_.showRGBFrame();
         gui_.showDepthFrame();
