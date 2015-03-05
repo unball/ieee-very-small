@@ -61,13 +61,13 @@ float Point::findAngle(const Point &point) const
     if (point.x == x)
         return (point.y >= y ? M_PI/2 : 3*M_PI/2);
     if (point.x > x && point.y > y)
-        return (atan((point.y - y)/(point.x-x)));
+        return (atan2((point.y - y),(point.x-x)));
     if (point.x > x && point.y < y)
-        return (2*M_PI - atan((y - point.y)/(point.x-x)));
+        return (2*M_PI - atan2((y - point.y),(point.x-x)));
     if (point.x < x && point.y < y)
-        return (M_PI + atan((y - point.y)/(x-point.x)));
+        return (M_PI + atan2((y - point.y),(x-point.x)));
     if (point.x < x && point.y > y)
-        return (M_PI - atan((point.y - y)/(x-point.x)));
+        return (M_PI - atan2((point.y - y),(x-point.x)));
 
     return 0;
 }
