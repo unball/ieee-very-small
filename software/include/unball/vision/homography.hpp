@@ -20,14 +20,13 @@
 class Homography
 {
   public:
-    Homography(float scale = 4.0);
+    Homography();
     void calcHomographyMat(std::vector<cv::Point2f> src_points);
     cv::Mat transform(cv::Mat image);
 
     bool isHomographyDone();
 
   private:
-    float scale_;
     bool is_done_;
 
     std::vector<cv::Point2f> dst_points_;

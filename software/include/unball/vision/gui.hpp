@@ -25,7 +25,7 @@
 class GUI
 {
   public:
-    GUI();
+    void loadConfig();
     void setRGBFrame(cv::Mat rgb_frame);
     void setDepthFrame(cv::Mat depth_frame);
     void show(cv::Mat image);

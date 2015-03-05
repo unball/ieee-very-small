@@ -86,6 +86,7 @@ void Vision::loadConfig()
     preprocessor_.loadConfig();
     segmenter_.loadConfig();
     tracker_.loadConfig();
+    gui_.loadConfig();
 }
 
 /**

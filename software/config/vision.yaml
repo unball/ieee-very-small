@@ -35,3 +35,18 @@ vision:
         # Select which method will be used to track the soccer field
         # Options: "rgb" or "depth"
         field_tracking_mode: "rgb"
+
+    gui:
+        # Name of the RGB window
+        rgb_window_name: "RGB frame"
+
+        # Position of the RGB window
+        rgb_window_pos_x: 0
+        rgb_window_pos_y: 0
+
+        # Name of the depth window
+        depth_window_name: "Depth frame"
+
+        # Position of the depth window
+        depth_window_pos_x: 707
+        depth_window_pos_y: 0

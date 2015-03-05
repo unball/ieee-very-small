@@ -12,13 +12,21 @@
 
 std::vector<cv::Point2f> GUI::rgb_points_;
 
-GUI::GUI()
+void GUI::loadConfig()
 {
-    rgb_frame_title_ = "RGB frame";
-    depth_frame_title_ = "Depth frame";
+    int x, y;
+    ros::param::get("/vision/gui/rgb_window_name", rgb_frame_title_);
+    ros::param::get("/vision/gui/rgb_window_pos_x", x);
+    ros::param::get("/vision/gui/rgb_window_pos_y", y);
     cv::namedWindow(rgb_frame_title_);
-    cv::namedWindow(depth_frame_title_);
+    cv::moveWindow(rgb_frame_title_, x, y);
     cv::setMouseCallback(rgb_frame_title_, rgbMouseCallback, NULL);
+
+    ros::param::get("/vision/gui/depth_window_name", depth_frame_title_);
+    ros::param::get("/vision/gui/depth_window_pos_x", x);
+    ros::param::get("/vision/gui/depth_window_pos_y", y);
+    cv::namedWindow(depth_frame_title_);
+    cv::moveWindow(depth_frame_title_, x, y);
 }
 
 void GUI::setRGBFrame(cv::Mat rgb_frame)

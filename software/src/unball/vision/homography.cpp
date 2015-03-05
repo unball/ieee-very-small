@@ -10,18 +10,17 @@
 
 #include <unball/vision/homography.hpp>
 
-Homography::Homography(float scale)
+Homography::Homography()
 {
-    scale_ = scale;
     is_done_ = false;
 
-    dst_points_.push_back(scale_*cv::Point2f(0.0,45.0));
-    dst_points_.push_back(scale_*cv::Point2f(85.0,0.0));
-    dst_points_.push_back(scale_*cv::Point2f(170.0,45.0));
+    dst_points_.push_back(cv::Point2f(0.0,0.0));
+    dst_points_.push_back(cv::Point2f(320.0,0.0));
+    dst_points_.push_back(cv::Point2f(640.0,0.0));
 
-    dst_points_.push_back(scale_*cv::Point2f(170.0,85.0));
-    dst_points_.push_back(scale_*cv::Point2f(85.0,130.0));
-    dst_points_.push_back(scale_*cv::Point2f(0.0,85.0));
+    dst_points_.push_back(cv::Point2f(0.0,480.0));
+    dst_points_.push_back(cv::Point2f(320.0,480.0));
+    dst_points_.push_back(cv::Point2f(640.0,480.0));
 }
 
 void Homography::calcHomographyMat(std::vector<cv::Point2f> src_points)
@@ -42,7 +41,7 @@ void Homography::calcHomographyMat(std::vector<cv::Point2f> src_points)
 cv::Mat Homography::transform(cv::Mat image)
 {
     cv::Mat result;
-    cv::warpPerspective(image,result,homography_matrix_,cv::Size(scale_*170,scale_*130));
+    cv::warpPerspective(image,result,homography_matrix_,cv::Size(640,480));
     return result;
 }
 
