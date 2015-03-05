@@ -11,7 +11,11 @@
 #include <unball/vision/gui.hpp>
 
 std::vector<cv::Point2f> GUI::rgb_points_;
+std::vector<cv::Point2f> GUI::depth_points_;
 
+/**
+ * Load GUI configurations.
+ */
 void GUI::loadConfig()
 {
     int x, y;
@@ -27,6 +31,7 @@ void GUI::loadConfig()
     ros::param::get("/vision/gui/depth_window_pos_y", y);
     cv::namedWindow(depth_frame_title_);
     cv::moveWindow(depth_frame_title_, x, y);
+    cv::setMouseCallback(depth_frame_title_, depthMouseCallback, NULL);
 }
 
 void GUI::setRGBFrame(cv::Mat rgb_frame)
@@ -85,6 +90,15 @@ void GUI::showDepthFrame()
     cv::waitKey(1); // Must be called to show images sequentially
 }
 
+/**
+ * Callback function for OpenCV mouse handling on rgb window. If there is a mouse click on the window, the position of
+ * the cursor will be stored in rgb_points_ for homography.
+ * @param event the mouse event
+ * @param x position of the cursor relative to the x axis
+ * @param y position of the cursor relative to the y axis
+ * @warning if the window is closed while the program is running this function will no longer be linked to the rgb
+ * window.
+ */
 void GUI::rgbMouseCallback(int event, int x, int y, int, void*)
 {
     if (event == cv::EVENT_LBUTTONDOWN)
@@ -94,7 +108,30 @@ void GUI::rgbMouseCallback(int event, int x, int y, int, void*)
     }
 }
 
+/**
+ * Callback function for OpenCV mouse handling on depth window. If there is a mouse click on the window, the position of
+ * the cursor will be stored in depth_points_ for homography.
+ * @param event the mouse event
+ * @param x position of the cursor relative to the x axis
+ * @param y position of the cursor relative to the y axis
+ * @warning if the window is closed while the program is running this function will no longer be linked to the depth
+ * window.
+ */
+void GUI::depthMouseCallback(int event, int x, int y, int, void*)
+{
+    if (event == cv::EVENT_LBUTTONDOWN)
+    {
+        ROS_INFO("Depth frame button click at: (%d,%d)", x, y);
+        depth_points_.push_back(cv::Point2f(x, y));
+    }
+}
+
 std::vector<cv::Point2f> GUI::getRGBPoints()
 {
     return rgb_points_;
+}
+
+std::vector<cv::Point2f> GUI::getDepthPoints()
+{
+    return depth_points_;
 }
