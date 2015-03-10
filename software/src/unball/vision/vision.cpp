@@ -83,6 +83,7 @@ void Vision::loadConfig()
     ros::param::get("/vision/using_rgb", using_rgb_);
     ros::param::get("/vision/using_depth", using_depth_);
 
+    homography_.loadConfig();
     preprocessor_.loadConfig();
     segmenter_.loadConfig();
     tracker_.loadConfig();
@@ -107,11 +108,15 @@ void Vision::run()
     {
         if (not homography_.isHomographyDone())
         {
-            homography_.calcHomographyMat(gui_.getRGBPoints());
+            homography_.run(gui_.getRGBPoints(), gui_.getDepthPoints());
+            if (homography_.isCalibrationDone())
+                depth_frame_ = homography_.calibrate(depth_frame_);
         }
         else
         {
-            rgb_frame_ = homography_.transform(rgb_frame_);
+            rgb_frame_ = homography_.rectify(rgb_frame_);
+            depth_frame_ = homography_.calibrate(depth_frame_);
+            depth_frame_ = homography_.rectify(depth_frame_);
             preprocessor_.preprocess(rgb_frame_, depth_frame_);
             rgb_segmented_frame = segmenter_.segment(rgb_frame_);
             tracker_.track(rgb_frame_, depth_frame_, rgb_segmented_frame);

@@ -35,6 +35,8 @@ class GUI
     std::vector<cv::Point2f> getRGBPoints();
     std::vector<cv::Point2f> getDepthPoints();
 
+    static void clearRGBPoints();
+    static void clearDepthPoints();
     static void rgbMouseCallback(int event, int x, int y, int, void*);
     static void depthMouseCallback(int event, int x, int y, int, void*);
 

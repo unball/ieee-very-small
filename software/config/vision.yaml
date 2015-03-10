@@ -9,6 +9,12 @@ vision:
     # false: ignore depth images.
     using_depth: true
 
+    homography:
+        # Indicates whether the homography class needs to calibrate depth camera (relative to rgb camera)
+        # true: calibrates the depth camera
+        # false: no calibration required, calibration matrix is loaded from a separate file
+        calibrate: true
+
     preprocessor:
         # Show image with the results of preprocessing
         show_image: false

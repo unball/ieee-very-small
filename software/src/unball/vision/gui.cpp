@@ -1,6 +1,7 @@
 /**
  * @file   gui.cpp
  * @author Matheus Vieira Portela
+ * @author Gabriel Naves da Silva
  * @date   12/07/2014
  *
  * @attention Copyright (C) 2014 UnBall Robot Soccer Team
@@ -134,4 +135,14 @@ std::vector<cv::Point2f> GUI::getRGBPoints()
 std::vector<cv::Point2f> GUI::getDepthPoints()
 {
     return depth_points_;
+}
+
+void GUI::clearRGBPoints()
+{
+    rgb_points_.clear();
+}
+
+void GUI::clearDepthPoints()
+{
+    depth_points_.clear();
 }
