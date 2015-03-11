@@ -71,6 +71,9 @@ void GUI::show(cv::Mat image)
 
 void GUI::showRGBFrame()
 {
+    for (unsigned i = 0; i < rgb_points_.size(); ++i) // Draws selected rgb points on the image
+        cv::circle(rgb_frame_, rgb_points_[i], 5, cv::Scalar(0, 0, 255));
+
     cv::imshow(rgb_frame_title_, rgb_frame_);
     cv::waitKey(1); // Must be called to show images sequentially
 }
@@ -86,6 +89,9 @@ void GUI::showDepthFrame()
      * To make the image visible, we apply a normalization from 0 to 65,535.
      */
     cv::normalize(depth_frame_, normalized_depth_frame, 0, 65535, cv::NORM_MINMAX, CV_16UC1);
+
+    for (unsigned i = 0; i < depth_points_.size(); ++i) // Draws selected depth points on the normalized image
+        cv::circle(normalized_depth_frame, depth_points_[i], 5, 255);
 
     cv::imshow(depth_frame_title_, normalized_depth_frame);
     cv::waitKey(1); // Must be called to show images sequentially
