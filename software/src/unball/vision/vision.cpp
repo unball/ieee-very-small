@@ -106,6 +106,10 @@ void Vision::run()
      */
     if (isValidSize(rgb_frame_) and isValidSize(depth_frame_))
     {
+        /**
+         * The homography is the first thing that needs to be done, as it makes the rest of the vision algorithm 
+         * possible.
+         */
         if (not homography_.isHomographyDone())
         {
             homography_.run(gui_.getRGBPoints(), gui_.getDepthPoints());
