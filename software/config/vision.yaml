@@ -15,6 +15,10 @@ vision:
         # false: no calibration required, calibration matrix is loaded from a separate file
         calibrate: true
 
+        # If "calibrate" is active, indicates whether the homography class should overwrite the previous calibration
+        # matrix
+        overwrite_calib_matrix: true
+
     preprocessor:
         # Show image with the results of preprocessing
         show_image: false

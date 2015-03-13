@@ -17,8 +17,11 @@
 #define UNBALL_VISION_HOMOGRAPHY_H_
 
 #include <vector>
+#include <fstream>
+#include <string>
 
 #include <ros/ros.h>
+#include <ros/package.h>
 
 #include <opencv2/opencv.hpp>
 
@@ -54,9 +57,12 @@ class Homography
     HomographyStep current_step_;
 
     std::vector<cv::Point2f> dst_points_; // Points for rectification
+    std::string calib_matrix_file_name_; // Name for the file containing the calibration matrix
     
     cv::Mat calibration_matrix_;
     cv::Mat homography_matrix_;
+
+    bool overwrite_calibration_matrix_;
 };
 
 #endif // UNBALL_VISION_HOMOGRAPHY_H_

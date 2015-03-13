@@ -26,12 +26,19 @@ Homography::Homography()
     dst_points_.push_back(cv::Point2f(0.0,480.0));
     dst_points_.push_back(cv::Point2f(320.0,480.0));
     dst_points_.push_back(cv::Point2f(640.0,480.0));
+
+    /**
+     * Finds the path for the unball package with getPath, then appends the rest of the file path and file name.
+     */
+    calib_matrix_file_name_ = ros::package::getPath("unball");
+    calib_matrix_file_name_.append("/data/calibration_matrix.txt");
 }
 
 void Homography::loadConfig()
 {
     bool shouldCalibrate;
     ros::param::get("/vision/homography/calibrate", shouldCalibrate);
+    ros::param::get("/vision/homography/overwrite_calib_matrix", overwrite_calibration_matrix_);
     current_step_ = (shouldCalibrate ? CALIBRATION : RECTIFICATION);
     
     if (current_step_ == RECTIFICATION)
@@ -80,7 +87,8 @@ void Homography::calcCalibrationMat(std::vector<cv::Point2f> src_points, std::ve
     GUI::clearRGBPoints();
     GUI::clearDepthPoints();
 
-    saveCalibrationMatrix();
+    if (overwrite_calibration_matrix_)
+        saveCalibrationMatrix();
 }
 
 /**
@@ -105,14 +113,61 @@ void Homography::calcHomographyMat(std::vector<cv::Point2f> src_points)
     GUI::clearDepthPoints();
 }
 
+/**
+ * Saves the calibration matrix that was calculated through the calibration algorithm to a file named
+ * "calibration_matrix.txt". This file will be located on the "data" folder of the "unball" package.
+ */
 void Homography::saveCalibrationMatrix()
 {
-    // TODO (gabri.navess@gmail.com): Actually save the matrix
+    ROS_DEBUG("Saving calibration matrix");
+    std::ofstream file(calib_matrix_file_name_.c_str());
+
+    if (not file.is_open())
+    {
+        ROS_ERROR("Error! Could not open file %c%s%c", 34, calib_matrix_file_name_.c_str(), 34);
+        return;
+    }
+
+    file << calibration_matrix_.rows << std::endl << calibration_matrix_.cols << std::endl;
+    for (int i = 0; i < calibration_matrix_.rows; ++i)
+    {
+        for (int j = 0; j < calibration_matrix_.cols; ++j)
+        {
+            file << calibration_matrix_.at<double>(j,i) << std::endl;
+        }
+    }
+
+    file.close();
 }
 
+/**
+ * Loads the calibration matrix to be used for calibration of the depth image from a file named
+ * "calibration_matrix.txt". This file should be located on the "data" folder of the "unball" package.
+ */
 void Homography::loadCalibrationMatrix()
 {
-    // TODO (gabri.navess@gmail.com): Actually load the matrix
+    ROS_DEBUG("Loading calibration matrix");
+    std::ifstream file(calib_matrix_file_name_.c_str());
+
+    if (not file.is_open())
+    {
+        ROS_ERROR("Error! Could not open file %c%s%c", 34, calib_matrix_file_name_.c_str(), 34);
+        return;
+    }
+    
+    int rows, cols;
+    file >> rows;
+    file >> cols;
+    for (int i = 0; i < rows; ++i)
+    {
+        for (int j = 0; j < cols; ++j)
+        {
+            file >> calibration_matrix_.at<double>(j,i);
+        }
+    }
+    
+    ROS_ERROR("Finished loading calib matrix");
+    file.close();
 }
 
 /**
