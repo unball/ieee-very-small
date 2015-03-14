@@ -13,7 +13,7 @@ vision:
         # Indicates whether the homography class needs to calibrate depth camera (relative to rgb camera)
         # true: calibrates the depth camera
         # false: no calibration required, calibration matrix is loaded from a separate file
-        calibrate: true
+        calibrate: false
 
         # If "calibrate" is active, indicates whether the homography class should overwrite the previous calibration
         # matrix

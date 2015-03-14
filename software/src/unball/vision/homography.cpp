@@ -158,15 +158,16 @@ void Homography::loadCalibrationMatrix()
     int rows, cols;
     file >> rows;
     file >> cols;
+    cv::Mat load_matrix(rows, cols, CV_64F);
     for (int i = 0; i < rows; ++i)
     {
         for (int j = 0; j < cols; ++j)
         {
-            file >> calibration_matrix_.at<double>(j,i);
+            file >> load_matrix.at<double>(j,i);
         }
     }
     
-    ROS_ERROR("Finished loading calib matrix");
+    calibration_matrix_ = load_matrix;
     file.close();
 }
 
