@@ -9,6 +9,16 @@ vision:
     # false: ignore depth images.
     using_depth: true
 
+    homography:
+        # Indicates whether the homography class needs to calibrate depth camera (relative to rgb camera)
+        # true: calibrates the depth camera
+        # false: no calibration required, calibration matrix is loaded from a separate file
+        calibrate: false
+
+        # If "calibrate" is active, indicates whether the homography class should overwrite the previous calibration
+        # matrix
+        overwrite_calib_matrix: true
+
     preprocessor:
         # Show image with the results of preprocessing
         show_image: false
@@ -35,3 +45,18 @@ vision:
         # Select which method will be used to track the soccer field
         # Options: "rgb" or "depth"
         field_tracking_mode: "rgb"
+
+    gui:
+        # Name of the RGB window
+        rgb_window_name: "RGB frame"
+
+        # Position of the RGB window
+        rgb_window_pos_x: 0
+        rgb_window_pos_y: 0
+
+        # Name of the depth window
+        depth_window_name: "Depth frame"
+
+        # Position of the depth window
+        depth_window_pos_x: 707
+        depth_window_pos_y: 0

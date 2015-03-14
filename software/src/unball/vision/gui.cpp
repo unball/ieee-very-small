@@ -1,6 +1,7 @@
 /**
  * @file   gui.cpp
  * @author Matheus Vieira Portela
+ * @author Gabriel Naves da Silva
  * @date   12/07/2014
  *
  * @attention Copyright (C) 2014 UnBall Robot Soccer Team
@@ -9,6 +10,30 @@
  */
 
 #include <unball/vision/gui.hpp>
+
+std::vector<cv::Point2f> GUI::rgb_points_;
+std::vector<cv::Point2f> GUI::depth_points_;
+
+/**
+ * Load GUI configurations.
+ */
+void GUI::loadConfig()
+{
+    int x, y;
+    ros::param::get("/vision/gui/rgb_window_name", rgb_frame_title_);
+    ros::param::get("/vision/gui/rgb_window_pos_x", x);
+    ros::param::get("/vision/gui/rgb_window_pos_y", y);
+    cv::namedWindow(rgb_frame_title_);
+    cv::moveWindow(rgb_frame_title_, x, y);
+    cv::setMouseCallback(rgb_frame_title_, rgbMouseCallback, NULL);
+
+    ros::param::get("/vision/gui/depth_window_name", depth_frame_title_);
+    ros::param::get("/vision/gui/depth_window_pos_x", x);
+    ros::param::get("/vision/gui/depth_window_pos_y", y);
+    cv::namedWindow(depth_frame_title_);
+    cv::moveWindow(depth_frame_title_, x, y);
+    cv::setMouseCallback(depth_frame_title_, depthMouseCallback, NULL);
+}
 
 void GUI::setRGBFrame(cv::Mat rgb_frame)
 {
@@ -46,7 +71,10 @@ void GUI::show(cv::Mat image)
 
 void GUI::showRGBFrame()
 {
-    cv::imshow("RGB frame", rgb_frame_);
+    for (unsigned i = 0; i < rgb_points_.size(); ++i) // Draws selected rgb points on the image
+        cv::circle(rgb_frame_, rgb_points_[i], 5, cv::Scalar(0, 0, 255));
+
+    cv::imshow(rgb_frame_title_, rgb_frame_);
     cv::waitKey(1); // Must be called to show images sequentially
 }
 
@@ -62,6 +90,65 @@ void GUI::showDepthFrame()
      */
     cv::normalize(depth_frame_, normalized_depth_frame, 0, 65535, cv::NORM_MINMAX, CV_16UC1);
 
-    cv::imshow("Depth frame", normalized_depth_frame);
+    for (unsigned i = 0; i < depth_points_.size(); ++i) // Draws selected depth points on the normalized image
+        cv::circle(normalized_depth_frame, depth_points_[i], 5, 255);
+
+    cv::imshow(depth_frame_title_, normalized_depth_frame);
     cv::waitKey(1); // Must be called to show images sequentially
+}
+
+/**
+ * Callback function for OpenCV mouse handling on rgb window. If there is a mouse click on the window, the position of
+ * the cursor will be stored in rgb_points_ for homography.
+ * @param event the mouse event
+ * @param x position of the cursor relative to the x axis
+ * @param y position of the cursor relative to the y axis
+ * @warning if the window is closed while the program is running this function will no longer be linked to the rgb
+ * window.
+ */
+void GUI::rgbMouseCallback(int event, int x, int y, int, void*)
+{
+    if (event == cv::EVENT_LBUTTONDOWN)
+    {
+        ROS_INFO("RGB frame button click at: (%d,%d)", x, y);
+        rgb_points_.push_back(cv::Point2f(x, y));
+    }
+}
+
+/**
+ * Callback function for OpenCV mouse handling on depth window. If there is a mouse click on the window, the position of
+ * the cursor will be stored in depth_points_ for homography.
+ * @param event the mouse event
+ * @param x position of the cursor relative to the x axis
+ * @param y position of the cursor relative to the y axis
+ * @warning if the window is closed while the program is running this function will no longer be linked to the depth
+ * window.
+ */
+void GUI::depthMouseCallback(int event, int x, int y, int, void*)
+{
+    if (event == cv::EVENT_LBUTTONDOWN)
+    {
+        ROS_INFO("Depth frame button click at: (%d,%d)", x, y);
+        depth_points_.push_back(cv::Point2f(x, y));
+    }
+}
+
+std::vector<cv::Point2f> GUI::getRGBPoints()
+{
+    return rgb_points_;
+}
+
+std::vector<cv::Point2f> GUI::getDepthPoints()
+{
+    return depth_points_;
+}
+
+void GUI::clearRGBPoints()
+{
+    rgb_points_.clear();
+}
+
+void GUI::clearDepthPoints()
+{
+    depth_points_.clear();
 }

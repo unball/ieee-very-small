@@ -24,6 +24,7 @@
 #include <unball/vision/preprocessor.hpp>
 #include <unball/vision/segmenter.hpp>
 #include <unball/vision/tracker.hpp>
+#include <unball/vision/homography.hpp>
 
 class Vision
 {
@@ -47,6 +48,7 @@ class Vision
     Preprocessor preprocessor_;
     Segmenter segmenter_;
     Tracker tracker_;
+    Homography homography_;
 
     cv::Mat rgb_frame_;
     cv::Mat depth_frame_;
