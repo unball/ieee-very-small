@@ -51,18 +51,20 @@ class Homography
   private:
     void calcCalibrationMat(std::vector<cv::Point2f> src_points, std::vector<cv::Point2f> dst_points);
     void calcHomographyMat(std::vector<cv::Point2f> src_points);
-    void saveCalibrationMatrix();
-    void loadCalibrationMatrix();
+    void saveMatrix(std::string file_name, cv::Mat &matrix);
+    void loadMatrix(std::string file_name, cv::Mat &matrix);
 
     HomographyStep current_step_;
 
     std::vector<cv::Point2f> dst_points_; // Points for rectification
     std::string calib_matrix_file_name_; // Name for the file containing the calibration matrix
+    std::string rect_matrix_file_name_; // Name for the file containing the rectification matrix
     
     cv::Mat calibration_matrix_;
     cv::Mat homography_matrix_;
 
     bool overwrite_calibration_matrix_;
+    bool overwrite_rectification_matrix_;
 };
 
 #endif // UNBALL_VISION_HOMOGRAPHY_H_

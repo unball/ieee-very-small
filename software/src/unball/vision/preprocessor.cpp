@@ -11,8 +11,6 @@
 
 #include <unball/vision/preprocessor.hpp>
 
-#include <iostream> // TODO: Remove this when printMeanMinMax is removed
-
 Preprocessor::Preprocessor()
 {
     window_name_ = "Preprocessor";
@@ -50,7 +48,7 @@ void Preprocessor::preprocessRGB(cv::Mat &rgb_frame)
      */ 
     cv::medianBlur(rgb_frame, rgb_frame, 5);
 
-    // TODO(matheus.v.portela@gmail.com): GUI show be the only one to deal with showing images.
+    // TODO(matheus.v.portela@gmail.com): GUI should be the only one to deal with showing images.
     // Show results
     if (show_image_)
     {
@@ -103,7 +101,7 @@ void Preprocessor::printMeanMinMax(cv::Mat image)
  */
 void Preprocessor::preprocessDepth(cv::Mat &depth_frame)
 {
-    printMeanMinMax(depth_frame);
+    cv::medianBlur(depth_frame, depth_frame, 5);
 }
 
 /**

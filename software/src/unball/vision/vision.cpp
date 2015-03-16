@@ -115,18 +115,22 @@ void Vision::run()
             homography_.run(gui_.getRGBPoints(), gui_.getDepthPoints());
             if (homography_.isCalibrationDone())
                 depth_frame_ = homography_.calibrate(depth_frame_);
+            gui_.setRGBFrame(rgb_frame_);
+            gui_.setDepthFrame(depth_frame_);
         }
         else
         {
             rgb_frame_ = homography_.rectify(rgb_frame_);
             depth_frame_ = homography_.calibrate(depth_frame_);
             depth_frame_ = homography_.rectify(depth_frame_);
+            
+            gui_.setRGBFrame(rgb_frame_);
+            gui_.setDepthFrame(depth_frame_);
+            
             preprocessor_.preprocess(rgb_frame_, depth_frame_);
             rgb_segmented_frame = segmenter_.segment(rgb_frame_);
             tracker_.track(rgb_frame_, depth_frame_, rgb_segmented_frame);
         }
-        gui_.setRGBFrame(rgb_frame_);
-        gui_.setDepthFrame(depth_frame_);
         gui_.showRGBFrame();
         gui_.showDepthFrame();
     }

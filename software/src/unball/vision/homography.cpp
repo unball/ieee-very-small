@@ -31,22 +31,34 @@ Homography::Homography()
      * Finds the path for the unball package with getPath, then appends the rest of the file path and file name.
      */
     calib_matrix_file_name_ = ros::package::getPath("unball");
+    rect_matrix_file_name_ = calib_matrix_file_name_;
     calib_matrix_file_name_.append("/data/calibration_matrix.txt");
+    rect_matrix_file_name_.append("/data/rectification_matrix.txt");
 }
 
 void Homography::loadConfig()
 {
-    bool shouldCalibrate;
+    bool shouldCalibrate, shouldRectify;
     ros::param::get("/vision/homography/calibrate", shouldCalibrate);
+    ros::param::get("/vision/homography/rectify", shouldRectify);
     ros::param::get("/vision/homography/overwrite_calib_matrix", overwrite_calibration_matrix_);
-    current_step_ = (shouldCalibrate ? CALIBRATION : RECTIFICATION);
-    
-    if (current_step_ == RECTIFICATION)
-        loadCalibrationMatrix();
+    ros::param::get("/vision/homography/overwrite_rect_matrix", overwrite_rectification_matrix_);
+    if (shouldCalibrate)
+    {
+        current_step_ = CALIBRATION;
+    }
+    else
+    {
+        current_step_ = (shouldRectify ? RECTIFICATION : END);
+        loadMatrix(calib_matrix_file_name_, calibration_matrix_);
+        if (current_step_ == END)
+            loadMatrix(rect_matrix_file_name_, homography_matrix_);
+    }
 }
 
 /**
- * Executes the homography algorithm. 
+ * Executes the homography algorithm. The homography algorithm is based on steps. Each step must know wich step comes
+ * after itself, and is in charge of changing to the next step.
  * @param rgb_points The selected points on RGB image
  * @param depth_points The selected points on depth image
  */
@@ -88,7 +100,7 @@ void Homography::calcCalibrationMat(std::vector<cv::Point2f> src_points, std::ve
     GUI::clearDepthPoints();
 
     if (overwrite_calibration_matrix_)
-        saveCalibrationMatrix();
+        saveMatrix(calib_matrix_file_name_, calibration_matrix_);
 }
 
 /**
@@ -111,64 +123,9 @@ void Homography::calcHomographyMat(std::vector<cv::Point2f> src_points)
     current_step_ = END;
     GUI::clearRGBPoints();
     GUI::clearDepthPoints();
-}
 
-/**
- * Saves the calibration matrix that was calculated through the calibration algorithm to a file named
- * "calibration_matrix.txt". This file will be located on the "data" folder of the "unball" package.
- */
-void Homography::saveCalibrationMatrix()
-{
-    ROS_DEBUG("Saving calibration matrix");
-    std::ofstream file(calib_matrix_file_name_.c_str());
-
-    if (not file.is_open())
-    {
-        ROS_ERROR("Error! Could not open file %c%s%c", 34, calib_matrix_file_name_.c_str(), 34);
-        return;
-    }
-
-    file << calibration_matrix_.rows << std::endl << calibration_matrix_.cols << std::endl;
-    for (int i = 0; i < calibration_matrix_.rows; ++i)
-    {
-        for (int j = 0; j < calibration_matrix_.cols; ++j)
-        {
-            file << calibration_matrix_.at<double>(j,i) << std::endl;
-        }
-    }
-
-    file.close();
-}
-
-/**
- * Loads the calibration matrix to be used for calibration of the depth image from a file named
- * "calibration_matrix.txt". This file should be located on the "data" folder of the "unball" package.
- */
-void Homography::loadCalibrationMatrix()
-{
-    ROS_DEBUG("Loading calibration matrix");
-    std::ifstream file(calib_matrix_file_name_.c_str());
-
-    if (not file.is_open())
-    {
-        ROS_ERROR("Error! Could not open file %c%s%c", 34, calib_matrix_file_name_.c_str(), 34);
-        return;
-    }
-    
-    int rows, cols;
-    file >> rows;
-    file >> cols;
-    cv::Mat load_matrix(rows, cols, CV_64F);
-    for (int i = 0; i < rows; ++i)
-    {
-        for (int j = 0; j < cols; ++j)
-        {
-            file >> load_matrix.at<double>(j,i);
-        }
-    }
-    
-    calibration_matrix_ = load_matrix;
-    file.close();
+    if (overwrite_rectification_matrix_)
+        saveMatrix(rect_matrix_file_name_, homography_matrix_);
 }
 
 /**
@@ -203,4 +160,56 @@ bool Homography::isHomographyDone()
 bool Homography::isCalibrationDone()
 {
     return current_step_ > CALIBRATION;
+}
+
+/**
+ * Saves a matrix to a text file
+ * @param file_name the path to the file
+ * @param matrix the matrix to be saved
+ */
+void Homography::saveMatrix(std::string file_name, cv::Mat &matrix)
+{
+    ROS_DEBUG("Saving matrix to: %s", file_name.c_str());
+    std::ofstream file(file_name.c_str());
+
+    if (not file.is_open())
+    {
+        ROS_ERROR("Error! Could not open file %c%s%c", 34, file_name.c_str(), 34);
+        return;
+    }
+
+    file << matrix.rows << std::endl << matrix.cols << std::endl;
+    for (int i = 0; i < matrix.rows; ++i)
+        for (int j = 0; j < matrix.cols; ++j)
+            file << matrix.at<double>(j,i) << std::endl;
+
+    file.close();
+}
+
+/**
+ * Loads a matrix from a text file
+ * @param file_name the path to the file
+ * @param matrix the matrix to be loaded
+ */
+void Homography::loadMatrix(std::string file_name, cv::Mat &matrix)
+{
+    ROS_DEBUG("Loading matrix at: %s", file_name.c_str());
+    std::ifstream file(file_name.c_str());
+
+    if (not file.is_open())
+    {
+        ROS_ERROR("Error! Could not open file %c%s%c", 34, file_name.c_str(), 34);
+        return;
+    }
+    
+    int rows, cols;
+    file >> rows;
+    file >> cols;
+    cv::Mat loaded_matrix(rows, cols, CV_64F);
+    for (int i = 0; i < rows; ++i)
+        for (int j = 0; j < cols; ++j)
+            file >> loaded_matrix.at<double>(j,i);
+    
+    matrix = loaded_matrix;
+    file.close();
 }
