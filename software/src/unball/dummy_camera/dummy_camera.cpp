@@ -7,7 +7,7 @@
  * @attention Copyright (C) 2014 UnBall Robot Soccer Team
  *
  * @brief  Dummy camera node
- * 
+ *
  * Loads the rgb video file and publishes it on the "/camera/rgb/image_raw" topic,
  * and loads the depth images in sequence and publishes them on the
  * "/camera/depth/image_raw" topic.
@@ -23,14 +23,14 @@
 
 /**
  * Converts an integer to a string.
- * 
+ *
  * @param num the integer to be converted.
  */
 std::string to_string(int num)
 {
     std::string result;
     char tmp[100];
-    sprintf(tmp, "%d\0", num);
+    sprintf(tmp, "%d", num);
     result = tmp;
     return result;
 }
@@ -68,16 +68,16 @@ int main(int argc, char **argv)
     int depth_counter = 0;
 
     // Set the loop rate, defined by the framerate of the video
-    ros::Rate loop_rate(rgb_cap.get(CV_CAP_PROP_FPS));
-    ROS_DEBUG("Loop rate: %lf", rgb_cap.get(CV_CAP_PROP_FPS));
+    ros::Rate loop_rate(25);
+    ROS_ERROR("Loop rate: %lf", rgb_cap.get(CV_CAP_PROP_FPS));
 
     // Set rgb and depth frame encoding
     rgb_frame.encoding = sensor_msgs::image_encodings::BGR8;
     depth_frame.encoding = sensor_msgs::image_encodings::TYPE_16UC1;
-    
+
     // Retrieve amount of frames on the video
     num_frames = rgb_cap.get(CV_CAP_PROP_FRAME_COUNT);
-    ROS_DEBUG("Frame number: %d", num_frames);
+    ROS_ERROR("Frame number: %d", num_frames);
 
     // Publish the video
     ROS_INFO("Sending video");
@@ -88,13 +88,13 @@ int main(int argc, char **argv)
         ROS_DEBUG("Publishing the rgb frame");
         rgb_cap >> rgb_frame.image; // Get a new frame from the rgb video capture
         rgb_pub.publish(rgb_frame.toImageMsg());
-        
+
         // Publish the depth frame
         ROS_DEBUG("Publishing the depth frame");
         depth_counter++;
         depth_frame.image = cv::imread(depth_image_file+to_string(depth_counter)+".png", CV_LOAD_IMAGE_ANYDEPTH);
         depth_pub.publish(depth_frame.toImageMsg());
-        
+
         ros::spinOnce();
         loop_rate.sleep();
     }
