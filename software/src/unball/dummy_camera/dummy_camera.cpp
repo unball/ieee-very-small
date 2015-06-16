@@ -20,6 +20,7 @@
 #include <opencv2/highgui/highgui.hpp>
 
 #include <string>
+#include <cmath>
 
 /**
  * Converts an integer to a string.
@@ -68,8 +69,9 @@ int main(int argc, char **argv)
     int depth_counter = 0;
 
     // Set the loop rate, defined by the framerate of the video
-    ros::Rate loop_rate(25);
-    ROS_ERROR("Loop rate: %lf", rgb_cap.get(CV_CAP_PROP_FPS));
+    double rgb_video_fps = rgb_cap.get(CV_CAP_PROP_FPS);
+    ros::Rate loop_rate(isnan(rgb_video_fps) ? 25 : rgb_video_fps);
+    ROS_INFO("Loop rate: %lf", rgb_video_fps);
 
     // Set rgb and depth frame encoding
     rgb_frame.encoding = sensor_msgs::image_encodings::BGR8;
@@ -77,7 +79,7 @@ int main(int argc, char **argv)
 
     // Retrieve amount of frames on the video
     num_frames = rgb_cap.get(CV_CAP_PROP_FRAME_COUNT);
-    ROS_ERROR("Frame number: %d", num_frames);
+    ROS_INFO("Frame number: %d", num_frames);
 
     // Publish the video
     ROS_INFO("Sending video");
