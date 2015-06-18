@@ -66,7 +66,8 @@ add_executable(strategy_node
   src/unball/strategy/no_play.cpp
   src/unball/strategy/play_stop.cpp
   src/unball/strategy/play_formation_1.cpp
-  src/unball/strategy/play_formation_2.cpp)
+  src/unball/strategy/play_formation_2.cpp
+  src/unball/strategy/keyboard_input.cpp)
 add_dependencies(strategy_node unball_gencpp)
 target_link_libraries(strategy_node ${catkin_LIBRARIES})
 

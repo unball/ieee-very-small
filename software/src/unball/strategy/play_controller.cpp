@@ -73,7 +73,7 @@ void PlayController::abortPlay()
 /**
  * Change the current play ID number, which occures whenever the play mutex is unlocked.
  */
-void PlayController::updatePlay()
+void PlayController::updatePlay() 
 {
     if (isMutexUnlocked())
     {

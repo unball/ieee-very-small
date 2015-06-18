@@ -94,12 +94,12 @@ void Strategy::choosePlay()
         if (ball_possession_state == WorldState::BALL_POSSESSION_NONE)
         {
             play_controller_.abortPlay();
-            play_controller_.pushPlay(new PlayFormation1());
+            play_controller_.pushPlay(new PlayFormation2());
         }
         else if (ball_possession_state == WorldState::BALL_POSSESSION_THEIRS)
         {
             play_controller_.abortPlay();
-            play_controller_.pushPlay(new PlayFormation2());
+            play_controller_.pushPlay(new PlayFormation1());
         }
     }
 }

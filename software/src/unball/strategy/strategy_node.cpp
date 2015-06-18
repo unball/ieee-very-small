@@ -116,8 +116,8 @@ void receiveVisionMessage(const unball::VisionMessage::ConstPtr &msg)
  */
 void receiveKeyboardMessage(const unball::KeyboardMessage::ConstPtr &msg)
 {
-    ROS_INFO("Received key: %c", msg->key);
+    ROS_ERROR("Received key: %c", msg->key);
     
-    // Strategy::getInstance().receiveKeyboardInput(msg->key);
+    Strategy::getInstance().receiveKeyboardInput(msg->key);
     strategy.receiveKeyboardInput(msg->key);
 }
