@@ -10,7 +10,9 @@
  * Read keyboard input
  */
 
- #include <ros/ros.h>
+#include <stdio.h>
+#include <termios.h>
+#include <ros/ros.h>
 
  class KeyboardInput
 {
@@ -18,9 +20,10 @@
 
   	char read();
   	void printTerminal();
+  	int getch();
 
   private:
   	
-  	char input;
+  	int last_char_;
 
 };

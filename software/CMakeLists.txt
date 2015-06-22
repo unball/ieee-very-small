@@ -66,8 +66,7 @@ add_executable(strategy_node
   src/unball/strategy/no_play.cpp
   src/unball/strategy/play_stop.cpp
   src/unball/strategy/play_formation_1.cpp
-  src/unball/strategy/play_formation_2.cpp
-  src/unball/strategy/keyboard_input.cpp)
+  src/unball/strategy/play_formation_2.cpp)
 add_dependencies(strategy_node unball_gencpp)
 target_link_libraries(strategy_node ${catkin_LIBRARIES})
 
@@ -111,7 +110,8 @@ add_dependencies(simulator_node unball_gencpp)
 target_link_libraries(simulator_node ${catkin_LIBRARIES})
 
 add_executable(keyboard_node
-  src/unball/keyboard/keyboard_node.cpp)
+  src/unball/keyboard/keyboard_node.cpp
+  src/unball/keyboard/keyboard_input.cpp)
 add_dependencies(keyboard_node unball_gencpp)
 target_link_libraries(keyboard_node ${catkin_LIBRARIES})
 
