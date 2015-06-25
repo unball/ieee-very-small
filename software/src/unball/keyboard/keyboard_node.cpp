@@ -19,12 +19,11 @@
 
 #define KEY_ESC 27
 
-int getch();
+int readChar();
 void publishKey(ros::Publisher &publisher, char c);
 
 int main(int argc, char **argv)
 {
-
     ros::init(argc, argv, "keyboard_node");
     ros::NodeHandle n;
     ros::Publisher publisher = n.advertise<unball::KeyboardMessage>("keyboard_topic", 1);
@@ -33,9 +32,9 @@ int main(int argc, char **argv)
     
     while (true)
     {
-        if ((c = input.getch()) != KEY_ESC)
+        if ((c = input.readChar()) != KEY_ESC)
         {
-            input.printTerminal();
+            input.printLastChar();
             publishKey(publisher, c);
             ros::spinOnce();
         }

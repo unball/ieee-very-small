@@ -19,8 +19,8 @@
   public:
 
   	char read();
-  	void printTerminal();
-  	int getch();
+  	void printLastChar();
+  	int readChar();
 
   private:
   	

@@ -17,7 +17,7 @@
 /**
  * Print the character read on the terminal while the roslauch is running.
  */
- void KeyboardInput::printTerminal()
+ void KeyboardInput::printLastChar()
  {
  	ROS_ERROR("Received key: %c", last_char_);
  }
@@ -25,7 +25,7 @@
  /**
  * Read a char from standard input without blocking the execution of a program
  */
-int KeyboardInput::getch()
+int KeyboardInput::readChar()
 {
     static struct termios oldt, newt;
 
