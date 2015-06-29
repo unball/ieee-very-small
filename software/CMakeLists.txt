@@ -111,7 +111,8 @@ add_dependencies(simulator_node unball_gencpp)
 target_link_libraries(simulator_node ${catkin_LIBRARIES})
 
 add_executable(keyboard_node
-  src/unball/keyboard/keyboard_node.cpp)
+  src/unball/keyboard/keyboard_node.cpp
+  src/unball/keyboard/keyboard_input.cpp)
 add_dependencies(keyboard_node unball_gencpp)
 target_link_libraries(keyboard_node ${catkin_LIBRARIES})
 

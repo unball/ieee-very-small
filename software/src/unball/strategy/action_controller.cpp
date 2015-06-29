@@ -22,7 +22,6 @@ ActionController& ActionController::getInstance()
 {
     if (instance == NULL)
         instance = new ActionController();
-
     return *instance;
 }
 

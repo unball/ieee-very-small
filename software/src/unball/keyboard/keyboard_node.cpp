@@ -15,24 +15,26 @@
 #include <unistd.h>
 #include <ros/ros.h>
 #include <unball/KeyboardMessage.h>
+#include <unball/keyboard/keyboard_input.hpp>
 
 #define KEY_ESC 27
 
-int getch();
+int readChar();
 void publishKey(ros::Publisher &publisher, char c);
 
 int main(int argc, char **argv)
 {
     ros::init(argc, argv, "keyboard_node");
-    
     ros::NodeHandle n;
     ros::Publisher publisher = n.advertise<unball::KeyboardMessage>("keyboard_topic", 1);
     char c;
+    KeyboardInput input;
     
     while (true)
     {
-        if ((c = getch()) != KEY_ESC)
+        if ((c = input.readChar()) != KEY_ESC)
         {
+            input.printLastChar();
             publishKey(publisher, c);
             ros::spinOnce();
         }
@@ -41,33 +43,7 @@ int main(int argc, char **argv)
     return 0;
 }
 
-/**
- * Read a char from standard input without blocking the execution of a program
- */
-int getch()
-{
-    static struct termios oldt, newt;
-    int c;
 
-    // Save old settings
-    tcgetattr(STDIN_FILENO, &oldt);
-    newt = oldt;
-
-    // Disable buffering
-    newt.c_lflag &= ~(ICANON);
-    //newt.c_lflag &= ~(ICANON|ECHO); // Disable echo to the screen
-
-    // Apply new settings
-    tcsetattr(STDIN_FILENO, TCSANOW, &newt);
-
-    // Read character (non-blocking)
-    c = getchar();
-
-    // Restore old settings
-    tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
-
-    return c;
-}
 
 /**
  * Publishes the robots velocities to the strategy topic.
