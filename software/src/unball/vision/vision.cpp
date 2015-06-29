@@ -65,7 +65,7 @@ bool Vision::isValidSize(cv::Mat frame)
 std::vector<float> Vision::getRobotPose(int robot_number)
 {
     std::vector<float> pose(3);
-    
+
     // Returning dummy values. This should be removed when positions are correctly extracted from the image.
     pose[0] = 0;
     pose[1] = 1;
@@ -107,7 +107,7 @@ void Vision::run()
     if (isValidSize(rgb_frame_) and isValidSize(depth_frame_))
     {
         /**
-         * The homography is the first thing that needs to be done, as it makes the rest of the vision algorithm 
+         * The homography is the first thing that needs to be done, as it makes the rest of the vision algorithm
          * possible.
          */
         if (not homography_.isHomographyDone())
@@ -123,10 +123,10 @@ void Vision::run()
             rgb_frame_ = homography_.rectify(rgb_frame_);
             depth_frame_ = homography_.calibrate(depth_frame_);
             depth_frame_ = homography_.rectify(depth_frame_);
-            
+
             gui_.setRGBFrame(rgb_frame_);
             gui_.setDepthFrame(depth_frame_);
-            
+
             preprocessor_.preprocess(rgb_frame_, depth_frame_);
             rgb_segmented_frame = segmenter_.segment(rgb_frame_);
             tracker_.track(rgb_frame_, depth_frame_, rgb_segmented_frame);

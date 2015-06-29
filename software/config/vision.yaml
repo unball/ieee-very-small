@@ -71,3 +71,10 @@ vision:
         # Position of the depth window
         depth_window_pos_x: 707
         depth_window_pos_y: 0
+
+    measurement_conversion:
+        # Width of the field, in metres
+        field_width: 100
+
+        # height of the field, in metres
+        field_height: 100

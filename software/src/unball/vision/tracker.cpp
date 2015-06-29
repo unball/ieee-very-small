@@ -59,6 +59,7 @@ void Tracker::loadConfig()
 {
     loadShowImage();
     loadFieldTrackingMode();
+    measurement_conversion_.loadConfig();
 }
 
 void Tracker::trackRobots(cv::Mat rgb_frame, cv::Mat depth_frame, cv::Mat rgb_segmented_frame)

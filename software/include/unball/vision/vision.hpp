@@ -35,7 +35,7 @@ class Vision
     std::vector<float> getRobotPose(int robot_index);
     void loadConfig();
     void run();
-    
+
     static Vision& getInstance();
 
   private:

@@ -20,7 +20,7 @@ class TrackedObject
   public:
     TrackedObject();
     ~TrackedObject();
-    
+
     virtual void init(cv::Rect &tracking_window);
     virtual void track(cv::Mat &rgb_frame, cv::Mat &depth_frame, cv::Mat &rgb_segmented_frame);
     virtual void draw(cv::Mat &frame);

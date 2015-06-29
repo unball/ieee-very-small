@@ -30,12 +30,12 @@ add_message_files(DIRECTORY msg FILES
 generate_messages(DEPENDENCIES std_msgs)
 
 catkin_package(
-  DEPENDS 
+  DEPENDS
     gazebo_ros
   CATKIN_DEPENDS
     message_runtime
-  INCLUDE_DIRS 
-  LIBRARIES 
+  INCLUDE_DIRS
+  LIBRARIES
 )
 
 include_directories(
@@ -80,7 +80,8 @@ add_executable(vision_node
   src/unball/vision/tracked_object.cpp
   src/unball/vision/tracked_field.cpp
   src/unball/vision/tracked_robot.cpp
-  src/unball/vision/homography.cpp)
+  src/unball/vision/homography.cpp
+  src/unball/vision/measurement_conversion.cpp)
 add_dependencies(vision_node unball_gencpp)
 target_link_libraries(vision_node ${catkin_LIBRARIES})
 

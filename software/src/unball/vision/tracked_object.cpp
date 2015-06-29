@@ -14,7 +14,7 @@ TrackedObject::TrackedObject()
 {
     type_ = NONE;
     orientation_ = 0.0;
-}  
+}
 
 TrackedObject::~TrackedObject()
 {
