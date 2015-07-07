@@ -35,8 +35,11 @@ class Tracker
     void track(cv::Mat rgb_frame, cv::Mat depth_frame, cv::Mat rgb_segmented_frame);
 
   private:
+    void calculateMeasurementConversion();
+
     std::string window_name_;
     bool show_image_;
+    bool calculated_measurement_parameters_;
     TrackedField tracked_field_;
     TrackedRobot tracked_robot_;
     MeasurementConversion measurement_conversion_;

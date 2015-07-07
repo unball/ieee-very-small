@@ -40,6 +40,9 @@ class TrackedField : public TrackedObject
 
     void draw(cv::Mat &frame);
 
+    bool isFieldStable();
+    cv::Point getFieldDimensions();
+
   private:
     std::string tracking_mode_;
     int field_stabilization_frame_;

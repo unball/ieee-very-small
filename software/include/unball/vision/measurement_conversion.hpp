@@ -25,13 +25,13 @@ class MeasurementConversion
     MeasurementConversion();
     void loadConfig();
     void calculateConversion(float field_pixel_width, float field_pixel_height);
-    cv::Point convertToMetric(cv::Point point_in_pixel);
-    cv::Point convertToPixel(cv::Point point_in_metric);
+    cv::Point2f convertToMetric(cv::Point point_in_pixel);
+    cv::Point convertToPixel(cv::Point2f point_in_metric);
 
   private:
     bool has_calculated_parameters_;
     float field_metric_width_, field_metric_height_;
-    std::pair<float, float> conversion_parameters_; // first is for x axis, second is for y axis
+    cv::Point2f conversion_parameters_; // first is for x axis, second is for y axis
 };
 
 #endif // UNBALL_VISION_MEASUREMENT_CONVERSION_H_

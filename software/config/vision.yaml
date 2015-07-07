@@ -81,7 +81,7 @@ vision:
 
     measurement_conversion:
         # Width of the field, in metres
-        field_width: 100
+        field_width: 1.5
 
         # height of the field, in metres
-        field_height: 100
+        field_height: 1.3

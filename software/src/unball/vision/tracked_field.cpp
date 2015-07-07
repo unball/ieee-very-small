@@ -253,7 +253,6 @@ void TrackedField::track(cv::Mat &rgb_frame, cv::Mat &depth_frame, cv::Mat &rgb_
         else if (tracking_mode_ == "depth")
             trackWithDepth(depth_frame);
     }
-    ROS_ERROR("Field center position: (%d,%d)", position_.x, position_.y);
 }
 
 /**
@@ -265,3 +264,14 @@ void TrackedField::draw(cv::Mat &frame)
     cv::rectangle(frame, tracking_window_, RECTANGLE_COLOR);
     cv::circle(frame, position_, CIRCLE_RADIUS, CIRCLE_COLOR); // arbitrary value for circle radius
 }
+
+bool TrackedField::isFieldStable()
+{
+    return is_field_stable_;
+}
+
+cv::Point TrackedField::getFieldDimensions()
+{
+    return cv::Point(tracking_window_.width, tracking_window_.height);
+}
+

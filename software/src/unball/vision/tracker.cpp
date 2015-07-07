@@ -13,6 +13,7 @@
 Tracker::Tracker()
 {
     window_name_ = "Tracker";
+    calculated_measurement_parameters_ = false;
 }
 
 Tracker::~Tracker()
@@ -73,6 +74,19 @@ void Tracker::track(cv::Mat rgb_frame, cv::Mat depth_frame, cv::Mat rgb_segmente
 
     // trackRobots(rgb_frame, depth_frame, rgb_segmented_frame);
 
+    if (tracked_field_.isFieldStable() && !calculated_measurement_parameters_)
+        calculateMeasurementConversion();
+
     tracked_field_.draw(rgb_frame);
     tracked_robot_.draw(rgb_frame);
+}
+
+/**
+ * Sends the field dimensions to the measurement conversion class
+ */
+void Tracker::calculateMeasurementConversion()
+{
+    cv::Point field_dimensions = tracked_field_.getFieldDimensions();
+    measurement_conversion_.calculateConversion(field_dimensions.x, field_dimensions.y);
+    calculated_measurement_parameters_ = true;
 }
