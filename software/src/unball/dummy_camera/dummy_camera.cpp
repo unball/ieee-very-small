@@ -70,6 +70,10 @@ int main(int argc, char **argv)
 
     // Set the loop rate, defined by the framerate of the video
     double rgb_video_fps = rgb_cap.get(CV_CAP_PROP_FPS);
+    /**
+     * The rgb video fps information may be somehow corrupted, so this check for "NaN" is done.
+     * The value 25 is the fps value for the current dummy video.
+     */
     ros::Rate loop_rate(isnan(rgb_video_fps) ? 25 : rgb_video_fps);
     ROS_INFO("Loop rate: %lf", rgb_video_fps);
 
