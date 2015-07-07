@@ -26,15 +26,31 @@ TrackedField::TrackedField()
 {
     type_ = FIELD;
     tracking_mode_ = "rgb";
+    field_stabilization_counter_ = 0;
+    is_field_stable_ = false;
 }
 
 TrackedField::~TrackedField()
 {
 }
 
-void TrackedField::setTrackingMode(std::string tracking_mode)
+void TrackedField::loadConfig()
 {
-    tracking_mode_ = tracking_mode;
+    ros::param::get("/vision/tracker/field_stabilization_frame", field_stabilization_frame_);
+    ros::param::get("/vision/tracker/field_center_discrepancy", field_center_discrepancy_);
+    loadTrackingMode();
+}
+
+void TrackedField::loadTrackingMode()
+{
+    ros::param::get("/vision/tracker/field_tracking_mode", tracking_mode_);
+    ROS_INFO("Field tracking mode: %s", tracking_mode_.c_str());
+
+    if (tracking_mode_ != "rgb" and tracking_mode_ != "depth")
+    {
+        ROS_FATAL("Unknown field tracking mode: %s", tracking_mode_.c_str());
+        exit(BAD_CONFIG);
+    }
 }
 
 /**
@@ -57,8 +73,10 @@ int TrackedField::exponentialMovingAvg(int old_value, int new_value)
  */
 void TrackedField::updatePosition(cv::Point position)
 {
+    cv::Point old_position = position_;
     position_.x = exponentialMovingAvg(position_.x, position.x);
     position_.y = exponentialMovingAvg(position_.y, position.y);
+    checkFieldStabilization(old_position, position_);
 }
 
 /**
@@ -71,6 +89,23 @@ void TrackedField::updateTrackingWindow(cv::Rect tracking_window)
     tracking_window_.y = exponentialMovingAvg(tracking_window_.y, tracking_window.y);
     tracking_window_.width = exponentialMovingAvg(tracking_window_.width, tracking_window.width);
     tracking_window_.height = exponentialMovingAvg(tracking_window_.height, tracking_window.height);
+}
+
+/**
+ * Using the previous and the current position of the field center, decides whether the field position is stable or not.
+ * @param old_position the old field's position
+ * @param new_position the new field's position
+ */
+void TrackedField::checkFieldStabilization(cv::Point old_position, cv::Point new_position)
+{
+    if (abs(new_position.x-old_position.x) <= field_center_discrepancy_ and
+        abs(new_position.y-old_position.y) <= field_center_discrepancy_)
+        ++field_stabilization_counter_;
+    else
+        field_stabilization_counter_ = 0;
+
+    if (field_stabilization_counter_ >= field_stabilization_frame_)
+        is_field_stable_ = true;
 }
 
 /**
@@ -211,10 +246,14 @@ void TrackedField::trackWithDepth(cv::Mat &depth_frame)
 
 void TrackedField::track(cv::Mat &rgb_frame, cv::Mat &depth_frame, cv::Mat &rgb_segmented_frame)
 {
-    if (tracking_mode_ == "rgb")
-        trackWithRGB(rgb_frame);
-    else if (tracking_mode_ == "depth")
-        trackWithDepth(depth_frame);
+    if (not is_field_stable_)
+    {
+        if (tracking_mode_ == "rgb")
+            trackWithRGB(rgb_frame);
+        else if (tracking_mode_ == "depth")
+            trackWithDepth(depth_frame);
+    }
+    ROS_ERROR("Field center position: (%d,%d)", position_.x, position_.y);
 }
 
 /**

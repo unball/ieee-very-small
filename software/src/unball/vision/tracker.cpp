@@ -34,31 +34,13 @@ void Tracker::loadShowImage()
 }
 
 /**
- * Load field tracking mode, either using the depth or RGB frame.
- */
-void Tracker::loadFieldTrackingMode()
-{
-    std::string field_tracking_mode;
-    ros::param::get("/vision/tracker/field_tracking_mode", field_tracking_mode);
-    ROS_INFO("Field tracking mode: %s", field_tracking_mode.c_str());
-
-    if (field_tracking_mode != "rgb" and field_tracking_mode != "depth")
-    {
-        ROS_FATAL("Unknown field tracking mode: %s", field_tracking_mode.c_str());
-        exit(BAD_CONFIG);
-    }
-
-    tracked_field_.setTrackingMode(field_tracking_mode);
-}
-
-/**
  * Load configurations.
  * @warning This method must be called after initializing ROS using ros::init in the node main function.
  */
 void Tracker::loadConfig()
 {
     loadShowImage();
-    loadFieldTrackingMode();
+    tracked_field_.loadConfig();
     measurement_conversion_.loadConfig();
 }
 

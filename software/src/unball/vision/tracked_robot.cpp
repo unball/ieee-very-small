@@ -28,7 +28,7 @@ void TrackedRobot::track(cv::Mat &rgb_frame, cv::Mat &depth_frame, cv::Mat &rgb_
     cv::Point center;
     std::vector<cv::Mat> robots_frame;
     std::vector<cv::Point> robots_positions;
-    
+
     // Find blobs from segmented image and extract images
     cv::findContours(rgb_segmented_frame, contours, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_SIMPLE);
     for (int i = 0; i < contours.size(); ++i)
@@ -45,6 +45,6 @@ void TrackedRobot::track(cv::Mat &rgb_frame, cv::Mat &depth_frame, cv::Mat &rgb_
         robots_positions.push_back(cv::Point(center));
 
         cv::rectangle(rgb_frame, tracking_window, (255, 0, 255), 2);
-        ROS_ERROR("Robot %d: (%d,%d)", i, center.x, center.y);
+        // ROS_ERROR("Robot %d: (%d,%d)", i, center.x, center.y);
     }
 }

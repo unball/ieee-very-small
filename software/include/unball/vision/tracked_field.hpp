@@ -12,8 +12,13 @@
 #define UNBALL_VISION_TRACKED_FIELD_H_
 
 #include <string>
+#include <cmath>
+
+#include <ros/ros.h>
 
 #include <unball/vision/tracked_object.hpp>
+
+#define BAD_CONFIG 1
 
 class TrackedField : public TrackedObject
 {
@@ -21,11 +26,13 @@ class TrackedField : public TrackedObject
     TrackedField();
     ~TrackedField();
 
-    void setTrackingMode(std::string tracking_mode);
+    void loadConfig();
+    void loadTrackingMode();
 
     int exponentialMovingAvg(int old_value, int new_value);
     void updatePosition(cv::Point position);
     void updateTrackingWindow(cv::Rect bounding_rect);
+    void checkFieldStabilization(cv::Point old_position, cv::Point new_position);
 
     void trackWithRGB(cv::Mat &rgb_frame);
     void trackWithDepth(cv::Mat &depth_frame);
@@ -35,6 +42,10 @@ class TrackedField : public TrackedObject
 
   private:
     std::string tracking_mode_;
+    int field_stabilization_frame_;
+    int field_center_discrepancy_;
+    int field_stabilization_counter_;
+    bool is_field_stable_;
 
     static const float AVG_CONSTANT;
     static const int CIRCLE_RADIUS;

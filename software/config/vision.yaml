@@ -57,6 +57,13 @@ vision:
         # Options: "rgb" or "depth"
         field_tracking_mode: "rgb"
 
+        # The amount of frames in which the field center position has to be considered stable so as to stop tracking
+        # the field.
+        field_stabilization_frame: 7
+
+        # The discrepancy allowed between each subsequent position so as to be considered the "same".
+        field_center_discrepancy: 2
+
     gui:
         # Name of the RGB window
         rgb_window_name: "RGB frame"

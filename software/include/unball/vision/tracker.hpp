@@ -30,7 +30,6 @@ class Tracker
     Tracker();
     ~Tracker();
     void loadShowImage();
-    void loadFieldTrackingMode();
     void loadConfig();
     void trackRobots(cv::Mat rgb_frame, cv::Mat depth_frame, cv::Mat rgb_segmented_frame);
     void track(cv::Mat rgb_frame, cv::Mat depth_frame, cv::Mat rgb_segmented_frame);
