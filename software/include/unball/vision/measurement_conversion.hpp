@@ -14,6 +14,7 @@
 #define UNBALL_VISION_MEASUREMENT_CONVERSION_H_
 
 #include <iostream>
+#include <cmath>
 
 #include <ros/ros.h>
 
@@ -25,13 +26,16 @@ class MeasurementConversion
     MeasurementConversion();
     void loadConfig();
     void calculateConversion(float field_pixel_width, float field_pixel_height);
+    void setFieldCenter(cv::Point field_center);
+    cv::Point2f pixelToMagnitudeAndAngle(cv::Point point_in_pixel);
     cv::Point2f convertToMetric(cv::Point point_in_pixel);
     cv::Point convertToPixel(cv::Point2f point_in_metric);
 
   private:
     bool has_calculated_parameters_;
     float field_metric_width_, field_metric_height_;
-    cv::Point2f conversion_parameters_; // first is for x axis, second is for y axis
+    cv::Point2f conversion_parameters_;
+    cv::Point field_center_;
 };
 
 #endif // UNBALL_VISION_MEASUREMENT_CONVERSION_H_

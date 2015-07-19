@@ -88,5 +88,6 @@ void Tracker::calculateMeasurementConversion()
 {
     cv::Point field_dimensions = tracked_field_.getFieldDimensions();
     measurement_conversion_.calculateConversion(field_dimensions.x, field_dimensions.y);
+    measurement_conversion_.setFieldCenter(tracked_field_.getFieldCenter());
     calculated_measurement_parameters_ = true;
 }

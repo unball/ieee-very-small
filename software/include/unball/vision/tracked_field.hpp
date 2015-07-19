@@ -42,6 +42,7 @@ class TrackedField : public TrackedObject
 
     bool isFieldStable();
     cv::Point getFieldDimensions();
+    cv::Point getFieldCenter();
 
   private:
     std::string tracking_mode_;

@@ -45,6 +45,36 @@ void MeasurementConversion::calculateConversion(float field_pixel_width, float f
 }
 
 /**
+ * Sets the field center, for conversion from a point to the magnitude and angle notation used by the
+ * robot soccer AI system
+ * @param field_center the center of the field, in pixels
+ */
+void MeasurementConversion::setFieldCenter(cv::Point field_center)
+{
+    ROS_DEBUG("Setting the field center on the measurement conversion system");
+    field_center_ = field_center;
+}
+
+/**
+ * Converts a given pixel coordinate into the magnitude and angle notation used by the robot soccer AI system.
+ * @param point_in_pixel The point to convert
+ * @return The resulting magnitude and angle relative to the center of the field
+ */
+cv::Point2f MeasurementConversion::pixelToMagnitudeAndAngle(cv::Point point_in_pixel)
+{
+    if (not has_calculated_parameters_)
+    {
+        ROS_ERROR("Trying to make a conversion without calculating the parameters first");
+        return cv::Point2f();
+    }
+    float magnitude, angle;
+    magnitude = sqrt(pow(point_in_pixel.x - field_center_.x, 2) + pow(point_in_pixel.y - field_center_.y, 2));
+    // TODO(gabri.navess@gmail.com): Find out whether this angle is correct.
+    angle = atan2(point_in_pixel.y-field_center_.y, point_in_pixel.x-field_center_.x);
+    return cv::Point2f(magnitude, angle);
+}
+
+/**
  * Converts a given pixel coordinate into the equivalent metric coordinate
  * @param point_in_pixel The point to convert
  * @return The resulting point

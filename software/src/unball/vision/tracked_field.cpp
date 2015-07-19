@@ -275,3 +275,7 @@ cv::Point TrackedField::getFieldDimensions()
     return cv::Point(tracking_window_.width, tracking_window_.height);
 }
 
+cv::Point TrackedField::getFieldCenter()
+{
+    return position_;
+}

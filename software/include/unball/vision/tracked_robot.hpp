@@ -20,11 +20,11 @@ class TrackedRobot : public TrackedObject
   public:
     TrackedRobot();
     ~TrackedRobot();
-    
+
     void track(cv::Mat &rgb_frame, cv::Mat &depth_frame, cv::Mat &rgb_segmented_frame);
 
   private:
-    
+
 };
 
 #endif // UNBALL_VISION_TRACKED_ROBOT_H_
