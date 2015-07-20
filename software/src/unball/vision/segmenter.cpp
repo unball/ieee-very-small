@@ -29,7 +29,7 @@ Segmenter::~Segmenter()
 void Segmenter::loadConfig()
 {
     ROS_INFO("Loading segmenter configurations");
-    
+
     loadShowImage();
     loadHSVMinSConfig();
     loadHSVMinVConfig();
@@ -107,7 +107,7 @@ cv::Mat Segmenter::segment(cv::Mat image)
     /*
      * (180, 256, 256) is the HSV coordinate for cyan. From 0 to 180, we have the following colors:
      * - 0: Red
-     * - 30: Orange 
+     * - 30: Orange
      * - 60: Yellow
      * - 120: Green
      * - 150: Cyan

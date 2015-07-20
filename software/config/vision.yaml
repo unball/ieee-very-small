@@ -64,6 +64,12 @@ vision:
         # The discrepancy allowed between each subsequent position so as to be considered the "same".
         field_center_discrepancy: 2
 
+        # Select whether the robots should be identified or just located.
+        identify_robots: true
+
+        # The amount of robots for each team (teams have the same amount of robots)
+        robots_per_team: 1
+
     gui:
         # Name of the RGB window
         rgb_window_name: "RGB frame"
