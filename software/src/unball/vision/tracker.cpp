@@ -46,23 +46,6 @@ void Tracker::loadConfig()
     tracked_robot_.loadConfig();
 }
 
-void Tracker::trackRobots(cv::Mat rgb_frame, cv::Mat depth_frame, cv::Mat rgb_segmented_frame)
-{
-    std::vector< std::vector<cv::Point> > contours;
-    cv::Rect tracking_window;
-
-    // Find contours in segmented frame as robots
-    cv::findContours(rgb_segmented_frame, contours, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_SIMPLE);
-    ROS_ERROR("Number of robots: %d", (int)contours.size());
-
-    // Track each robot individually
-    for (int i = 0; i < contours.size(); ++i)
-    {
-        // Find bounding rectangle
-        tracking_window = cv::boundingRect(contours[i]);
-    }
-}
-
 /**
  * Track objects in RGB and depth images
  * @param preprocessed OpenCV BGR image
@@ -72,8 +55,6 @@ void Tracker::track(cv::Mat rgb_frame, cv::Mat depth_frame, cv::Mat rgb_segmente
 {
     tracked_field_.track(rgb_frame, depth_frame, rgb_segmented_frame);
     tracked_robot_.track(rgb_frame, depth_frame, rgb_segmented_frame);
-
-    // trackRobots(rgb_frame, depth_frame, rgb_segmented_frame);
 
     if (tracked_field_.isFieldStable() && !calculated_measurement_parameters_)
         calculateMeasurementConversion();
