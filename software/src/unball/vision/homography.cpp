@@ -5,7 +5,7 @@
  *
  * @attention Copyright (C) 2014 UnBall Robot Soccer Team
  *
- * @brief Implementation of the computer vision homography class. 
+ * @brief Implementation of the computer vision homography class.
  */
 
 #include <unball/vision/homography.hpp>
@@ -201,7 +201,7 @@ void Homography::loadMatrix(std::string file_name, cv::Mat &matrix)
         ROS_ERROR("Error! Could not open file %c%s%c", 34, file_name.c_str(), 34);
         return;
     }
-    
+
     int rows, cols;
     file >> rows;
     file >> cols;
@@ -209,7 +209,7 @@ void Homography::loadMatrix(std::string file_name, cv::Mat &matrix)
     for (int i = 0; i < rows; ++i)
         for (int j = 0; j < cols; ++j)
             file >> loaded_matrix.at<double>(j,i);
-    
+
     matrix = loaded_matrix;
     file.close();
 }

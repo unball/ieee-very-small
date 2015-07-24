@@ -100,6 +100,28 @@ cv::Point RobotIdentifier::calculateMidPoint(cv::Point point, cv::Point referenc
     return cv::Point(reference.x + (point.x-reference.x)/2, reference.y + (point.y-reference.y)/2);
 }
 
+/**
+ * Determines whether the given point's color is the one given or not
+ * @param color the color being identified
+ * @param hsv_values the hsv values of the point
+ * @return whether the point is of the given color or not
+ */
+bool RobotIdentifier::isPointColor(std::string color, cv::Vec3b hsv_values)
+{
+    if (color_map_.find(color) == color_map_.end())
+    {
+        ROS_ERROR("[RobotIdentifier]isPointColor: color %s does not exist in color map", color.c_str());
+        return false;
+    }
+    else
+    {
+        HSVColorData data = color_map_[color];
+        return (hsv_values[0] >= data.min_hue and hsv_values[0] <= data.max_hue and
+                hsv_values[1] >= data.min_sat and hsv_values[1] <= data.max_sat and
+                hsv_values[2] >= data.min_val and hsv_values[2] <= data.max_val);
+    }
+}
+
 bool RobotIdentifier::isPointRed(cv::Vec3b hsv_values)
 {
     if (hsv_values[2] < hsv_min_v_ or hsv_values[1] < hsv_min_s_ or hsv_values[0] < 170)

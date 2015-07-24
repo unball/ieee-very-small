@@ -12,10 +12,13 @@
 #ifndef UNBALL_VISION_ROBOT_IDENTIFIER_H_
 #define UNBALL_VISION_ROBOT_IDENTIFIER_H_
 
+#include <map>
+
 #include <ros/ros.h>
 #include <opencv2/opencv.hpp>
 
 #include <unball/vision/robot_data.hpp>
+#include <unball/vision/hsv_color_data.hpp>
 
 class RobotIdentifier
 {
@@ -36,10 +39,13 @@ class RobotIdentifier
     cv::Point calculateMidPoint(cv::Point point, cv::Point reference);
     void setTeamParameters(RobotData &data, RobotData::Team team, cv::Scalar team_color);
 
+    bool isPointColor(std::string color, cv::Vec3b hsv_values);
     bool isPointRed(cv::Vec3b hsv_values);
     bool isPointPink(cv::Vec3b hsv_values);
 
     int hsv_min_s_, hsv_min_v_;
+
+    std::map<std::string, HSVColorData> color_map_;
 };
 
 #endif // UNBALL_VISION_ROBOT_IDENTIFIER_H_
