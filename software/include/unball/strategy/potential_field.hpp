@@ -16,7 +16,7 @@
 class PotentialField
 {
   public:
-    Vector calculateForce(Vector position) = 0;
+    virtual Vector calculateForce(Vector position) = 0;
 };
 
 #endif  // UNBALL_POTENTIAL_FIELD_H_
