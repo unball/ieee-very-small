@@ -5,9 +5,9 @@
  * @date   25/03/2014
  *
  * @attention Copyright (C) 2014 UnBall Robot Soccer Team
- * 
+ *
  * @brief Computer vision node
- * 
+ *
  * This node subscribes to the camera or dummy_camera topic, applies
  * computer vision algorithms to extract robots positions and publishes
  * to the vision topic.
@@ -31,16 +31,16 @@ void receiveDepthFrame(const sensor_msgs::ImageConstPtr& msg);
 int main(int argc, char **argv)
 {
     ros::init(argc, argv, "vision_node");
-    
+
     ros::NodeHandle node_handle;
     ros::Rate loop_rate(10);
     ros::Publisher publisher = node_handle.advertise<unball::VisionMessage>("vision_topic", 1);
-    
+
     image_transport::ImageTransport img_transport(node_handle);
     image_transport::Subscriber rgb_sub, depth_sub;
-    
+
     loadConfig(rgb_sub, depth_sub, img_transport);
-    
+
     // Main loop
     while (ros::ok())
     {
@@ -49,7 +49,7 @@ int main(int argc, char **argv)
         ros::spinOnce();
         loop_rate.sleep();
     }
-    
+
     return 0;
 }
 
@@ -64,15 +64,15 @@ void loadConfig(image_transport::Subscriber &rgb_sub, image_transport::Subscribe
 {
     // Load configurations
     bool using_rgb, using_depth;
-    
+
     ros::param::get("/vision/using_rgb", using_rgb);
     if (using_rgb)
         rgb_sub = img_transport.subscribe("camera/rgb/image_raw", 1, receiveRGBFrame);
-        
-    ros::param::get("/vision/using_depth", using_depth);   
+
+    ros::param::get("/vision/using_depth", using_depth);
     if (using_depth)
         depth_sub = img_transport.subscribe("camera/depth/image_raw", 1, receiveDepthFrame);
-    
+
     Vision::getInstance().loadConfig();
 }
 
@@ -84,9 +84,9 @@ void publishRobotsPoses(ros::Publisher &publisher)
 {
     unball::VisionMessage message;
     std::vector<float> pose;
-    
+
     ROS_DEBUG("Publishing robots poses");
-    
+
     for (unsigned int i = 0; i < message.x.size(); ++i)
     {
         pose = Vision::getInstance().getRobotPose(i);
@@ -94,7 +94,7 @@ void publishRobotsPoses(ros::Publisher &publisher)
         message.y[i] = pose[1];
         message.th[i] = pose[2];
     }
-    
+
     publisher.publish(message);
 }
 
@@ -105,7 +105,7 @@ void publishRobotsPoses(ros::Publisher &publisher)
 void receiveRGBFrame(const sensor_msgs::ImageConstPtr &msg)
 {
     cv_bridge::CvImagePtr cv_ptr;
-    
+
     try
     {
         cv_ptr = cv_bridge::toCvCopy(msg);
@@ -115,7 +115,7 @@ void receiveRGBFrame(const sensor_msgs::ImageConstPtr &msg)
         ROS_WARN("cv_bridge exception: %s", e.what());
         return;
     }
-    
+
     Vision::getInstance().setRGBFrame(cv_ptr->image);
 }
 

@@ -89,6 +89,12 @@ add_executable(vision_node
 add_dependencies(vision_node unball_gencpp)
 target_link_libraries(vision_node ${catkin_LIBRARIES})
 
+add_executable(color_calibration_node
+  src/unball/color_calibration/color_calibration_node.cpp
+  src/unball/color_calibration/color_calibration.cpp)
+add_dependencies(color_calibration_node unball_gencpp)
+target_link_libraries(color_calibration_node ${catkin_LIBRARIES})
+
 add_executable(show_kinect_camera
   src/unball/camera/show_kinect_camera.cpp)
 add_dependencies(show_kinect_camera unball_gencpp)
