@@ -17,10 +17,10 @@ RadialPotentialField::RadialPotentialField(Vector origin, float magnitude) :
 
 Vector RadialPotentialField::calculateForce(Vector position)
 {
+    Vector result;
     Vector difference = position - origin_;
     float magnitude = magnitude_/difference.getMagnitude();
     float angle = difference.getDirection();
-    Vector result;
     result.setPolar(magnitude, angle);
     return result;
 }

@@ -18,6 +18,7 @@
 
 #include <unball/strategy/play_controller.hpp>
 #include <unball/strategy/state_estimator.hpp>
+#include <unball/strategy/trajectory_controller.hpp>
 
 namespace TeamState
 {
@@ -45,6 +46,7 @@ class Strategy
 
     StateEstimator state_estimator_;
     PlayController play_controller_;
+    TrajectoryController trajectory_controller_;
     TeamState::StrategyState strategy_state_;
 };
 

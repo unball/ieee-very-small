@@ -68,7 +68,12 @@ add_executable(strategy_node
   src/unball/strategy/play_stop.cpp
   src/unball/strategy/play_formation_1.cpp
   src/unball/strategy/play_formation_2.cpp
-  src/unball/strategy/radial_potential_field.cpp)
+  src/unball/strategy/parallel_potential_field.cpp
+  src/unball/strategy/perpendicular_potential_field.cpp
+  src/unball/strategy/radial_potential_field.cpp
+  src/unball/strategy/selective_potential_field.cpp
+  src/unball/strategy/tangential_potential_field.cpp
+  src/unball/strategy/trajectory_controller.cpp)
 add_dependencies(strategy_node unball_gencpp)
 target_link_libraries(strategy_node ${catkin_LIBRARIES})
 

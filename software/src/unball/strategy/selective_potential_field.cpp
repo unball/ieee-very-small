@@ -10,7 +10,7 @@
 
 #include <unball/strategy/selective_potential_field.hpp>
 
-SelectivePotentialField(Vector origin, float magnitude, float width) :
+SelectivePotentialField::SelectivePotentialField(Vector origin, float magnitude, float width) :
     origin_(origin), magnitude_(magnitude), width_(width)
 {
 }
