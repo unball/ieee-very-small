@@ -11,7 +11,7 @@
 #include <unball/strategy/radial_potential_field.hpp>
 
 RadialPotentialField::RadialPotentialField(Vector origin, float magnitude) :
-    origin_(origin_), magnitude_(magnitude)
+    origin_(origin), magnitude_(magnitude)
 {
 }
 
