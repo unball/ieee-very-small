@@ -10,24 +10,12 @@
 
 #include <unball/strategy/parallel_potential_field.hpp>
 
-ParallelPotentialField::ParallelPotentialField(Vector origin, float magnitude) :
-    origin_(origin), magnitude_(magnitude)
+ParallelPotentialField::ParallelPotentialField(Vector field_force) :
+    field_force_(field_force)
 {
 }
 
 Vector ParallelPotentialField::calculateForce(Vector position)
 {
-    Vector result;
-    Vector difference = position - origin_;
-    float magnitude = 0.0;
-    float angle = 0.0;
-
-    if (difference.getMagnitude() <= magnitude_)
-    {
-    	magnitude = magnitude_/difference.getMagnitude();
-    	angle = origin_.getDirection();
-    }
-
-    result.setPolar(magnitude, angle);
-    return result;
+    return field_force_;
 }
