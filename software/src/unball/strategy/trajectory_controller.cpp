@@ -26,13 +26,16 @@ void TrajectoryController::run()
     controlRobot(0, resultant_force);
     clearPotentialFields();
 
-    ROS_DEBUG("Resultant force: %s", resultant_force.toString().c_str());
+    ROS_ERROR("Resultant force: %s", resultant_force.toString().c_str());
 }
 
 void TrajectoryController::buildPotentialFields()
 {
     Vector ball_position(Vector(Ball::getInstance().getX(), Ball::getInstance().getY()));
-    potential_fields_.push_back(new AttractivePotentialField(ball_position, 30));
+    potential_fields_.push_back(new AttractivePotentialField(ball_position, 10));
+
+    for (int i = 1; i < 6; ++i)
+        potential_fields_.push_back(new RepulsivePotentialField(Vector(robot[i].getX(), robot[i].getY()), 3));
 }
 
 void TrajectoryController::clearPotentialFields()

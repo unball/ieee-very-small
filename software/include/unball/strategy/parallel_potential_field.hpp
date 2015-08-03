@@ -18,11 +18,13 @@
 class ParallelPotentialField : public PotentialField
 {
   public:
-    ParallelPotentialField(Vector field_force);
+    ParallelPotentialField(Vector origin, Vector field_force, float max_distance);
     Vector calculateForce(Vector position);
   
   private:
+    Vector origin_;
     Vector field_force_;
+    float max_distance_;
 };
 
 #endif  // UNBALL_PARALLEL_POTENTIAL_FIELD_H_

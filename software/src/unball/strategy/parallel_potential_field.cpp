@@ -10,12 +10,19 @@
 
 #include <unball/strategy/parallel_potential_field.hpp>
 
-ParallelPotentialField::ParallelPotentialField(Vector field_force) :
-    field_force_(field_force)
+ParallelPotentialField::ParallelPotentialField(Vector origin,
+    Vector field_force, float max_distance) :
+    origin_(origin), field_force_(field_force), max_distance_(max_distance)
 {
 }
 
 Vector ParallelPotentialField::calculateForce(Vector position)
 {
-    return field_force_;
+    Vector result;
+    Vector difference = position - origin_;
+
+    if (difference.getMagnitude() < max_distance_)
+        result = field_force_;
+
+    return result;
 }
