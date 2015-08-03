@@ -17,15 +17,17 @@ ParallelPotentialField::ParallelPotentialField(Vector origin, float magnitude) :
 
 Vector ParallelPotentialField::calculateForce(Vector position)
 {
+    Vector result;
     Vector difference = position - origin_;
     float magnitude = 0.0;
     float angle = 0.0;
-    if(difference.getMagnitude() <= magnitude_)
+
+    if (difference.getMagnitude() <= magnitude_)
     {
     	magnitude = magnitude_/difference.getMagnitude();
     	angle = origin_.getDirection();
     }
-    Vector result;
+
     result.setPolar(magnitude, angle);
     return result;
 }

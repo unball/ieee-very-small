@@ -17,18 +17,21 @@ TangentialPotentialField::TangentialPotentialField(Vector origin, float magnitud
 
 Vector TangentialPotentialField::calculateForce(Vector position)
 {
+    Vector result;
     Vector difference = position - origin_;
     float magnitude = 0.0;
     float angle = 0.0;
-    if(difference.getMagnitude() <= magnitude_)
+
+    if (difference.getMagnitude() <= magnitude_)
     {
         magnitude = magnitude_;
-        if(difference.getDirection() < 0)
+        
+        if (difference.getDirection() < 0)
            angle = origin_.getDirection() + (M_PI/2);
         else
            angle = origin_.getDirection() - (M_PI/2);
     }
-    Vector result;
+    
     result.setPolar(magnitude, angle);
     return result;
 }
