@@ -12,7 +12,6 @@
 
 TrajectoryController::TrajectoryController()
 {
-    buildPotentialFields();
 }
 
 TrajectoryController::~TrajectoryController()
@@ -22,21 +21,26 @@ TrajectoryController::~TrajectoryController()
 
 void TrajectoryController::run()
 {
+    buildPotentialFields();
     Vector resultant_force = calculateResultantForce(0);
     controlRobot(0, resultant_force);
+    clearPotentialFields();
 
     ROS_DEBUG("Resultant force: %s", resultant_force.toString().c_str());
 }
 
 void TrajectoryController::buildPotentialFields()
 {
-    potential_fields_.push_back(new RadialPotentialField(Vector(0.1, 0.1), 10));
+    Vector ball_position(Vector(Ball::getInstance().getX(), Ball::getInstance().getY()));
+    potential_fields_.push_back(new AttractivePotentialField(ball_position, 30));
 }
 
 void TrajectoryController::clearPotentialFields()
 {
     for (int i = 0; i < potential_fields_.size(); ++i)
         delete potential_fields_[i];
+
+    potential_fields_.clear();
 }
 
 Vector TrajectoryController::calculateResultantForce(int robot_number)

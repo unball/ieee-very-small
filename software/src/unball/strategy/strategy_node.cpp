@@ -22,8 +22,6 @@
 #include <unball/strategy/robot.hpp> // Robot robot[6];
 #include <unball/strategy/ball.hpp> // Ball ball;
 
-#include <unball/strategy/radial_potential_field.hpp>
-
 void initRobotsPoses();
 void publishRobotsVelocities(ros::Publisher &publisher);
 void receiveVisionMessage(const unball::VisionMessage::ConstPtr &msg);

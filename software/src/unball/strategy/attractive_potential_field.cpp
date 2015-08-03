@@ -1,21 +1,21 @@
 /**
- * @file   vector.cpp
+ * @file   attractive_potential_field.cpp
  * @author Matheus Vieira Portela
- * @date   27/06/2015
+ * @date   03/08/2015
  *
  * @attention Copyright (C) 2015 UnBall Robot Soccer Team
  *
- * @brief Two-dimensional vector class.
+ * @brief Field that attracts the robot to the desired position.
  */
 
-#include <unball/strategy/radial_potential_field.hpp>
+#include <unball/strategy/attractive_potential_field.hpp>
 
-RadialPotentialField::RadialPotentialField(Vector origin, float magnitude) :
+AttractivePotentialField::AttractivePotentialField(Vector origin, float magnitude) :
     origin_(origin), magnitude_(magnitude)
 {
 }
 
-Vector RadialPotentialField::calculateForce(Vector position)
+Vector AttractivePotentialField::calculateForce(Vector position)
 {
     Vector result;
     Vector difference = position - origin_;

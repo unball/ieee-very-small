@@ -15,11 +15,13 @@
 
 #include <unball/utils/vector.hpp>
 
+#include <unball/strategy/ball.hpp>
 #include <unball/strategy/robot.hpp>
 #include <unball/strategy/potential_field.hpp>
+#include <unball/strategy/attractive_potential_field.hpp>
 #include <unball/strategy/parallel_potential_field.hpp>
 #include <unball/strategy/perpendicular_potential_field.hpp>
-#include <unball/strategy/radial_potential_field.hpp>
+#include <unball/strategy/repulsive_potential_field.hpp>
 #include <unball/strategy/selective_potential_field.hpp>
 #include <unball/strategy/tangential_potential_field.hpp>
 
