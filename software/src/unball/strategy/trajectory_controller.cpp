@@ -17,8 +17,7 @@ TrajectoryController::TrajectoryController()
 
 TrajectoryController::~TrajectoryController()
 {
-    for (int i = 0; i < potential_fields_.size(); ++i)
-        delete potential_fields_[i];
+    clearPotentialFields();
 }
 
 void TrajectoryController::run()
@@ -26,12 +25,18 @@ void TrajectoryController::run()
     Vector resultant_force = calculateResultantForce(0);
     controlRobot(0, resultant_force);
 
-    ROS_ERROR("Resultant force: %s", resultant_force.toString().c_str());
+    ROS_DEBUG("Resultant force: %s", resultant_force.toString().c_str());
 }
 
 void TrajectoryController::buildPotentialFields()
 {
-    potential_fields_.push_back(new RadialPotentialField(Vector(0, 0), 10));
+    potential_fields_.push_back(new RadialPotentialField(Vector(0.1, 0.1), 10));
+}
+
+void TrajectoryController::clearPotentialFields()
+{
+    for (int i = 0; i < potential_fields_.size(); ++i)
+        delete potential_fields_[i];
 }
 
 Vector TrajectoryController::calculateResultantForce(int robot_number)
@@ -65,7 +70,7 @@ void TrajectoryController::turn(int robot_number, float angle)
 
 void TrajectoryController::move(int robot_number, float distance)
 {
-    const float DIST_KP = 0.1;
+    const float DIST_KP = 1;
     const float distance_tolerance = 0.05; // m
 
     float lin_vel = DIST_KP*distance; // P control

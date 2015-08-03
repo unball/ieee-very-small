@@ -30,6 +30,7 @@ class TrajectoryController
     ~TrajectoryController();
     void run();
     void buildPotentialFields();
+    void clearPotentialFields();
     Vector calculateResultantForce(int robot_number);
     void controlRobot(int robot_number, Vector force);
     void turn(int robot_number, float angle);
