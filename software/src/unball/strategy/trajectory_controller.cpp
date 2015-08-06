@@ -21,18 +21,24 @@ TrajectoryController::~TrajectoryController()
 
 void TrajectoryController::run()
 {
-    buildPotentialFields();
+    buildPotentialFields(0);
     Vector resultant_force = calculateResultantForce(0);
     controlRobot(0, resultant_force);
     clearPotentialFields();
 
-    ROS_INFO("Resultant force: %s", resultant_force.toString().c_str());
+    ROS_ERROR("Resultant force: %s", resultant_force.toString().c_str());
 }
 
-void TrajectoryController::buildPotentialFields()
+void TrajectoryController::buildPotentialFields(int robot_number)
 {
     Vector ball_position(Vector(Ball::getInstance().getX(), Ball::getInstance().getY()));
-    potential_fields_.push_back(new AttractivePotentialField(ball_position, 10));
+    Vector robot_position(robot[robot_number].getX(), robot[robot_number].getY());
+    Vector difference = robot_position - ball_position;
+
+    if (difference.getMagnitude() < 0.05)
+        potential_fields_.push_back(new SelectivePotentialField(Vector(-0.75, 0), 0, M_PI, 10));
+    else
+        potential_fields_.push_back(new AttractivePotentialField(ball_position, 20));
 
     for (int i = 1; i < 6; ++i)
         potential_fields_.push_back(new RepulsivePotentialField(Vector(robot[i].getX(), robot[i].getY()), 3));
