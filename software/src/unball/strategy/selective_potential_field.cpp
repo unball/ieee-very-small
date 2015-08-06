@@ -10,8 +10,9 @@
 
 #include <unball/strategy/selective_potential_field.hpp>
 
-SelectivePotentialField::SelectivePotentialField(Vector origin, float magnitude, float width) :
-    origin_(origin), magnitude_(magnitude), width_(width)
+SelectivePotentialField::SelectivePotentialField(Vector origin, float direction,
+    float width, float magnitude) :
+    origin_(origin), direction_(direction), width_(width), magnitude_(magnitude)
 {
 }
 
@@ -22,23 +23,11 @@ Vector SelectivePotentialField::calculateForce(Vector position)
     float magnitude = 0.0;
     float angle = 0.0;
 
-    if (difference.getMagnitude() < magnitude_)
+    if ((difference.getDirection() - direction_ <= width_/2)
+        and (difference.getDirection() - direction_>= -width_/2))
     {
-        if (difference.getDirection() > origin_.getDirection() + (width_/2)
-            or difference.getDirection() < origin_.getDirection() - (width_/2))
-        {
-            magnitude = magnitude_;
-
-            if(difference.getDirection() < 0)
-               angle = origin_.getDirection() + (M_PI/2);
-            else
-                angle = origin_.getDirection() - (M_PI/2);
-        }
-        else
-        { 
-            magnitude = magnitude_/difference.getMagnitude();
-            angle = difference.getDirection();
-        }
+        angle = difference.getDirection();
+        magnitude = difference.getMagnitude()*magnitude_;
     }
     
     result.setPolar(magnitude, angle);

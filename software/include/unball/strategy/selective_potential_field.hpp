@@ -19,13 +19,22 @@
 class SelectivePotentialField : public PotentialField
 {
   public:
-    SelectivePotentialField(Vector origin, float magnitude, float width);
+    SelectivePotentialField(Vector origin, float direction, float width,
+        float magnitude);
     Vector calculateForce(Vector position);
   
   private:
+    // The position attracting robots.
     Vector origin_;
-    float magnitude_;
+
+    // The direction, in radians, of the field normal vector.
+    float direction_;
+
+    // The width, in radians, this field has.
     float width_;
+
+    // The magnitude of the force applied to the robots.
+    float magnitude_;
 
 };
 

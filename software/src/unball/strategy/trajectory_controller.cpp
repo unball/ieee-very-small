@@ -26,7 +26,7 @@ void TrajectoryController::run()
     controlRobot(0, resultant_force);
     clearPotentialFields();
 
-    ROS_ERROR("Resultant force: %s", resultant_force.toString().c_str());
+    ROS_INFO("Resultant force: %s", resultant_force.toString().c_str());
 }
 
 void TrajectoryController::buildPotentialFields()
