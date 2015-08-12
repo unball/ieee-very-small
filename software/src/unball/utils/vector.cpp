@@ -180,6 +180,11 @@ void Vector::multiply(float scalar)
     y_ *= scalar;
 }
 
+float Vector::dotMultiply(Vector vector)
+{
+    return (x_*vector.getX() + y_*vector.getY());
+}
+
 void Vector::divide(float scalar)
 {
     if (scalar == 0.0)
@@ -222,7 +227,7 @@ void Vector::normalize()
 
 void Vector::project(Vector direction)
 {
-    Vector projection = (((*this)*direction) / (direction*direction)) * direction;
+    Vector projection = direction*(dotMultiply(direction)/direction.dotMultiply(direction));
     set(projection);
 }
 

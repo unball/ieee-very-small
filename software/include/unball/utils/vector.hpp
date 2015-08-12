@@ -77,6 +77,9 @@ class Vector
     // Multiplies vector coordinates by a scalar value.
     void multiply(float scalar);
 
+    // Multiplies vectors using dot product.
+    float dotMultiply(Vector vector);
+
     // Divides vector coordinates by a scalar value, except zero.
     void divide(float scalar);
 
