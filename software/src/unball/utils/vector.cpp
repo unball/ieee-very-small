@@ -60,6 +60,18 @@ Vector& Vector::operator/=(const Vector &rhs)
     return *this;
 }
 
+Vector& Vector::operator/=(float rhs)
+{
+    if (rhs == 0)
+    {
+        ROS_ERROR("[Vector] Division by zero scalar");
+    }
+
+    x_ /= rhs;
+    y_ /= rhs;
+    return *this;
+}
+
 const Vector Vector::operator+(const Vector &rhs) const
 {
     return Vector(*this) += rhs;
@@ -81,6 +93,11 @@ const Vector Vector::operator*(float rhs) const
 }
 
 const Vector Vector::operator/(const Vector &rhs) const
+{
+    return Vector(*this) /= rhs;
+}
+
+const Vector Vector::operator/(float rhs) const
 {
     return Vector(*this) /= rhs;
 }
@@ -201,6 +218,12 @@ void Vector::normalize()
     {
         ROS_WARN("[Vector] Normalizing a zero magnitude vector does not change anything");
     }
+}
+
+void Vector::project(Vector direction)
+{
+    Vector projection = (((*this)*direction) / (direction*direction)) * direction;
+    set(projection);
 }
 
 void Vector::saturate(float maximum)

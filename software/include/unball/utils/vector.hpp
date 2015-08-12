@@ -35,6 +35,7 @@ class Vector
     Vector& operator*=(const Vector &rhs);
     Vector& operator*=(float rhs);
     Vector& operator/=(const Vector &rhs);
+    Vector& operator/=(float rhs);
 
     // Binary arithmetic operators.
     const Vector operator+(const Vector &rhs) const;
@@ -42,6 +43,7 @@ class Vector
     const Vector operator*(const Vector &rhs) const;
     const Vector operator*(float rhs) const;
     const Vector operator/(const Vector &rhs) const;
+    const Vector operator/(float rhs) const;
 
     // Comparison operators.
     bool operator==(const Vector &rhs) const;
@@ -86,6 +88,9 @@ class Vector
 
     // Adjusts the x, y coordinates such that the vector norm is 1.
     void normalize();
+
+    // Projects the vector onto a given direction.
+    void project(Vector direction);
 
     // Limits vector magnitude to the maximum given value.
     void saturate(float maximum);
