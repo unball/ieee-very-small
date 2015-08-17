@@ -21,12 +21,27 @@ TrajectoryController::~TrajectoryController()
 
 void TrajectoryController::run()
 {
-    buildPotentialFields(0);
-    Vector resultant_force = calculateResultantForce(0);
-    controlRobot(0, resultant_force);
-    clearPotentialFields();
+    Vector resultant_force;
 
-    ROS_ERROR("Resultant force: %s", resultant_force.toString().c_str());
+    for (int i = 0; i < 6; ++i)
+    {
+        switch (i)
+        {
+            case 0:
+                buildPotentialFields(i);
+                break;
+            case 1:
+                buildPotentialFields(i);
+                break;
+            case 2:
+                buildGoalKeeperPotentialFields(i);
+                break;
+        };
+
+        resultant_force = calculateResultantForce(i);
+        controlRobot(i, resultant_force);
+        clearPotentialFields();
+    }
 }
 
 void TrajectoryController::buildPotentialFields(int robot_number)
@@ -42,6 +57,14 @@ void TrajectoryController::buildPotentialFields(int robot_number)
 
     for (int i = 1; i < 6; ++i)
         potential_fields_.push_back(new RepulsivePotentialField(Vector(robot[i].getX(), robot[i].getY()), 3));
+}
+
+void TrajectoryController::buildGoalKeeperPotentialFields(int robot_number)
+{
+    Vector ball_line(robot[robot_number].getX(), Ball::getInstance().getY());
+    potential_fields_.push_back(new AttractivePotentialField(ball_line, 20));
+    potential_fields_.push_back(new ParallelPotentialField(Vector(0, 0.6), Vector(0, -10), 0.8));
+    potential_fields_.push_back(new ParallelPotentialField(Vector(0, -0.6), Vector(0, 10), 0.4));
 }
 
 void TrajectoryController::clearPotentialFields()

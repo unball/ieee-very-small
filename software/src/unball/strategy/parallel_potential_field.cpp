@@ -20,9 +20,7 @@ Vector ParallelPotentialField::calculateForce(Vector position)
 {
     Vector result;
     Vector difference = position - origin_;
-
-    if (difference.getMagnitude() < max_distance_)
-        result = field_force_;
+    difference.project(field_force_);
 
     return result;
 }

@@ -227,8 +227,11 @@ void Vector::normalize()
 
 void Vector::project(Vector direction)
 {
-    Vector projection = direction*(dotMultiply(direction)/direction.dotMultiply(direction));
-    set(projection);
+    Vector result;
+    Vector difference = (*this) - direction;
+    float magnitude = direction.getMagnitude()*cos(difference.getDirection());
+    result.setPolar(magnitude, direction.getDirection());
+    set(result);
 }
 
 void Vector::saturate(float maximum)
