@@ -19,8 +19,7 @@
 class SelectivePotentialField : public PotentialField
 {
   public:
-    SelectivePotentialField(Vector origin, float direction, float width,
-        float magnitude);
+    SelectivePotentialField(Vector origin, float direction, float width, float magnitude);
     Vector calculateForce(Vector position);
   
   private:
