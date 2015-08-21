@@ -8,7 +8,7 @@
  * @brief Play stop class
  */
 
-#include <unball/strategy/play_stop.hpp>
+#include <unball/strategy/legacy/play_stop.hpp>
 
 PlayStop::PlayStop() : Play()
 {

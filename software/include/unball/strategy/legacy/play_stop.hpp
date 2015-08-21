@@ -13,8 +13,8 @@
 
 #include <ros/ros.h>
 
-#include <unball/strategy/action_controller.hpp>
-#include <unball/strategy/play.hpp>
+#include <unball/strategy/legacy/action_controller.hpp>
+#include <unball/strategy/legacy/play.hpp>
 
 class PlayStop : public Play
 {

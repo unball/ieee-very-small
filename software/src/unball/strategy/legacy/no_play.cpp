@@ -8,7 +8,7 @@
  * @brief Empty play class
  */
 
-#include <unball/strategy/no_play.hpp>
+#include <unball/strategy/legacy/no_play.hpp>
 
  NoPlay::NoPlay() : Play()
 {

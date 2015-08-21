@@ -28,10 +28,7 @@ Strategy& Strategy::getInstance()
     return *instance;
 }
 
-Strategy::Strategy()
-{
-    play_controller_.pushPlay(new NoPlay());
-}
+Strategy::Strategy() {}
 
 /**
  * Receive keyboard input and set the proper game state.
@@ -42,28 +39,31 @@ void Strategy::receiveKeyboardInput(char key)
     switch (key)
     {
         case 'r': case 'R':
-            ROS_INFO("[Strategy] Keyboard input: Setting game state RUNNING");
-            state_estimator_.setGameState(WorldState::GAME_RUNNING);
-            break;
+        	ResumeGame();
+        	break;
         case 'p': case 'P':
-            ROS_INFO("[Strategy] Keyboard input: Setting game state PAUSED");
-            state_estimator_.setGameState(WorldState::GAME_PAUSED);
-            break;
-        case 'a': case 'A':
-            ROS_INFO("[Strategy] Keyboard input: Abort play");
-            play_controller_.abortPlay();
-            break;
-        case '1':
-            ROS_INFO("[Strategy] Keyboard input: Play Formation 1");
-            play_controller_.abortPlay();
-            play_controller_.pushPlay(new PlayFormation1());
-            break;
-        case '2':
-            ROS_INFO("[Strategy] Keyboard input: Play Formation 2");
-            play_controller_.abortPlay();
-            play_controller_.pushPlay(new PlayFormation2());
+        	PauseGame();
             break;
     }
+}
+
+/*
+* Pauses the actions of all robots.
+* TODO (mota.icaro@gmail.com): Pause the ball
+*/
+void Strategy::PauseGame()
+{
+	ROS_INFO("[Strategy] Keyboard input: Setting game state PAUSED");
+	state_estimator_.setGameState(WorldState::GAME_PAUSED);
+	
+	for (int i=0;i<6;i++)
+		trajectory_controller_.stopRobot(i);
+}
+
+void Strategy::ResumeGame()
+{
+	ROS_INFO("[Strategy] Keyboard input: Setting game state RUNNING");
+	state_estimator_.setGameState(WorldState::GAME_RUNNING);   
 }
 
 /**
@@ -73,35 +73,8 @@ void Strategy::run()
 {
     if (state_estimator_.getGameState() != WorldState::GAME_PAUSED)
     {
-        state_estimator_.update();
-        // choosePlay();
-        // play_controller_.run();
+		state_estimator_.update();
         trajectory_controller_.run();
-    }
-}
-
-/**
- * Choose the best play for the current state of the game.
- */
-void Strategy::choosePlay()
-{
-    WorldState::BallState ball_state = state_estimator_.getBallState();
-    WorldState::BallPossessionState ball_possession_state = state_estimator_.getBallPossessionState();
-    
-    // Only evaluate plays when there is a change in the state estimation
-    if (state_estimator_.hasStateChanged())
-    {
-        // Abort any on-going play and replace it with the new play
-        if (ball_possession_state == WorldState::BALL_POSSESSION_NONE)
-        {
-            play_controller_.abortPlay();
-            play_controller_.pushPlay(new PlayFormation2());
-        }
-        else if (ball_possession_state == WorldState::BALL_POSSESSION_THEIRS)
-        {
-            play_controller_.abortPlay();
-            play_controller_.pushPlay(new PlayFormation1());
-        }
     }
 }
 

@@ -43,8 +43,6 @@ int main(int argc, char **argv)
     return 0;
 }
 
-
-
 /**
  * Publishes the robots velocities to the strategy topic.
  * @param publisher a ROS node publisher.

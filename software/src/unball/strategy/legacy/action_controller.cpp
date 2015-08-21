@@ -11,7 +11,7 @@
  * Implements robots actions for strategy
  */
 
-#include <unball/strategy/action_controller.hpp>
+#include <unball/strategy/legacy/action_controller.hpp>
 
 /**
  * Strategy instance.

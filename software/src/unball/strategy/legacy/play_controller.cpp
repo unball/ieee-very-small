@@ -10,7 +10,7 @@
  * Implements strategy for robots
  */
 
-#include <unball/strategy/play_controller.hpp>
+#include <unball/strategy/legacy/play_controller.hpp>
 
 PlayController::PlayController()
 {

@@ -22,7 +22,6 @@ TrajectoryController::~TrajectoryController()
 void TrajectoryController::run()
 {
     Vector resultant_force;
-
     for (int i = 0; i < 6; ++i)
     {
         switch (i)
@@ -50,7 +49,7 @@ void TrajectoryController::buildPotentialFields(int robot_number)
     Vector robot_position(robot[robot_number].getX(), robot[robot_number].getY());
     Vector difference = robot_position - ball_position;
 
-    if (difference.getMagnitude() < 0.05)
+    if (difference.getMagnitude() < 0.05) 
         potential_fields_.push_back(new SelectivePotentialField(Vector(-0.75, 0), 0, M_PI, 10));
     else
         potential_fields_.push_back(new AttractivePotentialField(ball_position, 20));
@@ -90,6 +89,12 @@ void TrajectoryController::controlRobot(int robot_number, Vector force)
 {
     move(robot_number, force.getMagnitude());
     turn(robot_number, force.getDirection());
+}
+
+void TrajectoryController::stopRobot(int robot_number)
+{
+    robot[robot_number].setAngVel(0);
+    robot[robot_number].setLinVel(0);
 }
 
 void TrajectoryController::turn(int robot_number, float angle)

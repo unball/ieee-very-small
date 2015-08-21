@@ -10,7 +10,7 @@
  * Move one robot to a defensive position and the other to an offensive position.
  */
 
-#include <unball/strategy/play_formation_1.hpp>
+#include <unball/strategy/legacy/play_formation_1.hpp>
 
 PlayFormation1::PlayFormation1() : Play()
 {

@@ -36,6 +36,7 @@ class TrajectoryController
     void clearPotentialFields();
     Vector calculateResultantForce(int robot_number);
     void controlRobot(int robot_number, Vector force);
+    void stopRobot(int robot_number);
     void turn(int robot_number, float angle);
     void move(int robot_number, float distance);
   

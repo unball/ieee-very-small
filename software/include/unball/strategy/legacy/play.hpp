@@ -16,7 +16,7 @@
 
 #include <ros/ros.h>
 
-#include <unball/strategy/action_controller.hpp>
+#include <unball/strategy/legacy/action_controller.hpp>
 #include <unball/strategy/ball.hpp>
 #include <unball/strategy/robot.hpp>
 

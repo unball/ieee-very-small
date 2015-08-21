@@ -11,7 +11,7 @@
  * Move both robots to defensive positions.
  */
 
-#include <unball/strategy/play_formation_2.hpp>
+#include <unball/strategy/legacy/play_formation_2.hpp>
 
 PlayFormation2::PlayFormation2() : Play()
 {

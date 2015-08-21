@@ -42,7 +42,6 @@ int main(int argc, char **argv)
     
     while (ros::ok())
     {
-        // Strategy::getInstance().run();
         strategy.run();
 
         publishRobotsVelocities(publisher);

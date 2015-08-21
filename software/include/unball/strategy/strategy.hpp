@@ -16,7 +16,6 @@
 
 #include <ros/ros.h>
 
-#include <unball/strategy/play_controller.hpp>
 #include <unball/strategy/state_estimator.hpp>
 #include <unball/strategy/trajectory_controller.hpp>
 
@@ -45,9 +44,11 @@ class Strategy
     void chooseStrategyState();
 
     StateEstimator state_estimator_;
-    PlayController play_controller_;
     TrajectoryController trajectory_controller_;
     TeamState::StrategyState strategy_state_;
+
+    void PauseGame();
+    void ResumeGame();
 };
 
 extern Strategy strategy;

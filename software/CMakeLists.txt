@@ -61,13 +61,13 @@ add_executable(strategy_node
   src/unball/strategy/state_estimator.cpp
   src/unball/strategy/robot.cpp
   src/unball/strategy/ball.cpp
-  src/unball/strategy/action_controller.cpp
-  src/unball/strategy/play_controller.cpp
-  src/unball/strategy/play.cpp
-  src/unball/strategy/no_play.cpp
-  src/unball/strategy/play_stop.cpp
-  src/unball/strategy/play_formation_1.cpp
-  src/unball/strategy/play_formation_2.cpp
+  src/unball/strategy/legacy/action_controller.cpp
+  src/unball/strategy/legacy/play_controller.cpp
+  src/unball/strategy/legacy/play.cpp
+  src/unball/strategy/legacy/no_play.cpp
+  src/unball/strategy/legacy/play_stop.cpp
+  src/unball/strategy/legacy/play_formation_1.cpp
+  src/unball/strategy/legacy/play_formation_2.cpp
   src/unball/strategy/attractive_potential_field.cpp
   src/unball/strategy/parallel_potential_field.cpp
   src/unball/strategy/perpendicular_potential_field.cpp

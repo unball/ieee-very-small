@@ -24,10 +24,12 @@
 
  /**
  * Read a char from standard input without blocking the execution of a program
+ * Stores the char read into last_char_
  */
 int KeyboardInput::readChar()
 {
     static struct termios oldt, newt;
+    last_char_ = ' ';
 
     // Save old settings
     tcgetattr(STDIN_FILENO, &oldt);

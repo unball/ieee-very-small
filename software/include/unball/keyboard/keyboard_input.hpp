@@ -17,13 +17,9 @@
  class KeyboardInput
 {
   public:
-
-  	char read();
   	void printLastChar();
   	int readChar();
 
   private:
-  	
   	int last_char_;
-
 };

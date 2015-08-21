@@ -9,7 +9,7 @@
  * @brief Play class
  */
 
-#include <unball/strategy/play.hpp>
+#include <unball/strategy/legacy/play.hpp>
 
 Play::Play()
 {
