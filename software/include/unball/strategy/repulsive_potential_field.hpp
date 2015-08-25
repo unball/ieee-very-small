@@ -17,12 +17,12 @@
 class RepulsivePotentialField : public PotentialField
 {
   public:
-    RepulsivePotentialField(Vector origin, float magnitude);
+    RepulsivePotentialField(Vector origin, float range);
     Vector calculateForce(Vector position);
   
   private:
     Vector origin_;
-    float magnitude_;
+    float range_;
 };
 
 #endif  // UNBALL_REPULSIVE_POTENTIAL_FIELD_H_

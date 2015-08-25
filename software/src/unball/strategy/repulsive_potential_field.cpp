@@ -10,18 +10,23 @@
 
 #include <unball/strategy/repulsive_potential_field.hpp>
 
-RepulsivePotentialField::RepulsivePotentialField(Vector origin, float magnitude) :
-    origin_(origin), magnitude_(magnitude)
+RepulsivePotentialField::RepulsivePotentialField(Vector origin, float range) :
+    origin_(origin), range_(range)
 {
 }
 
 Vector RepulsivePotentialField::calculateForce(Vector position)
 {
     Vector result;
-    Vector difference = origin_ - position;
+    Vector difference = origin_ - position;   
     float angle = difference.getDirection();
-    float magnitude = difference.getMagnitude()/magnitude_;
+ 
+    float magnitude = 0;
+    if (difference.getMagnitude() < range_)
+ 		magnitude = (range_ - difference.getMagnitude())/range_;
 
     result.setPolar(magnitude, angle);
+   	
     return result;
 }
+

@@ -53,7 +53,6 @@ void TrajectoryController::buildPotentialFields(int robot_number)
         potential_fields_.push_back(new SelectivePotentialField(Vector(-0.75, 0), 0, M_PI, 10));
     else
         potential_fields_.push_back(new AttractivePotentialField(ball_position, 20));
-
     for (int i = 1; i < 6; ++i)
         potential_fields_.push_back(new RepulsivePotentialField(Vector(robot[i].getX(), robot[i].getY()), 3));
 }
