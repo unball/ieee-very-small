@@ -19,7 +19,7 @@
 class SelectivePotentialField : public PotentialField
 {
   public:
-    SelectivePotentialField(Vector origin, float direction, float width, float magnitude);
+    SelectivePotentialField(Vector origin, float direction, float width, float range);
     Vector calculateForce(Vector position);
   
   private:
@@ -33,8 +33,11 @@ class SelectivePotentialField : public PotentialField
     float width_;
 
     // The magnitude of the force applied to the robots.
-    float magnitude_;
+    float range_;
 
+    bool isInTheCone(Vector difference);
+    Vector applyAttractivePotentialField(Vector difference);
+    Vector applyTangentialField(Vector difference);
 };
 
 #endif  // UNBALL_SELECTIVE_POTENTIAL_FIELD_H_

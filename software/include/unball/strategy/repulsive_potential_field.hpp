@@ -23,6 +23,8 @@ class RepulsivePotentialField : public PotentialField
   private:
     Vector origin_;
     float range_;
+
+    bool isInRange(Vector position);
 };
 
 #endif  // UNBALL_REPULSIVE_POTENTIAL_FIELD_H_

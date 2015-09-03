@@ -22,7 +22,7 @@ Vector RepulsivePotentialField::calculateForce(Vector position)
     float angle = difference.getDirection();
  
     float magnitude = 0;
-    if (difference.getMagnitude() < range_)
+    if (isInRange(position))
  		magnitude = (range_ - difference.getMagnitude())/range_;
 
     result.setPolar(magnitude, angle);
@@ -30,3 +30,8 @@ Vector RepulsivePotentialField::calculateForce(Vector position)
     return result;
 }
 
+bool RepulsivePotentialField::isInRange(Vector position)
+{
+	Vector difference = origin_ - position;   
+	return difference.getMagnitude() < range_;
+}

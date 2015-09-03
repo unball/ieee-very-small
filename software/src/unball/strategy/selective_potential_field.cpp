@@ -11,8 +11,8 @@
 #include <unball/strategy/selective_potential_field.hpp>
 
 SelectivePotentialField::SelectivePotentialField(Vector origin, float direction,
-    float width, float magnitude) :
-    origin_(origin), direction_(direction), width_(width), magnitude_(magnitude)
+    float width, float range) :
+    origin_(origin), direction_(direction), width_(width), range_(range)
 {
 }
 
@@ -23,13 +23,35 @@ Vector SelectivePotentialField::calculateForce(Vector position)
     float magnitude = 0.0;
     float angle = 0.0;
 
-    if ((difference.getDirection() - direction_ <= width_/2)
-        and (difference.getDirection() - direction_>= -width_/2))
-    {
-        angle = difference.getDirection();
-        magnitude = difference.getMagnitude()*magnitude_;
-    }
+    if (isInTheCone(difference))
+        result = applyAttractivePotentialField(difference);
+    else
+        result = applyTangentialField(difference);
     
-    result.setPolar(magnitude, angle);
     return result;
+}
+
+bool SelectivePotentialField::isInTheCone(Vector difference)
+{
+    return (fabs(difference.getDirection() - direction_) <= width_/2);
+}
+
+Vector SelectivePotentialField::applyAttractivePotentialField(Vector difference)
+{
+    float angle = difference.getDirection();
+    float magnitude = difference.getMagnitude()*range_;    
+    
+    Vector result;
+    result.setPolar(magnitude, angle); 
+    return result;
+}
+
+Vector SelectivePotentialField::applyTangentialField(Vector difference)
+{
+        float angle = difference.getDirection() + M_PI_2;
+        float magnitude = range_;
+        
+        Vector result;
+        result.setPolar(magnitude, angle);
+        return result;
 }

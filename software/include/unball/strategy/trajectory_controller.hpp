@@ -39,10 +39,12 @@ class TrajectoryController
     void stopRobot(int robot_number);
     void turn(int robot_number, float angle);
     void move(int robot_number, float distance);
-  
+
   private:
     std::vector<PotentialField*> potential_fields_;
     float angle_error_d_;
+
+    bool isInBallRange(int robot_number);
 };
 
 #endif  // UNBALL_TRAJECTORY_CONTROLLER_H_

@@ -56,6 +56,7 @@ add_executable(strategy_node
   src/unball/utils/point.cpp
   src/unball/utils/math.cpp
   src/unball/utils/vector.cpp
+  src/unball/utils/test_angles.cpp
   src/unball/strategy/strategy_node.cpp
   src/unball/strategy/strategy.cpp
   src/unball/strategy/state_estimator.cpp
