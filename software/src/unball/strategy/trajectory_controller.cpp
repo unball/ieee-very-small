@@ -12,81 +12,27 @@
 
 TrajectoryController::TrajectoryController()
 {
+    player_[0] = new RegularPlayer();
+    player_[1] = new RegularPlayer();
+    player_[2] = new Goalkeeper();
 }
 
 TrajectoryController::~TrajectoryController()
 {
-    clearPotentialFields();
+    for (int i = 3; i >= 0; --i)
+        delete player_[i];
 }
 
 void TrajectoryController::run()
 {
     Vector resultant_force;
-    for (int i = 0; i < 6; ++i)
+    for (int i = 0; i < 3; ++i)
     {
-        switch (i)
-        {
-            //case 0:
-            //    buildPotentialFields(i);
-            //    break;
-            case 1:
-                buildPotentialFields(i);
-                break;
-            //case 2:
-            //    buildGoalKeeperPotentialFields(i);
-            //    break;
-        };
-
-        resultant_force = calculateResultantForce(i);
+        player_[i]->buildPotentialFields(i);
+        resultant_force = player_[i]->calculateResultantForce(i);
+        player_[i]->clearPotentialFields();
         controlRobot(i, resultant_force);
-        clearPotentialFields();
     }
-}
-
-void TrajectoryController::buildPotentialFields(int robot_number)
-{
-    Vector ball_position(Vector(Ball::getInstance().getX(), Ball::getInstance().getY()));
-
-    //if (isInBallRange(robot_number)) 
-        potential_fields_.push_back(new SelectivePotentialField(ball_position, 0, M_PI/12, 6));
-    //else
-    //    potential_fields_.push_back(new AttractivePotentialField(ball_position, 20));
-    //for (int i = 1; i < 6; ++i)
-    //    potential_fields_.push_back(new RepulsivePotentialField(Vector(robot[i].getX(), robot[i].getY()), 3));
-}
-
-bool TrajectoryController::isInBallRange(int robot_number)
-{
-    Vector ball_position(Vector(Ball::getInstance().getX(), Ball::getInstance().getY()));
-    Vector robot_position(robot[robot_number].getX(), robot[robot_number].getY());
-    Vector difference = robot_position - ball_position;    
-    
-    return difference.getMagnitude() < 0.2;
-}
-
-void TrajectoryController::buildGoalKeeperPotentialFields(int robot_number)
-{
-    Vector ball_line(robot[robot_number].getX(), Ball::getInstance().getY());
-    potential_fields_.push_back(new AttractivePotentialField(ball_line, 20));
-    potential_fields_.push_back(new ParallelPotentialField(Vector(0, 0.6), Vector(0, -10), 0.8));
-    potential_fields_.push_back(new ParallelPotentialField(Vector(0, -0.6), Vector(0, 10), 0.4));
-}
-
-void TrajectoryController::clearPotentialFields()
-{
-    for (int i = potential_fields_.size()-1; i >= 0; --i)
-        delete potential_fields_[i];
-    potential_fields_.clear();
-}
-
-Vector TrajectoryController::calculateResultantForce(int robot_number)
-{
-    Vector resultant_force;
-    Vector position(robot[robot_number].getX(), robot[robot_number].getY());
-
-    for (int i = 0; i < potential_fields_.size(); ++i) 
-        resultant_force += potential_fields_[i]->calculateForce(position);
-    return resultant_force;
 }
 
 void TrajectoryController::controlRobot(int robot_number, Vector force)

@@ -24,6 +24,8 @@
 #include <unball/strategy/repulsive_potential_field.hpp>
 #include <unball/strategy/selective_potential_field.hpp>
 #include <unball/strategy/tangential_potential_field.hpp>
+#include <unball/strategy/regular_player.hpp>
+#include <unball/strategy/goalkeeper.hpp>
 
 class TrajectoryController
 {
@@ -41,6 +43,8 @@ class TrajectoryController
     void move(int robot_number, float distance);
 
   private:
+    Player* player_[3];
+
     std::vector<PotentialField*> potential_fields_;
     float angle_error_d_;
 

@@ -69,6 +69,9 @@ add_executable(strategy_node
   src/unball/strategy/legacy/play_stop.cpp
   src/unball/strategy/legacy/play_formation_1.cpp
   src/unball/strategy/legacy/play_formation_2.cpp
+  src/unball/strategy/player.cpp
+  src/unball/strategy/goalkeeper.cpp
+  src/unball/strategy/regular_player.cpp
   src/unball/strategy/attractive_potential_field.cpp
   src/unball/strategy/parallel_potential_field.cpp
   src/unball/strategy/perpendicular_potential_field.cpp

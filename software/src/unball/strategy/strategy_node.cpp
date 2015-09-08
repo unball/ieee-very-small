@@ -61,10 +61,6 @@ void runTests()
 {
     ROS_ERROR("Started Testing");
     TestAngles test;
-    if (test.run())
-        ROS_ERROR("All tests worked");
-    else
-        ROS_ERROR("Failed tests");
 }
 
 /**
