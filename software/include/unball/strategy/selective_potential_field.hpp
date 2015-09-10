@@ -20,7 +20,7 @@ class SelectivePotentialField : public PotentialField
 {
   public:
     SelectivePotentialField(Vector origin, float direction, float width, float range);
-    Vector calculateForce(Vector position);
+    Vector calculateForce(Vector robot_position);
   
   private:
     // The position attracting robots.

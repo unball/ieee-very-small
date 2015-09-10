@@ -11,7 +11,7 @@
   
   <group ns="robot_2">
   <node name="robot_2" pkg="gazebo_ros" type="spawn_model"
-  args="-file $(find unball)/model/unball_robot.urdf -urdf -x 0.17 -y -0.20 -z 0.05 -model robot_2" />
+  args="-file $(find unball)/model/unball_robot.urdf -urdf -x 0.00 -y 0.20 -z 0.05 -model robot_2" />
   </group>
   
 </launch>

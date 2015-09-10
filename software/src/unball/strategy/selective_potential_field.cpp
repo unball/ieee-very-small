@@ -16,18 +16,16 @@ SelectivePotentialField::SelectivePotentialField(Vector origin, float direction,
 {
 }
 
-Vector SelectivePotentialField::calculateForce(Vector position)
+Vector SelectivePotentialField::calculateForce(Vector robot_position)
 {
     Vector result;
-    Vector difference = position - origin_;
-    float magnitude = 0.0;
-    float angle = 0.0;
+    Vector difference = robot_position - origin_;
 
     if (isInTheCone(difference))
         result = applyAttractivePotentialField(difference);
     else
         result = applyTangentialField(difference);
-    
+    ROS_ERROR("RESULTANT FORCE:\tangle: %f\tmagnitude: %f", result.getDirection()*(180/M_PI), result.getMagnitude());
     return result;
 }
 
@@ -48,9 +46,13 @@ Vector SelectivePotentialField::applyAttractivePotentialField(Vector difference)
 
 Vector SelectivePotentialField::applyTangentialField(Vector difference)
 {
-        float angle = difference.getDirection() + M_PI_2;
+        float angle = difference.getDirection();
         float magnitude = range_;
         
+        if(fabs(angle) <= M_PI)
+            angle += M_PI_2;
+        else
+            angle -= M_PI_2;
         Vector result;
         result.setPolar(magnitude, angle);
         return result;
