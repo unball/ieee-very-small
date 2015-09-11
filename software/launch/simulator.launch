@@ -1,0 +1,17 @@
+<launch>
+  <!-- start gazebo server-->
+  <!-- to start the server paused, include a -u flag -->
+  <node name="gazebo" pkg="gazebo_ros" type="gzserver" respawn="false" output="screen"
+	args="-u $(find unball)/model/ieee_very_small_field.world" />
+	
+  <!-- start gazebo client -->
+  <node name="gazebo_gui" pkg="gazebo_ros" type="gzclient" respawn="false" output="screen" />
+  
+  <!-- spawn robots -->
+  
+  <group ns="robot_2">
+  <node name="robot_2" pkg="gazebo_ros" type="spawn_model"
+  args="-file $(find unball)/model/unball_robot.urdf -urdf -x 0.00 -y 0.20 -z 0.05 -model robot_2" />
+  </group>
+  
+</launch>
