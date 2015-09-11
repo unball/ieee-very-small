@@ -1,7 +1,7 @@
 /**
  * @file   goalkeeper.hpp
  * @author Icaro da Costa Mota
- * @date   03/09/2015
+ * @date   08/09/2015
  *
  * @attention Copyright (C) 2015 UnBall Robot Soccer Team
  *

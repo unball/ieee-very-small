@@ -16,10 +16,10 @@ SelectivePotentialField::SelectivePotentialField(Vector origin, float direction,
 {
 }
 
-Vector SelectivePotentialField::calculateForce(Vector position)
+Vector SelectivePotentialField::calculateForce(Vector robot_position)
 {
     Vector result;
-    Vector difference = position - origin_;
+    Vector difference = robot_position - origin_;
     float magnitude = 0.0;
     float angle = 0.0;
 
@@ -48,10 +48,10 @@ Vector SelectivePotentialField::applyAttractivePotentialField(Vector difference)
 
 Vector SelectivePotentialField::applyTangentialField(Vector difference)
 {
-        float angle = difference.getDirection() + M_PI_2;
+        float angle = difference.getDirection() - M_PI_2;
         float magnitude = range_;
         
         Vector result;
-        result.setPolar(magnitude, angle);
+        result.setPolar(magnitude, angle+0.3);
         return result;
 }
