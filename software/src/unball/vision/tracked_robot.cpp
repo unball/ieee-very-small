@@ -37,3 +37,14 @@ void TrackedRobot::setPosition(RobotData data)
     tracking_window_ = data.tracking_window;
     team_color_ = data.team_color;
 }
+
+std::vector<float> TrackedRobot::getRobotPose()
+{
+    std::vector<float> pose(3);
+
+    pose[0] = position_.x;
+    pose[1] = position_.y;
+    pose[2] = orientation_;
+
+    return pose;
+}

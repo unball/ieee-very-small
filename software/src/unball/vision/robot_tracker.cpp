@@ -60,3 +60,8 @@ void RobotTracker::trackStep2(cv::Mat &rgb_frame, cv::Mat &depth_frame, cv::Mat 
 {
 
 }
+
+std::vector<float> RobotTracker::getRobotPose(int robot_index)
+{
+    return robots_[robot_index / 3][robot_index % 3].getRobotPose();
+}

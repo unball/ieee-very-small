@@ -11,6 +11,8 @@
 #ifndef UNBALL_VISION_ROBOT_TRACKER_H_
 #define UNBALL_VISION_ROBOT_TRACKER_H_
 
+#include <vector>
+
 #include <ros/ros.h>
 
 #include <unball/vision/robot_identifier.hpp>
@@ -24,6 +26,8 @@ class RobotTracker
 
     void track(cv::Mat &rgb_frame, cv::Mat &depth_frame, cv::Mat &rgb_segmented_frame);
     void draw(cv::Mat &frame);
+
+    std::vector<float> getRobotPose(int robot_index);
 
   private:
     void trackStep1(cv::Mat &rgb_frame, cv::Mat &depth_frame, cv::Mat &rgb_segmented_frame);

@@ -73,3 +73,8 @@ void Tracker::calculateMeasurementConversion()
     measurement_conversion_.setFieldCenter(tracked_field_.getFieldCenter());
     calculated_measurement_parameters_ = true;
 }
+
+std::vector<float> Tracker::getRobotPose(int robot_index)
+{
+    return robot_tracker_.getRobotPose(robot_index);
+}
