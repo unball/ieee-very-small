@@ -13,6 +13,7 @@
 #define UNBALL_VISION_ROBOT_IDENTIFIER_H_
 
 #include <map>
+#include <cmath>
 
 #include <ros/ros.h>
 #include <opencv2/opencv.hpp>
@@ -31,7 +32,7 @@ class RobotIdentifier
                                  cv::Point center);
     void calculateColorPoints(cv::Mat rgb_frame, cv::Point farthest_point, cv::Point opposite_point, cv::Point center,
                               cv::Vec3b &value_f, cv::Vec3b &value_o);
-    void calculateOrientation();
+    float calculateOrientation(std::vector<cv::Point> contour);
 
     cv::Point calculateCenterPosition(cv::Rect tracking_window);
     double distanceBetweenPoints(cv::Point a, cv::Point b);

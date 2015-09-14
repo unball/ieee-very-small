@@ -22,6 +22,7 @@ RobotData RobotIdentifier::identifyRobot(cv::Mat rgb_frame, std::vector<cv::Poin
 
     data.tracking_window = cv::boundingRect(contour);
     data.center_position = calculateCenterPosition(data.tracking_window);
+    data.orientation = calculateOrientation(contour);
 
     cv::Point farthest_point, opposite_point;
     calculateDiagonalPoints(contour, farthest_point, opposite_point, data.center_position);
@@ -70,9 +71,12 @@ void RobotIdentifier::calculateColorPoints(cv::Mat rgb_frame, cv::Point farthest
     value_o = hsv.at<cv::Vec3b>(middle_o.y,middle_o.x);
 }
 
-void RobotIdentifier::calculateOrientation()
+float RobotIdentifier::calculateOrientation(std::vector<cv::Point> contour)
 {
-
+    // Orientation is calculated using moments, according to this:
+    // https://en.wikipedia.org/wiki/Image_moment#Examples_2
+    cv::Moments moments = cv::moments(contour);
+    float theta = atan(2*moments.m11/(moments.m20 - moments.m02))/2;
 }
 
 cv::Point RobotIdentifier::calculateCenterPosition(cv::Rect tracking_window)
