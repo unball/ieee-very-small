@@ -49,9 +49,9 @@ Vector SelectivePotentialField::applyTangentialField(Vector difference)
         float magnitude = range_;
         
         if(fabs(angle) <= M_PI)
-            angle += M_PI_2;
+            angle += M_PI_2 - TANGENTIAL_CORRECTION_;
         else
-            angle -= M_PI_2;
+            angle -= M_PI_2 + TANGENTIAL_CORRECTION_;
         Vector result;
         result.setPolar(magnitude, angle+0.3);
         return result;

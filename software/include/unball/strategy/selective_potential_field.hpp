@@ -38,6 +38,9 @@ class SelectivePotentialField : public PotentialField
     bool isInTheCone(Vector difference);
     Vector applyAttractivePotentialField(Vector difference);
     Vector applyTangentialField(Vector difference);
+
+    //HACK: We added this const to stop the robot from overshooting when going around the target.
+    static float const TANGENTIAL_CORRECTION_ = 0.3;
 };
 
 #endif  // UNBALL_SELECTIVE_POTENTIAL_FIELD_H_
