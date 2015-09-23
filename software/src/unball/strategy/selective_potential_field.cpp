@@ -53,6 +53,6 @@ Vector SelectivePotentialField::applyTangentialField(Vector difference)
         else
             angle -= M_PI_2 + TANGENTIAL_CORRECTION_;
         Vector result;
-        result.setPolar(magnitude, angle+0.3);
+        result.setPolar(magnitude, angle);
         return result;
 }
