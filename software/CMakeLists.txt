@@ -62,13 +62,6 @@ add_executable(strategy_node
   src/unball/strategy/state_estimator.cpp
   src/unball/strategy/robot.cpp
   src/unball/strategy/ball.cpp
-  src/unball/strategy/legacy/action_controller.cpp
-  src/unball/strategy/legacy/play_controller.cpp
-  src/unball/strategy/legacy/play.cpp
-  src/unball/strategy/legacy/no_play.cpp
-  src/unball/strategy/legacy/play_stop.cpp
-  src/unball/strategy/legacy/play_formation_1.cpp
-  src/unball/strategy/legacy/play_formation_2.cpp
   src/unball/strategy/player.cpp
   src/unball/strategy/goalkeeper.cpp
   src/unball/strategy/regular_player.cpp
