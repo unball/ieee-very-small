@@ -29,7 +29,7 @@ bool is_open_rgb, is_open_depth;
 
 /**
  * Converts an integer to a string.
- * 
+ *
  * @param num the integer to be converted.
  */
 std::string to_string(int num)
@@ -50,7 +50,7 @@ std::string to_string(int num)
 void rgbCallback(const sensor_msgs::ImageConstPtr &msg)
 {
     cv_bridge::CvImagePtr cv_ptr;
-    
+
     // Copies the image data to cv_ptr and handles exceptions
     try
     {
@@ -61,14 +61,14 @@ void rgbCallback(const sensor_msgs::ImageConstPtr &msg)
         ROS_ERROR("cv_bridge exception: %s", e.what());
         return;
     }
-    
+
     // Check for invalid image
     if (!(cv_ptr->image.rows) || !(cv_ptr->image.cols))
     {
         ROS_ERROR("cv_ptr error: invalid image frame received");
         exit(-1);
     }
-    
+
     // Opens the rgb video writer if it's not opened yet.
     if (!is_open_rgb)
     {
@@ -89,7 +89,7 @@ void rgbCallback(const sensor_msgs::ImageConstPtr &msg)
 void depthCallback(const sensor_msgs::ImageConstPtr &msg)
 {
     cv_bridge::CvImagePtr cv_ptr;
-    
+
     // Copies the image data to cv_ptr and handles exceptions
     try
     {
@@ -107,7 +107,7 @@ void depthCallback(const sensor_msgs::ImageConstPtr &msg)
         ROS_ERROR("cv_ptr error: invalid image frame received");
         exit(-1);
     }
-    
+
     /*
     // Opens the depth video writer if it's not opened yet.
     if (!is_open_depth)
@@ -118,15 +118,15 @@ void depthCallback(const sensor_msgs::ImageConstPtr &msg)
         else is_open_depth = true;
     }
     */
-    
+
     /*
     // Normalizes the depth image and converts it from 16-bit to 6-bit.
     cv::Mat normed;
     normalize(cv_ptr->image, normed, 0, 255, cv::NORM_MINMAX, CV_8UC1);
-    
+
     depth_writer << normed; // Saves the normed image on the depth video.
     */
-    
+
     depth_counter++;
     cv::imwrite(depth_file+to_string(depth_counter)+".png", cv_ptr->image);
 }
@@ -141,10 +141,10 @@ int main(int argc, char **argv)
     is_open_depth = false;
     depth_counter = 0;
     depth_file = "data/depth/depth";
-    
+
     sub_rgb = it.subscribe("/camera/rgb/image_raw", 1, rgbCallback);
     sub_depth = it.subscribe("/camera/depth/image_raw", 1, depthCallback);
-    
+
     ROS_INFO("Saving videos");
     ros::spin();
 

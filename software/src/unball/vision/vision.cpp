@@ -64,7 +64,14 @@ bool Vision::isValidSize(cv::Mat frame)
  */
 std::vector<float> Vision::getRobotPose(int robot_number)
 {
-    return tracker_.getRobotPose(robot_number);
+    std::vector<float> pose(3);
+
+    // Returning dummy values. This should be removed when positions are correctly extracted from the image.
+    pose[0] = 0;
+    pose[1] = 1;
+    pose[2] = 2;
+
+    return pose;
 }
 
 /**
@@ -89,6 +96,7 @@ void Vision::loadConfig()
 void Vision::run()
 {
     cv::Mat rgb_segmented_frame;
+    cv::Mat depth_segmented_frame;
 
     ROS_DEBUG("Run vision");
 
@@ -122,7 +130,8 @@ void Vision::run()
 
             preprocessor_.preprocess(rgb_frame_, depth_frame_);
             rgb_segmented_frame = segmenter_.segment(rgb_frame_);
-            tracker_.track(rgb_frame_, depth_frame_, rgb_segmented_frame);
+            depth_segmented_frame = segmenter_.segmentDepth(depth_frame_);
+            // tracker_.track(rgb_frame_, depth_frame_, rgb_segmented_frame);
         }
         gui_.showRGBFrame();
         gui_.showDepthFrame();
