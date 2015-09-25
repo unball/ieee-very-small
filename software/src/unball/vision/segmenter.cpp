@@ -15,7 +15,7 @@ Segmenter::Segmenter()
 {
     window_name_ = "Segmenter";
     depth_window_name_ = "Segmented Depth Frame";
-    depth_threshold_ = 4;
+    // depth_threshold_ = 4;
 }
 
 Segmenter::~Segmenter()
@@ -100,7 +100,8 @@ void Segmenter::loadDepthSegmentationConfig()
     if (show_depth_image_)
     {
         cv::namedWindow(depth_window_name_);
-        cv::createTrackbar("Threshold", depth_window_name_, &depth_threshold_, 150);
+        cv::createTrackbar("Threshold", depth_window_name_, &depth_threshold_, 50);
+        cv::createTrackbar("Size", depth_window_name_, &size_value_, 100);
     }
 }
 
@@ -170,6 +171,11 @@ cv::Mat Segmenter::segment(cv::Mat image)
 cv::Mat Segmenter::segmentDepth(cv::Mat image)
 {
     cv::Mat mask = cv::Mat::zeros(image.rows, image.cols, CV_8UC1);
+    cv::Mat image_8_bit;
+    cv::normalize(image, image_8_bit, 0, 256, cv::NORM_MINMAX, CV_8UC1);
+    cv::adaptiveThreshold(image_8_bit, mask, 256, cv::ADAPTIVE_THRESH_GAUSSIAN_C, cv::THRESH_BINARY_INV,
+                          3+(size_value_*2), depth_threshold_-25);
+    /*
     std::map<int, std::pair<int, std::stack<cv::Point> > > object_map;
 
     int biggest_object_id;
@@ -179,7 +185,7 @@ cv::Mat Segmenter::segmentDepth(cv::Mat image)
     cv::Mat structuring_element = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(3, 3));
     cv::morphologyEx(mask, mask, cv::MORPH_DILATE, structuring_element, cv::Point(-1,-1), 1);
     cv::morphologyEx(mask, mask, cv::MORPH_ERODE, structuring_element, cv::Point(-1,-1), 1);
-
+    */
     if (show_depth_image_)
     {
         cv::imshow(depth_window_name_, mask);

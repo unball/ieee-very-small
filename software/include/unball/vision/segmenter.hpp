@@ -53,6 +53,7 @@ class Segmenter
     cv::Mat processed_points_;
     std::string depth_window_name_;
     int depth_threshold_;
+    int size_value_;
     bool depth_seg_use_8_neighbours_;
     bool show_depth_image_;
 };
