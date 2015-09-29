@@ -14,6 +14,7 @@
 #define UNBALL_SELECTIVE_POTENTIAL_FIELD_H_
 
 #include <unball/utils/vector.hpp>
+#include <unball/utils/math.hpp>
 #include <unball/strategy/potential_field.hpp>
 
 class SelectivePotentialField : public PotentialField
@@ -38,6 +39,8 @@ class SelectivePotentialField : public PotentialField
     bool isInTheCone(Vector difference);
     Vector applyAttractivePotentialField(Vector difference);
     Vector applyTangentialField(Vector difference);
+    float rotateClockwise(float angle);
+    float rotateCounterClockwise(float angle);
 
     //HACK: We added this const to stop the robot from overshooting when going around the target.
     static float const TANGENTIAL_CORRECTION_ = 0.4;
