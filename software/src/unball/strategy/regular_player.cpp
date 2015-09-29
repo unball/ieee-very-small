@@ -4,8 +4,6 @@ void RegularPlayer::buildPotentialFields(int robot_number)
 {
     Vector ball_position(Vector(Ball::getInstance().getX(), Ball::getInstance().getY()));
 
-    ROS_ERROR("Robot %d", robot_number);
-
     if (isInBallRange(robot_number)) 
         potential_fields_.push_back(new SelectivePotentialField(ball_position, M_PI, M_PI/6, 6));
     else 

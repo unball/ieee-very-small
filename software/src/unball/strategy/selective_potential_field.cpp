@@ -49,9 +49,7 @@ Vector SelectivePotentialField::applyTangentialField(Vector difference)
         float magnitude = range_;
         
         angle = math::reduceAngle(angle);
-
-        ROS_ERROR("Angle to the ball: %f", angle);
-
+        
         if (angle >= 0)
             angle = rotateClockwise(angle);
         else
