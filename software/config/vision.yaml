@@ -49,6 +49,14 @@ vision:
         # Minimum value for HSV segmentation.
         hsv_min_v: 190
 
+        # Alternates the depth segmentation neighbour system
+        # True: uses 8 neighbours model
+        # False: uses 4 neighbours model
+        depth_seg_use_8_neighbours: false
+
+        # Show image with the results of depth segmentation
+        show_depth_image: true
+
     tracker:
         # Show image with the results of tracking
         show_image: false

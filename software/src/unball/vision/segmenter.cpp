@@ -14,6 +14,8 @@
 Segmenter::Segmenter()
 {
     window_name_ = "Segmenter";
+    depth_window_name_ = "Segmented Depth Frame";
+    // depth_threshold_ = 4;
 }
 
 Segmenter::~Segmenter()
@@ -34,6 +36,7 @@ void Segmenter::loadConfig()
     loadHSVMinSConfig();
     loadHSVMinVConfig();
     loadHSVAdjustConfig();
+    loadDepthSegmentationConfig();
 }
 
 /**
@@ -82,6 +85,23 @@ void Segmenter::loadHSVAdjustConfig()
         // The trackbar goes from 0 to 255, wich is the highest number for 8 bit values used by HSV
         cv::createTrackbar("SMIN", window_name_, &hsv_min_s_, 256);
         cv::createTrackbar("VMIN", window_name_, &hsv_min_v_, 256);
+    }
+}
+
+/**
+ * Load the depth segmentation configurations. These configurations may alter the behaviour of the depth segmentation
+ * algorithm.
+ */
+void Segmenter::loadDepthSegmentationConfig()
+{
+    ros::param::get("/vision/segmenter/show_depth_image", show_depth_image_);
+    ros::param::get("/vision/segmenter/depth_seg_use_8_neighbours", depth_seg_use_8_neighbours_);
+
+    if (show_depth_image_)
+    {
+        cv::namedWindow(depth_window_name_);
+        cv::createTrackbar("Threshold", depth_window_name_, &depth_threshold_, 50);
+        cv::createTrackbar("Size", depth_window_name_, &size_value_, 100);
     }
 }
 
@@ -140,4 +160,114 @@ cv::Mat Segmenter::segment(cv::Mat image)
     }
 
     return mask;
+}
+
+/**
+ * Receives a depth image and apply segmentation to it.
+ *
+ * @param image depth image that will be segmented.
+ * @return Black and white segmentation mask.
+ */
+cv::Mat Segmenter::segmentDepth(cv::Mat image)
+{
+    cv::Mat mask = cv::Mat::zeros(image.rows, image.cols, CV_8UC1);
+    cv::Mat image_8_bit;
+    cv::normalize(image, image_8_bit, 0, 256, cv::NORM_MINMAX, CV_8UC1);
+    cv::adaptiveThreshold(image_8_bit, mask, 256, cv::ADAPTIVE_THRESH_GAUSSIAN_C, cv::THRESH_BINARY_INV,
+                          3+(size_value_*2), depth_threshold_-25);
+    /*
+    std::map<int, std::pair<int, std::stack<cv::Point> > > object_map;
+
+    int biggest_object_id;
+    findConnectedComponentsInDepthImage(image, object_map, biggest_object_id);
+    fillDepthMaskImage(mask, object_map, biggest_object_id);
+
+    cv::Mat structuring_element = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(3, 3));
+    cv::morphologyEx(mask, mask, cv::MORPH_DILATE, structuring_element, cv::Point(-1,-1), 1);
+    cv::morphologyEx(mask, mask, cv::MORPH_ERODE, structuring_element, cv::Point(-1,-1), 1);
+    */
+    if (show_depth_image_)
+    {
+        cv::imshow(depth_window_name_, mask);
+        cv::waitKey(1);
+    }
+
+    return mask;
+}
+
+void Segmenter::findConnectedComponentsInDepthImage(cv::Mat image,
+        std::map<int, std::pair<int, std::stack<cv::Point> > > &object_map, int &biggest_object_id)
+{
+    int id = 0, max_pixel_amount = 0;
+    processed_points_ = cv::Mat::zeros(image.rows, image.cols, CV_8UC1);
+    cv::Point current_pixel;
+
+    unknown_pixels_.push(cv::Point(0, 0)); // initial seed
+    while (unknown_pixels_.size() != 0)
+    {
+        current_pixel = unknown_pixels_.front();
+        if (processed_points_.at<uchar>(current_pixel.y, current_pixel.x) != 255)
+        {
+            object_map[id] = std::pair<int, std::stack<cv::Point> >(id, std::stack<cv::Point>());
+            int pixel_count = 0;
+            current_object_.push(current_pixel);
+            while (current_object_.size() != 0)
+            {
+                ++pixel_count;
+                current_pixel = current_object_.front();
+                // ROS_ERROR("pixel value: %d", image.at<unsigned short int>(current_pixel.y, current_pixel.x));
+                object_map[id].second.push(current_pixel);
+                processed_points_.at<uchar>(current_pixel.y, current_pixel.x) = 255;
+                depthSegAnalyzePixel(current_pixel, cv::Point(current_pixel.x+1, current_pixel.y), image, object_map);
+                depthSegAnalyzePixel(current_pixel, cv::Point(current_pixel.x-1, current_pixel.y), image, object_map);
+                depthSegAnalyzePixel(current_pixel, cv::Point(current_pixel.x, current_pixel.y+1), image, object_map);
+                depthSegAnalyzePixel(current_pixel, cv::Point(current_pixel.x, current_pixel.y-1), image, object_map);
+                if (depth_seg_use_8_neighbours_)
+                {
+                    depthSegAnalyzePixel(current_pixel, cv::Point(current_pixel.x+1, current_pixel.y+1), image, object_map);
+                    depthSegAnalyzePixel(current_pixel, cv::Point(current_pixel.x-1, current_pixel.y+1), image, object_map);
+                    depthSegAnalyzePixel(current_pixel, cv::Point(current_pixel.x+1, current_pixel.y-1), image, object_map);
+                    depthSegAnalyzePixel(current_pixel, cv::Point(current_pixel.x-1, current_pixel.y-1), image, object_map);
+                }
+                current_object_.pop();
+            }
+            if (pixel_count > max_pixel_amount)
+            {
+                max_pixel_amount = pixel_count;
+                biggest_object_id = id;
+            }
+        }
+        unknown_pixels_.pop();
+        ++id;
+    }
+}
+
+void Segmenter::depthSegAnalyzePixel(cv::Point original_pixel, cv::Point pixel_to_analyze, cv::Mat image,
+        std::map<int, std::pair<int, std::stack<cv::Point> > > &object_map)
+{
+    int x = pixel_to_analyze.x, y = pixel_to_analyze.y;
+    if (!(x < 0 or x >= image.cols or y < 0 or y >= image.rows))
+    {
+        if (processed_points_.at<uchar>(y, x) == 0) {
+            int diff = (int)image.at<unsigned short int>(y, x) - (int)image.at<unsigned short int>(original_pixel.y, original_pixel.x);
+            if (diff < depth_threshold_ and diff > -depth_threshold_)
+                current_object_.push(pixel_to_analyze);
+            else
+                unknown_pixels_.push(pixel_to_analyze);
+            processed_points_.at<uchar>(y, x) = 1;
+        }
+    }
+}
+
+void Segmenter::fillDepthMaskImage(cv::Mat &mask,
+        std::map<int, std::pair<int, std::stack<cv::Point> > > &object_map, int biggest_object_id)
+{
+    std::stack<cv::Point> object_stack = object_map[biggest_object_id].second;
+    // ROS_ERROR("pixel amount: %lu", object_stack.size());
+    while (object_stack.size() != 0)
+    {
+        cv::Point pixel = object_stack.top();
+        mask.at<uchar>(pixel.y, pixel.x) = 255;
+        object_stack.pop();
+    }
 }
