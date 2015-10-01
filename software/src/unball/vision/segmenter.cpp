@@ -33,6 +33,8 @@ void Segmenter::loadConfig()
     ROS_INFO("Loading segmenter configurations");
 
     loadShowImage();
+    loadHSVMaxHConfig();
+    loadHSVMinHConfig();
     loadHSVMinSConfig();
     loadHSVMinVConfig();
     loadHSVAdjustConfig();
@@ -51,6 +53,24 @@ void Segmenter::loadShowImage()
         cv::namedWindow(window_name_);
 }
 
+
+/**
+ * Load HSB minimum hue configuration.
+ */
+void Segmenter::loadHSVMinHConfig()
+{
+    ros::param::get("/vision/segmenter/hsv_min_h", hsv_min_h_);
+    ROS_INFO("HSV minimum configuration: %d", hsv_min_h_);
+}
+
+/**
+ * Load HSB maximum hue configuration.
+ */
+void Segmenter::loadHSVMaxHConfig()
+{
+    ros::param::get("/vision/segmenter/hsv_max_h", hsv_max_h_);
+    ROS_INFO("HSV maximum configuration: %d", hsv_max_h_);
+}
 /**
  * Load HSV minimum saturation configuration.
  */
@@ -83,6 +103,8 @@ void Segmenter::loadHSVAdjustConfig()
     if (hsv_adjust)
     {
         // The trackbar goes from 0 to 255, wich is the highest number for 8 bit values used by HSV
+        cv::createTrackbar("HMIN", window_name_, &hsv_min_h_, 360);
+        cv::createTrackbar("HMAX", window_name_, &hsv_max_h_, 360);
         cv::createTrackbar("SMIN", window_name_, &hsv_min_s_, 256);
         cv::createTrackbar("VMIN", window_name_, &hsv_min_v_, 256);
     }
@@ -99,7 +121,7 @@ void Segmenter::loadDepthSegmentationConfig()
     ros::param::get("/vision/segmenter/depth_treshold", depth_threshold_);
     ros::param::get("/vision/segmenter/size_value", size_value_);
     if (depth_adjust_)
-    {
+    {   
         cv::namedWindow(depth_window_name_);
         cv::createTrackbar("Threshold", depth_window_name_, &depth_threshold_, 50);
         cv::createTrackbar("Size", depth_window_name_, &size_value_, 100);
@@ -116,7 +138,7 @@ void Segmenter::loadDepthSegmentationConfig()
  * @param image image that will be segmented.
  * @return Black and white segmentation mask.
  */
-cv::Mat Segmenter::segment(cv::Mat image)
+cv::Mat Segmenter::segmentRGB(cv::Mat image)
 {
     cv::Mat mask;
     cv::Mat hsv;
@@ -135,7 +157,7 @@ cv::Mat Segmenter::segment(cv::Mat image)
      * If we need any color that lies out of this scope, we should change the Hue value.
      * This range was chosen due to the colors that are most commonly present in the game field.
      */
-    cv::inRange(hsv, cv::Scalar(0, hsv_min_s_, hsv_min_v_), cv::Scalar(180, 256, 256), mask);
+    cv::inRange(hsv, cv::Scalar(hsv_min_h_, hsv_min_s_, hsv_min_v_), cv::Scalar(hsv_max_h_, 256, 256), mask);
 
     /*
      * Creating a kernel for morphologic transformations. The second parameter is the size of this kernel.
@@ -149,8 +171,8 @@ cv::Mat Segmenter::segment(cv::Mat image)
      * transformation multiple times than do it one with a larger kernel.
      * Dilate more times than erode to merge the robot's squares as a single blob.
      */
-    cv::morphologyEx(mask, mask, cv::MORPH_ERODE, structuring_element, cv::Point(-1,-1), 3);
-    cv::morphologyEx(mask, mask, cv::MORPH_DILATE, structuring_element, cv::Point(-1,-1), 5);
+    cv::morphologyEx(mask, mask, cv::MORPH_ERODE, structuring_element, cv::Point(-1,-1), 5);
+    cv::morphologyEx(mask, mask, cv::MORPH_DILATE, structuring_element, cv::Point(-1,-1), 7);
 
     // TODO(matheus.v.portela@gmail.com): GUI show be the only one to deal with showing images.
     // Show results

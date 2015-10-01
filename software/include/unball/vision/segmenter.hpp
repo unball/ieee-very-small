@@ -27,11 +27,13 @@ class Segmenter
     Segmenter();
     ~Segmenter();
     void loadConfig();
-    cv::Mat segment(cv::Mat image);
+    cv::Mat segmentRGB(cv::Mat image);
     cv::Mat segmentDepth(cv::Mat image);
 
   private:
     void loadShowImage();
+    void loadHSVMinHConfig();
+    void loadHSVMaxHConfig();
     void loadHSVMinSConfig();
     void loadHSVMinVConfig();
     void loadHSVAdjustConfig();
@@ -41,6 +43,8 @@ class Segmenter
     bool show_image_;
     int hsv_min_s_;
     int hsv_min_v_;
+    int hsv_min_h_;
+    int hsv_max_h_;
 
     // Depth segmentation stuff
     std::string depth_window_name_;
