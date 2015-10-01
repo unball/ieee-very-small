@@ -52,7 +52,7 @@ vision:
         # Show image with the results of depth segmentation
         # true: Show trackbars
         # false: Don't show trackbars
-        show_depth_image: false
+        show_depth_image: true
 
         # Show image with the results of depth segmentation
         # true: Show trackbars

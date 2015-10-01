@@ -131,7 +131,7 @@ void Vision::run()
             preprocessor_.preprocess(rgb_frame_, depth_frame_);
             rgb_segmented_frame = segmenter_.segmentRGB(rgb_frame_);
             depth_segmented_frame = segmenter_.segmentDepth(depth_frame_);
-            // tracker_.track(rgb_frame_, depth_frame_, rgb_segmented_frame);
+            // tracker_.track(rgb_frame_, depth_frame_, rgb_segmented_frame, depth_segmented_frame);
         }
         gui_.showRGBFrame();
         gui_.showDepthFrame();

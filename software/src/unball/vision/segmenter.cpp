@@ -190,6 +190,15 @@ cv::Mat Segmenter::segmentDepth(cv::Mat image)
     cv::adaptiveThreshold(image_8_bit, mask, 256, cv::ADAPTIVE_THRESH_GAUSSIAN_C, cv::THRESH_BINARY_INV,
                           3+(size_value_*2), depth_threshold_-25);
 
+     /*
+     * Creating a kernel for morphologic transformations. The second parameter is the size of this kernel.
+     * Empirically, a kernel of 3x3 generates good results for our application.
+     */
+    cv::Mat structuring_element = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(3, 3));
+
+    cv::morphologyEx(mask, mask, cv::MORPH_ERODE, structuring_element, cv::Point(-1,-1), 5);
+    cv::morphologyEx(mask, mask, cv::MORPH_DILATE, structuring_element, cv::Point(-1,-1), 5);
+
     if (show_depth_image_)
     {
         cv::imshow(depth_window_name_, mask);
