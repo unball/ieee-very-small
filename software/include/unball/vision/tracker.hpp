@@ -32,7 +32,7 @@ class Tracker
     ~Tracker();
     void loadShowImage();
     void loadConfig();
-    void track(cv::Mat rgb_frame, cv::Mat depth_frame, cv::Mat rgb_segmented_frame);
+    void track(cv::Mat rgb_frame, cv::Mat depth_frame, cv::Mat rgb_segmented_frame, cv::Mat depth_segmented_frame);
     std::vector<float> getRobotPose(int robot_index);
 
   private:

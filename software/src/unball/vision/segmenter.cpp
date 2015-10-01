@@ -125,7 +125,7 @@ void Segmenter::loadDepthSegmentationConfig()
         cv::namedWindow(depth_window_name_);
         cv::createTrackbar("Threshold", depth_window_name_, &depth_threshold_, 50);
         cv::createTrackbar("Size", depth_window_name_, &size_value_, 100);
-    } 
+    }
 }
 
 /**
@@ -195,9 +195,32 @@ cv::Mat Segmenter::segmentDepth(cv::Mat image)
 {
     cv::Mat mask = cv::Mat::zeros(image.rows, image.cols, CV_8UC1);
     cv::Mat image_8_bit;
+
+    /*
+     * Adaptive Threshold works only with 8-bit single channel images, so the original depth image needs to be
+     * converted to this format. Since it has a smaller range of possible values, it needs to be normalized too.
+     */
     cv::normalize(image, image_8_bit, 0, 256, cv::NORM_MINMAX, CV_8UC1);
+
+    /*
+     * Applies adaptive threshold to the image. The difference from normal thresholding is that the threshold value
+     * is calculated for each pixel.
+     * The last two parameters are "blockSize" and "C", respectively. Block size takes odd values, starting from 3.
+     * C is a constant subtracted from the weighted mean. Both values are managed on trackbars.
+     * More info on < http://docs.opencv.org/modules/imgproc/doc/miscellaneous_transformations.html#adaptivethreshold >
+     */
     cv::adaptiveThreshold(image_8_bit, mask, 256, cv::ADAPTIVE_THRESH_GAUSSIAN_C, cv::THRESH_BINARY_INV,
                           3+(size_value_*2), depth_threshold_-25);
+
+     /*
+     * Creating a kernel for morphologic transformations. The second parameter is the size of this kernel.
+     * Empirically, a kernel of 3x3 generates good results for our application.
+     */
+    cv::Mat structuring_element = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(3, 3));
+
+    cv::morphologyEx(mask, mask, cv::MORPH_ERODE, structuring_element, cv::Point(-1,-1), 5);
+    cv::morphologyEx(mask, mask, cv::MORPH_DILATE, structuring_element, cv::Point(-1,-1), 5);
+
     if (show_depth_image_)
     {
         cv::imshow(depth_window_name_, mask);
