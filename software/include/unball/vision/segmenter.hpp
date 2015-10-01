@@ -27,7 +27,7 @@ class Segmenter
     Segmenter();
     ~Segmenter();
     void loadConfig();
-    cv::Mat segment(cv::Mat image);
+    cv::Mat segmentRGB(cv::Mat image);
     cv::Mat segmentDepth(cv::Mat image);
 
   private:

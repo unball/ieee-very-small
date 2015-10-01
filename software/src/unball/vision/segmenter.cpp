@@ -116,7 +116,7 @@ void Segmenter::loadDepthSegmentationConfig()
  * @param image image that will be segmented.
  * @return Black and white segmentation mask.
  */
-cv::Mat Segmenter::segment(cv::Mat image)
+cv::Mat Segmenter::segmentRGB(cv::Mat image)
 {
     cv::Mat mask;
     cv::Mat hsv;
