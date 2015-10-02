@@ -36,12 +36,12 @@ vision:
 
     segmenter:
         # Show image with the results of segmentation
-        show_image: true
+        show_image: false
 
         # Show trackbars to manually set the minimum saturation and value for HSV segmentation.
         # true: Show trackbars.
         # false: Don't show trackbars.
-        hsv_adjust: true
+        hsv_adjust: false
 
         # Minimum hue for HSV segmentation.
         hsv_min_h: 0
@@ -50,7 +50,7 @@ vision:
         hsv_max_h: 290
 
         # Minimum saturation for HSV segmentation.
-        hsv_min_s: 133    
+        hsv_min_s: 133
 
         # Minimum value for HSV segmentation.
         hsv_min_v: 90
@@ -58,7 +58,7 @@ vision:
         # Show image with the results of depth segmentation
         # true: Show trackbars
         # false: Don't show trackbars
-        show_depth_image: true
+        show_depth_image: false
 
         # Show trackbar for depth segmentation adjustment
         # true: Show trackbars
