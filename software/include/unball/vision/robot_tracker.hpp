@@ -24,7 +24,7 @@ class RobotTracker
     RobotTracker();
     void loadConfig();
 
-    void track(cv::Mat &rgb_frame, cv::Mat &depth_frame, cv::Mat &rgb_segmented_frame);
+    void track(cv::Mat &rgb_frame, cv::Mat &depth_frame, cv::Mat &depth_segmented_frame);
     void draw(cv::Mat &frame);
 
     std::vector<float> getRobotPose(int robot_index);
