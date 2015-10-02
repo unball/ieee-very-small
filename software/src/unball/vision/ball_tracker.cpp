@@ -1,11 +1,11 @@
 #include <unball/vision/ball_tracker.hpp>
 
-cv::Point BallTracker::getBallPosition()
+cv::Point BallTracker::getBallPose()
 {
     return ball_position_;
 }
 
-void BallTracker::track(cv::Mat &rgb_frame, cv::Mat &rgb_segmented_image)
+void BallTracker::track(cv::Mat &rgb_segmented_image)
 {
     cv::Moments moments;
     std::vector< std::vector<cv::Point> > countours;

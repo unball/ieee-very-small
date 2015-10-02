@@ -21,8 +21,8 @@
 class BallTracker
 {
   public:
-    cv::Point getBallPosition();
-    void track(cv::Mat &rgb_frame, cv::Mat &rgb_segmented_image);
+    cv::Point getBallPose();
+    void track(cv::Mat &rgb_segmented_image);
     
   private:  
     cv::Point ball_position_;

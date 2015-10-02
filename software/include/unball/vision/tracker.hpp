@@ -22,6 +22,7 @@
 #include <unball/vision/tracked_robot.hpp>
 #include <unball/vision/measurement_conversion.hpp>
 #include <unball/vision/robot_tracker.hpp>
+#include <unball/vision/ball_tracker.hpp>
 
 #define BAD_CONFIG 1
 
@@ -44,6 +45,7 @@ class Tracker
     TrackedField tracked_field_;
     MeasurementConversion measurement_conversion_;
     RobotTracker robot_tracker_;
+    BallTracker ball_tracker_;
 };
 
 #endif // UNBALL_VISION_TRACKER_H_
