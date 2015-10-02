@@ -39,21 +39,21 @@ void RobotTracker::track(cv::Mat &rgb_frame, cv::Mat &depth_frame, cv::Mat &rgb_
 
 void RobotTracker::draw(cv::Mat &frame)
 {
-    for (int i = 0; i < 2; ++i)
-        for (int j = 0; j < robot_amount_; ++j)
-            robots_[i][j].draw(frame);
+    // for (int i = 0; i < 2; ++i)
+    //     for (int j = 0; j < robot_amount_; ++j)
+    //         robots_[i][j].draw(frame);
 }
 
-void RobotTracker::trackStep1(cv::Mat &rgb_frame, cv::Mat &depth_frame, cv::Mat &rgb_segmented_frame)
+void RobotTracker::trackStep1(cv::Mat &rgb_frame, cv::Mat &depth_frame, cv::Mat &depth_segmented_frame)
 {
-    std::vector< std::vector<cv::Point> > contours;
+    // std::vector< std::vector<cv::Point> > contours;
 
-    cv::findContours(rgb_segmented_frame, contours, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_SIMPLE);
-    for (int i = 0; i < contours.size(); ++i)
-    {
-        RobotData robot_data = robot_identifier_.identifyRobot(rgb_frame, contours[i]);
-        robots_[robot_data.team][robot_data.id].setPosition(robot_data);
-    }
+    // cv::findContours(depth_segmented_frame, contours, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_SIMPLE);
+    // for (int i = 0; i < contours.size(); ++i)
+    // {
+    //     RobotData robot_data = robot_identifier_.identifyRobot(rgb_frame, contours[i]);
+    //     robots_[robot_data.team][robot_data.id].setPosition(robot_data);
+    // }
 }
 
 void RobotTracker::trackStep2(cv::Mat &rgb_frame, cv::Mat &depth_frame, cv::Mat &rgb_segmented_frame)
