@@ -79,6 +79,7 @@ add_executable(vision_node
   src/unball/vision/vision_node.cpp
   src/unball/vision/vision.cpp
   src/unball/vision/gui.cpp
+  src/unball/vision/kalman_filter.cpp
   src/unball/vision/preprocessor.cpp
   src/unball/vision/segmenter.cpp
   src/unball/vision/tracker.cpp
