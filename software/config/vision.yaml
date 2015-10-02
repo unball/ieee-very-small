@@ -32,30 +32,44 @@ vision:
 
     preprocessor:
         # Show image with the results of preprocessing
-        show_image: true
+        show_image: false
 
     segmenter:
         # Show image with the results of segmentation
-        show_image: true
+        show_image: false
 
         # Show trackbars to manually set the minimum saturation and value for HSV segmentation.
         # true: Show trackbars.
         # false: Don't show trackbars.
         hsv_adjust: false
 
+        # Minimum hue for HSV segmentation.
+        hsv_min_h: 0
+
+        # Maximum hue for HSV segmentation.
+        hsv_max_h: 290
+
         # Minimum saturation for HSV segmentation.
-        hsv_min_s: 100
+        hsv_min_s: 133
 
         # Minimum value for HSV segmentation.
-        hsv_min_v: 190
-
-        # Alternates the depth segmentation neighbour system
-        # True: uses 8 neighbours model
-        # False: uses 4 neighbours model
-        depth_seg_use_8_neighbours: false
+        hsv_min_v: 90
 
         # Show image with the results of depth segmentation
-        show_depth_image: true
+        # true: Show trackbars
+        # false: Don't show trackbars
+        show_depth_image: false
+
+        # Show trackbar for depth segmentation adjustment
+        # true: Show trackbars
+        # false: Don't show trackbars
+        depth_adjust: false
+
+        # Treshold value
+        depth_treshold: 17
+
+        # Size Value
+        size_value: 81
 
     tracker:
         # Show image with the results of tracking
