@@ -10,10 +10,15 @@ void Player::clearPotentialFields()
     for (int i = potential_fields_.size()-1; i >= 0; --i)
         delete potential_fields_[i];
     potential_fields_.clear();
+    if (potential_fields_.size() == 0)
+    	ROS_ERROR("[Player]clearPotentialFields: cleared all potential fields");
+   	else
+    	ROS_ERROR("[Player]clearPotentialFields: did not clear all potential fields");
 }
 
 Vector Player::calculateResultantForce(int robot_number)
 {
+	ROS_ERROR("[Player]calculateResultantForce:");
     Vector resultant_force;
     Vector position(robot[robot_number].getX(), robot[robot_number].getY());
 

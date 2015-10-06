@@ -18,13 +18,20 @@ SelectivePotentialField::SelectivePotentialField(Vector origin, float direction,
 
 Vector SelectivePotentialField::calculateForce(Vector robot_position)
 {
+    ROS_ERROR("[SelectivePotentialField]calculateForce:");
     Vector result;
     Vector difference = robot_position - origin_;
 
     if (isInTheCone(difference))
+    {
+        ROS_ERROR("     Apply Attractive Field");
         result = applyAttractivePotentialField(difference);
-    else
+    }
+    else 
+    {
+        ROS_ERROR("     Apply Tangential Field");
         result = applyTangentialField(difference);
+    }
     return result;
 }
 

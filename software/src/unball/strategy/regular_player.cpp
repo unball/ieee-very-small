@@ -4,10 +4,14 @@ void RegularPlayer::buildPotentialFields(int robot_number)
 {
     Vector ball_position(Vector(Ball::getInstance().getX(), Ball::getInstance().getY()));
 
-    if (isInBallRange(robot_number)) 
+    if (isInBallRange(robot_number)) {
+        ROS_ERROR("[RegularPlayer]buildPotentialFields: creating selective field");
         potential_fields_.push_back(new SelectivePotentialField(ball_position, 0, M_PI/6, 6));
-    else 
+    }
+    else {
+        ROS_ERROR("[RegularPlayer]buildPotentialFields: creating attractive field");
         potential_fields_.push_back(new AttractivePotentialField(ball_position, 20));
+    }
 
     for (int i = 1; i < 6; ++i) 
     {
