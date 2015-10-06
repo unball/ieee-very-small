@@ -26,7 +26,7 @@ TrajectoryController::~TrajectoryController()
 void TrajectoryController::run()
 {
     Vector resultant_force;
-    for (int i = 0; i < 3; ++i)
+    for (int i = 0; i < 1; ++i)
     {
         player_[i]->buildPotentialFields(i);
         resultant_force = player_[i]->calculateResultantForce(i);
