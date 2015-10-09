@@ -16,30 +16,112 @@ void RobotIdentifier::loadConfig()
     ros::param::get("/vision/segmenter/hsv_min_v", hsv_min_v_);
 }
 
-RobotData RobotIdentifier::identifyRobot(cv::Mat rgb_frame, std::vector<cv::Point> contour)
+RobotData RobotIdentifier::identifyRobot(cv::Mat rgb_frame, std::vector<cv::Point> contour, cv::Rect boundingRect)
 {
     RobotData data;
 
-    data.tracking_window = cv::boundingRect(contour);
-    data.center_position = calculateCenterPosition(data.tracking_window);
-    data.orientation = calculateOrientation(contour);
+    cv::RotatedRect robot = cv::minAreaRect(contour);
+    data.center_position = cv::Point(robot.center.x, robot.center.y);
+    data.tracking_window = calculateTrackingWindow(data.center_position);
 
-    cv::Point farthest_point, opposite_point;
-    calculateDiagonalPoints(contour, farthest_point, opposite_point, data.center_position);
+    cv::Mat roi = rgb_frame(data.tracking_window);
+    cv::Mat histogram = calculateHistogram(roi);
 
-    cv::Vec3b value_f, value_o;
-    calculateColorPoints(rgb_frame, farthest_point, opposite_point, data.center_position, value_f, value_o);
+    // cv::imshow("roi", roi);
+    // cv::waitKey(1);
 
-    if (isPointPink(value_f) or isPointPink(value_o))
-        setTeamParameters(data, RobotData::ALLY, cv::Scalar(180, 0, 180));
-    else if (isPointRed(value_f) or isPointRed(value_o))
-        setTeamParameters(data, RobotData::OPPONENT, cv::Scalar(0, 0, 180));
-    else
-        ROS_ERROR("[RobotIdentifier]identifyRobot: could not identify the team");
+    //~~~~~
+    cv::circle(rgb_frame, data.center_position, 5, cv::Scalar(255,0,0));
+    cv::Point2f vertices[4];
+    robot.points(vertices);
+    for (int i = 0; i < 4; i++)
+        cv::line(rgb_frame, vertices[i], vertices[(i+1)%4], cv::Scalar(0,255,0));
+    // cv::rectangle(rgb_frame, data.tracking_window, cv::Scalar(0, 0, 255));
+    // ~~~~
 
-    data.id = 0;
+    // data.orientation = calculateOrientation(contour);
+
+    // cv::Point farthest_point, opposite_point;
+    // calculateDiagonalPoints(contour, farthest_point, opposite_point, data.center_position);
+
+    // cv::Vec3b value_f, value_o;
+    // calculateColorPoints(rgb_frame, farthest_point, opposite_point, data.center_position, value_f, value_o);
+
+    // if (isPointPink(value_f) or isPointPink(value_o))
+    //     setTeamParameters(data, RobotData::ALLY, cv::Scalar(180, 0, 180));
+    // else if (isPointRed(value_f) or isPointRed(value_o))
+    //     setTeamParameters(data, RobotData::OPPONENT, cv::Scalar(0, 0, 180));
+    // else
+    //     ROS_ERROR("[RobotIdentifier]identifyRobot: could not identify the team");
+
+    // data.id = 0;
 
     return data;
+}
+
+cv::Rect RobotIdentifier::calculateTrackingWindow(cv::Point center)
+{
+    int width = 60, height = 60;
+    return cv::Rect(center.x-width/2, center.y-height/2, width, height);
+}
+
+cv::Mat RobotIdentifier::calculateHistogram(cv::Mat img)
+{
+    cv::Mat histogram;
+    // we compute the histogram from the 0-th and 1-st channels
+    int channels[] = {0, 1};
+    // Quantize the hue to 30 levels
+    // and the saturation to 32 levels
+    int hbins = 30, sbins = 32;
+    int histSize[] = {hbins, sbins};
+    // hue varies from 0 to 179, see cvtColor
+    float hranges[] = { 0, 180 };
+    // saturation varies from 0 (black-gray-white) to
+    // 255 (pure spectrum color)
+    float sranges[] = { 0, 256 };
+    const float* ranges[] = { hranges, sranges };
+    cv::calcHist(&img, 1, channels, cv::Mat(),
+                 histogram, 2, histSize, ranges);
+    // back projection
+    //~~~~~
+    cv::Mat backProject;
+    cv::calcBackProject(&img, 1, channels, histogram,
+                        backProject, ranges);
+    //~~~~~
+    // Make histimg
+    //~~~~~
+    double maxVal=0;
+    cv::minMaxLoc(histogram, 0, &maxVal, 0, 0);
+
+    int scale = 10;
+    cv::Mat histImg = cv::Mat::zeros(sbins*scale, hbins*10, CV_8UC3);
+
+    for( int h = 0; h < hbins; h++ )
+        for( int s = 0; s < sbins; s++ )
+        {
+            float binVal = histogram.at<float>(h, s);
+            int intensity = cvRound(binVal*255/maxVal);
+            cv::rectangle( histImg, cv::Point(h*scale, s*scale),
+                        cv::Point( (h+1)*scale - 1, (s+1)*scale - 1),
+                        cv::Scalar::all(intensity),
+                        CV_FILLED );
+        }
+    //~~~~~
+    // Show images
+    //~~~~~
+    cv::namedWindow( "Source", 1 );
+    cv::imshow( "Source", img );
+
+    cv::namedWindow( "H-S Histogram", 1 );
+    cv::imshow( "H-S Histogram", histImg );
+
+    cv::namedWindow( "Back project", 1 );
+    cv::imshow( "Back project", backProject );
+
+    // cv::waitKey(0);
+    //~~~~~
+
+    return histogram;
 }
 
 void RobotIdentifier::calculateDiagonalPoints(std::vector<cv::Point> contour, cv::Point &farthest_point,

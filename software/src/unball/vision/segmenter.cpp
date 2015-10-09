@@ -121,7 +121,7 @@ void Segmenter::loadDepthSegmentationConfig()
     ros::param::get("/vision/segmenter/depth_treshold", depth_threshold_);
     ros::param::get("/vision/segmenter/size_value", size_value_);
     if (depth_adjust_)
-    {   
+    {
         cv::namedWindow(depth_window_name_);
         cv::createTrackbar("Threshold", depth_window_name_, &depth_threshold_, 50);
         cv::createTrackbar("Size", depth_window_name_, &size_value_, 100);

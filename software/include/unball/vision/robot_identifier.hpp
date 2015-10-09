@@ -25,9 +25,11 @@ class RobotIdentifier
 {
   public:
     void loadConfig();
-    RobotData identifyRobot(cv::Mat rgb_frame, std::vector<cv::Point> contour);
+    RobotData identifyRobot(cv::Mat rgb_frame, std::vector<cv::Point> contour, cv::Rect boundingRect);
 
   private:
+    cv::Rect calculateTrackingWindow(cv::Point center);
+    cv::Mat calculateHistogram(cv::Mat img);
     void calculateDiagonalPoints(std::vector<cv::Point> contour, cv::Point &farthest_point, cv::Point &opposite_point,
                                  cv::Point center);
     void calculateColorPoints(cv::Mat rgb_frame, cv::Point farthest_point, cv::Point opposite_point, cv::Point center,
