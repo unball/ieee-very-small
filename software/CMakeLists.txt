@@ -90,6 +90,7 @@ add_executable(vision_node
   src/unball/vision/robot_tracker.cpp
   src/unball/vision/ball_tracker.cpp
   src/unball/vision/homography.cpp
+  src/unball/vision/ball_identifier.cpp
   src/unball/vision/measurement_conversion.cpp)
 add_dependencies(vision_node unball_gencpp)
 target_link_libraries(vision_node ${catkin_LIBRARIES})

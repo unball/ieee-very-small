@@ -12,15 +12,16 @@
 #define UNBALL_VISION_KALMAN_FILTER_H_
 
 #include <opencv2/opencv.hpp>
+#include <ros/ros.h>
 
 class KalmanFilter
 {
   public:
     KalmanFilter();
-    cv::Point2f getEstimatedPose();
-    void update(cv::Point2f measured_pose);
     void predict();
-
+    void update(cv::Point2f measured_pose);
+    cv::Point2f getEstimatedPose();
+    void updateWithoutMeasurement();
   private:
     cv::Point2f estimated_pose_;
     cv::KalmanFilter kalman_filter_;
