@@ -25,9 +25,6 @@ TrajectoryController::~TrajectoryController()
 
 void TrajectoryController::run()
 {
-    ROS_ERROR(" ");
-    ROS_ERROR("[TrajectoryController]run:");
-
     Vector resultant_force;
     for (int i = 0; i < 1; ++i)
     {
@@ -39,17 +36,18 @@ void TrajectoryController::run()
 }
 
 void TrajectoryController::controlRobot(int robot_number, Vector force)
-{
-    ROS_ERROR("[TrajectoryController]controlRobot:");
-    ROS_ERROR("     force = (%.2f,%.2f)", force.getMagnitude(),180*force.getDirection()/M_PI);
-    
+{   
     if (fabs(force.getDirection()) <= M_PI/2) 
     {
-        ROS_ERROR("     angle <= 90");
         move(robot_number, force.getMagnitude());
         turn(robot_number, force.getDirection());
     }
-    else if (force.getDirection() > M_PI/2)
+    else
+    {
+        move(robot_number, -force.getMagnitude());
+        turn(robot_number, math::invertAngle(force.getDirection()));
+    }
+    /*else if (force.getDirection() > M_PI/2)
     {
         ROS_ERROR("     angle > 90");
         move(robot_number, -force.getMagnitude());
@@ -60,11 +58,7 @@ void TrajectoryController::controlRobot(int robot_number, Vector force)
         ROS_ERROR("     angle < -90");
         move(robot_number, -force.getMagnitude());
         turn(robot_number, -(force.getDirection() + M_PI/2));
-    }
-    else
-    {
-        stopRobot(robot_number);
-    }    
+    }*/
 }
 
 void TrajectoryController::stopRobot(int robot_number)
@@ -75,9 +69,6 @@ void TrajectoryController::stopRobot(int robot_number)
 
 void TrajectoryController::turn(int robot_number, float angle)
 {
-    ROS_ERROR("[TrajectoryController]turn:");
-    ROS_ERROR("     angle = %.2f",180*angle/M_PI);
-
     const float ANG_KP = 0.03;
     const float ANG_KD = 0.003;
 
@@ -86,18 +77,15 @@ void TrajectoryController::turn(int robot_number, float angle)
     angle_error_d_ = angle_error;
 
     robot[robot_number].setAngVel(ang_vel);
-
-    ROS_ERROR("     ang vel = %.2f",ang_vel);
 }
 
 void TrajectoryController::move(int robot_number, float distance)
 {
-    ROS_ERROR("[TrajectoryController]move:");
     const float DIST_KP = 1;
     const float distance_tolerance = 0.05; // m
 
     float lin_vel = DIST_KP*distance; // P control
-    ROS_ERROR("     lin_vel = %.2f",lin_vel);
+
     if (fabs(distance) > distance_tolerance)
         robot[robot_number].setLinVel(lin_vel);
     else

@@ -21,13 +21,11 @@
 #include <unball/strategy/strategy.hpp> // Strategy strategy;
 #include <unball/strategy/robot.hpp> // Robot robot[6];
 #include <unball/strategy/ball.hpp> // Ball ball;
-#include <unball/utils/test_angles.hpp>
 
 void initRobotsPoses();
 void publishRobotsVelocities(ros::Publisher &publisher);
 void receiveVisionMessage(const unball::VisionMessage::ConstPtr &msg);
 void receiveKeyboardMessage(const unball::KeyboardMessage::ConstPtr &msg);
-void runTests();
 
 int main(int argc, char **argv)
 {
@@ -41,8 +39,6 @@ int main(int argc, char **argv)
     ros::Publisher publisher = n.advertise<unball::StrategyMessage>("strategy_topic", 1);
     
     initRobotsPoses();
-    
-    runTests();
 
     while (ros::ok())
     {
@@ -55,12 +51,6 @@ int main(int argc, char **argv)
     }
     
     return 0;
-}
-
-void runTests()
-{
-    ROS_ERROR("Started Testing");
-    TestAngles test;
 }
 
 /**

@@ -56,7 +56,6 @@ add_executable(strategy_node
   src/unball/utils/point.cpp
   src/unball/utils/math.cpp
   src/unball/utils/vector.cpp
-  src/unball/utils/test_angles.cpp
   src/unball/strategy/strategy_node.cpp
   src/unball/strategy/strategy.cpp
   src/unball/strategy/state_estimator.cpp
@@ -134,3 +133,14 @@ catkin_add_gtest(test_point
   test/utils/test_point.cpp
   src/unball/utils/point.cpp)
 target_link_libraries(test_point ${catkin_LIBRARIES})
+
+catkin_add_gtest(test_angles
+  test/utils/test_angles.cpp
+  src/unball/utils/vector.cpp)
+target_link_libraries(test_angles ${catkin_LIBRARIES})
+
+catkin_add_gtest(test_invert_angles
+  test/utils/test_invert_angles.cpp
+  src/unball/utils/point.cpp
+  src/unball/utils/math.cpp)
+target_link_libraries(test_invert_angles ${catkin_LIBRARIES})

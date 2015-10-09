@@ -37,7 +37,7 @@ float math::reduceAngle(float angle)
 {
     while (angle < -M_PI)
         angle += 2*M_PI;
-    while (angle >= M_PI)
+    while (angle > M_PI)
         angle -= 2*M_PI;
         
     return angle;
@@ -93,4 +93,13 @@ float math::calculateAngle(float x1, float y1, float x2, float y2)
 float math::calculateAngle(Point point1, Point point2)
 {
     return calculateAngle(point1.getX(), point1.getY(), point2.getX(), point2.getY());
+}
+
+float math::invertAngle(float angle)
+{
+    if (angle == 0)
+        return M_PI;
+    else if (angle == M_PI)
+        return 0;
+    return reduceAngle(angle + M_PI);
 }
