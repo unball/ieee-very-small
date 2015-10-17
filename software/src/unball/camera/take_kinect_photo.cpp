@@ -76,11 +76,11 @@ static void onMouse( int event, int x, int y, int, void* )
 {
     if (event != cv::EVENT_LBUTTONDOWN)
         return;
-    ROS_INFO("taking pictures of you");
     std::string name = rgb_image_name;
     name += to_string(photo_amount++);
     name += ".png";
     cv::imwrite(name, rgb_frame);
+    ROS_INFO("Photo taken! Took %d photos so far.", photo_amount);
 }
 
 int main(int argc, char **argv)
@@ -98,7 +98,7 @@ int main(int argc, char **argv)
     cv::namedWindow(window_name);
     cv::setMouseCallback(window_name, onMouse);
 
-    ROS_INFO("Running");
+    ROS_INFO("Taking pictures of you.");
     ros::spin();
 
     return 0;
