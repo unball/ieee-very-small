@@ -20,8 +20,8 @@
 #include <iostream>
 #include <string>
 
-cv::VideoWriter rgb_writer;
-std::string rgb_image_name;
+cv::Mat rgb_frame;
+std::string rgb_image_name, window_name;
 int photo_amount = 0;
 
 /**
@@ -66,10 +66,20 @@ void rgbCallback(const sensor_msgs::ImageConstPtr &msg)
         exit(-1);
     }
 
-    cv::imshow("RGB image", cv_ptr->image);
+    rgb_frame = cv_ptr->image;
+    cv::imshow(window_name, rgb_frame);
     cv::waitKey(1);
-    // std::string name = rgb_image_name;
-    // name += to_string(photo_amount++);
+}
+
+static void onMouse( int event, int x, int y, int, void* )
+{
+    if (event != cv::EVENT_LBUTTONDOWN)
+        return;
+
+    std::string name = rgb_image_name;
+    name += to_string(photo_amount++);
+    name += ".png";
+    cv::imwrite(name, rgb_frame);
 }
 
 int main(int argc, char **argv)
@@ -81,6 +91,10 @@ int main(int argc, char **argv)
 
     sub_rgb = it.subscribe("/camera/rgb/image_raw", 1, rgbCallback);
     rgb_image_name = "data/RGB photos/image";
+
+    window_name = "RGB image";
+    cv::namedWindow(window_name);
+    cv::setMouseCallback(window_name, onMouse);
 
     ROS_INFO("Running");
     ros::spin();
