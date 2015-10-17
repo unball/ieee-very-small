@@ -13,13 +13,13 @@
 
 const cv::Scalar BallIdentifier::CIRCLE_COLOR_(0, 0, 255);
 
-/*BallIdentifier::BallIdentifier(){
-    ball_pose_ = cv::Point2f(0.0, 0.0);
-}*/
+BallIdentifier::BallIdentifier(MeasurementConversion *mc){
+    to_metric_ = mc;
+}
 
 cv::Point2f BallIdentifier::getBallPose()
 {
-    ball_pose_ = to_metric_.convertToMetric(ball_pose_);
+    ball_pose_ = to_metric_->convertToMetric(ball_pose_);
     ROS_ERROR("ball_pose_ : %f %f", ball_pose_.x, ball_pose_.y);
     return ball_pose_;
 }

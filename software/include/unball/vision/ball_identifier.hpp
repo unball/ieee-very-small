@@ -25,7 +25,7 @@
 class BallIdentifier
 {
   public:
-    //BallIdentifier();
+    BallIdentifier(MeasurementConversion *mc);
     cv::Point2f getBallPose();
     void track(cv::Mat &rgb_frame, cv::Mat &rgb_segmented_image);
     std::vector<cv::Point> findLargerBlob(std::vector< std::vector<cv::Point> > contours);
@@ -34,7 +34,7 @@ class BallIdentifier
     static const cv::Scalar CIRCLE_COLOR_;
     cv::Point2f ball_pose_;
     BallTracker tracker_;
-    MeasurementConversion to_metric_;
+    MeasurementConversion *to_metric_;
 };
 
 #endif // UNBALL_VISION_BALL_TRACKER_H_
