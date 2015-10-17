@@ -111,6 +111,11 @@ add_executable(save_kinect_video
 add_dependencies(save_kinect_video unball_gencpp)
 target_link_libraries(save_kinect_video ${catkin_LIBRARIES})
 
+add_executable(take_kinect_photo
+  src/unball/camera/take_kinect_photo.cpp)
+add_dependencies(take_kinect_photo unball_gencpp)
+target_link_libraries(take_kinect_photo ${catkin_LIBRARIES})
+
 add_executable(dummy_camera
   src/unball/dummy_camera/dummy_camera.cpp)
 add_dependencies(dummy_camera unball_gencpp)

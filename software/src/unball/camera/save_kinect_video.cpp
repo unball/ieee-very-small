@@ -36,7 +36,7 @@ std::string to_string(int num)
 {
     std::string result;
     char tmp[100];
-    sprintf(tmp, "%d\0", num);
+    sprintf(tmp, "%d", num);
     result = tmp;
     return result;
 }
