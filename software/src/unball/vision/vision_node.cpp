@@ -47,7 +47,7 @@ int main(int argc, char **argv)
     {
         Vision::getInstance().run();
         publishRobotsPoses(publisher);
-        publishBallPose(publisher);
+        // publishBallPose(publisher);
         ros::spinOnce();
         loop_rate.sleep();
     }
@@ -146,7 +146,7 @@ void publishBallPose(ros::Publisher &publisher)
 {
     cv::Point2f pose;
     unball::VisionMessage message;
-    
+
     pose = Vision::getInstance().getBallPose();
     message.ball_x = pose.x;
     message.ball_y = pose.y;

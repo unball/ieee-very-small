@@ -43,8 +43,7 @@ class Tracker
 
     std::string window_name_;
     bool show_image_;
-    bool calculated_measurement_parameters_;
-    TrackedField tracked_field_;
+    // TrackedField tracked_field_;
     MeasurementConversion measurement_conversion_;
     RobotTracker robot_tracker_;
     BallIdentifier ball_tracker_;
