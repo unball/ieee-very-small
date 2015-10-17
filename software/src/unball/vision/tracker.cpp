@@ -79,3 +79,7 @@ std::vector<float> Tracker::getRobotPose(int robot_index)
 {
     return robot_tracker_.getRobotPose(robot_index);
 }
+
+cv::Point2f Tracker::getBallPose(){
+    return ball_tracker_.getBallPose();
+}

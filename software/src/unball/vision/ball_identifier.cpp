@@ -19,6 +19,8 @@ const cv::Scalar BallIdentifier::CIRCLE_COLOR_(0, 0, 255);
 
 cv::Point2f BallIdentifier::getBallPose()
 {
+    ball_pose_ = to_metric_.convertToMetric(ball_pose_);
+    ROS_ERROR("ball_pose_ : %f %f", ball_pose_.x, ball_pose_.y);
     return ball_pose_;
 }
 
@@ -54,6 +56,4 @@ void BallIdentifier::track(cv::Mat &rgb_frame, cv::Mat &rgb_segmented_image)
     ball_pose_ = tracker_.getPredictedPose();
 
     cv::circle(rgb_frame, ball_pose_, 10, CIRCLE_COLOR_);
-    ROS_ERROR("Ball x %f", ball_pose_.x);
-    ROS_ERROR("Ball y %f", ball_pose_.y);
 };

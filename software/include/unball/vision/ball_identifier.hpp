@@ -20,6 +20,7 @@
 
 #include <unball/vision/ball_tracker.hpp>
 
+#include <unball/vision/measurement_conversion.hpp>
  
 class BallIdentifier
 {
@@ -33,6 +34,7 @@ class BallIdentifier
     static const cv::Scalar CIRCLE_COLOR_;
     cv::Point2f ball_pose_;
     BallTracker tracker_;
+    MeasurementConversion to_metric_;
 };
 
 #endif // UNBALL_VISION_BALL_TRACKER_H_

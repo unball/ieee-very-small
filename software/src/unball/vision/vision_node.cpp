@@ -27,6 +27,7 @@ void loadConfig(image_transport::Subscriber &rgb_sub, image_transport::Subscribe
 void publishRobotsPoses(ros::Publisher &publisher);
 void receiveRGBFrame(const sensor_msgs::ImageConstPtr& msg);
 void receiveDepthFrame(const sensor_msgs::ImageConstPtr& msg);
+void publishBallPose(ros::Publisher &publisher);
 
 int main(int argc, char **argv)
 {
@@ -45,6 +46,7 @@ int main(int argc, char **argv)
     while (ros::ok())
     {
         Vision::getInstance().run();
+        publishBallPose(publisher);
         publishRobotsPoses(publisher);
         ros::spinOnce();
         loop_rate.sleep();
@@ -138,4 +140,15 @@ void receiveDepthFrame(const sensor_msgs::ImageConstPtr &msg)
     }
 
     Vision::getInstance().setDepthFrame(cv_ptr->image);
+}
+
+void publishBallPose(ros::Publisher &publisher)
+{
+    cv::Point2f pose;
+    unball::VisionMessage message;
+    
+    pose = Vision::getInstance().getBallPose();
+    message.ball_x = pose.x;
+    message.ball_y = pose.y;
+
 }

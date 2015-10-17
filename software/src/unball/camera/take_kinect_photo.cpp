@@ -11,6 +11,7 @@
  */
 
 #include <ros/ros.h>
+#include <ros/package.h>
 #include <image_transport/image_transport.h>
 #include <cv_bridge/cv_bridge.h>
 #include <sensor_msgs/image_encodings.h>
@@ -75,7 +76,7 @@ static void onMouse( int event, int x, int y, int, void* )
 {
     if (event != cv::EVENT_LBUTTONDOWN)
         return;
-
+    ROS_INFO("taking pictures of you");
     std::string name = rgb_image_name;
     name += to_string(photo_amount++);
     name += ".png";
@@ -90,7 +91,8 @@ int main(int argc, char **argv)
     image_transport::Subscriber sub_rgb;
 
     sub_rgb = it.subscribe("/camera/rgb/image_raw", 1, rgbCallback);
-    rgb_image_name = "data/RGB photos/image";
+    rgb_image_name = ros::package::getPath("unball");
+    rgb_image_name += "/data/RBG_photos/image";
 
     window_name = "RGB image";
     cv::namedWindow(window_name);
