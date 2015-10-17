@@ -89,7 +89,10 @@ void Vision::loadConfig()
     tracker_.loadConfig();
     gui_.loadConfig();
 }
-
+cv::Point2f Vision::getBallPose()
+{
+    return tracker_.getBallPose();
+}
 /**
  * Execute vision processing.
  */

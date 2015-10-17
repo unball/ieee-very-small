@@ -1,19 +1,25 @@
 #include <unball/vision/ball_tracker.hpp>
 
-cv::Point BallTracker::getBallPose()
+BallTracker::BallTracker()
 {
-    return ball_position_;
+    predicted_velocity_ = cv::Point2f(0, 0);
+    predicted_pose_ = cv::Point2f(0, 0);
+    weight_ = 0.5;
 }
 
-void BallTracker::track(cv::Mat &rgb_segmented_image)
+cv::Point2f BallTracker::getPredictedPose()
 {
-    cv::Moments moments;
-    std::vector< std::vector<cv::Point> > countours;
+    return predicted_pose_;
+}
 
-    cv::findContours(rgb_segmented_image, countours, CV_RETR_LIST, CV_CHAIN_APPROX_SIMPLE);
-    moments = cv::moments(countours[0], true);
-    ball_position_.x = moments.m10/moments.m00;
-    ball_position_.y = moments.m01/moments.m00;
-    ROS_INFO("Ball x %d", ball_position_.x);
-    ROS_INFO("Ball y %d", ball_position_.y);
+void BallTracker::predict()
+{
+    predicted_pose_ += predicted_velocity_ * 1.07;
+}
+
+void BallTracker::update(cv::Point2f measured_pose)
+{
+    cv::Point2f previous_pose = predicted_pose_;
+    predicted_pose_ = weight_ * predicted_pose_ +  (1 - weight_) * measured_pose;
+    predicted_velocity_ = (predicted_pose_ - previous_pose);
 }

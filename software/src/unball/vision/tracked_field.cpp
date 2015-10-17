@@ -76,6 +76,7 @@ void TrackedField::updatePosition(cv::Point position)
     cv::Point old_position = position_;
     position_.x = exponentialMovingAvg(position_.x, position.x);
     position_.y = exponentialMovingAvg(position_.y, position.y);
+    ROS_ERROR("POSITION: %d %d", position_.x, position_.y );
     checkFieldStabilization(old_position, position_);
 }
 
@@ -103,9 +104,10 @@ void TrackedField::checkFieldStabilization(cv::Point old_position, cv::Point new
         ++field_stabilization_counter_;
     else
         field_stabilization_counter_ = 0;
-
     if (field_stabilization_counter_ >= field_stabilization_frame_)
         is_field_stable_ = true;
+    if (is_field_stable_)
+        ROS_ERROR("OK");
 }
 
 /**

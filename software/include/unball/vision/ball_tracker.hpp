@@ -1,16 +1,5 @@
-/**
- * @file   ball_tracker.hpp
- * @author Matheus Vieira Portela
- * @author Manoel Vieira Coelho Neto
- * @date   30/09/2015
- *
- * @attention Copyright (C) 2014 UnBall Robot Soccer Team
- *
- * @brief Definition of ball tracker class
- */
-
-#ifndef UNBALL_VISION_BALL_TRACKER_H_
-#define UNBALL_VISION_BALL_TRACKER_H_
+#ifndef UNBALL_VISION_BALL_TRACKER_H
+#define UNBALL_VISION_BALL_TRACKER_H
 
 #include <vector>
 
@@ -18,14 +7,20 @@
 
 #include <opencv2/opencv.hpp>
 
+
 class BallTracker
 {
   public:
-    cv::Point getBallPose();
-    void track(cv::Mat &rgb_segmented_image);
-    
-  private:  
-    cv::Point ball_position_;
+    BallTracker();
+    cv::Point2f getPredictedPose();
+    void predict();
+    void update(cv::Point2f measured_pose);
+  private:
+    cv::Point2f predicted_pose_;
+    cv::Point2f predicted_velocity_;
+    float weight_;
 };
 
-#endif // UNBALL_VISION_BALL_TRACKER_H_
+
+
+#endif

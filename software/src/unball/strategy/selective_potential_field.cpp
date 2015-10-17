@@ -45,18 +45,61 @@ Vector SelectivePotentialField::applyAttractivePotentialField(Vector difference)
 
 Vector SelectivePotentialField::applyTangentialField(Vector difference)
 {
-        float angle = difference.getDirection();// - direction_;
+        float angle = difference.getDirection();
         float magnitude = range_;
         
-        angle = math::reduceAngle(angle);
-        
-        if (angle >= 0)
+        int angle_quadrant = quadrant(angle);
+        int direction_quadrant = quadrant(direction_);
+
+        if(shouldRotateClockwise(angle_quadrant, direction_quadrant, math::reduceAngle(angle - direction_)))
             angle = rotateClockwise(angle);
         else
-            angle = rotateCounterClockwise(angle); //verify how it will work walking backwards  
+            angle = rotateCounterClockwise(angle); //verify how it will work walking backwards*/   
+
         Vector result;
         result.setPolar(magnitude, angle);
         return result;
+}
+
+int SelectivePotentialField::quadrant(float generic_angle)
+{
+    int quadrant;
+
+    if(generic_angle < -M_PI_2)
+        quadrant = 3;
+    else if(generic_angle < 0)
+        quadrant = 4;
+    else if(generic_angle < M_PI_2)
+        quadrant = 1;
+    else
+        quadrant = 2;
+    return quadrant;
+}
+
+bool SelectivePotentialField::shouldRotateClockwise(int angle_quadrant, int direction_quadrant, float resultant_angle)
+{
+    bool clockwise = true;
+
+    if (direction_quadrant == 1 and angle_quadrant == 2)
+        clockwise = true;
+    else if (direction_quadrant == 1 and angle_quadrant == 4)
+        clockwise = false;
+    else if(direction_quadrant == 2 and angle_quadrant == 3)
+        clockwise = true;
+    else if (direction_quadrant == 2 and angle_quadrant == 1)
+        clockwise = false;
+    else if (direction_quadrant == 3 and angle_quadrant == 4)
+        clockwise = true;
+    else if (direction_quadrant == 3 and angle_quadrant == 2)
+        clockwise = false;
+    else if (direction_quadrant == 4 and angle_quadrant == 1)
+        clockwise = true;
+    else if (direction_quadrant == 4 and angle_quadrant == 3)
+        clockwise = false;
+    else if (resultant_angle <= 0)
+        clockwise = false;
+
+    return clockwise;
 }
 
 float SelectivePotentialField::rotateClockwise(float angle) {

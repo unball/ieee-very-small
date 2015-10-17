@@ -33,6 +33,7 @@ class Vision
     void setDepthFrame(cv::Mat depth_frame);
     bool isValidSize(cv::Mat frame);
     std::vector<float> getRobotPose(int robot_index);
+    cv::Point2f getBallPose();
     void loadConfig();
     void run();
 

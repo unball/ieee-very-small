@@ -23,6 +23,7 @@
 #include <unball/vision/measurement_conversion.hpp>
 #include <unball/vision/robot_tracker.hpp>
 #include <unball/vision/ball_tracker.hpp>
+#include <unball/vision/ball_identifier.hpp>
 
 #define BAD_CONFIG 1
 
@@ -35,17 +36,17 @@ class Tracker
     void loadConfig();
     void track(cv::Mat rgb_frame, cv::Mat depth_frame, cv::Mat rgb_segmented_frame, cv::Mat depth_segmented_frame);
     std::vector<float> getRobotPose(int robot_index);
+    cv::Point2f getBallPose();
 
   private:
     void calculateMeasurementConversion();
 
     std::string window_name_;
     bool show_image_;
-    bool calculated_measurement_parameters_;
-    TrackedField tracked_field_;
+    // TrackedField tracked_field_;
     MeasurementConversion measurement_conversion_;
     RobotTracker robot_tracker_;
-    BallTracker ball_tracker_;
+    BallIdentifier ball_tracker_;
 };
 
 #endif // UNBALL_VISION_TRACKER_H_
