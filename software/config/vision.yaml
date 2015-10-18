@@ -36,7 +36,7 @@ vision:
 
     segmenter:
         # Show image with the results of segmentation
-        show_image: true
+        show_image: false
 
         # Show trackbars to manually set the minimum saturation and value for HSV segmentation.
         # true: Show trackbars.
@@ -63,13 +63,13 @@ vision:
         # Show trackbar for depth segmentation adjustment
         # true: Show trackbars
         # false: Don't show trackbars
-        depth_adjust: false
+        depth_adjust: true
 
         # Treshold value
-        depth_treshold: 17
+        depth_treshold: 800
 
         # Size Value
-        size_value: 81
+        size_value: 40
 
     tracker:
         # Show image with the results of tracking
