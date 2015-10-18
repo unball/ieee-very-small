@@ -20,6 +20,7 @@ BallIdentifier::BallIdentifier(MeasurementConversion *mc){
 cv::Point2f BallIdentifier::getBallPose()
 {
     ball_pose_ = to_metric_->convertToMetric(ball_pose_);
+    ROS_ERROR("ball_pose_ : %f %f", ball_pose_.x, ball_pose_.y);
     return ball_pose_;
 }
 

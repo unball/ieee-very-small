@@ -73,7 +73,7 @@ vision:
 
     tracker:
         # Show image with the results of tracking
-        show_image: true
+        show_image: false
 
         # Select which method will be used to track the soccer field
         # Options: "rgb" or "depth"
@@ -84,7 +84,7 @@ vision:
         field_stabilization_frame: 7
 
         # The discrepancy allowed between each subsequent position so as to be considered the "same".
-        field_center_discrepancy: 5
+        field_center_discrepancy: 2
 
         # The amount of robots for each team (teams have the same amount of robots)
         robots_per_team: 1
