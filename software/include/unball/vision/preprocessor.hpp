@@ -29,7 +29,7 @@ class Preprocessor
     void preprocess(cv::Mat &rgb_frame, cv::Mat &depth_frame);
 
   private:
-    void printMeanMinMax(cv::Mat image);
+    void printMeanMinMax(const cv::Mat &image);
     bool show_image_;
     std::string window_name_;
 };

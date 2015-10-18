@@ -73,7 +73,7 @@ void loadConfig(image_transport::Subscriber &rgb_sub, image_transport::Subscribe
 
     ros::param::get("/vision/using_depth", using_depth);
     if (using_depth)
-        depth_sub = img_transport.subscribe("camera/depth/image_raw", 1, receiveDepthFrame);
+        depth_sub = img_transport.subscribe("camera/depth/image", 1, receiveDepthFrame);
 
     Vision::getInstance().loadConfig();
 }
@@ -110,7 +110,7 @@ void receiveRGBFrame(const sensor_msgs::ImageConstPtr &msg)
 
     try
     {
-        cv_ptr = cv_bridge::toCvCopy(msg);
+        cv_ptr = cv_bridge::toCvCopy(msg, sensor_msgs::image_encodings::BGR8);
     }
     catch (cv_bridge::Exception &e)
     {
@@ -131,7 +131,7 @@ void receiveDepthFrame(const sensor_msgs::ImageConstPtr &msg)
 
     try
     {
-        cv_ptr = cv_bridge::toCvCopy(msg, sensor_msgs::image_encodings::TYPE_16UC1);
+        cv_ptr = cv_bridge::toCvCopy(msg, "32FC1");
     }
     catch (cv_bridge::Exception &e)
     {

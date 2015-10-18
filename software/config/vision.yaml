@@ -66,10 +66,13 @@ vision:
         depth_adjust: true
 
         # Treshold value
-        depth_treshold: 800
+        depth_treshold: 1800
+
+        # Depth threshold divider
+        depth_treshold_divider: 30
 
         # Size Value
-        size_value: 40
+        size_value: 79
 
     tracker:
         # Show image with the results of tracking

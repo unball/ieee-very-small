@@ -64,33 +64,41 @@ void Preprocessor::preprocessRGB(cv::Mat &rgb_frame)
  * 
  * @param image the image to be preprocessed
  */
-void Preprocessor::printMeanMinMax(cv::Mat image)
+void Preprocessor::printMeanMinMax(const cv::Mat &image)
 {
-    unsigned short int min = 65535, max = 0;
-    unsigned int mean = 0, counter = 0;
+    typedef float pixelType;
+    pixelType min = 255, max = 0;
+    pixelType mean = 0, counter = 0;
+    int npixels = 0;
 
     for (int i = 0; i < image.rows; i++)
     {
         for (int j = 0; j < image.cols; j++)
         {
-            if (image.at<unsigned short int>(i, j) != 0)
+            npixels++;
+            if (image.at<pixelType>(i, j) != 0)
             {
                 counter++;
-                mean += image.at<unsigned short int>(i, j);
+                mean += image.at<pixelType>(i, j);
                 
-                if (image.at<unsigned short int>(i, j) < min)
-                    min = image.at<unsigned short int>(i, j);
+                if (image.at<pixelType>(i, j) < min)
+                    min = image.at<pixelType>(i, j);
 
-                if (image.at<unsigned short int>(i, j) > max)
-                    max = image.at<unsigned short int>(i, j);
+                if (image.at<pixelType>(i, j) > max)
+                    max = image.at<pixelType>(i, j);
             }
         }
     }
 
-    mean = mean/counter;
-    ROS_INFO("Mean: %d", mean);
-    ROS_INFO("Max: %d", max);
-    ROS_INFO("Min: %d", min);
+    if (counter != 0)
+    {
+        ROS_ERROR("Analyzed %d pixels", (int)counter);
+        ROS_ERROR("Mean: %.3f", (float)mean / (float)counter);
+    }
+    ROS_ERROR("Max: %d", (int)max);
+    ROS_ERROR("Min: %d", (int)min);
+    ROS_ERROR("Npixels: %d", (int)npixels);
+    ROS_ERROR("image dimensions: (%d,%d)", (int)image.cols, (int)image.rows);
 }
 
 /**
@@ -102,6 +110,8 @@ void Preprocessor::printMeanMinMax(cv::Mat image)
 void Preprocessor::preprocessDepth(cv::Mat &depth_frame)
 {
     cv::medianBlur(depth_frame, depth_frame, 5);
+    cv::normalize(depth_frame, depth_frame, 0, 256, cv::NORM_MINMAX, CV_8UC1);
+
 }
 
 /**
