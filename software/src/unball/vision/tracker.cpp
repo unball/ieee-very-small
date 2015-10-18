@@ -56,7 +56,6 @@ void Tracker::track(cv::Mat rgb_frame, cv::Mat depth_frame, cv::Mat rgb_segmente
     tracked_field_.track(rgb_frame, depth_frame, rgb_segmented_frame);
     //robot_tracker_.track(rgb_frame, depth_frame, depth_segmented_frame);
     if (tracked_field_.isFieldStable() && !calculated_measurement_parameters_){
-        ROS_ERROR("here!!");
         calculateMeasurementConversion();
     }  
 
@@ -71,7 +70,6 @@ void Tracker::track(cv::Mat rgb_frame, cv::Mat depth_frame, cv::Mat rgb_segmente
 void Tracker::calculateMeasurementConversion()
 {
     cv::Point field_dimensions = tracked_field_.getFieldDimensions();
-    ROS_ERROR("HERE!!!");
     measurement_conversion_.calculateConversion(field_dimensions.x, field_dimensions.y);
     measurement_conversion_.setFieldCenter(tracked_field_.getFieldCenter());
     calculated_measurement_parameters_ = true;
