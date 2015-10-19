@@ -13,22 +13,22 @@ vision:
         # Indicates whether the homography class needs to calibrate depth camera (relative to rgb camera)
         # true: calibrates the depth camera
         # false: no calibration required, calibration matrix is loaded from a separate file
-        calibrate: false
+        calibrate: true
 
         # If "calibrate" is active, indicates whether the homography class should overwrite the previous calibration
         # matrix
-        overwrite_calib_matrix: false
+        overwrite_calib_matrix: true
 
         # Indicates whether the homography class needs to run the rectification algorithm, or load a pre-calculated
         # from a separate file.
         # NOTE: If "calibrate" is active, rectification will also be active regardless of this config
         # true: runs the rectification algorithm
         # false: loads the rectification matrix from a separate file
-        rectify: false
+        rectify: true
 
         # If "rectify" is active, indicates whether the homography class should overwrite the previous rectification
         # matrix
-        overwrite_rect_matrix: false
+        overwrite_rect_matrix: true
 
     preprocessor:
         # Show image with the results of preprocessing
