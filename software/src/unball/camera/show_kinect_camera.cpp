@@ -55,7 +55,7 @@ void depthCallback(const sensor_msgs::ImageConstPtr &msg)
     // Copies the image data to cv_ptr and handles exceptions
     try
     {
-        cv_ptr = cv_bridge::toCvCopy(msg, sensor_msgs::image_encodings::TYPE_16UC1);
+        cv_ptr = cv_bridge::toCvCopy(msg, sensor_msgs::image_encodings::TYPE_32FC1);
     }
     catch (cv_bridge::Exception &e)
     {
@@ -76,7 +76,7 @@ void depthCallback(const sensor_msgs::ImageConstPtr &msg)
     //Update GUI Window
     cv::Mat normalized_depth_frame;
     cv::normalize(cv_ptr->image, normalized_depth_frame, 0, 256, cv::NORM_MINMAX, CV_8UC1);
-    cv::imshow(DEPTH_WINDOW, cv_ptr->image);
+    cv::imshow(DEPTH_WINDOW, normalized_depth_frame);
     cv::waitKey(1);
 }
 
@@ -88,7 +88,7 @@ int main(int argc, char **argv)
     image_transport::Subscriber sub_rgb, sub_depth;
 
     sub_rgb = it.subscribe("/camera/rgb/image_raw", 1, rgbCallback);
-    sub_depth = it.subscribe("/camera/depth/image_raw", 1, depthCallback);
+    sub_depth = it.subscribe("/camera/depth/image", 1, depthCallback);
 
     cv::namedWindow(RGB_WINDOW);
     cv::namedWindow(DEPTH_WINDOW);

@@ -12,6 +12,7 @@
  */
 
 #include <ros/ros.h>
+#include <ros/package.h>
 #include <image_transport/image_transport.h>
 #include <cv_bridge/cv_bridge.h>
 #include <sensor_msgs/image_encodings.h>
@@ -22,9 +23,9 @@
 #include <string>
 
 cv::VideoWriter rgb_writer;
-//cv::VideoWriter depth_writer;
+cv::FileStorage depth_storage;
 int depth_counter;
-std::string depth_file;
+std::string depth_file, package_path;
 bool is_open_rgb, is_open_depth;
 
 /**
@@ -72,7 +73,8 @@ void rgbCallback(const sensor_msgs::ImageConstPtr &msg)
     // Opens the rgb video writer if it's not opened yet.
     if (!is_open_rgb)
     {
-        rgb_writer.open("rgb_video.avi", CV_FOURCC('P','I','M','1'),
+        std::string rgb_writer_name = package_path + "/data/rgb_video.avi";
+        rgb_writer.open(rgb_writer_name.c_str(), CV_FOURCC('P','I','M','1'),
                         25, cv::Size(cv_ptr->image.cols, cv_ptr->image.rows),true);
         if (!rgb_writer.isOpened()) ROS_ERROR("Error! Could not open rgb video writer!");
         else is_open_rgb = true;
@@ -93,7 +95,7 @@ void depthCallback(const sensor_msgs::ImageConstPtr &msg)
     // Copies the image data to cv_ptr and handles exceptions
     try
     {
-        cv_ptr = cv_bridge::toCvCopy(msg, sensor_msgs::image_encodings::TYPE_16UC1);
+        cv_ptr = cv_bridge::toCvCopy(msg, sensor_msgs::image_encodings::TYPE_32FC1);
     }
     catch (cv_bridge::Exception &e)
     {
@@ -108,27 +110,10 @@ void depthCallback(const sensor_msgs::ImageConstPtr &msg)
         exit(-1);
     }
 
-    /*
-    // Opens the depth video writer if it's not opened yet.
-    if (!is_open_depth)
-    {
-        depth_writer.open("depth_video.avi", CV_FOURCC('P','I','M','1'),
-                          25, cv::Size(cv_ptr->image.cols, cv_ptr->image.rows),false);
-        if (!depth_writer.isOpened()) ROS_ERROR("Error! Could not open depth video writer!");
-        else is_open_depth = true;
-    }
-    */
-
-    /*
-    // Normalizes the depth image and converts it from 16-bit to 6-bit.
-    cv::Mat normed;
-    normalize(cv_ptr->image, normed, 0, 255, cv::NORM_MINMAX, CV_8UC1);
-
-    depth_writer << normed; // Saves the normed image on the depth video.
-    */
-
     depth_counter++;
-    cv::imwrite(depth_file+to_string(depth_counter)+".png", cv_ptr->image);
+    depth_storage.open(depth_file+to_string(depth_counter)+".yml", cv::FileStorage::WRITE);
+    depth_storage << "depth"+to_string(depth_counter) << cv_ptr->image;
+    ROS_ERROR("Saved %d frame(s) on file %s", depth_counter, std::string(depth_file+to_string(depth_counter)+".yml").c_str());
 }
 
 int main(int argc, char **argv)
@@ -140,10 +125,11 @@ int main(int argc, char **argv)
     is_open_rgb = false;
     is_open_depth = false;
     depth_counter = 0;
-    depth_file = "data/depth/depth";
+    package_path = ros::package::getPath("unball");
+    depth_file = package_path + "/data/depth/depth";
 
     sub_rgb = it.subscribe("/camera/rgb/image_raw", 1, rgbCallback);
-    sub_depth = it.subscribe("/camera/depth/image_raw", 1, depthCallback);
+    sub_depth = it.subscribe("/camera/depth/image", 1, depthCallback);
 
     ROS_INFO("Saving videos");
     ros::spin();

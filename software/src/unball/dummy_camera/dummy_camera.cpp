@@ -42,7 +42,7 @@ int main(int argc, char **argv)
     ros::NodeHandle nh;
     image_transport::ImageTransport it(nh); // Used to publish and subscribe to images.
     image_transport::Publisher rgb_pub = it.advertise("/camera/rgb/image_raw", 1);
-    image_transport::Publisher depth_pub = it.advertise("/camera/depth/image_raw", 1);
+    image_transport::Publisher depth_pub = it.advertise("/camera/depth/image", 1);
     cv_bridge::CvImage rgb_frame, depth_frame;
     int frame_counter; // Used to count the number of frames published on the topic.
     int num_frames;
@@ -62,10 +62,13 @@ int main(int argc, char **argv)
         return -1;
     }
 
+    // Load depth images on Yaml file
+
     // Opens depth image and check for errors
-    std::string depth_image_file, folder(argv[2]);
-    if (depth_image_file[depth_image_file.size()-1] == '/') depth_image_file.erase(depth_image_file.end());
-    depth_image_file = folder + "/depth";
+    std::string depth_image_name("depth"), depth_path(argv[2]);
+    if (depth_path[depth_path.size()-1] != '/')
+        depth_path.push_back('/');
+    cv::FileStorage depth_storage;
     int depth_counter = 0;
 
     // Set the loop rate, defined by the framerate of the video
@@ -79,7 +82,7 @@ int main(int argc, char **argv)
 
     // Set rgb and depth frame encoding
     rgb_frame.encoding = sensor_msgs::image_encodings::BGR8;
-    depth_frame.encoding = sensor_msgs::image_encodings::TYPE_16UC1;
+    depth_frame.encoding = sensor_msgs::image_encodings::TYPE_32FC1;
 
     // Retrieve amount of frames on the video
     num_frames = rgb_cap.get(CV_CAP_PROP_FRAME_COUNT);
@@ -88,7 +91,7 @@ int main(int argc, char **argv)
     // Publish the video
     ROS_INFO("Sending video");
     frame_counter = 0;
-    while (ros::ok())
+    while (ros::ok() && frame_counter < num_frames)
     {
         ROS_DEBUG("Frame counter: %d", frame_counter);
         // Publish the rgb frame
@@ -99,14 +102,13 @@ int main(int argc, char **argv)
         // Publish the depth frame
         ROS_DEBUG("Publishing the depth frame");
         depth_counter++;
-        depth_frame.image = cv::imread(depth_image_file+to_string(depth_counter)+".png", CV_LOAD_IMAGE_ANYDEPTH);
+        depth_storage.open(depth_path+depth_image_name+to_string(depth_counter), cv::FileStorage::READ);
+        depth_storage[depth_image_name+to_string(depth_counter)] >> depth_frame.image;
         depth_pub.publish(depth_frame.toImageMsg());
 
         ros::spinOnce();
         loop_rate.sleep();
         frame_counter++;
-        if (frame_counter >= num_frames)
-            rgb_cap.set(CV_CAP_PROP_POS_AVI_RATIO, 0); // Resets the video
     }
     ROS_INFO("Finished sending video");
 

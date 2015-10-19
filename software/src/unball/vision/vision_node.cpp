@@ -131,13 +131,16 @@ void receiveDepthFrame(const sensor_msgs::ImageConstPtr &msg)
 
     try
     {
-        cv_ptr = cv_bridge::toCvCopy(msg, "32FC1");
+        cv_ptr = cv_bridge::toCvCopy(msg, sensor_msgs::image_encodings::TYPE_32FC1);
     }
     catch (cv_bridge::Exception &e)
     {
         ROS_WARN("cv_bridge exception: %s", e.what());
         return;
     }
+
+    cv::imshow("depth image as received", cv_ptr->image);
+    cv::waitKey(1);
 
     Vision::getInstance().setDepthFrame(cv_ptr->image);
 }
