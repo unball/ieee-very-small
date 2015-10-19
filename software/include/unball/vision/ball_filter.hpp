@@ -8,10 +8,10 @@
 #include <opencv2/opencv.hpp>
 
 
-class BallTracker
+class BallFilter
 {
   public:
-    BallTracker();
+    BallFilter();
     cv::Point2f getPredictedPose();
     void predict();
     void update(cv::Point2f measured_pose);

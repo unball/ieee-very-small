@@ -18,7 +18,7 @@
 
 #include <opencv2/opencv.hpp>
 
-#include <unball/vision/ball_tracker.hpp>
+#include <unball/vision/ball_filter.hpp>
 
 #include <unball/vision/measurement_conversion.hpp>
  
@@ -33,7 +33,7 @@ class BallIdentifier
   private:  
     static const cv::Scalar CIRCLE_COLOR_;
     cv::Point2f ball_pose_;
-    BallTracker tracker_;
+    BallFilter tracker_;
     MeasurementConversion *to_metric_;
 };
 
