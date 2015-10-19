@@ -14,7 +14,7 @@ cv::Point2f BallFilter::getPredictedPose()
 
 void BallFilter::predict()
 {
-    predicted_pose_ += predicted_velocity_ * 1.07;
+    predicted_pose_ += predicted_velocity_ * 2;
 }
 
 void BallFilter::update(cv::Point2f measured_pose)

@@ -47,7 +47,7 @@ vision:
         hsv_min_h: 0
 
         # Maximum hue for HSV segmentation.
-        hsv_max_h: 290
+        hsv_max_h: 17
 
         # Minimum saturation for HSV segmentation.
         hsv_min_s: 133
