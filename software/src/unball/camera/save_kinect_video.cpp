@@ -12,6 +12,7 @@
  */
 
 #include <ros/ros.h>
+#include <ros/package.h>
 #include <image_transport/image_transport.h>
 #include <cv_bridge/cv_bridge.h>
 #include <sensor_msgs/image_encodings.h>
@@ -71,7 +72,8 @@ void rgbCallback(const sensor_msgs::ImageConstPtr &msg)
     // Opens the rgb video writer if it's not opened yet.
     if (!is_open_rgb)
     {
-        rgb_writer.open("rgb_video.avi", CV_FOURCC('P','I','M','1'),
+        std::string rgb_name = ros::package::getPath("unball") + "/data/rgb_video.avi";
+        rgb_writer.open(rgb_name.c_str(), CV_FOURCC('P','I','M','1'),
                         25, cv::Size(cv_ptr->image.cols, cv_ptr->image.rows),true);
         if (!rgb_writer.isOpened()) ROS_ERROR("Error! Could not open rgb video writer!");
         else is_open_rgb = true;
@@ -123,7 +125,7 @@ int main(int argc, char **argv)
     is_open_rgb = false;
     is_open_depth = false;
     depth_counter = 0;
-    depth_file = "data/depth/depth";
+    depth_file = ros::package::getPath("unball") + "/data/depth/depth";
 
     sub_rgb = it.subscribe("/camera/rgb/image_raw", 1, rgbCallback);
     sub_depth = it.subscribe("/camera/depth/image", 1, depthCallback);
