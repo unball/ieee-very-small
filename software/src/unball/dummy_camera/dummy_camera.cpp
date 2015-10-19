@@ -62,13 +62,10 @@ int main(int argc, char **argv)
         return -1;
     }
 
-    // Load depth images on Yaml file
-
     // Opens depth image and check for errors
-    std::string depth_image_name("depth"), depth_path(argv[2]);
-    if (depth_path[depth_path.size()-1] != '/')
-        depth_path.push_back('/');
-    cv::FileStorage depth_storage;
+    std::string depth_image_file, folder(argv[2]);
+    if (depth_image_file[depth_image_file.size()-1] == '/') depth_image_file.erase(depth_image_file.end());
+    depth_image_file = folder + "/depth";
     int depth_counter = 0;
 
     // Set the loop rate, defined by the framerate of the video
@@ -91,7 +88,7 @@ int main(int argc, char **argv)
     // Publish the video
     ROS_INFO("Sending video");
     frame_counter = 0;
-    while (ros::ok() && frame_counter < num_frames)
+    while (ros::ok())
     {
         ROS_DEBUG("Frame counter: %d", frame_counter);
         // Publish the rgb frame
@@ -102,13 +99,16 @@ int main(int argc, char **argv)
         // Publish the depth frame
         ROS_DEBUG("Publishing the depth frame");
         depth_counter++;
-        depth_storage.open(depth_path+depth_image_name+to_string(depth_counter), cv::FileStorage::READ);
-        depth_storage[depth_image_name+to_string(depth_counter)] >> depth_frame.image;
+        cv::Mat loaded_image;
+        loaded_image = cv::imread(depth_image_file+to_string(depth_counter)+".png", CV_LOAD_IMAGE_ANYDEPTH);
+        loaded_image.convertTo(depth_frame.image, CV_32FC1, 1.0);
         depth_pub.publish(depth_frame.toImageMsg());
 
         ros::spinOnce();
         loop_rate.sleep();
         frame_counter++;
+        if (frame_counter >= num_frames)
+            rgb_cap.set(CV_CAP_PROP_POS_AVI_RATIO, 0); // Resets the video
     }
     ROS_INFO("Finished sending video");
 

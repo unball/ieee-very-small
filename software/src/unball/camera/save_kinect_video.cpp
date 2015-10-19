@@ -12,7 +12,6 @@
  */
 
 #include <ros/ros.h>
-#include <ros/package.h>
 #include <image_transport/image_transport.h>
 #include <cv_bridge/cv_bridge.h>
 #include <sensor_msgs/image_encodings.h>
@@ -23,9 +22,8 @@
 #include <string>
 
 cv::VideoWriter rgb_writer;
-cv::FileStorage depth_storage;
 int depth_counter;
-std::string depth_file, package_path;
+std::string depth_file;
 bool is_open_rgb, is_open_depth;
 
 /**
@@ -73,8 +71,7 @@ void rgbCallback(const sensor_msgs::ImageConstPtr &msg)
     // Opens the rgb video writer if it's not opened yet.
     if (!is_open_rgb)
     {
-        std::string rgb_writer_name = package_path + "/data/rgb_video.avi";
-        rgb_writer.open(rgb_writer_name.c_str(), CV_FOURCC('P','I','M','1'),
+        rgb_writer.open("rgb_video.avi", CV_FOURCC('P','I','M','1'),
                         25, cv::Size(cv_ptr->image.cols, cv_ptr->image.rows),true);
         if (!rgb_writer.isOpened()) ROS_ERROR("Error! Could not open rgb video writer!");
         else is_open_rgb = true;
@@ -110,10 +107,11 @@ void depthCallback(const sensor_msgs::ImageConstPtr &msg)
         exit(-1);
     }
 
+    // Normalizes the depth image and converts it from 32 floating point to 16 bit unsigned.
+    cv::Mat normed;
+    normalize(cv_ptr->image, normed, 0, 65535, cv::NORM_MINMAX, CV_16UC1);
     depth_counter++;
-    depth_storage.open(depth_file+to_string(depth_counter)+".yml", cv::FileStorage::WRITE);
-    depth_storage << "depth"+to_string(depth_counter) << cv_ptr->image;
-    ROS_ERROR("Saved %d frame(s) on file %s", depth_counter, std::string(depth_file+to_string(depth_counter)+".yml").c_str());
+    cv::imwrite(depth_file+to_string(depth_counter)+".png", normed);
 }
 
 int main(int argc, char **argv)
@@ -125,8 +123,7 @@ int main(int argc, char **argv)
     is_open_rgb = false;
     is_open_depth = false;
     depth_counter = 0;
-    package_path = ros::package::getPath("unball");
-    depth_file = package_path + "/data/depth/depth";
+    depth_file = "data/depth/depth";
 
     sub_rgb = it.subscribe("/camera/rgb/image_raw", 1, rgbCallback);
     sub_depth = it.subscribe("/camera/depth/image", 1, depthCallback);
