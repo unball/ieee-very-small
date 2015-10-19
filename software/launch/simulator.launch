@@ -10,7 +10,32 @@
   <!-- spawn robots -->
   <group ns="robot_1">
   <node name="robot_1" pkg="gazebo_ros" type="spawn_model"
-  args="-file $(find unball)/model/unball_robot.urdf -urdf -x -0.37 -y 0.40 -z 0.05 -model robot_1" />
+  args="-file $(find unball)/model/unball_robot.urdf -urdf -x 0.37 -y 0.40 -z 0.05 -model robot_1" />
   </group>
   
+  <group ns="robot_2">
+  <node name="robot_2" pkg="gazebo_ros" type="spawn_model"
+  args="-file $(find unball)/model/unball_robot.urdf -urdf -x 0.37 -y -0.40 -z 0.05 -model robot_2" />
+  </group>
+  
+  <group ns="robot_3">
+  <node name="robot_3" pkg="gazebo_ros" type="spawn_model"
+  args="-file $(find unball)/model/unball_robot.urdf -urdf -x 0.60 -y 0 -z 0.05 -model robot_3" />
+  </group>
+
+  <group ns="robot_4">
+  <node name="robot_4" pkg="gazebo_ros" type="spawn_model"
+  args="-file $(find unball)/model/unball_robot.urdf -urdf -x -0.37 -y 0.40 -z 0.05 -Y 3.14 -model robot_4" />
+  </group>
+  
+  <group ns="robot_5">
+  <node name="robot_5" pkg="gazebo_ros" type="spawn_model"
+  args="-file $(find unball)/model/unball_robot.urdf -urdf -x -0.37 -y -0.40 -z 0.05 -Y 3.14 -model robot_5" />
+  </group>
+  
+  <group ns="robot_6">
+  <node name="robot_6" pkg="gazebo_ros" type="spawn_model"
+  args="-file $(find unball)/model/unball_robot.urdf -urdf -x -0.60 -y 0 -z 0.05 -Y 3.14 -model robot_6" />
+  </group>
+
 </launch>

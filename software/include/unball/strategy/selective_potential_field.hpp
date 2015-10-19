@@ -43,7 +43,6 @@ class SelectivePotentialField : public PotentialField
     float rotateCounterClockwise(float angle);
 
     bool shouldRotateClockwise(int angle_quadrant, int direction_quadrant, float resultant_angle);
-    int quadrant(float generic_angle);
 
     static float const MIN_MAGNITUDE_ = 2;
     //HACK: We added this const to stop the robot from overshooting when going around the target.

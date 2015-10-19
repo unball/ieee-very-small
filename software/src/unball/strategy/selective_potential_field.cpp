@@ -52,8 +52,8 @@ Vector SelectivePotentialField::applyTangentialField(Vector difference)
         float angle = difference.getDirection();
         float magnitude = range_;
         
-        int angle_quadrant = quadrant(angle);
-        int direction_quadrant = quadrant(direction_);
+        int angle_quadrant = math::quadrant(angle);
+        int direction_quadrant = math::quadrant(direction_);
 
         if(shouldRotateClockwise(angle_quadrant, direction_quadrant, math::reduceAngle(angle - direction_)))
             angle = rotateClockwise(angle);
@@ -63,21 +63,6 @@ Vector SelectivePotentialField::applyTangentialField(Vector difference)
         Vector result;
         result.setPolar(magnitude, angle);
         return result;
-}
-
-int SelectivePotentialField::quadrant(float generic_angle)
-{
-    int quadrant;
-
-    if(generic_angle < -M_PI_2)
-        quadrant = 3;
-    else if(generic_angle < 0)
-        quadrant = 4;
-    else if(generic_angle < M_PI_2)
-        quadrant = 1;
-    else
-        quadrant = 2;
-    return quadrant;
 }
 
 bool SelectivePotentialField::shouldRotateClockwise(int angle_quadrant, int direction_quadrant, float resultant_angle)

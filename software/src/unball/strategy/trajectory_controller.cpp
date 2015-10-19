@@ -26,7 +26,7 @@ TrajectoryController::~TrajectoryController()
 void TrajectoryController::run()
 {
     Vector resultant_force;
-    for (int i = 0; i < 1; ++i)
+    for (int i = 0; i < 3; ++i)
     {
         player_[i]->buildPotentialFields(i);
         resultant_force = player_[i]->calculateResultantForce(i);
@@ -47,18 +47,6 @@ void TrajectoryController::controlRobot(int robot_number, Vector force)
         move(robot_number, -force.getMagnitude());
         turn(robot_number, math::invertAngle(force.getDirection()));
     }
-    /*else if (force.getDirection() > M_PI/2)
-    {
-        ROS_ERROR("     angle > 90");
-        move(robot_number, -force.getMagnitude());
-        turn(robot_number, -(force.getDirection() - M_PI/2));
-    }
-    else if (force.getDirection() < -M_PI/2)
-    {
-        ROS_ERROR("     angle < -90");
-        move(robot_number, -force.getMagnitude());
-        turn(robot_number, -(force.getDirection() + M_PI/2));
-    }*/
 }
 
 void TrajectoryController::stopRobot(int robot_number)

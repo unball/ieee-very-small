@@ -26,6 +26,7 @@ namespace math
     float calculateAngle(float x1, float y1, float x2, float y2);
     float calculateAngle(Point point1, Point point2);
     float invertAngle(float angle);
+    int quadrant(float angle);
 }
 
 #endif // MATH_H_

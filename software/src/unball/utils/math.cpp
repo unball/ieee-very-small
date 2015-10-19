@@ -103,3 +103,18 @@ float math::invertAngle(float angle)
         return 0;
     return reduceAngle(angle + M_PI);
 }
+
+int math::quadrant(float generic_angle)
+{
+    int quadrant;
+
+    if(generic_angle < -M_PI_2)
+        quadrant = 3;
+    else if(generic_angle < 0)
+        quadrant = 4;
+    else if(generic_angle < M_PI_2)
+        quadrant = 1;
+    else
+        quadrant = 2;
+    return quadrant;
+}
