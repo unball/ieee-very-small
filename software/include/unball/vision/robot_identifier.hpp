@@ -14,8 +14,10 @@
 
 #include <map>
 #include <cmath>
+#include <string>
 
 #include <ros/ros.h>
+#include <ros/package.h>
 #include <opencv2/opencv.hpp>
 
 #include <unball/vision/robot_data.hpp>
@@ -25,26 +27,28 @@ class RobotIdentifier
 {
   public:
     void loadConfig();
-    RobotData identifyRobot(cv::Mat rgb_frame, std::vector<cv::Point> contour);
+    RobotData identifyRobot(cv::Mat rgb_frame, std::vector<cv::Point> contour, cv::Rect boundingRect);
 
   private:
-    void calculateDiagonalPoints(std::vector<cv::Point> contour, cv::Point &farthest_point, cv::Point &opposite_point,
-                                 cv::Point center);
-    void calculateColorPoints(cv::Mat rgb_frame, cv::Point farthest_point, cv::Point opposite_point, cv::Point center,
-                              cv::Vec3b &value_f, cv::Vec3b &value_o);
-    float calculateOrientation(std::vector<cv::Point> contour);
+    void loadShirtImages();
+    cv::Mat calculateHistogram(cv::Mat img);
+    void identifyTeam(RobotData &data, cv::RotatedRect robot, cv::Mat rgb_frame);
 
-    cv::Point calculateCenterPosition(cv::Rect tracking_window);
-    double distanceBetweenPoints(cv::Point a, cv::Point b);
-    cv::Point calculateOppositePoint(cv::Point point, cv::Point reference);
-    cv::Point calculateMidPoint(cv::Point point, cv::Point reference);
-    void setTeamParameters(RobotData &data, RobotData::Team team, cv::Scalar team_color);
+    cv::Point2f calculatePointAtMiddle(cv::Point2f a, cv::Point2f b);
 
     bool isPointColor(std::string color, cv::Vec3b hsv_values);
+
+    bool isPointBlue(cv::Vec3b hsv_values);
+    bool isPointYellow(cv::Vec3b hsv_values);
     bool isPointRed(cv::Vec3b hsv_values);
-    bool isPointPink(cv::Vec3b hsv_values);
+    bool isPointGreen(cv::Vec3b hsv_values);
+    bool isPointPurple(cv::Vec3b hsv_values);
 
     int hsv_min_s_, hsv_min_v_;
+
+    std::string team_color_;
+    cv::Mat shirt_images_[3];
+    cv::Mat shirt_histograms_[3];
 
     std::map<std::string, HSVColorData> color_map_;
 };

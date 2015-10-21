@@ -19,6 +19,11 @@ void RobotTracker::loadConfig()
 {
     ros::param::get("/vision/tracker/robots_per_team", robot_amount_);
     robot_identifier_.loadConfig();
+    min_area_ = 250;
+    max_area_ = 2000;
+    // cv::namedWindow("Robot tracker config");
+    // cv::createTrackbar("Min area", "Robot tracker config", &min_area_, 20000);
+    // cv::createTrackbar("Max area", "Robot tracker config", &max_area_, 20000);
 }
 
 void RobotTracker::track(cv::Mat &rgb_frame, cv::Mat &depth_frame, cv::Mat &rgb_segmented_frame)
@@ -39,23 +44,26 @@ void RobotTracker::track(cv::Mat &rgb_frame, cv::Mat &depth_frame, cv::Mat &rgb_
 
 void RobotTracker::draw(cv::Mat &frame)
 {
-    // for (int i = 0; i < 2; ++i)
-    //     for (int j = 0; j < robot_amount_; ++j)
-    //         robots_[i][j].draw(frame);
+    for (int i = 0; i < 2; ++i)
+        for (int j = 0; j < 3; ++j)
+            robots_[i][j].draw(frame);
 }
 
 void RobotTracker::trackStep1(cv::Mat &rgb_frame, cv::Mat &depth_frame, cv::Mat &depth_segmented_frame)
 {
     std::vector< std::vector<cv::Point> > contours;
+    int opponent_counter = 0;
 
     cv::findContours(depth_segmented_frame, contours, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_SIMPLE);
     for (int i = 0; i < contours.size(); ++i)
     {
-        ROS_ERROR("sizeof Contours[%d]: %lu", i, contours[i].size());
         cv::Rect boundingRect = cv::boundingRect(contours[i]);
-        cv::rectangle(rgb_frame, boundingRect, cv::Scalar(0, 255, 0));
-        // RobotData robot_data = robot_identifier_.identifyRobot(rgb_frame, contours[i]);
-        // robots_[robot_data.team][robot_data.id].setPosition(robot_data);
+        if (boundingRect.area() > min_area_ and boundingRect.area() < max_area_)
+        {
+            RobotData robot_data = robot_identifier_.identifyRobot(rgb_frame, contours[i], boundingRect);
+            int team = robot_data.team, id = robot_data.id;
+            robots_[team][team == RobotData::ALLY ? id : (opponent_counter++)%3].setPosition(robot_data);
+        }
     }
 }
 

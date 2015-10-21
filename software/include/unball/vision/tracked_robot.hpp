@@ -32,7 +32,8 @@ class TrackedRobot : public TrackedObject
     std::vector<float> getRobotPose();
 
   private:
-    cv::Scalar team_color_;
+    cv::Scalar robot_color_;
+    cv::RotatedRect robot_outline_;
 };
 
 #endif // UNBALL_VISION_TRACKED_ROBOT_H_

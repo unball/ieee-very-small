@@ -25,7 +25,7 @@ static const std::string DEPTH_WINDOW = "Depth image";
 void rgbCallback(const sensor_msgs::ImageConstPtr &msg)
 {
     cv_bridge::CvImagePtr cv_ptr;
-    
+
     // Copies the image data to cv_ptr and handles exceptions
     try
     {
@@ -36,13 +36,13 @@ void rgbCallback(const sensor_msgs::ImageConstPtr &msg)
         ROS_ERROR("cv_bridge exception: %s", e.what());
         return;
     }
-    
+
     if (!(cv_ptr->image.rows) || !(cv_ptr->image.cols))
     {
         ROS_ERROR("cv_ptr error: invalid image frame received");
         exit(-1);
     }
-    
+
     //Update GUI Window
     cv::imshow(RGB_WINDOW, cv_ptr->image);
     cv::waitKey(1);
@@ -51,30 +51,32 @@ void rgbCallback(const sensor_msgs::ImageConstPtr &msg)
 void depthCallback(const sensor_msgs::ImageConstPtr &msg)
 {
     cv_bridge::CvImagePtr cv_ptr;
-    
+
     // Copies the image data to cv_ptr and handles exceptions
     try
     {
-        cv_ptr = cv_bridge::toCvCopy(msg, sensor_msgs::image_encodings::TYPE_16UC1);
+        cv_ptr = cv_bridge::toCvCopy(msg, sensor_msgs::image_encodings::TYPE_32FC1);
     }
     catch (cv_bridge::Exception &e)
     {
         ROS_ERROR("cv_bridge exception: %s", e.what());
         return;
     }
-    
+
     if (!(cv_ptr->image.rows) || !(cv_ptr->image.cols))
     {
         ROS_ERROR("cv_ptr error: invalid image frame received");
         exit(-1);
     }
-    
+
     // Normalizes the depth image
 //    cv::Mat normed;
 //    normalize(cv_ptr->image, normed, 0, 255, cv::NORM_MINMAX, CV_8UC1);
-    
+
     //Update GUI Window
-    cv::imshow(DEPTH_WINDOW, cv_ptr->image);
+    cv::Mat normalized_depth_frame;
+    cv::normalize(cv_ptr->image, normalized_depth_frame, 0, 256, cv::NORM_MINMAX, CV_8UC1);
+    cv::imshow(DEPTH_WINDOW, normalized_depth_frame);
     cv::waitKey(1);
 }
 
@@ -84,10 +86,10 @@ int main(int argc, char **argv)
     ros::NodeHandle nh;
     image_transport::ImageTransport it(nh);
     image_transport::Subscriber sub_rgb, sub_depth;
-    
+
     sub_rgb = it.subscribe("/camera/rgb/image_raw", 1, rgbCallback);
-    sub_depth = it.subscribe("/camera/depth/image_raw", 1, depthCallback);
-    
+    sub_depth = it.subscribe("/camera/depth/image", 1, depthCallback);
+
     cv::namedWindow(RGB_WINDOW);
     cv::namedWindow(DEPTH_WINDOW);
     ros::spin();

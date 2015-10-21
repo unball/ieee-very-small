@@ -29,8 +29,6 @@ void MeasurementConversion::loadConfig()
  */
 void MeasurementConversion::calculateConversion(float field_pixel_width, float field_pixel_height)
 {
-    ROS_ERROR("Calculating the conversion parameters");
-
     if (field_pixel_width < 0 or field_pixel_height < 0)
         ROS_ERROR("Invalid field pixel measurements given");
 

@@ -49,7 +49,9 @@ class Segmenter
     // Depth segmentation stuff
     std::string depth_window_name_;
     int depth_threshold_;
+    int depth_threshold_divider_;
     int size_value_;
+    int depth_morphology_amount_;
     bool show_depth_image_;
     bool depth_adjust_;
 };
