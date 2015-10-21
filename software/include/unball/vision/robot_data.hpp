@@ -16,9 +16,10 @@ struct RobotData
     int team;
     int id; // defined by config
     cv::Rect tracking_window;
+    cv::RotatedRect robot_outline;
     cv::Point center_position; // in pixels
     float orientation;
-    cv::Scalar team_color;
+    cv::Scalar robot_color;
 
     enum Team
     {

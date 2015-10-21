@@ -27,7 +27,12 @@ void TrackedRobot::track(cv::Mat &rgb_frame, cv::Mat &depth_frame, cv::Mat &rgb_
 
 void TrackedRobot::draw(cv::Mat &frame)
 {
-    cv::rectangle(frame, tracking_window_, team_color_, 2);
+    cv::Point2f vertices[4];
+    robot_outline_.points(vertices);
+    for (int i = 0; i < 4; i++)
+        cv::line(frame, vertices[i], vertices[(i+1)%4], robot_color_);
+    cv::Point2f tmp_point(position_.x+(cos(orientation_)*20), position_.y+(sin(orientation_)*20));
+    cv::line(frame, position_, tmp_point, robot_color_);
 }
 
 void TrackedRobot::setPosition(RobotData data)
@@ -35,7 +40,8 @@ void TrackedRobot::setPosition(RobotData data)
     position_ = data.center_position;
     orientation_ = data.orientation;
     tracking_window_ = data.tracking_window;
-    team_color_ = data.team_color;
+    robot_color_ = data.robot_color;
+    robot_outline_ = data.robot_outline;
 }
 
 std::vector<float> TrackedRobot::getRobotPose()

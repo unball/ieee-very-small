@@ -139,9 +139,6 @@ void receiveDepthFrame(const sensor_msgs::ImageConstPtr &msg)
         return;
     }
 
-    cv::imshow("depth image as received", cv_ptr->image);
-    cv::waitKey(1);
-
     Vision::getInstance().setDepthFrame(cv_ptr->image);
 }
 
