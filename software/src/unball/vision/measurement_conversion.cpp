@@ -87,7 +87,7 @@ cv::Point2f MeasurementConversion::convertToMetric(cv::Point point_in_pixel)
     point_in_pixel.x -= 320;
     point_in_pixel.y -= 240;
     return cv::Point2f(point_in_pixel.x * conversion_parameters_.x,
-                       point_in_pixel.y * conversion_parameters_.y);
+                       -point_in_pixel.y * conversion_parameters_.y);
 }
 
 /**
