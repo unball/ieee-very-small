@@ -35,7 +35,7 @@ float math::saturate(float x, float limit)
  */
 float math::reduceAngle(float angle)
 {
-    while (angle < -M_PI)
+    while (angle <= -M_PI)
         angle += 2*M_PI;
     while (angle > M_PI)
         angle -= 2*M_PI;
@@ -104,15 +104,15 @@ float math::invertAngle(float angle)
     return reduceAngle(angle + M_PI);
 }
 
-int math::quadrant(float generic_angle)
+int math::quadrant(float angle)
 {
     int quadrant;
 
-    if(generic_angle < -M_PI_2)
+    if(angle < -M_PI_2)
         quadrant = 3;
-    else if(generic_angle < 0)
+    else if(angle < 0)
         quadrant = 4;
-    else if(generic_angle < M_PI_2)
+    else if(angle < M_PI_2)
         quadrant = 1;
     else
         quadrant = 2;

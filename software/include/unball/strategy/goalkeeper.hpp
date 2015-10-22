@@ -16,7 +16,20 @@
 class Goalkeeper : public Player
 {
   public:
+  	Goalkeeper();
   	void buildPotentialFields(int robot_number);
+  private:
+  	bool isBallBelowGoalkeeper(int goalkeeper_number);
+  	void stayAtTheBoundary();
+  	bool isBallInRange();
+  	void goToTheBoundary(float limit);
+
+  	void updateBallPos();
+
+  	Vector ball_pos_;
+
+  	static float const LEFT_LIMIT = 0.18;
+  	static float const RIGHT_LIMIT = -0.18;
 };
 
 #endif  // UNBALL_GOALKEEPER_H_

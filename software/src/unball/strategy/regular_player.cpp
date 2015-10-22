@@ -5,7 +5,7 @@ void RegularPlayer::buildPotentialFields(int robot_number)
     Vector ball_position(Vector(Ball::getInstance().getX(), Ball::getInstance().getY()));
 
     if (isInBallRange(robot_number))
-        potential_fields_.push_back(new SelectivePotentialField(ball_position, M_PI, M_PI/5, 6));
+        potential_fields_.push_back(new SelectivePotentialField(ball_position, 3*M_PI/4, M_PI/5, 6));
     else
         potential_fields_.push_back(new AttractivePotentialField(ball_position, 20));
 
