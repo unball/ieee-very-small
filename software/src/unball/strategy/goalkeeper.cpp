@@ -20,7 +20,7 @@ void Goalkeeper::buildPotentialFields(int robot_number)
     }
     //else
     //{
-    	//Danger: block the goal like there is no tomorrow
+    	//Danger: kick the ball as far as possible
     //}
 }
 
