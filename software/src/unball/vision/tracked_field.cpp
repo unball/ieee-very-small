@@ -103,7 +103,6 @@ void TrackedField::checkFieldStabilization(cv::Point old_position, cv::Point new
         ++field_stabilization_counter_;
     else
         field_stabilization_counter_ = 0;
-
     if (field_stabilization_counter_ >= field_stabilization_frame_)
         is_field_stable_ = true;
 }

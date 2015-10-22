@@ -14,134 +14,168 @@ void RobotIdentifier::loadConfig()
 {
     ros::param::get("/vision/segmenter/hsv_min_s", hsv_min_s_);
     ros::param::get("/vision/segmenter/hsv_min_v", hsv_min_v_);
+
+    loadShirtImages();
 }
 
-RobotData RobotIdentifier::identifyRobot(cv::Mat rgb_frame, std::vector<cv::Point> contour)
+void RobotIdentifier::loadShirtImages()
+{
+    std::string path;
+    ros::param::get("/vision/tracker/team", team_color_);
+    path = ros::package::getPath("unball");
+    path += "/data/camisas/";
+
+    // Loads the shirt images
+    if (team_color_ == "Blue")
+    {
+        shirt_images_[0] = cv::imread(path + "red/blue.png", CV_LOAD_IMAGE_COLOR);
+        shirt_images_[1] = cv::imread(path + "green/blue.png", CV_LOAD_IMAGE_COLOR);
+        shirt_images_[2] = cv::imread(path + "purple/blue.png", CV_LOAD_IMAGE_COLOR);
+    }
+    else if (team_color_ == "Yellow")
+    {
+        shirt_images_[0] = cv::imread(path + "red/yellow.png", CV_LOAD_IMAGE_COLOR);
+        shirt_images_[1] = cv::imread(path + "green/yellow.png", CV_LOAD_IMAGE_COLOR);
+        shirt_images_[2] = cv::imread(path + "purple/yellow.png", CV_LOAD_IMAGE_COLOR);
+    }
+    else
+    {
+        ROS_ERROR("Unknown team identification");
+    }
+
+    // Calculates shirt histograms
+    for (int i = 0; i < 3; ++i)
+        shirt_histograms_[i] = calculateHistogram(shirt_images_[i]);
+}
+
+RobotData RobotIdentifier::identifyRobot(cv::Mat rgb_frame, std::vector<cv::Point> contour, cv::Rect boundingRect)
 {
     RobotData data;
 
+    data.robot_outline = cv::minAreaRect(contour);
+    data.center_position = cv::Point(data.robot_outline.center.x, data.robot_outline.center.y);
     data.tracking_window = cv::boundingRect(contour);
-    data.center_position = calculateCenterPosition(data.tracking_window);
-    data.orientation = calculateOrientation(contour);
 
-    cv::Point farthest_point, opposite_point;
-    calculateDiagonalPoints(contour, farthest_point, opposite_point, data.center_position);
+    identifyTeam(data, data.robot_outline, rgb_frame);
 
-    cv::Vec3b value_f, value_o;
-    calculateColorPoints(rgb_frame, farthest_point, opposite_point, data.center_position, value_f, value_o);
-
-    if (isPointPink(value_f) or isPointPink(value_o))
-        setTeamParameters(data, RobotData::ALLY, cv::Scalar(180, 0, 180));
-    else if (isPointRed(value_f) or isPointRed(value_o))
-        setTeamParameters(data, RobotData::OPPONENT, cv::Scalar(0, 0, 180));
-    else
-        ROS_ERROR("[RobotIdentifier]identifyRobot: could not identify the team");
-
-    data.id = 0;
+    // if (data.team == 0)
+    // {
+    //     cv::Point2f vertices[4];
+    //     data.robot_outline.points(vertices);
+    //     for (int i = 0; i < 4; i++)
+    //         cv::line(rgb_frame, vertices[i], vertices[(i+1)%4], cv::Scalar(0,255,0));
+    //     cv::line(rgb_frame, data.center_position,
+    //              cv::Point2f(data.center_position.x+(cos(data.orientation)*20),
+    //                          data.center_position.y+(sin(data.orientation)*20)),
+    //              cv::Scalar(255,255,0));
+    // }
 
     return data;
 }
 
-void RobotIdentifier::calculateDiagonalPoints(std::vector<cv::Point> contour, cv::Point &farthest_point,
-                                              cv::Point &opposite_point, cv::Point center)
+/**
+ * Calculates and normalizes the histogram of the given image.
+ * Code taken from:
+ * <http://docs.opencv.org/doc/tutorials/imgproc/histograms/histogram_comparison/histogram_comparison.html>
+ * @param img the image whose histogram is to be calculated
+ * @return The normalized histogram
+ */
+cv::Mat RobotIdentifier::calculateHistogram(cv::Mat img)
 {
-    farthest_point = contour[0];
-    float distance = distanceBetweenPoints(center, farthest_point);
-    for (int k = 1; k < contour.size(); ++k)
+    cv::Mat histogram;
+    cv::Mat hsv;
+    cv::cvtColor(img, hsv, CV_BGR2HSV);
+
+    // Using 50 bins for hue and 60 for saturation
+    int h_bins = 50; int s_bins = 60;
+    int histSize[] = { h_bins, s_bins };
+
+    // hue varies from 0 to 179, saturation from 0 to 255
+    float h_ranges[] = { 0, 180 };
+    float s_ranges[] = { 0, 256 };
+    const float* ranges[] = { h_ranges, s_ranges };
+
+    // Use the o-th and 1-st channels
+    int channels[] = { 0, 1 };
+
+    cv::calcHist(&hsv, 1, channels, cv::Mat(), histogram, 1, histSize, ranges, true, false);
+
+    normalize(histogram, histogram, 0, 1, cv::NORM_MINMAX, -1, cv::Mat());
+
+    return histogram;
+}
+
+void RobotIdentifier::identifyTeam(RobotData &data, cv::RotatedRect robot, cv::Mat rgb_frame)
+{
+    cv::Mat hsv;
+    cv::Point2f test_points[4];
+    cv::Point2f vertices[4];
+    robot.points(vertices);
+    cv::cvtColor(rgb_frame, hsv, CV_BGR2HSV);
+    for (int i = 0; i < 4; ++i)
     {
-        float current_distance = distanceBetweenPoints(center, contour[k]);
-        if (current_distance > distance)
+        test_points[i] = calculatePointAtMiddle(robot.center, vertices[i]);
+        cv::Vec3b hsv_value = hsv.at<cv::Vec3b>(test_points[i].y, test_points[i].x);
+        if ((team_color_ == "Blue" and isPointBlue(hsv_value)) or
+            (team_color_ == "Yellow" and isPointYellow(hsv_value)))
         {
-            farthest_point = contour[k];
-            distance = current_distance;
+            data.team = RobotData::ALLY;
+            data.orientation = (robot.angle+(90*((i+1)%4)))*2*M_PI/360.0;
+            cv::Point2f id_test_point = calculatePointAtMiddle(robot.center, vertices[(i+2)%4]);
+            cv::Vec3b hsv_id_point = hsv.at<cv::Vec3b>(id_test_point.y, id_test_point.x);
+            if (isPointRed(hsv_id_point))
+            {
+                data.id = 0;
+                data.robot_color = cv::Scalar(0, 0, 255);
+            }
+            else if (isPointGreen(hsv_id_point))
+            {
+                data.id = 1;
+                data.robot_color = cv::Scalar(0, 255, 0);
+            }
+            else if (isPointPurple(hsv_id_point))
+            {
+                data.id = 2;
+                data.robot_color = cv::Scalar(255, 0, 0);
+            }
+            else
+            {
+                ROS_ERROR("Could not identify this robot");
+            }
+            return;
         }
     }
-    opposite_point = calculateOppositePoint(farthest_point, center);
+    data.team = RobotData::OPPONENT;
+    data.id = 0;
+    data.orientation = 0.0;
 }
 
-void RobotIdentifier::calculateColorPoints(cv::Mat rgb_frame, cv::Point farthest_point, cv::Point opposite_point,
-                                           cv::Point center, cv::Vec3b &value_f, cv::Vec3b &value_o)
+cv::Point2f RobotIdentifier::calculatePointAtMiddle(cv::Point2f a, cv::Point2f b)
 {
-    cv::Point middle_f = calculateMidPoint(farthest_point, center);
-    cv::Point middle_o = calculateMidPoint(opposite_point, center);
-
-    cv::Mat hsv;
-    cv::cvtColor(rgb_frame, hsv, CV_BGR2HSV);
-    value_f = hsv.at<cv::Vec3b>(middle_f.y,middle_f.x);
-    value_o = hsv.at<cv::Vec3b>(middle_o.y,middle_o.x);
+    return cv::Point2f((a.x+b.x)/2,(a.y+b.y)/2);
 }
 
-float RobotIdentifier::calculateOrientation(std::vector<cv::Point> contour)
+bool RobotIdentifier::isPointBlue(cv::Vec3b hsv_values)
 {
-    // Orientation is calculated using moments, according to this:
-    // https://en.wikipedia.org/wiki/Image_moment#Examples_2
-    cv::Moments moments = cv::moments(contour);
-    float theta = atan(2*moments.m11/(moments.m20 - moments.m02))/2;
+    return (hsv_values[0] > 100 and hsv_values[0] <= 150 and hsv_values[1] > 133 and hsv_values[2] > 90);
 }
 
-cv::Point RobotIdentifier::calculateCenterPosition(cv::Rect tracking_window)
+bool RobotIdentifier::isPointYellow(cv::Vec3b hsv_values)
 {
-    cv::Point center;
-    cv::Point top_left = tracking_window.tl();
-    cv::Point bottom_right = tracking_window.br();
-    center.x = (top_left.x + bottom_right.x)/2;
-    center.y = (top_left.y + bottom_right.y)/2;
-    return center;
-}
-
-double RobotIdentifier::distanceBetweenPoints(cv::Point a, cv::Point b)
-{
-    return sqrt(pow(a.x-b.x, 2) + pow(a.y-b.y, 2));
-}
-
-cv::Point RobotIdentifier::calculateOppositePoint(cv::Point point, cv::Point reference)
-{
-    return cv::Point(2 * reference.x - point.x, 2 * reference.y - point.y);
-}
-
-cv::Point RobotIdentifier::calculateMidPoint(cv::Point point, cv::Point reference)
-{
-    return cv::Point(reference.x + (point.x-reference.x)/2, reference.y + (point.y-reference.y)/2);
-}
-
-/**
- * Determines whether the given point's color is the one given or not
- * @param color the color being identified
- * @param hsv_values the hsv values of the point
- * @return whether the point is of the given color or not
- */
-bool RobotIdentifier::isPointColor(std::string color, cv::Vec3b hsv_values)
-{
-    if (color_map_.find(color) == color_map_.end())
-    {
-        ROS_ERROR("[RobotIdentifier]isPointColor: color %s does not exist in color map", color.c_str());
-        return false;
-    }
-    else
-    {
-        HSVColorData data = color_map_[color];
-        return (hsv_values[0] >= data.min_hue and hsv_values[0] <= data.max_hue and
-                hsv_values[1] >= data.min_sat and hsv_values[1] <= data.max_sat and
-                hsv_values[2] >= data.min_val and hsv_values[2] <= data.max_val);
-    }
+    return (hsv_values[0] <= 40 and hsv_values[1] > 133 and hsv_values[2] > 90);
 }
 
 bool RobotIdentifier::isPointRed(cv::Vec3b hsv_values)
 {
-    if (hsv_values[2] < hsv_min_v_ or hsv_values[1] < hsv_min_s_ or hsv_values[0] < 170)
-        return false;
-    return true;
+    return (hsv_values[0] > 150 and hsv_values[0] <= 200 and hsv_values[1] > 133 and hsv_values[2] > 90);
 }
 
-bool RobotIdentifier::isPointPink(cv::Vec3b hsv_values)
+bool RobotIdentifier::isPointGreen(cv::Vec3b hsv_values)
 {
-    if (hsv_values[2] < hsv_min_v_ or hsv_values[1] < hsv_min_s_ or hsv_values[0] > 175 or hsv_values[1] > 200)
-        return false;
-    return true;
+    return (hsv_values[0] > 80 and hsv_values[0] <= 100 and hsv_values[2] > 90);
 }
 
-void RobotIdentifier::setTeamParameters(RobotData &data, RobotData::Team team, cv::Scalar team_color)
+bool RobotIdentifier::isPointPurple(cv::Vec3b hsv_values)
 {
-    data.team = team;
-    data.team_color = team_color;
+    return (hsv_values[0] > 120 and hsv_values[0] <= 140 and hsv_values[2] > 90);
 }

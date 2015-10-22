@@ -47,7 +47,7 @@ vision:
         hsv_min_h: 0
 
         # Maximum hue for HSV segmentation.
-        hsv_max_h: 290
+        hsv_max_h: 17
 
         # Minimum saturation for HSV segmentation.
         hsv_min_s: 133
@@ -66,10 +66,13 @@ vision:
         depth_adjust: false
 
         # Treshold value
-        depth_treshold: 17
+        depth_treshold: 2000
+
+        # Depth threshold divider
+        depth_treshold_divider: 30
 
         # Size Value
-        size_value: 81
+        size_value: 79
 
     tracker:
         # Show image with the results of tracking
@@ -88,6 +91,9 @@ vision:
 
         # The amount of robots for each team (teams have the same amount of robots)
         robots_per_team: 1
+
+        # Identification for the color representing our team. Can be either "Blue" or "Yellow"
+        team: "Blue"
 
     gui:
         # Name of the RGB window

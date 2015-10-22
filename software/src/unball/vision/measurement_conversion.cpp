@@ -29,8 +29,6 @@ void MeasurementConversion::loadConfig()
  */
 void MeasurementConversion::calculateConversion(float field_pixel_width, float field_pixel_height)
 {
-    ROS_INFO("Calculating the conversion parameters");
-
     if (field_pixel_width < 0 or field_pixel_height < 0)
         ROS_ERROR("Invalid field pixel measurements given");
 
@@ -86,8 +84,10 @@ cv::Point2f MeasurementConversion::convertToMetric(cv::Point point_in_pixel)
         ROS_ERROR("Trying to make a conversion without calculating the parameters first");
         return cv::Point2f();
     }
+    point_in_pixel.x -= 320;
+    point_in_pixel.y -= 240;
     return cv::Point2f(point_in_pixel.x * conversion_parameters_.x,
-                     point_in_pixel.y * conversion_parameters_.y);
+                       -point_in_pixel.y * conversion_parameters_.y);
 }
 
 /**

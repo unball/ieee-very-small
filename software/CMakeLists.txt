@@ -78,6 +78,7 @@ add_executable(vision_node
   src/unball/vision/vision_node.cpp
   src/unball/vision/vision.cpp
   src/unball/vision/gui.cpp
+  src/unball/vision/kalman_filter.cpp
   src/unball/vision/preprocessor.cpp
   src/unball/vision/segmenter.cpp
   src/unball/vision/tracker.cpp
@@ -86,8 +87,9 @@ add_executable(vision_node
   src/unball/vision/tracked_robot.cpp
   src/unball/vision/robot_identifier.cpp
   src/unball/vision/robot_tracker.cpp
-  src/unball/vision/ball_tracker.cpp
+  src/unball/vision/ball_filter.cpp
   src/unball/vision/homography.cpp
+  src/unball/vision/ball_identifier.cpp
   src/unball/vision/measurement_conversion.cpp)
 add_dependencies(vision_node unball_gencpp)
 target_link_libraries(vision_node ${catkin_LIBRARIES})
@@ -107,6 +109,11 @@ add_executable(save_kinect_video
   src/unball/camera/save_kinect_video.cpp)
 add_dependencies(save_kinect_video unball_gencpp)
 target_link_libraries(save_kinect_video ${catkin_LIBRARIES})
+
+add_executable(take_kinect_photo
+  src/unball/camera/take_kinect_photo.cpp)
+add_dependencies(take_kinect_photo unball_gencpp)
+target_link_libraries(take_kinect_photo ${catkin_LIBRARIES})
 
 add_executable(dummy_camera
   src/unball/dummy_camera/dummy_camera.cpp)

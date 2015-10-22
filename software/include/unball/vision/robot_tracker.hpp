@@ -21,7 +21,7 @@
 class RobotTracker
 {
   public:
-    RobotTracker();
+    RobotTracker(MeasurementConversion *measurement_conversion_);
     void loadConfig();
 
     void track(cv::Mat &rgb_frame, cv::Mat &depth_frame, cv::Mat &depth_segmented_frame);
@@ -39,6 +39,9 @@ class RobotTracker
     TrackedRobot robots_[2][3]; // First line for allied robots, second for opponent robots
 
     int tracking_step_;
+
+    // Used on tracking step 1
+    int min_area_, max_area_;
 };
 
 #endif // UNBALL_VISION_ROBOT_TRACKER_H_

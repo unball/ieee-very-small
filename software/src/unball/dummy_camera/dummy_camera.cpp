@@ -42,7 +42,7 @@ int main(int argc, char **argv)
     ros::NodeHandle nh;
     image_transport::ImageTransport it(nh); // Used to publish and subscribe to images.
     image_transport::Publisher rgb_pub = it.advertise("/camera/rgb/image_raw", 1);
-    image_transport::Publisher depth_pub = it.advertise("/camera/depth/image_raw", 1);
+    image_transport::Publisher depth_pub = it.advertise("/camera/depth/image", 1);
     cv_bridge::CvImage rgb_frame, depth_frame;
     int frame_counter; // Used to count the number of frames published on the topic.
     int num_frames;
@@ -79,7 +79,7 @@ int main(int argc, char **argv)
 
     // Set rgb and depth frame encoding
     rgb_frame.encoding = sensor_msgs::image_encodings::BGR8;
-    depth_frame.encoding = sensor_msgs::image_encodings::TYPE_16UC1;
+    depth_frame.encoding = sensor_msgs::image_encodings::TYPE_32FC1;
 
     // Retrieve amount of frames on the video
     num_frames = rgb_cap.get(CV_CAP_PROP_FRAME_COUNT);
@@ -87,7 +87,8 @@ int main(int argc, char **argv)
 
     // Publish the video
     ROS_INFO("Sending video");
-    for (frame_counter = 0; ros::ok() && (frame_counter < num_frames); frame_counter++)
+    frame_counter = 0;
+    while (ros::ok())
     {
         ROS_DEBUG("Frame counter: %d", frame_counter);
         // Publish the rgb frame
@@ -98,11 +99,16 @@ int main(int argc, char **argv)
         // Publish the depth frame
         ROS_DEBUG("Publishing the depth frame");
         depth_counter++;
-        depth_frame.image = cv::imread(depth_image_file+to_string(depth_counter)+".png", CV_LOAD_IMAGE_ANYDEPTH);
+        cv::Mat loaded_image;
+        loaded_image = cv::imread(depth_image_file+to_string(depth_counter)+".png", CV_LOAD_IMAGE_ANYDEPTH);
+        loaded_image.convertTo(depth_frame.image, CV_32FC1, 1.0);
         depth_pub.publish(depth_frame.toImageMsg());
 
         ros::spinOnce();
         loop_rate.sleep();
+        frame_counter++;
+        if (frame_counter >= num_frames)
+            rgb_cap.set(CV_CAP_PROP_POS_AVI_RATIO, 0); // Resets the video
     }
     ROS_INFO("Finished sending video");
 
