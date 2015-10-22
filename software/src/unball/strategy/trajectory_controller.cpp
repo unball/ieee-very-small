@@ -13,7 +13,7 @@
 TrajectoryController::TrajectoryController()
 {
     player_[0] = new RegularPlayer();
-    player_[1] = new RegularPlayer();
+    //player_[1] = new RegularPlayer();
     player_[2] = new Goalkeeper();
 }
 
@@ -26,8 +26,9 @@ TrajectoryController::~TrajectoryController()
 void TrajectoryController::run()
 {
     Vector resultant_force;
-    for (int i = 0; i < 3; ++i)
+    for (int i = 0; i < 2; ++i)
     {
+        if (i==1) i = 2; //REMOVE THIS LINE, IT IS MEANT ONLY FOR TESTING. DO NOT FEAR IT
         player_[i]->buildPotentialFields(i);
         resultant_force = player_[i]->calculateResultantForce(i);
         player_[i]->clearPotentialFields();
@@ -37,7 +38,7 @@ void TrajectoryController::run()
 
 void TrajectoryController::controlRobot(int robot_number, Vector force)
 {   
-    if (fabs(force.getDirection()) <= M_PI/2) 
+    if (fabs(math::reduceAngle(force.getDirection() - robot[robot_number].getTh())) <= M_PI/2) 
     {
         move(robot_number, force.getMagnitude());
         turn(robot_number, force.getDirection());
