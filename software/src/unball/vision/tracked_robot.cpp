@@ -20,6 +20,11 @@ TrackedRobot::~TrackedRobot()
 {
 }
 
+void TrackedRobot::setMeasurementConversion(MeasurementConversion *mc)
+{
+    measurement_conversion_ = mc;
+}
+
 void TrackedRobot::track(cv::Mat &rgb_frame, cv::Mat &depth_frame, cv::Mat &rgb_segmented_frame)
 {
 
@@ -47,9 +52,9 @@ void TrackedRobot::setPosition(RobotData data)
 std::vector<float> TrackedRobot::getRobotPose()
 {
     std::vector<float> pose(3);
-
-    pose[0] = position_.x;
-    pose[1] = position_.y;
+    cv::Point2f metric_position = measurement_conversion_->convertToMetric(position_);
+    pose[0] = metric_position.x;
+    pose[1] = metric_position.y;
     pose[2] = orientation_;
 
     return pose;

@@ -10,9 +10,12 @@
 
 #include <unball/vision/robot_tracker.hpp>
 
-RobotTracker::RobotTracker()
+RobotTracker::RobotTracker(MeasurementConversion *mc)
 {
     tracking_step_ = 1;
+    for (int i = 0; i < 2; ++i)
+        for (int j = 0; j < 3; ++j)
+            robots_[i][j].setMeasurementConversion(mc);
 }
 
 void RobotTracker::loadConfig()

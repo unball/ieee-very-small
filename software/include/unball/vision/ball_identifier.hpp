@@ -19,9 +19,8 @@
 #include <opencv2/opencv.hpp>
 
 #include <unball/vision/ball_filter.hpp>
-
 #include <unball/vision/measurement_conversion.hpp>
- 
+
 class BallIdentifier
 {
   public:
@@ -29,8 +28,8 @@ class BallIdentifier
     cv::Point2f getBallPose();
     void track(cv::Mat &rgb_frame, cv::Mat &rgb_segmented_image);
     std::vector<cv::Point> findLargerBlob(std::vector< std::vector<cv::Point> > contours);
-     
-  private:  
+
+  private:
     static const cv::Scalar CIRCLE_COLOR_;
     cv::Point2f ball_pose_;
     BallFilter tracker_;

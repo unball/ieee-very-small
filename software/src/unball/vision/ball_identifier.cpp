@@ -20,9 +20,8 @@ BallIdentifier::BallIdentifier(MeasurementConversion *mc){
 
 cv::Point2f BallIdentifier::getBallPose()
 {
-    ball_pose_ = to_metric_->convertToMetric(ball_pose_);
-    ROS_ERROR("ball_pose_ : %f %f", ball_pose_.x, ball_pose_.y);
-    return ball_pose_;
+    cv::Point2f metric_position = to_metric_->convertToMetric(ball_pose_);
+    return metric_position;
 }
 
 std::vector<cv::Point> BallIdentifier::findLargerBlob(std::vector< std::vector<cv::Point> > contours)
@@ -31,7 +30,7 @@ std::vector<cv::Point> BallIdentifier::findLargerBlob(std::vector< std::vector<c
     comparison_contour = contours[0];
     for (int i = 0; i < contours.size() - 1; ++i)
     {
-        if (cv::contourArea(comparison_contour) < cv::contourArea(contours[i+1]))    
+        if (cv::contourArea(comparison_contour) < cv::contourArea(contours[i+1]))
         {
             comparison_contour = contours[i+1];
         }
@@ -47,14 +46,14 @@ void BallIdentifier::track(cv::Mat &rgb_frame, cv::Mat &rgb_segmented_image)
 
     cv::findContours(rgb_segmented_image, contours, CV_RETR_LIST, CV_CHAIN_APPROX_SIMPLE);
     tracker_.predict();
-    ball_pose_ = tracker_.getPredictedPose();  
+    ball_pose_ = tracker_.getPredictedPose();
     if (contours.size() != 0)
     {
         larger_contour = findLargerBlob(contours);
         moments = cv::moments(larger_contour, true);
         tracker_.update(cv::Point2f (moments.m10/moments.m00, moments.m01/moments.m00));
     }
-    
+
     ball_pose_ = tracker_.getPredictedPose();
 
 

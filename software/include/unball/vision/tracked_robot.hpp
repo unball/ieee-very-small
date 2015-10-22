@@ -18,12 +18,15 @@
 
 #include <unball/vision/tracked_object.hpp>
 #include <unball/vision/robot_data.hpp>
+#include <unball/vision/measurement_conversion.hpp>
 
 class TrackedRobot : public TrackedObject
 {
   public:
     TrackedRobot();
     ~TrackedRobot();
+
+    void setMeasurementConversion(MeasurementConversion *mc);
 
     void track(cv::Mat &rgb_frame, cv::Mat &depth_frame, cv::Mat &rgb_segmented_frame);
     void draw(cv::Mat &frame);
@@ -32,6 +35,8 @@ class TrackedRobot : public TrackedObject
     std::vector<float> getRobotPose();
 
   private:
+    MeasurementConversion *measurement_conversion_;
+
     cv::Scalar robot_color_;
     cv::RotatedRect robot_outline_;
 };

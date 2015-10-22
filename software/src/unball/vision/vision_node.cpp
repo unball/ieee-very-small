@@ -24,10 +24,11 @@
 
 void loadConfig(image_transport::Subscriber &rgb_sub, image_transport::Subscriber &depth_sub,
                 image_transport::ImageTransport &img_transport);
-void publishRobotsPoses(ros::Publisher &publisher);
 void receiveRGBFrame(const sensor_msgs::ImageConstPtr& msg);
 void receiveDepthFrame(const sensor_msgs::ImageConstPtr& msg);
-void publishBallPose(ros::Publisher &publisher);
+void publishVisionMessage(ros::Publisher &publisher);
+void getRobotsPoses(unball::VisionMessage &message);
+void getBallPose(unball::VisionMessage &message);
 
 int main(int argc, char **argv)
 {
@@ -46,8 +47,7 @@ int main(int argc, char **argv)
     while (ros::ok())
     {
         Vision::getInstance().run();
-        publishRobotsPoses(publisher);
-        publishBallPose(publisher);
+        publishVisionMessage(publisher);
         ros::spinOnce();
         loop_rate.sleep();
     }
@@ -76,28 +76,6 @@ void loadConfig(image_transport::Subscriber &rgb_sub, image_transport::Subscribe
         depth_sub = img_transport.subscribe("camera/depth/image", 1, receiveDepthFrame);
 
     Vision::getInstance().loadConfig();
-}
-
-/**
- * Publishes the six robots poses (x, y, theta) to the vision topic.
- * @param publisher a ROS node publisher.
- */
-void publishRobotsPoses(ros::Publisher &publisher)
-{
-    unball::VisionMessage message;
-    std::vector<float> pose;
-
-    ROS_DEBUG("Publishing robots poses");
-
-    for (unsigned int i = 0; i < message.x.size(); ++i)
-    {
-        pose = Vision::getInstance().getRobotPose(i);
-        message.x[i] = pose[0];
-        message.y[i] = pose[1];
-        message.th[i] = pose[2];
-    }
-
-    publisher.publish(message);
 }
 
 /**
@@ -142,13 +120,48 @@ void receiveDepthFrame(const sensor_msgs::ImageConstPtr &msg)
     Vision::getInstance().setDepthFrame(cv_ptr->image);
 }
 
-void publishBallPose(ros::Publisher &publisher)
+/**
+ * Publishes the vision message to the vision topic.
+ * @param publisher a ROS node publisher.
+ */
+void publishVisionMessage(ros::Publisher &publisher)
+{
+    unball::VisionMessage message;
+    getRobotsPoses(message);
+    getBallPose(message);
+    publisher.publish(message);
+}
+
+/**
+ * Retrieves the six robots poses (x, y, theta) to the vision message.
+ * @param message reference to the vision message.
+ */
+void getRobotsPoses(unball::VisionMessage &message)
+{
+    std::vector<float> pose;
+
+    ROS_DEBUG("Getting robots poses");
+
+    for (unsigned int i = 0; i < message.x.size(); ++i)
+    {
+        pose = Vision::getInstance().getRobotPose(i);
+        message.x[i] = pose[0];
+        message.y[i] = pose[1];
+        message.th[i] = pose[2];
+    }
+}
+
+/**
+ * Retrieves the ball position (x, y) to the vision message.
+ * @param message reference to the vision message.
+ */
+void getBallPose(unball::VisionMessage &message)
 {
     cv::Point2f pose;
-    unball::VisionMessage message;
+
+    ROS_DEBUG("Getting ball pose");
 
     pose = Vision::getInstance().getBallPose();
     message.ball_x = pose.x;
     message.ball_y = pose.y;
-
 }

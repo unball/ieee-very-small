@@ -10,7 +10,7 @@
 
 #include <unball/vision/tracker.hpp>
 
-Tracker::Tracker() : ball_tracker_(&measurement_conversion_)
+Tracker::Tracker() : ball_tracker_(&measurement_conversion_), robot_tracker_(&measurement_conversion_)
 {
     window_name_ = "Tracker";
     loadConfig();

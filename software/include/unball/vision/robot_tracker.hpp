@@ -21,7 +21,7 @@
 class RobotTracker
 {
   public:
-    RobotTracker();
+    RobotTracker(MeasurementConversion *measurement_conversion_);
     void loadConfig();
 
     void track(cv::Mat &rgb_frame, cv::Mat &depth_frame, cv::Mat &depth_segmented_frame);
