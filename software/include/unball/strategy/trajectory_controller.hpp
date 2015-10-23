@@ -27,6 +27,7 @@
 #include <unball/strategy/regular_player.hpp>
 #include <unball/strategy/goalkeeper.hpp>
 #include <unball/strategy/initial_goalkeeper.hpp>
+#include <unball/strategy/kicker_player.hpp>
 
 class TrajectoryController
 {

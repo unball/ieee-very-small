@@ -31,6 +31,10 @@ enum player_behaviour
     REGULAR_PLAYER
 };
 
+//static const Vector FRIENDLY_GOAL(0.85, 0);
+//static const Vector OPPONENT_GOAL(-0.85, 0);
+//>>>>>>> issue40
+
 class Player
 {
   public:
