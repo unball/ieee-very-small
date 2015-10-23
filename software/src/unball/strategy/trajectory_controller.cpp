@@ -95,6 +95,5 @@ void TrajectoryController::updatePlayer(int robot_number, player_behaviour behav
 
 Player* TrajectoryController::getPlayer(int robot_number)
 {
-    ROS_ERROR("[TrajectoryController]getPlayer");
     return player_[robot_number];
 }
