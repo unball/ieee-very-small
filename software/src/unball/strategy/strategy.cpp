@@ -49,7 +49,7 @@ void Strategy::receiveKeyboardInput(char key)
 
 /*
 * Pauses the actions of all robots.
-* TODO (mota.icaro@gmail.com): Pause the ball
+* TODO (mota.icaro@gmail.com): Pause the ball in the simulator
 */
 void Strategy::PauseGame()
 {
@@ -74,14 +74,12 @@ void Strategy::run()
     if (state_estimator_.getGameState() != WorldState::GAME_PAUSED)
     {
 		state_estimator_.update();
+        updatePlayers();
         trajectory_controller_.run();
     }
 }
 
-/**
- * Choose the best strategy state depending on the state of the game
- */
-void Strategy::chooseStrategyState()
+void Strategy::updatePlayers()
 {
-
+    
 }

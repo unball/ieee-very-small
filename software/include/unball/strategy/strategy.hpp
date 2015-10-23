@@ -40,15 +40,14 @@ class Strategy
     
   private:
     static Strategy *instance; // singleton instance
-    void choosePlay();
-    void chooseStrategyState();
 
     StateEstimator state_estimator_;
     TrajectoryController trajectory_controller_;
-    TeamState::StrategyState strategy_state_;
 
     void PauseGame();
     void ResumeGame();
+
+    void updatePlayers();
 };
 
 extern Strategy strategy;

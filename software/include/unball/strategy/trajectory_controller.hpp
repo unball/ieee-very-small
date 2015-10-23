@@ -28,26 +28,32 @@
 #include <unball/strategy/goalkeeper.hpp>
 #include <unball/strategy/initial_goalkeeper.hpp>
 
+enum player_behaviour
+{
+    INITIAL_GOALKEEPER,
+    GOALKEEPER,
+    REGULAR_PLAYER
+};
+
 class TrajectoryController
 {
   public:
     TrajectoryController();
     ~TrajectoryController();
     void run();
-    void buildPotentialFields(int robot_number);
-    void buildGoalKeeperPotentialFields(int robot_number);
-    void clearPotentialFields();
-    Vector calculateResultantForce(int robot_number);
-    void controlRobot(int robot_number, Vector force);
     void stopRobot(int robot_number);
-    void turn(int robot_number, float angle);
-    void move(int robot_number, float distance);
+
+    void updatePlayer(int robot_number, player_behaviour behaviour);
 
   private:
     Player* player_[3];
 
     std::vector<PotentialField*> potential_fields_;
     float angle_error_d_;
+
+    void controlRobot(int robot_number, Vector force);
+    void turn(int robot_number, float angle);
+    void move(int robot_number, float distance);
 
     bool isInBallRange(int robot_number);
 };

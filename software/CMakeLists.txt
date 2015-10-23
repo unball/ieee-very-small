@@ -61,6 +61,7 @@ add_executable(strategy_node
   src/unball/strategy/state_estimator.cpp
   src/unball/strategy/robot.cpp
   src/unball/strategy/ball.cpp
+  src/unball/strategy/goals.cpp
   src/unball/strategy/player.cpp
   src/unball/strategy/goalkeeper.cpp
   src/unball/strategy/initial_goalkeeper.cpp

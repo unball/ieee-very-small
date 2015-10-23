@@ -80,3 +80,13 @@ void TrajectoryController::move(int robot_number, float distance)
     else
         robot[robot_number].setLinVel(0);
 }
+
+void TrajectoryController::updatePlayer(int robot_number, player_behaviour behaviour)
+{
+    if (behaviour == INITIAL_GOALKEEPER)
+        player_[robot_number] = new InitialGoalkeeper();
+    if (behaviour == GOALKEEPER)
+        player_[robot_number] = new Goalkeeper();
+    if (behaviour == REGULAR_PLAYER)
+        player_[robot_number] = new RegularPlayer();    
+}
