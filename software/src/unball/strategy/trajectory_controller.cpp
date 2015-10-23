@@ -83,6 +83,8 @@ void TrajectoryController::move(int robot_number, float distance)
 
 void TrajectoryController::updatePlayer(int robot_number, player_behaviour behaviour)
 {
+    delete player_[robot_number];
+    
     if (behaviour == INITIAL_GOALKEEPER)
         player_[robot_number] = new InitialGoalkeeper();
     if (behaviour == GOALKEEPER)
