@@ -1,5 +1,10 @@
 #include <unball/strategy/regular_player.hpp>
 
+RegularPlayer::RegularPlayer()
+{
+    behaviour_ = REGULAR_PLAYER;
+}
+
 void RegularPlayer::buildPotentialFields(int robot_number)
 {
     Vector ball_position(Vector(Ball::getInstance().getX(), Ball::getInstance().getY()));

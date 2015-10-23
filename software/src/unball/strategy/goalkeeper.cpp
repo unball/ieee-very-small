@@ -2,7 +2,7 @@
 
 Goalkeeper::Goalkeeper()
 {
-	//findGoal();
+	behaviour_ = GOALKEEPER;
 }
 
 void Goalkeeper::buildPotentialFields(int robot_number)

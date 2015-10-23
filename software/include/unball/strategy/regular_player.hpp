@@ -16,6 +16,7 @@
 class RegularPlayer : public Player
 {
   public:
+  	RegularPlayer();
   	void buildPotentialFields(int robot_number);
   	bool isInBallRange(int robot_number);
 

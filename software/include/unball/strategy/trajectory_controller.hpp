@@ -28,13 +28,6 @@
 #include <unball/strategy/goalkeeper.hpp>
 #include <unball/strategy/initial_goalkeeper.hpp>
 
-enum player_behaviour
-{
-    INITIAL_GOALKEEPER,
-    GOALKEEPER,
-    REGULAR_PLAYER
-};
-
 class TrajectoryController
 {
   public:
@@ -45,6 +38,7 @@ class TrajectoryController
 
     void updatePlayer(int robot_number, player_behaviour behaviour);
 
+    Player* getPlayer(int robot_number);
   private:
     Player* player_[3];
 

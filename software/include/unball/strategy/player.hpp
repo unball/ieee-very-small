@@ -24,6 +24,13 @@
 #include <unball/strategy/selective_potential_field.hpp>
 #include <unball/strategy/tangential_potential_field.hpp>
 
+enum player_behaviour
+{
+    INITIAL_GOALKEEPER,
+    GOALKEEPER,
+    REGULAR_PLAYER
+};
+
 class Player
 {
   public:
@@ -31,8 +38,12 @@ class Player
   	virtual void buildPotentialFields(int robot_number) = 0;
   	void clearPotentialFields();
   	Vector calculateResultantForce(int robot_number);
+
+  	player_behaviour getBehaviour();
   protected:
   	std::vector<PotentialField*> potential_fields_;
+
+  	player_behaviour behaviour_;
 };
 
 #endif  // UNBALL_PLAYER_H_

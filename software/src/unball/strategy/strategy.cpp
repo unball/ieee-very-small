@@ -81,10 +81,14 @@ void Strategy::run()
 
 void Strategy::updatePlayers()
 {
-    Vector goalkeeper_pos = Vector(robot[2].getPos().getX(),robot[2].getPos().getY());
-    
-    if (goalkeeper_pos.calculateDistance(Goals::getInstance().friendly_goal_) < 0.01)
+    for (int i=0;i<3;i++)
     {
-        trajectory_controller_.updatePlayer(2,GOALKEEPER);
-    }   
+       if (trajectory_controller_.getPlayer(i)->getBehaviour() == INITIAL_GOALKEEPER)
+       {
+            Vector goalkeeper_pos = Vector(robot[i].getPos().getX(),robot[i].getPos().getY());
+    
+             if (goalkeeper_pos.calculateDistance(Goals::getInstance().friendly_goal_) < 0.01)
+                trajectory_controller_.updatePlayer(i,GOALKEEPER);
+       }
+    }
 }

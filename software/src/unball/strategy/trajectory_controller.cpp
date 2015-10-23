@@ -13,13 +13,13 @@
 TrajectoryController::TrajectoryController()
 {
     player_[0] = new RegularPlayer();
-    //player_[1] = new RegularPlayer();
+    player_[1] = new RegularPlayer();
     player_[2] = new InitialGoalkeeper();
 }
 
 TrajectoryController::~TrajectoryController()
 {
-    for (int i = 3; i >= 0; --i)
+    for (int i = 2; i >= 0; --i)
         delete player_[i];
 }
 
@@ -50,10 +50,17 @@ void TrajectoryController::controlRobot(int robot_number, Vector force)
     }
 }
 
-void TrajectoryController::stopRobot(int robot_number)
+void TrajectoryController::move(int robot_number, float distance)
 {
-    robot[robot_number].setAngVel(0);
-    robot[robot_number].setLinVel(0);
+    const float DIST_KP = 1;
+    const float distance_tolerance = 0.05; // m
+
+    float lin_vel = DIST_KP*distance; // P control
+
+    if (fabs(distance) > distance_tolerance)
+        robot[robot_number].setLinVel(lin_vel);
+    else
+        robot[robot_number].setLinVel(0);
 }
 
 void TrajectoryController::turn(int robot_number, float angle)
@@ -68,17 +75,10 @@ void TrajectoryController::turn(int robot_number, float angle)
     robot[robot_number].setAngVel(ang_vel);
 }
 
-void TrajectoryController::move(int robot_number, float distance)
+void TrajectoryController::stopRobot(int robot_number)
 {
-    const float DIST_KP = 1;
-    const float distance_tolerance = 0.05; // m
-
-    float lin_vel = DIST_KP*distance; // P control
-
-    if (fabs(distance) > distance_tolerance)
-        robot[robot_number].setLinVel(lin_vel);
-    else
-        robot[robot_number].setLinVel(0);
+    robot[robot_number].setAngVel(0);
+    robot[robot_number].setLinVel(0);
 }
 
 void TrajectoryController::updatePlayer(int robot_number, player_behaviour behaviour)
@@ -91,4 +91,10 @@ void TrajectoryController::updatePlayer(int robot_number, player_behaviour behav
         player_[robot_number] = new Goalkeeper();
     if (behaviour == REGULAR_PLAYER)
         player_[robot_number] = new RegularPlayer();    
+}
+
+Player* TrajectoryController::getPlayer(int robot_number)
+{
+    ROS_ERROR("[TrajectoryController]getPlayer");
+    return player_[robot_number];
 }
