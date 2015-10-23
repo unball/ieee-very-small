@@ -20,6 +20,7 @@ class InitialGoalkeeper : public Player
   	InitialGoalkeeper();
   	void buildPotentialFields(int robot_number);
   private:
+  	static float const OFFSET = 0.18;
 };
 
 #endif  // UNBALL_INITIAL_GOALKEEPER_H_

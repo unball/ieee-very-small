@@ -12,7 +12,7 @@
 
 TrajectoryController::TrajectoryController()
 {
-    player_[0] = new KickerPlayer();
+    player_[0] = new RegularPlayer();
     player_[1] = new RegularPlayer();
     player_[2] = new InitialGoalkeeper();
 }

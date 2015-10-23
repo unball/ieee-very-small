@@ -7,5 +7,9 @@ InitialGoalkeeper::InitialGoalkeeper()
 
 void InitialGoalkeeper::buildPotentialFields(int robot_number)
 {
-	potential_fields_.push_back(new AttractivePotentialField(Goals::getInstance().friendly_goal_,10));
+	int sign = fabs(Goals::getInstance().friendly_goal_.getY())/Goals::getInstance().friendly_goal_.getY();
+	sign = fabs(sign)/sign;
+
+	Vector position(Goals::getInstance().friendly_goal_.getX() - sign*OFFSET, Goals::getInstance().friendly_goal_.getY());
+	potential_fields_.push_back(new AttractivePotentialField(position,10));
 }
