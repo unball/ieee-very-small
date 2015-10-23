@@ -18,7 +18,7 @@
     
     <model name='ball'>
       <static>false</static>
-      <pose>0 0 0 0 0 0</pose>
+      <pose>-0.40 0.15 0 0 0 0</pose>
       <link name='ball_link'>
         <collision name='ball_collision'>
           <geometry>

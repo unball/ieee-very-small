@@ -64,6 +64,7 @@ add_executable(strategy_node
   src/unball/strategy/player.cpp
   src/unball/strategy/goalkeeper.cpp
   src/unball/strategy/regular_player.cpp
+  src/unball/strategy/kicker_player.cpp
   src/unball/strategy/attractive_potential_field.cpp
   src/unball/strategy/parallel_potential_field.cpp
   src/unball/strategy/perpendicular_potential_field.cpp

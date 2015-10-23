@@ -24,6 +24,10 @@
 #include <unball/strategy/selective_potential_field.hpp>
 #include <unball/strategy/tangential_potential_field.hpp>
 
+
+static const Vector FRIENDLY_GOAL(0.85, 0);
+static const Vector OPPONENT_GOAL(-0.85, 0);
+
 class Player
 {
   public:
