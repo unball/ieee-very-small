@@ -24,12 +24,12 @@ void Goals::setGoalkeeperSide(float x)
 {
 	if (x > 0) 
 	{
-		friendly_goal_ = Vector(0.68,0);
-   		opponent_goal_ = Vector(-0.68,0);
+		friendly_goal_ = Vector(0.85,0);
+   		opponent_goal_ = Vector(-0.85,0);
 	}
 	else
 	{
-		friendly_goal_ = Vector(-0.68,0);
-   		opponent_goal_ = Vector(0.68,0);
+		friendly_goal_ = Vector(-0.85,0);
+   		opponent_goal_ = Vector(0.85,0);
 	}
 }
