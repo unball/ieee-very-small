@@ -87,8 +87,10 @@ void Strategy::updatePlayers()
        {
             Vector goalkeeper_pos = Vector(robot[i].getPos().getX(),robot[i].getPos().getY());
     
-             if (goalkeeper_pos.calculateDistance(Goals::getInstance().friendly_goal_) < 0.01)
+            if (goalkeeper_pos.calculateDistance(Goals::getInstance().friendly_goal_) < 0.015) {
+                ROS_ERROR("GOALKEEPER");
                 trajectory_controller_.updatePlayer(i,GOALKEEPER);
+            }
        }
     }
 }

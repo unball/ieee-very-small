@@ -21,6 +21,7 @@
 #include <unball/strategy/strategy.hpp> // Strategy strategy;
 #include <unball/strategy/robot.hpp> // Robot robot[6];
 #include <unball/strategy/ball.hpp> // Ball ball;
+#include <unball/strategy/goals.hpp> // Goals goals;
 
 void initRobotsPoses();
 void publishRobotsVelocities(ros::Publisher &publisher);
@@ -105,7 +106,8 @@ void receiveVisionMessage(const unball::VisionMessage::ConstPtr &msg)
         ROS_DEBUG("%d x: %f\t y: %f\t th: %f", i, msg->x[i], msg->y[i], msg->th[i]);
         robot[i].setPose(msg->x[i], msg->y[i], msg->th[i]);
     }
-    
+
+    Goals::getInstance().setGoalkeeperSide(msg->x[2]);
     Ball::getInstance().update(msg->ball_x, msg->ball_y);
 }
 
