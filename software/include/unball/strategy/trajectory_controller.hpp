@@ -26,6 +26,7 @@
 #include <unball/strategy/tangential_potential_field.hpp>
 #include <unball/strategy/regular_player.hpp>
 #include <unball/strategy/goalkeeper.hpp>
+#include <unball/strategy/initial_goalkeeper.hpp>
 
 class TrajectoryController
 {
