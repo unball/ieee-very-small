@@ -18,10 +18,12 @@ class KickerPlayer : public Player
 {
   public:
   	void buildPotentialFields(int robot_number);
-  	bool isInBallRange(int robot_number);
-
+  
   private:
-  	static float const BALL_RANGE_ = 0.5;
+  	static float const BALL_RANGE_ = 0.1;
+
+  	bool isInBallRange(int robot_number);
+  	bool opponentGoalkeeperIsInGoalRange(int opponent_goalkeeper);
 };
 
 #endif  // UNBALL_KICKER_PLAYER_H_
