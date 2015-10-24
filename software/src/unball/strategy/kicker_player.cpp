@@ -3,13 +3,23 @@
 void KickerPlayer::buildPotentialFields(int robot_number)
 {
     Vector ball_position(Vector(Ball::getInstance().getX(), Ball::getInstance().getY()));
-    Vector opponent_goalkeeper(Vector(robot[6].getY(), robot[6].getX()));
     Vector difference;
-    // fazer o angulo ser em relacao a posicao do robo, pra desviar do goleiro e fazer gol
-    if(robot[6].getY() > 0)
-        difference = ball_position - Goals::getInstance().opponent_goal_ - opponent_goalkeeper;
-    else
-        difference = ball_position - Goals::getInstance().opponent_goal_ + opponent_goalkeeper;
+    float target = 0;
+    
+    if(opponentGoalkeeperIsInGoalRange(5))
+    {
+        ROS_ERROR("opponent_goalkeeper[5]: %f\n", robot[5].getY());
+        if(robot[5].getY() > 0)
+            target = robot[5].getY() - (0.2 + fabs(robot[5].getY())/2);
+            //target = (0.20 - robot[5].getY())/2;
+        else
+            target = robot[5].getY() - (0.2 + fabs(robot[5].getY())/2);
+            //target = (-0.20 - robot[5].getY())/2;
+    }
+    ROS_ERROR("target: %f\n", target);
+    Vector kick_target(Vector(Goals::getInstance().opponent_goal_.getX(), target));
+    difference = ball_position - kick_target;
+    ROS_ERROR("%f\n", difference.getDirection()*180/M_PI);
 
     if (isInBallRange(robot_number))
         potential_fields_.push_back(new SelectivePotentialField(ball_position, difference.getDirection(), M_PI/5, 6));
@@ -18,10 +28,8 @@ void KickerPlayer::buildPotentialFields(int robot_number)
 
     for (int i = 1; i < 6; ++i) 
     {
-        if (i != robot_number) 
-        {
+        if (i != robot_number)
             potential_fields_.push_back(new RepulsivePotentialField(Vector(robot[i].getX(), robot[i].getY()), 0.3));
-        }
     }
 }
 
@@ -32,4 +40,9 @@ bool KickerPlayer::isInBallRange(int robot_number)
     Vector difference = robot_position - ball_position;    
     
     return difference.getMagnitude() < BALL_RANGE_;
+}
+
+bool KickerPlayer::opponentGoalkeeperIsInGoalRange(int opponent_goalkeeper)
+{
+    return (robot[opponent_goalkeeper].getY() > -0.22 and robot[opponent_goalkeeper].getY() < 0.22);
 }
