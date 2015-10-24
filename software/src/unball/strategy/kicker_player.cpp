@@ -4,25 +4,13 @@ void KickerPlayer::buildPotentialFields(int robot_number)
 {
     Vector ball_position(Vector(Ball::getInstance().getX(), Ball::getInstance().getY()));
     Vector difference;
-    float target = 0;
-    
-    if(opponentGoalkeeperIsInGoalRange(5))
-    {
-        ROS_ERROR("opponent_goalkeeper[5]: %f\n", robot[5].getY());
-        if(robot[5].getY() > 0)
-            target = robot[5].getY() - (0.2 + fabs(robot[5].getY())/2);
-            //target = (0.20 - robot[5].getY())/2;
-        else
-            target = robot[5].getY() - (0.2 + fabs(robot[5].getY())/2);
-            //target = (-0.20 - robot[5].getY())/2;
-    }
-    ROS_ERROR("target: %f\n", target);
-    Vector kick_target(Vector(Goals::getInstance().opponent_goal_.getX(), target));
-    difference = ball_position - kick_target;
-    ROS_ERROR("%f\n", difference.getDirection()*180/M_PI);
+
+    findTarget();
+
+    difference = ball_position - kick_target_;
 
     if (isInBallRange(robot_number))
-        potential_fields_.push_back(new SelectivePotentialField(ball_position, difference.getDirection(), M_PI/5, 6));
+        potential_fields_.push_back(new SelectivePotentialField(ball_position, difference.getDirection(), M_PI/4, 6));
     else
         potential_fields_.push_back(new AttractivePotentialField(ball_position, 20));
 
@@ -31,6 +19,21 @@ void KickerPlayer::buildPotentialFields(int robot_number)
         if (i != robot_number)
             potential_fields_.push_back(new RepulsivePotentialField(Vector(robot[i].getX(), robot[i].getY()), 0.3));
     }
+}
+
+void KickerPlayer::findTarget()
+{
+    target_ = 0;
+    
+    if(opponentGoalkeeperIsInGoalRange(5))
+    {
+        if(robot[5].getY() > 0)
+            target_ = robot[5].getY() - (0.2 + fabs(robot[5].getY())/2);
+        else
+            target_ = robot[5].getY() - (0.2 + fabs(robot[5].getY())/2);
+    }
+
+    kick_target_ = Vector(Goals::getInstance().opponent_goal_.getX(), target_);
 }
 
 bool KickerPlayer::isInBallRange(int robot_number)

@@ -17,6 +17,7 @@
 
 #include <unball/strategy/ball.hpp>
 #include <unball/strategy/robot.hpp>
+ #include <unball/strategy/goals.hpp>
 #include <unball/strategy/attractive_potential_field.hpp>
 #include <unball/strategy/parallel_potential_field.hpp>
 #include <unball/strategy/perpendicular_potential_field.hpp>
