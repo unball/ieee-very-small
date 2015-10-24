@@ -92,8 +92,8 @@ void Strategy::updatePlayers()
        }
        else if (trajectory_controller_.getPlayer(i)->getBehaviour() == KICKER_PLAYER)
        {
-            //if (not hasBall(i))
-            //    trajectory_controller_.updatePlayer(i,ASSISTENT_PLAYER);
+            if (not hasBall(i))
+                trajectory_controller_.updatePlayer(i,ASSISTENT_PLAYER);
        }
        else if (trajectory_controller_.getPlayer(i)->getBehaviour() == ASSISTENT_PLAYER)
        {
@@ -136,9 +136,12 @@ bool Strategy::hasBall(int robot_number)
 {
     Vector ball_pos(Ball::getInstance().getX(),Ball::getInstance().getY());
     Vector robot_pos(robot[robot_number].getX(),robot[robot_number].getY());
-    
+ 
+    if ((robot_pos - ball_pos).getMagnitude() > 0.5) 
+        return false; 
+
     float direction = (ball_pos - Goals::getInstance().opponent_goal_).getDirection();
     
     Vector difference = robot_pos - ball_pos;
-    return (fabs(difference.getDirection() - direction) <= M_PI/4);
+    return (fabs(difference.getDirection() - direction) <= M_PI/2);
 }

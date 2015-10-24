@@ -58,7 +58,7 @@ Vector SelectivePotentialField::applyTangentialField(Vector difference)
         if(shouldRotateClockwise(angle_quadrant, direction_quadrant, math::reduceAngle(angle - direction_)))
             angle = rotateClockwise(angle);
         else
-            angle = rotateCounterClockwise(angle); //verify how it will work walking backwards*/   
+            angle = rotateCounterClockwise(angle); 
 
         Vector result;
         result.setPolar(magnitude, angle);

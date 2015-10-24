@@ -26,6 +26,13 @@ void AssistentPlayer::buildPotentialFields(int robot_number)
         potential_fields_.push_back(new AttractivePotentialField(ball_position, 20));
 
     potential_fields_.push_back(new RepulsivePotentialField(Vector(robot[5].getX(), robot[5].getY()), 0.3));
+
+    for (int i=0; i<6; i++)
+    {
+        if (i != robot_number)
+            potential_fields_.push_back(new RepulsivePotentialField(Vector(robot[i].getX(), robot[i].getY()), 0.3, 3));    
+    }
+
     if (friendly_kicker_ != -1)
     	potential_fields_.push_back(new RepulsivePotentialField(Vector(robot[friendly_kicker_].getX(),
     																   robot[friendly_kicker_].getY()), 0.3, 5));
