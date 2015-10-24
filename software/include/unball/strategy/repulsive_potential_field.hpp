@@ -17,12 +17,13 @@
 class RepulsivePotentialField : public PotentialField
 {
   public:
-    RepulsivePotentialField(Vector origin, float range);
+    RepulsivePotentialField(Vector origin, float range, float magnitude_weight = 1);
     Vector calculateForce(Vector position);
   
   private:
     Vector origin_;
     float range_;
+    float magnitude_weight_;
 
     bool isInRange(Vector position);
 };

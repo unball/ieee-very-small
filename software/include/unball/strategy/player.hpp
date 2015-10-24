@@ -29,12 +29,10 @@ enum player_behaviour
 {
     INITIAL_GOALKEEPER,
     GOALKEEPER,
-    REGULAR_PLAYER
+    REGULAR_PLAYER,
+    ASSISTENT_PLAYER,
+    KICKER_PLAYER
 };
-
-//static const Vector FRIENDLY_GOAL(0.85, 0);
-//static const Vector OPPONENT_GOAL(-0.85, 0);
-//>>>>>>> issue40
 
 class Player
 {

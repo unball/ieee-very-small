@@ -90,5 +90,17 @@ void Strategy::updatePlayers()
             if (goalkeeper_pos.calculateDistance(Goals::getInstance().friendly_goal_) < 0.2)
                 trajectory_controller_.updatePlayer(i,GOALKEEPER);
        }
+       if (trajectory_controller_.getPlayer(i)->getBehaviour() == KICKER_PLAYER)
+       {
+            //if (isBallTooFar())
+            //    LostBal();
+       }
+       if (trajectory_controller_.getPlayer(i)->getBehaviour() == ASSISTENT_PLAYER)
+       {
+            //if (isThereKicker())
+            //    setKicker(kicker);
+            //else
+            //    setKicker(none);
+       }
     }
 }

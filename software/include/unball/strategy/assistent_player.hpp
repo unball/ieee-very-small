@@ -16,11 +16,14 @@
 class AssistentPlayer : public Player
 {
   public:
+  	AssistentPlayer();
+  	AssistentPlayer(int friendly_kicker);
   	void buildPotentialFields(int robot_number);
   private:
   	void findTarget();
   	bool isInBallRange(int robot_number);
 
+  	int friendly_kicker_;
   	Vector kick_target_;
 
   	static float const BALL_RANGE_ = 0.5;  	

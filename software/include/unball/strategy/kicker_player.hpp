@@ -16,6 +16,7 @@
 class KickerPlayer : public Player
 {
   public:
+  	KickerPlayer();
   	void buildPotentialFields(int robot_number);
   
   private:

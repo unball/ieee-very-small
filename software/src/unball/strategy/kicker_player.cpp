@@ -1,5 +1,10 @@
 #include <unball/strategy/kicker_player.hpp>
 
+KickerPlayer::KickerPlayer()
+{
+    behaviour_ = KICKER_PLAYER;
+}
+
 void KickerPlayer::buildPotentialFields(int robot_number)
 {
     Vector ball_position(Vector(Ball::getInstance().getX(), Ball::getInstance().getY()));
@@ -14,7 +19,7 @@ void KickerPlayer::buildPotentialFields(int robot_number)
     else
         potential_fields_.push_back(new AttractivePotentialField(ball_position, 20));
 
-    potential_fields_.push_back(new RepulsivePotentialField(Vector(robot[5].getX(), robot[5].getY()), 0.3));
+    potential_fields_.push_back(new RepulsivePotentialField(Vector(robot[5].getX(), robot[5].getY()), 0.3, 0.9));
 }
 
 void KickerPlayer::findTarget()
