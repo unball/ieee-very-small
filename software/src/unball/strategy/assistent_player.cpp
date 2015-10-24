@@ -11,6 +11,8 @@ void AssistentPlayer::buildPotentialFields(int robot_number)
         potential_fields_.push_back(new SelectivePotentialField(ball_position, kick_target_.getDirection(), M_PI/4, 6));
     else
         potential_fields_.push_back(new AttractivePotentialField(ball_position, 20));
+
+    potential_fields_.push_back(new RepulsivePotentialField(Vector(robot[5].getX(), robot[5].getY()), 0.3));
 }
 
 bool AssistentPlayer::isInBallRange(int robot_number)
