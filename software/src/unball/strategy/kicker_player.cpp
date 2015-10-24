@@ -3,6 +3,7 @@
 KickerPlayer::KickerPlayer()
 {
     behaviour_ = KICKER_PLAYER;
+    ROS_ERROR("NEW KICKER");
 }
 
 void KickerPlayer::buildPotentialFields(int robot_number)

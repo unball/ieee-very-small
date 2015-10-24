@@ -13,7 +13,7 @@
 TrajectoryController::TrajectoryController()
 {
     player_[0] = new AssistentPlayer();
-    player_[1] = new KickerPlayer();
+    player_[1] = new AssistentPlayer();
     player_[2] = new InitialGoalkeeper();
 }
 
@@ -89,7 +89,11 @@ void TrajectoryController::updatePlayer(int robot_number, player_behaviour behav
     if (behaviour == GOALKEEPER)
         player_[robot_number] = new Goalkeeper();
     if (behaviour == REGULAR_PLAYER)
-        player_[robot_number] = new RegularPlayer();    
+        player_[robot_number] = new RegularPlayer();
+    if (behaviour == KICKER_PLAYER)
+        player_[robot_number] = new KickerPlayer();
+    if (behaviour == ASSISTENT_PLAYER)
+        player_[robot_number] = new AssistentPlayer();
 }
 
 Player* TrajectoryController::getPlayer(int robot_number)

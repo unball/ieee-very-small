@@ -26,7 +26,7 @@ class AssistentPlayer : public Player
   	int friendly_kicker_;
   	Vector kick_target_;
 
-  	static float const BALL_RANGE_ = 0.5;  	
+  	static float const BALL_RANGE_ = 0.5;
 };
 
 #endif  // UNBALL_ASSISTENT_PLAYER_H_

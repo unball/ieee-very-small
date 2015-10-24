@@ -4,7 +4,7 @@
 AssistentPlayer::AssistentPlayer()
 {
 	behaviour_ = ASSISTENT_PLAYER;
-	friendly_kicker_ = 1;
+	friendly_kicker_ = -1;
 }
 
 AssistentPlayer::AssistentPlayer(int friendly_kicker)

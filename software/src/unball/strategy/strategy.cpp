@@ -90,17 +90,55 @@ void Strategy::updatePlayers()
             if (goalkeeper_pos.calculateDistance(Goals::getInstance().friendly_goal_) < 0.2)
                 trajectory_controller_.updatePlayer(i,GOALKEEPER);
        }
-       if (trajectory_controller_.getPlayer(i)->getBehaviour() == KICKER_PLAYER)
+       else if (trajectory_controller_.getPlayer(i)->getBehaviour() == KICKER_PLAYER)
        {
-            //if (isBallTooFar())
-            //    LostBal();
+            //if (not hasBall(i))
+            //    trajectory_controller_.updatePlayer(i,ASSISTENT_PLAYER);
        }
-       if (trajectory_controller_.getPlayer(i)->getBehaviour() == ASSISTENT_PLAYER)
+       else if (trajectory_controller_.getPlayer(i)->getBehaviour() == ASSISTENT_PLAYER)
        {
-            //if (isThereKicker())
-            //    setKicker(kicker);
-            //else
-            //    setKicker(none);
+            if (isThere(KICKER_PLAYER)) 
+            {
+                setKickerForAssistent(i);
+            }
+            else
+            {
+                if (hasBall(i))
+                    trajectory_controller_.updatePlayer(i,KICKER_PLAYER);
+                else    
+                    trajectory_controller_.updatePlayer(i,ASSISTENT_PLAYER);
+            }
        }
     }
+}
+
+bool Strategy::isThere(player_behaviour behaviour)
+{
+    return find(behaviour) != -1;
+}
+
+int Strategy::find(player_behaviour behaviour)
+{
+    for (int i=0; i<3; i++)
+        if (trajectory_controller_.getPlayer(i)->getBehaviour() == behaviour)
+            return i;
+    return -1;
+}
+
+void Strategy::setKickerForAssistent(int assistent)
+{
+    delete trajectory_controller_.getPlayer(assistent);
+    Player *p = trajectory_controller_.getPlayer(assistent);
+    p = new AssistentPlayer(find(KICKER_PLAYER));
+}
+
+bool Strategy::hasBall(int robot_number)
+{
+    Vector ball_pos(Ball::getInstance().getX(),Ball::getInstance().getY());
+    Vector robot_pos(robot[robot_number].getX(),robot[robot_number].getY());
+    
+    float direction = (ball_pos - Goals::getInstance().opponent_goal_).getDirection();
+    
+    Vector difference = robot_pos - ball_pos;
+    return (fabs(difference.getDirection() - direction) <= M_PI/4);
 }
