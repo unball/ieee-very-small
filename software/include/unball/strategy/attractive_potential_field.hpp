@@ -23,6 +23,8 @@ class AttractivePotentialField : public PotentialField
   private:
     Vector origin_;
     float magnitude_;
+
+	static float const MIN_MAGNITUDE_ = 0.5;    
 };
 
 #endif  // UNBALL_ATTRACTIVE_POTENTIAL_FIELD_H_

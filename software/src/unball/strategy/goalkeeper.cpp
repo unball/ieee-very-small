@@ -3,36 +3,25 @@
 Goalkeeper::Goalkeeper()
 {
 	behaviour_ = GOALKEEPER;
+	x_pos_ = robot[2].getX();
 }
 
 void Goalkeeper::buildPotentialFields(int robot_number)
 {
     updateBallPos();
-    Vector robot_pos(robot[robot_number].getX(), robot[robot_number].getY());
+    Vector robot_pos(x_pos_, robot[robot_number].getY());
     Vector ball_line(robot[robot_number].getX(), ball_pos_.getY());
 
-    if (isBallBelowGoalkeeper(robot_number))
-    {
-    	if (isBallInRange())
-			potential_fields_.push_back(new AttractivePotentialField(ball_line, 20));
-		else 
-			stayAtTheBoundary();
-    }
-    //else
-    //{
-    	//Danger: kick the ball as far as possible
-    //}
+    if (isBallInRange())
+		potential_fields_.push_back(new AttractivePotentialField(ball_line, 20));
+	else
+		stayAtTheBoundary();
 }
 
 void Goalkeeper::updateBallPos()
 {
 	Vector ball_pos(Ball::getInstance().getX(),Ball::getInstance().getY());
 	ball_pos_ = ball_pos;
-}
-
-bool Goalkeeper::isBallBelowGoalkeeper(int goalkeeper_number)
-{
-	return (ball_pos_.getX() < robot[2].getX());
 }
 
 bool Goalkeeper::isBallInRange()
