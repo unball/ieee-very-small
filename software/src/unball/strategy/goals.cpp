@@ -33,3 +33,14 @@ void Goals::setGoalkeeperSide(float x)
    		opponent_goal_ = Vector(0.85,0);
 	}
 }
+
+int Goals::findOpponentGoalkeeper()
+{
+	for (int i=3; i<6; ++i)
+	{
+		if (fabs(robot[i].getX()) > 0.55) 
+			if (robot[i].getY() > -0.22 and robot[i].getY() < 0.22) 
+				return i;
+	}
+	return 3; //THIS IS A HACK: return ANY so our program will not bug.
+}

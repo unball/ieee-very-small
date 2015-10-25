@@ -15,6 +15,7 @@
 #include <cmath>
 
 #include <unball/utils/vector.hpp>
+#include <unball/strategy/robot.hpp>
 
 class Goals
 {
@@ -25,7 +26,7 @@ class Goals
     Vector opponent_goal_;
 
 	void setGoalkeeperSide(float x);
-
+	int findOpponentGoalkeeper();
   private:
     static Goals *instance;
 };

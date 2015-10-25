@@ -25,13 +25,14 @@ void KickerPlayer::buildPotentialFields(int robot_number)
 void KickerPlayer::findTarget()
 {
     target_ = 0;
+    int opponent_goalkeeper_index = Goals::getInstance().findOpponentGoalkeeper();
     
-    if(opponentGoalkeeperIsInGoalRange(5))
+    if(opponentGoalkeeperIsInGoalRange(opponent_goalkeeper_index))
     {
-        if(robot[5].getY() > 0)
-            target_ = robot[5].getY() - (0.2 + fabs(robot[5].getY())/2);
+        if(robot[opponent_goalkeeper_index].getY() > 0)
+            target_ = robot[opponent_goalkeeper_index].getY() - (0.2 + fabs(robot[5].getY())/2);
         else
-            target_ = robot[5].getY() - (0.2 + fabs(robot[5].getY())/2);
+            target_ = robot[opponent_goalkeeper_index].getY() - (0.2 + fabs(robot[5].getY())/2);
     }
 
     kick_target_ = Vector(Goals::getInstance().opponent_goal_.getX(), target_);
