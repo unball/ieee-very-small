@@ -59,3 +59,8 @@ std::vector<float> TrackedRobot::getRobotPose()
 
     return pose;
 }
+
+cv::Point TrackedRobot::getPixelPosition()
+{
+    return position_;
+}

@@ -33,6 +33,7 @@ class TrackedRobot : public TrackedObject
     void setPosition(RobotData data);
 
     std::vector<float> getRobotPose();
+    cv::Point getPixelPosition();
 
   private:
     MeasurementConversion *measurement_conversion_;

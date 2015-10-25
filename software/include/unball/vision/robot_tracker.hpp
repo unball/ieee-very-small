@@ -32,6 +32,8 @@ class RobotTracker
   private:
     void trackStep1(cv::Mat &rgb_frame, cv::Mat &depth_frame, cv::Mat &rgb_segmented_frame);
     void trackStep2(cv::Mat &rgb_frame, cv::Mat &depth_frame, cv::Mat &rgb_segmented_frame);
+    int getClosestOpponentRobot(cv::Point new_position);
+    float distanceBetweenPoints(cv::Point a, cv::Point b);
 
     RobotIdentifier robot_identifier_;
 
@@ -42,6 +44,9 @@ class RobotTracker
 
     // Used on tracking step 1
     int min_area_, max_area_;
+
+    // used for tracking system to make sure no more than 3 opponent robots are identified
+    bool used_opponent_robots_[3];
 };
 
 #endif // UNBALL_VISION_ROBOT_TRACKER_H_
