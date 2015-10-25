@@ -11,8 +11,8 @@
 #include <unball/strategy/selective_potential_field.hpp>
 
 SelectivePotentialField::SelectivePotentialField(Vector origin, float direction,
-    float width, float range) :
-    origin_(origin), direction_(direction), width_(width), range_(range)
+    float width, float range, bool isSmooth) :
+    origin_(origin), direction_(direction), width_(width), range_(range), isSmooth_(isSmooth)
 {
 }
 
@@ -22,16 +22,23 @@ Vector SelectivePotentialField::calculateForce(Vector robot_position)
     Vector difference = robot_position - origin_;
 
     if (isInTheCone(difference))
-        result = applyAttractivePotentialField(difference);
-    else 
-        result = applyTangentialField(difference);
+        result += applyAttractivePotentialField(difference);
+    else if (isSmooth_ and isInTheCone(difference, 1.5))
+    {
+        result += applyAttractivePotentialField(difference);
+        result += applyTangentialField(difference);
+    }
+    else
+    {
+        result += applyTangentialField(difference);   
+    }
     
     return result;
 }
 
-bool SelectivePotentialField::isInTheCone(Vector difference)
+bool SelectivePotentialField::isInTheCone(Vector difference, float weight)
 {
-    return (fabs(difference.getDirection() - direction_) <= width_/2);
+    return (fabs(difference.getDirection() - direction_) <= weight*width_);
 }
 
 Vector SelectivePotentialField::applyAttractivePotentialField(Vector difference)

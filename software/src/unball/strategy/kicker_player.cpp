@@ -15,7 +15,7 @@ void KickerPlayer::buildPotentialFields(int robot_number)
     difference = ball_position - kick_target_;
 
     if (isInBallRange(robot_number))
-        potential_fields_.push_back(new SelectivePotentialField(ball_position, difference.getDirection(), M_PI/4, 6));
+        potential_fields_.push_back(new SelectivePotentialField(ball_position, difference.getDirection(), M_PI/4, 6, false));
     else
         potential_fields_.push_back(new AttractivePotentialField(ball_position, 20));
 
