@@ -64,6 +64,7 @@ add_executable(strategy_node
   src/unball/strategy/goals.cpp
   src/unball/strategy/player.cpp
   src/unball/strategy/goalkeeper.cpp
+  src/unball/strategy/goalkeeper_kicker.cpp
   src/unball/strategy/initial_goalkeeper.cpp
   src/unball/strategy/regular_player.cpp
   src/unball/strategy/kicker_player.cpp

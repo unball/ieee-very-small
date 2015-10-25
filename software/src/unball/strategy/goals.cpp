@@ -44,3 +44,25 @@ int Goals::findOpponentGoalkeeper()
 	}
 	return 3; //THIS IS A HACK: return ANY so our program will not bug.
 }
+
+bool Goals::isBallInFriendlyGoalArea()
+{
+	float goal_area_height;
+	
+	Vector ball_pos(Ball::getInstance().getX(),Ball::getInstance().getY());
+
+	if (friendly_goal_.getX() < 0) 
+	{
+		goal_area_height = friendly_goal_.getX() + 0.25;
+		if (ball_pos.getX() > goal_area_height)
+			return false;
+	}
+	else 
+	{
+		goal_area_height = friendly_goal_.getX() - 0.25;
+		if (ball_pos.getX() < goal_area_height)
+			return false;
+	}
+
+    return (ball_pos.getY() > -0.22 and ball_pos.getY() < 0.22);
+}

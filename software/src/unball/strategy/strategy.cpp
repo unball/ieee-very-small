@@ -79,6 +79,9 @@ void Strategy::run()
     }
 }
 
+/**
+ * REFACTOR: put this inside each player. maybe a method like: player_behaviour shouldChangeTo();
+ */
 void Strategy::updatePlayers()
 {
     for (int i=0;i<3;i++)
@@ -87,8 +90,27 @@ void Strategy::updatePlayers()
        {
             Vector goalkeeper_pos = Vector(robot[i].getPos().getX(),robot[i].getPos().getY());
     
-            if (goalkeeper_pos.calculateDistance(Goals::getInstance().friendly_goal_) < 0.2)
+            if (goalkeeper_pos.calculateDistance(Goals::getInstance().friendly_goal_) < 0.2) 
+            {
+                ROS_ERROR("[Strategy]updatePlayers: changed to goalkeeper");
                 trajectory_controller_.updatePlayer(i,GOALKEEPER);
+            }
+       }
+       else if (trajectory_controller_.getPlayer(i)->getBehaviour() == GOALKEEPER)
+       {
+            if (Goals::getInstance().isBallInFriendlyGoalArea()) 
+            {
+                ROS_ERROR("[Strategy]updatePlayers: changed to kicker");
+                trajectory_controller_.updatePlayer(i,GOALKEEPER_KICKER);        
+            }
+       }
+       else if (trajectory_controller_.getPlayer(i)->getBehaviour() == GOALKEEPER_KICKER)
+       {
+            if (not Goals::getInstance().isBallInFriendlyGoalArea()) 
+            {
+                ROS_ERROR("[Strategy]updatePlayers: changed to initial");
+                trajectory_controller_.updatePlayer(i,INITIAL_GOALKEEPER);   
+            }
        }
        else if (trajectory_controller_.getPlayer(i)->getBehaviour() == KICKER_PLAYER)
        {

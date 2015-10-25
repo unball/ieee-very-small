@@ -32,7 +32,7 @@ void AssistentPlayer::buildPotentialFields(int robot_number)
         if (i != robot_number)
             potential_fields_.push_back(new RepulsivePotentialField(Vector(robot[i].getX(), robot[i].getY()), 0.3, 3));    
     }
-
+    potential_fields_.push_back(new RepulsivePotentialField(Vector(robot[0].getX(), robot[0].getY()), 0.3, 5));
     if (friendly_kicker_ != -1)
     	potential_fields_.push_back(new RepulsivePotentialField(Vector(robot[friendly_kicker_].getX(),
     																   robot[friendly_kicker_].getY()), 0.3, 5));

@@ -15,7 +15,7 @@ void Goalkeeper::buildPotentialFields(int robot_number)
     if (isBallInRange())
 		potential_fields_.push_back(new AttractivePotentialField(ball_line, 20));
 	else
-		stayAtTheBoundary();
+    	stayAtTheBoundary();
 }
 
 void Goalkeeper::updateBallPos()
@@ -26,7 +26,7 @@ void Goalkeeper::updateBallPos()
 
 bool Goalkeeper::isBallInRange()
 {
-	return (ball_pos_.getX() > RIGHT_LIMIT and ball_pos_.getX() < LEFT_LIMIT);
+	return (ball_pos_.getY() > RIGHT_LIMIT and ball_pos_.getY() < LEFT_LIMIT);
 }
 
 void Goalkeeper::stayAtTheBoundary()
