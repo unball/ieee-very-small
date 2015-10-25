@@ -94,6 +94,8 @@ void TrajectoryController::updatePlayer(int robot_number, player_behaviour behav
         player_[robot_number] = new KickerPlayer();
     if (behaviour == ASSISTENT_PLAYER)
         player_[robot_number] = new AssistentPlayer();
+    if (behaviour == GOALKEEPER_KICKER)
+        player_[robot_number] = new GoalkeeperKicker();
 }
 
 Player* TrajectoryController::getPlayer(int robot_number)

@@ -16,6 +16,7 @@
 
 #include <unball/utils/vector.hpp>
 #include <unball/strategy/robot.hpp>
+#include <unball/strategy/ball.hpp>
 
 class Goals
 {
@@ -27,6 +28,7 @@ class Goals
 
 	void setGoalkeeperSide(float x);
 	int findOpponentGoalkeeper();
+	bool isBallInFriendlyGoalArea();
   private:
     static Goals *instance;
 };

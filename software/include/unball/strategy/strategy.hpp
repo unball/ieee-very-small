@@ -37,7 +37,7 @@ class Strategy
     Strategy();
     void receiveKeyboardInput(char key);
     void run();
-    
+
   private:
     static Strategy *instance; // singleton instance
 
@@ -46,6 +46,7 @@ class Strategy
 
     void PauseGame();
     void ResumeGame();
+    void GoalKick();
 
     void updatePlayers();
 

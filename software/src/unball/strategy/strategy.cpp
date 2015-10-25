@@ -44,6 +44,9 @@ void Strategy::receiveKeyboardInput(char key)
         case 'p': case 'P':
         	PauseGame();
             break;
+        case 'k': case 'K':
+            GoalKick();
+            break;
     }
 }
 
@@ -55,7 +58,7 @@ void Strategy::PauseGame()
 {
 	ROS_INFO("[Strategy] Keyboard input: Setting game state PAUSED");
 	state_estimator_.setGameState(WorldState::GAME_PAUSED);
-	
+
 	for (int i=0;i<6;i++)
 		trajectory_controller_.stopRobot(i);
 }
@@ -63,7 +66,12 @@ void Strategy::PauseGame()
 void Strategy::ResumeGame()
 {
 	ROS_INFO("[Strategy] Keyboard input: Setting game state RUNNING");
-	state_estimator_.setGameState(WorldState::GAME_RUNNING);   
+	state_estimator_.setGameState(WorldState::GAME_RUNNING);
+}
+
+void Strategy::GoalKick()
+{
+    trajectory_controller_.updatePlayer(2,GOALKEEPER_KICKER);
 }
 
 /**
@@ -79,6 +87,9 @@ void Strategy::run()
     }
 }
 
+/**
+ * REFACTOR: put this inside each player. maybe a method like: player_behaviour shouldChangeTo();
+ */
 void Strategy::updatePlayers()
 {
     for (int i=0;i<3;i++)
@@ -86,9 +97,19 @@ void Strategy::updatePlayers()
        if (trajectory_controller_.getPlayer(i)->getBehaviour() == INITIAL_GOALKEEPER)
        {
             Vector goalkeeper_pos = Vector(robot[i].getPos().getX(),robot[i].getPos().getY());
-    
+
             if (goalkeeper_pos.calculateDistance(Goals::getInstance().friendly_goal_) < 0.2)
                 trajectory_controller_.updatePlayer(i,GOALKEEPER);
+       }
+       else if (trajectory_controller_.getPlayer(i)->getBehaviour() == GOALKEEPER)
+       {
+        //    if (Goals::getInstance().isBallInFriendlyGoalArea())
+        //        trajectory_controller_.updatePlayer(i,GOALKEEPER_KICKER);
+       }
+       else if (trajectory_controller_.getPlayer(i)->getBehaviour() == GOALKEEPER_KICKER)
+       {
+            if (not Goals::getInstance().isBallInFriendlyGoalArea())
+                trajectory_controller_.updatePlayer(i,INITIAL_GOALKEEPER);
        }
        else if (trajectory_controller_.getPlayer(i)->getBehaviour() == KICKER_PLAYER)
        {
@@ -97,7 +118,7 @@ void Strategy::updatePlayers()
        }
        else if (trajectory_controller_.getPlayer(i)->getBehaviour() == ASSISTENT_PLAYER)
        {
-            if (isThere(KICKER_PLAYER)) 
+            if (isThere(KICKER_PLAYER))
             {
                 setKickerForAssistent(i);
             }
@@ -105,7 +126,7 @@ void Strategy::updatePlayers()
             {
                 if (hasBall(i))
                     trajectory_controller_.updatePlayer(i,KICKER_PLAYER);
-                else    
+                else
                     trajectory_controller_.updatePlayer(i,ASSISTENT_PLAYER);
             }
        }
@@ -136,12 +157,12 @@ bool Strategy::hasBall(int robot_number)
 {
     Vector ball_pos(Ball::getInstance().getX(),Ball::getInstance().getY());
     Vector robot_pos(robot[robot_number].getX(),robot[robot_number].getY());
- 
-    if ((robot_pos - ball_pos).getMagnitude() > 0.5) 
-        return false; 
+
+    if ((robot_pos - ball_pos).getMagnitude() > 0.5)
+        return false;
 
     float direction = (ball_pos - Goals::getInstance().opponent_goal_).getDirection();
-    
+
     Vector difference = robot_pos - ball_pos;
     return (fabs(difference.getDirection() - direction) <= M_PI/2);
 }
