@@ -16,6 +16,7 @@
 #include <unball/utils/vector.hpp>
 #include <unball/utils/math.hpp>
 #include <unball/strategy/potential_field.hpp>
+#include <unball/strategy/repulsive_potential_field.hpp>
 
 class SelectivePotentialField : public PotentialField
 {

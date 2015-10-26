@@ -103,8 +103,8 @@ void Strategy::updatePlayers()
        }
        else if (trajectory_controller_.getPlayer(i)->getBehaviour() == GOALKEEPER)
        {
-        //    if (Goals::getInstance().isBallInFriendlyGoalArea())
-        //        trajectory_controller_.updatePlayer(i,GOALKEEPER_KICKER);
+            if (Goals::getInstance().isBallInFriendlyGoalArea())
+                trajectory_controller_.updatePlayer(i,GOALKEEPER_KICKER);
        }
        else if (trajectory_controller_.getPlayer(i)->getBehaviour() == GOALKEEPER_KICKER)
        {

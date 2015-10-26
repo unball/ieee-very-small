@@ -30,7 +30,12 @@ Vector SelectivePotentialField::calculateForce(Vector robot_position)
     }
     else
     {
-        result += applyTangentialField(difference);   
+        result += applyTangentialField(difference);
+        if (isSmooth_)
+        {   
+            RepulsivePotentialField field(origin_, range_, 0.6);
+            result += field.calculateForce(robot_position);
+        }
     }
     
     return result;
