@@ -20,6 +20,7 @@
 #include <unball/vision/robot_data.hpp>
 #include <unball/vision/measurement_conversion.hpp>
 #include <unball/vision/robot_filter.hpp>
+#include <unball/utils/math.hpp>
 
 class TrackedRobot : public TrackedObject
 {

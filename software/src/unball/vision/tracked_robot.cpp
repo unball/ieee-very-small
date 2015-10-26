@@ -70,7 +70,7 @@ std::vector<float> TrackedRobot::getRobotPose()
     cv::Point2f metric_position = measurement_conversion_->convertToMetric(position_);
     pose[0] = metric_position.x;
     pose[1] = metric_position.y;
-    pose[2] = orientation_;
+    pose[2] = math::reduceAngle(orientation_);
 
     return pose;
 }
