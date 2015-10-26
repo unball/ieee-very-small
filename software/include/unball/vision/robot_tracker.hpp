@@ -56,6 +56,10 @@ class RobotTracker
 
     // used to identify whether the tracking situation is stable
     int continuous_frame_counter_;
+
+    // used to identify whether the tracking situation has gone unstable
+    bool found_robots_on_tracking_;
+    bool missing_frame_counter_;
 };
 
 #endif // UNBALL_VISION_ROBOT_TRACKER_H_

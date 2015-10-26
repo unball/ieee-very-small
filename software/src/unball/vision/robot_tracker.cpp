@@ -76,7 +76,10 @@ void RobotTracker::trackStep1(cv::Mat &rgb_frame, cv::Mat &depth_frame, cv::Mat 
         restartRobotFilters();
 
     if (continuous_frame_counter_ >= 20)
+    {
+        missing_frame_counter_ = 0;
         tracking_step_ = 2;
+    }
 }
 
 void RobotTracker::setNewRobot(RobotData robot_data)
@@ -113,9 +116,19 @@ void RobotTracker::restartRobotFilters()
 
 void RobotTracker::trackStep2(cv::Mat &rgb_frame, cv::Mat &depth_frame, cv::Mat &depth_segmented_frame)
 {
+    found_robots_on_tracking_ = true;
     for (int i = 0; i < 2; ++i)
         for (int j = 0; j < 3; ++j)
             trackIndividualRobot(rgb_frame, depth_segmented_frame, robots_[i][j]);
+
+    if (found_robots_on_tracking_ == false)
+        missing_frame_counter_++;
+
+    if (missing_frame_counter_ >= 10)
+    {
+        tracking_step_ = 1;
+        restartRobotFilters();
+    }
 }
 
 void RobotTracker::trackIndividualRobot(cv::Mat &rgb_frame, cv::Mat &depth_segmented_frame, TrackedRobot &robot)
@@ -145,6 +158,7 @@ void RobotTracker::trackIndividualRobot(cv::Mat &rgb_frame, cv::Mat &depth_segme
     else
     {
         robot.setPosition(predicted_position);
+        found_robots_on_tracking_ = false;
     }
 }
 
