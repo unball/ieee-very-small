@@ -13,6 +13,7 @@
 RobotTracker::RobotTracker(MeasurementConversion *mc)
 {
     tracking_step_ = 1;
+    continuous_frame_counter_ = 0;
     for (int i = 0; i < 2; ++i)
         for (int j = 0; j < 3; ++j)
             robots_[i][j].setMeasurementConversion(mc);
@@ -56,6 +57,7 @@ void RobotTracker::trackStep1(cv::Mat &rgb_frame, cv::Mat &depth_frame, cv::Mat 
 {
     std::vector< std::vector<cv::Point> > contours;
     memset(used_opponent_robots_, false, sizeof(used_opponent_robots_));
+    memset(used_allied_robots_, false, sizeof(used_allied_robots_));
 
     cv::findContours(depth_segmented_frame, contours, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_SIMPLE);
     for (int i = 0; i < contours.size(); ++i)
@@ -64,17 +66,46 @@ void RobotTracker::trackStep1(cv::Mat &rgb_frame, cv::Mat &depth_frame, cv::Mat 
         if (boundingRect.area() > min_area_ and boundingRect.area() < max_area_)
         {
             RobotData robot_data = robot_identifier_.identifyRobot(rgb_frame, contours[i], boundingRect);
-            int team = robot_data.team, id = robot_data.id;
-            if (team == RobotData::ALLY)
-                robots_[team][id].setPosition(robot_data);
-            else
-            {
-                int index = getClosestOpponentRobot(robot_data.center_position);
-                if (index != -1)
-                    robots_[team][index].setPosition(robot_data);
-            }
+            setNewRobot(robot_data);
         }
     }
+
+    if (foundAllRobots())
+        continuous_frame_counter_++;
+
+    if (continuous_frame_counter_ >= 20)
+    {
+        tracking_step_ = 2;
+        ROS_ERROR("Entered tracking step 2");
+    }
+}
+
+void RobotTracker::setNewRobot(RobotData robot_data)
+{
+    int team = robot_data.team, id = robot_data.id;
+    if (team == RobotData::ALLY)
+    {
+        robots_[team][id].setPosition(robot_data);
+        used_allied_robots_[id] = true;
+    }
+    else
+    {
+        int index = getClosestOpponentRobot(robot_data.center_position);
+        if (index != -1)
+            robots_[team][index].setPosition(robot_data);
+    }
+}
+
+bool RobotTracker::foundAllRobots()
+{
+    for (int i = 0; i < 3; ++i)
+        if (used_allied_robots_[i] == false)
+            return false;
+    for (int i = 0; i < 3; ++i)
+        if (used_opponent_robots_[i] == false)
+            return false;
+
+    return true;
 }
 
 void RobotTracker::trackStep2(cv::Mat &rgb_frame, cv::Mat &depth_frame, cv::Mat &rgb_segmented_frame)
