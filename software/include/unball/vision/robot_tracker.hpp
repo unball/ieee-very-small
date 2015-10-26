@@ -34,6 +34,11 @@ class RobotTracker
     void trackStep2(cv::Mat &rgb_frame, cv::Mat &depth_frame, cv::Mat &rgb_segmented_frame);
     int getClosestOpponentRobot(cv::Point new_position);
     float distanceBetweenPoints(cv::Point a, cv::Point b);
+    void setNewRobot(RobotData robot_data);
+    bool foundAllRobots();
+    void restartRobotFilters();
+    void trackIndividualRobot(cv::Mat &rgb_frame, cv::Mat &depth_segmented_frame, TrackedRobot &robot);
+    void chooseCorrectOrientation(float &orientation, TrackedRobot &robot);
 
     RobotIdentifier robot_identifier_;
 
@@ -47,6 +52,14 @@ class RobotTracker
 
     // used for tracking system to make sure no more than 3 opponent robots are identified
     bool used_opponent_robots_[3];
+    bool used_allied_robots_[3];
+
+    // used to identify whether the tracking situation is stable
+    int continuous_frame_counter_;
+
+    // used to identify whether the tracking situation has gone unstable
+    bool found_robots_on_tracking_;
+    bool missing_frame_counter_;
 };
 
 #endif // UNBALL_VISION_ROBOT_TRACKER_H_
