@@ -215,7 +215,7 @@ cv::Mat Segmenter::segmentDepth(cv::Mat image)
     cv::adaptiveThreshold(image, mask, 256, cv::ADAPTIVE_THRESH_GAUSSIAN_C, cv::THRESH_BINARY_INV,
                           3+(size_value_*2), (float)(depth_threshold_-1000)/(float)(depth_threshold_divider_+1));
 
-     /*
+    /*
      * Creating a kernel for morphologic transformations. The second parameter is the size of this kernel.
      * Empirically, a kernel of 3x3 generates good results for our application.
      */

@@ -19,6 +19,7 @@
 #include <unball/vision/tracked_object.hpp>
 #include <unball/vision/robot_data.hpp>
 #include <unball/vision/measurement_conversion.hpp>
+#include <unball/vision/robot_filter.hpp>
 
 class TrackedRobot : public TrackedObject
 {
@@ -31,9 +32,14 @@ class TrackedRobot : public TrackedObject
     void track(cv::Mat &rgb_frame, cv::Mat &depth_frame, cv::Mat &rgb_segmented_frame);
     void draw(cv::Mat &frame);
     void setPosition(RobotData data);
+    void setPosition(cv::Point position, cv::RotatedRect robot_outline, float orientation);
+    void setPosition(cv::Point position);
 
     std::vector<float> getRobotPose();
     cv::Point getPixelPosition();
+    float getOrientation();
+
+    RobotFilter filter_;
 
   private:
     MeasurementConversion *measurement_conversion_;

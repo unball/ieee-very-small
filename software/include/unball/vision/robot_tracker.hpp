@@ -36,6 +36,9 @@ class RobotTracker
     float distanceBetweenPoints(cv::Point a, cv::Point b);
     void setNewRobot(RobotData robot_data);
     bool foundAllRobots();
+    void restartRobotFilters();
+    void trackIndividualRobot(cv::Mat &rgb_frame, cv::Mat &depth_segmented_frame, TrackedRobot &robot);
+    void chooseCorrectOrientation(float &orientation, TrackedRobot &robot);
 
     RobotIdentifier robot_identifier_;
 
