@@ -10,7 +10,7 @@
   <!-- spawn robots -->
   <group ns="robot_1">
   <node name="robot_1" pkg="gazebo_ros" type="spawn_model"
-  args="-file $(find unball)/model/unball_robot.urdf -urdf -x -0.37 -y 0.40 -z 0.05 -model robot_1" />
+  args="-file $(find unball)/model/unball_robot.urdf -urdf -x -0.37 -y 0.61 -z 0.05 -model robot_1" />
   </group>
   
   <group ns="robot_2">

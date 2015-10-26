@@ -81,7 +81,7 @@ void Strategy::run()
 {
     if (state_estimator_.getGameState() != WorldState::GAME_PAUSED)
     {
-		state_estimator_.update();
+		    state_estimator_.update();
         updatePlayers();
         trajectory_controller_.run();
     }

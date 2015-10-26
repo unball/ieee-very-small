@@ -20,6 +20,7 @@ void KickerPlayer::buildPotentialFields(int robot_number)
         potential_fields_.push_back(new AttractivePotentialField(ball_position, 20));
 
     potential_fields_.push_back(new RepulsivePotentialField(Vector(robot[5].getX(), robot[5].getY()), 0.3, 0.9));
+    avoidTheWalls(robot_number);
 }
 
 void KickerPlayer::findTarget()
@@ -50,4 +51,20 @@ bool KickerPlayer::isInBallRange(int robot_number)
 bool KickerPlayer::opponentGoalkeeperIsInGoalRange(int opponent_goalkeeper)
 {
     return (robot[opponent_goalkeeper].getY() > -0.22 and robot[opponent_goalkeeper].getY() < 0.22);
+}
+
+void KickerPlayer::avoidTheWalls(int robot_number)
+{
+    if (robot[robot_number].getY() > 0.55)
+        potential_fields_.push_back(new ParallelPotentialField(Vector(robot[robot_number].getX(), robot[robot_number].getY()),
+        Vector(robot[robot_number].getX(), 0.65), 0.2));
+    else if (robot[robot_number].getY() < -0.55)
+        potential_fields_.push_back(new ParallelPotentialField(Vector(robot[robot_number].getX(), robot[robot_number].getY()),
+        Vector(robot[robot_number].getX(), -0.65), 0.2));
+    else if (robot[robot_number].getX() > 0.65)
+        potential_fields_.push_back(new ParallelPotentialField(Vector(robot[robot_number].getX(), robot[robot_number].getY()),
+        Vector(0.75, robot[robot_number].getY()), 0.2));
+    else if (robot[robot_number].getX() < -0.65)
+        potential_fields_.push_back(new ParallelPotentialField(Vector(robot[robot_number].getX(), robot[robot_number].getY()),
+        Vector(-0.75, robot[robot_number].getY()), 0.2));
 }

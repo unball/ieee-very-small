@@ -1,3 +1,4 @@
+
 /**
  * @file   kicker_player.hpp
  * @author Izabella Thais Oliveira Gomes
@@ -26,6 +27,7 @@ class KickerPlayer : public Player
 
   	bool isInBallRange(int robot_number);
   	bool opponentGoalkeeperIsInGoalRange(int opponent_goalkeeper);
+    void avoidTheWalls(int robot_number);
 
   	float target_;
   	Vector kick_target_;

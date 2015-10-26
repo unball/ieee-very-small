@@ -1,3 +1,4 @@
+
 /**
  * @file   regular_player.hpp
  * @author Icaro da Costa Mota
@@ -21,6 +22,8 @@ class RegularPlayer : public Player
   	bool isInBallRange(int robot_number);
 
   private:
+  	void avoidTheWalls(int robot_number);
+
   	static float const BALL_RANGE_ = 0.5;
 };
 

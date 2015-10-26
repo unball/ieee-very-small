@@ -1,3 +1,4 @@
+
 /**
  * @file   assistent_player.hpp
  * @author Icaro da Costa Mota
@@ -22,6 +23,7 @@ class AssistentPlayer : public Player
   private:
   	void findTarget();
   	bool isInBallRange(int robot_number);
+    void avoidTheWalls(int robot_number);
 
   	int friendly_kicker_;
   	Vector kick_target_;
