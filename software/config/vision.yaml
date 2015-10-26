@@ -58,21 +58,21 @@ vision:
         # Show image with the results of depth segmentation
         # true: Show trackbars
         # false: Don't show trackbars
-        show_depth_image: false
+        show_depth_image: true
 
         # Show trackbar for depth segmentation adjustment
         # true: Show trackbars
         # false: Don't show trackbars
-        depth_adjust: false
+        depth_adjust: true
 
         # Treshold value
         depth_treshold: 2000
 
         # Depth threshold divider
-        depth_treshold_divider: 30
+        depth_treshold_divider: 48
 
         # Size Value
-        size_value: 79
+        size_value: 72
 
     tracker:
         # Show image with the results of tracking

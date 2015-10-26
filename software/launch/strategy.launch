@@ -1,0 +1,5 @@
+<launch>
+  <node name="strategy" pkg="unball" type="strategy_node" />
+  <node name="keyboard" pkg="unball" type="keyboard_node" />
+  <node name="communication" pkg="unball" type="communication_node" />   
+</launch>

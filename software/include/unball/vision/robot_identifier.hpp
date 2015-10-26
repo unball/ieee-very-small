@@ -22,6 +22,7 @@
 
 #include <unball/vision/robot_data.hpp>
 #include <unball/vision/hsv_color_data.hpp>
+#include <unball/utils/math.hpp>
 
 class RobotIdentifier
 {

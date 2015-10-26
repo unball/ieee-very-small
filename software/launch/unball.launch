@@ -1,5 +1,5 @@
 <launch>
-  <node name="strategy" pkg="unball" type="strategy_node" />
-  <node name="vision" pkg="unball" type="vision_node" />
-  <!-- camera or simulation node -->
+  <include file="$(find freenect_launch)/launch/freenect.launch" />
+  <rosparam command="load" file="$(find unball)/config/vision.yaml" />
+  <node name="vision" pkg="unball" type="vision_node" /> 
 </launch>
