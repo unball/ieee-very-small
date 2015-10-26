@@ -141,6 +141,11 @@ add_executable(keyboard_node
 add_dependencies(keyboard_node unball_gencpp)
 target_link_libraries(keyboard_node ${catkin_LIBRARIES})
 
+add_executable(communication_node
+  src/unball/communication/communication_node.cpp)
+add_dependencies(communication_node unball_gencpp)
+target_link_libraries(communication_node ${catkin_LIBRARIES})
+
 catkin_add_gtest(test_point
   test/utils/test_point.cpp
   src/unball/utils/point.cpp)
