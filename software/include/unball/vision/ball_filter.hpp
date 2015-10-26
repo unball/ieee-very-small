@@ -7,6 +7,8 @@
 
 #include <opencv2/opencv.hpp>
 
+#include <cmath>
+
 
 class BallFilter
 {
@@ -15,6 +17,7 @@ class BallFilter
     cv::Point2f getPredictedPose();
     void predict();
     void update(cv::Point2f measured_pose);
+    void resetFilter();
   private:
     cv::Point2f predicted_pose_;
     cv::Point2f predicted_velocity_;
