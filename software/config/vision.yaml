@@ -24,11 +24,11 @@ vision:
         # NOTE: If "calibrate" is active, rectification will also be active regardless of this config
         # true: runs the rectification algorithm
         # false: loads the rectification matrix from a separate file
-        rectify: false
+        rectify: true
 
         # If "rectify" is active, indicates whether the homography class should overwrite the previous rectification
         # matrix
-        overwrite_rect_matrix: false
+        overwrite_rect_matrix: true
 
     preprocessor:
         # Show image with the results of preprocessing
