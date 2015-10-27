@@ -39,6 +39,7 @@ class RobotTracker
     void restartRobotFilters();
     void trackIndividualRobot(cv::Mat &rgb_frame, cv::Mat &depth_segmented_frame, TrackedRobot &robot);
     void chooseCorrectOrientation(float &orientation, TrackedRobot &robot);
+    void calculateRegionOfInterest(cv::Mat &depth_segmented_frame, cv::Point2f predicted_position);
 
     RobotIdentifier robot_identifier_;
 
@@ -60,6 +61,10 @@ class RobotTracker
     // used to identify whether the tracking situation has gone unstable
     bool found_robots_on_tracking_;
     bool missing_frame_counter_;
+
+    // used to obtain the region of interest on tracking
+    cv::Rect prediction_window_;
+    cv::Point2f upper_left_corner_;
 };
 
 #endif // UNBALL_VISION_ROBOT_TRACKER_H_

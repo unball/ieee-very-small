@@ -135,10 +135,8 @@ void RobotTracker::trackIndividualRobot(cv::Mat &rgb_frame, cv::Mat &depth_segme
 {
     robot.filter_.predict();
     cv::Point2f predicted_position = robot.filter_.getPredictedPose();
-    float window_width = 45, window_height = 45;
-    cv::Point2f upper_left_corner(predicted_position.x-(window_width/2.0), predicted_position.y-(window_height/2.0));
-    cv::Rect prediction_window(upper_left_corner.x, upper_left_corner.y, window_width, window_height);
-    cv::Mat roi = depth_segmented_frame(prediction_window);
+    calculateRegionOfInterest(depth_segmented_frame, predicted_position);
+    cv::Mat roi = depth_segmented_frame(prediction_window_);
 
     cv::Mat structuring_element = cv::getStructuringElement(cv::MORPH_ELLIPSE, cv::Size(3, 3), cv::Point(1, 1));
     cv::morphologyEx(roi, roi, cv::MORPH_ERODE, structuring_element, cv::Point(-1,-1), 8);
@@ -149,7 +147,7 @@ void RobotTracker::trackIndividualRobot(cv::Mat &rgb_frame, cv::Mat &depth_segme
     if (contours.size() == 1)
     {
         cv::RotatedRect robot_outline = cv::minAreaRect(contours[0]);
-        robot_outline.center += cv::Point2f(upper_left_corner.x, upper_left_corner.y);
+        robot_outline.center += cv::Point2f(upper_left_corner_.x, upper_left_corner_.y);
         robot_outline.size += cv::Size2f(10,10);
         float orientation = robot_outline.angle*2*M_PI/360.0;
         chooseCorrectOrientation(orientation, robot);
@@ -160,6 +158,22 @@ void RobotTracker::trackIndividualRobot(cv::Mat &rgb_frame, cv::Mat &depth_segme
         robot.setPosition(predicted_position);
         found_robots_on_tracking_ = false;
     }
+}
+
+void RobotTracker::calculateRegionOfInterest(cv::Mat &depth_segmented_frame, cv::Point2f predicted_position)
+{
+    float window_width = 45, window_height = 45;
+    upper_left_corner_ = cv::Point2f(predicted_position.x-(window_width/2.0),
+                                     predicted_position.y-(window_height/2.0));
+    if (upper_left_corner_.x < 0)
+        upper_left_corner_.x = 0;
+    else if (upper_left_corner_.x + window_width >= depth_segmented_frame.cols)
+        upper_left_corner_.x = (depth_segmented_frame.cols - window_width - 1);
+    if (upper_left_corner_.y < 0)
+        upper_left_corner_.y = 0;
+    else if (upper_left_corner_.y + window_height >= depth_segmented_frame.rows)
+        upper_left_corner_.y = (depth_segmented_frame.rows - window_height - 1);
+    prediction_window_ = cv::Rect(upper_left_corner_.x, upper_left_corner_.y, window_width, window_height);
 }
 
 void RobotTracker::chooseCorrectOrientation(float &orientation, TrackedRobot &robot)
