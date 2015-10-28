@@ -4,7 +4,6 @@
 UnBallSoftwareSerial serial1(15, 14);
 
 // Conversion from message speed to RPM
-//float speedMap[8] = {-592, -296, -148, 0, 148, 222, 296, 592};
 float speedMap[8] = {-150, -100, -50, 0, 37.5, 75, 112.5, 150};
 
 // Flag to print communication data for debug purposes
