@@ -79,6 +79,7 @@ void RobotTracker::trackStep1(cv::Mat &rgb_frame, cv::Mat &depth_frame, cv::Mat 
     {
         missing_frame_counter_ = 0;
         tracking_step_ = 2;
+        ROS_ERROR("Changed to tracking step 2");
     }
 }
 
@@ -116,10 +117,12 @@ void RobotTracker::restartRobotFilters()
 
 void RobotTracker::trackStep2(cv::Mat &rgb_frame, cv::Mat &depth_frame, cv::Mat &depth_segmented_frame)
 {
+    cv::Mat hsv;
+    cv::cvtColor(rgb_frame, hsv, CV_BGR2HSV);
     found_robots_on_tracking_ = true;
     for (int i = 0; i < 2; ++i)
         for (int j = 0; j < 3; ++j)
-            trackIndividualRobot(rgb_frame, depth_segmented_frame, robots_[i][j]);
+            trackIndividualRobot(hsv, depth_segmented_frame, robots_[i][j]);
 
     if (found_robots_on_tracking_ == false)
         missing_frame_counter_++;
@@ -128,15 +131,14 @@ void RobotTracker::trackStep2(cv::Mat &rgb_frame, cv::Mat &depth_frame, cv::Mat 
     {
         tracking_step_ = 1;
         restartRobotFilters();
+        ROS_ERROR("Changed to tracking step 1");
     }
 }
 
-void RobotTracker::trackIndividualRobot(cv::Mat &rgb_frame, cv::Mat &depth_segmented_frame, TrackedRobot &robot)
+void RobotTracker::trackIndividualRobot(cv::Mat &hsv, cv::Mat &depth_segmented_frame, TrackedRobot &robot)
 {
     robot.filter_.predictPose();
-    robot.filter_.predictOrientation();
     cv::Point2f predicted_position = robot.filter_.getPredictedPose();
-    float predicted_orientation = robot.filter_.getPredictedOrientation();
     calculateRegionOfInterest(depth_segmented_frame, predicted_position);
     cv::Mat roi = depth_segmented_frame(prediction_window_);
 
@@ -152,11 +154,13 @@ void RobotTracker::trackIndividualRobot(cv::Mat &rgb_frame, cv::Mat &depth_segme
         robot_outline.center += cv::Point2f(upper_left_corner_.x, upper_left_corner_.y);
         robot_outline.size += cv::Size2f(6,6);
         float orientation = robot_outline.angle*2*M_PI/360.0;
-        chooseCorrectOrientation(orientation, predicted_orientation);
+        chooseCorrectOrientation(orientation, robot_outline.center, hsv);
         robot.setPosition(robot_outline.center, robot_outline, orientation);
     }
     else
     {
+        robot.filter_.predictOrientation();
+        float predicted_orientation = robot.filter_.getPredictedOrientation();
         robot.setPosition(predicted_position, predicted_orientation);
         found_robots_on_tracking_ = false;
     }
@@ -179,16 +183,18 @@ void RobotTracker::calculateRegionOfInterest(cv::Mat &depth_segmented_frame, cv:
     prediction_window_ = cv::Rect(upper_left_corner_.x, upper_left_corner_.y, window_width, window_height);
 }
 
-void RobotTracker::chooseCorrectOrientation(float &orientation, float predicted_orientation)
+void RobotTracker::chooseCorrectOrientation(float &orientation, cv::Point2f center_pos, cv::Mat &hsv)
 {
-    float closest_orientation = orientation;
-    for (int i = 1; i <= 4; ++i)
+    float distance = 10;
+    for (int i = 0; i < 4; ++i)
     {
-        float current_orientation = orientation+M_PI*i/2;
-        if (abs(current_orientation - predicted_orientation) < abs(closest_orientation - predicted_orientation))
-            closest_orientation = current_orientation;
+        orientation += (M_PI * i / 2);
+        float temp_angle = orientation + (M_PI / 4);
+        cv::Point2f current_point(distance*cos(temp_angle) + center_pos.x, distance*sin(temp_angle) + center_pos.y);
+        cv::Vec3b hsv_value = hsv.at<cv::Vec3b>(current_point.y, current_point.x);
+        if (hsv_value[0] > 100 and hsv_value[0] <= 150 and hsv_value[1] > 133 and hsv_value[2] > 90)
+            return;
     }
-    orientation = closest_orientation;
 }
 
 float RobotTracker::distanceBetweenPoints(cv::Point a, cv::Point b)
