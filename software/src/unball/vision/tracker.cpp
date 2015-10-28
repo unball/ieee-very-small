@@ -42,7 +42,6 @@ void Tracker::loadShowImage()
 void Tracker::loadConfig()
 {
     loadShowImage();
-    // tracked_field_.loadConfig();
     measurement_conversion_.loadConfig();
     robot_tracker_.loadConfig();
 }
