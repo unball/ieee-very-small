@@ -14,38 +14,7 @@ void RobotIdentifier::loadConfig()
 {
     ros::param::get("/vision/segmenter/hsv_min_s", hsv_min_s_);
     ros::param::get("/vision/segmenter/hsv_min_v", hsv_min_v_);
-
-    loadShirtImages();
-}
-
-void RobotIdentifier::loadShirtImages()
-{
-    std::string path;
     ros::param::get("/vision/tracker/team", team_color_);
-    path = ros::package::getPath("unball");
-    path += "/data/camisas/";
-
-    // Loads the shirt images
-    if (team_color_ == "Blue")
-    {
-        shirt_images_[0] = cv::imread(path + "red/blue.png", CV_LOAD_IMAGE_COLOR);
-        shirt_images_[1] = cv::imread(path + "green/blue.png", CV_LOAD_IMAGE_COLOR);
-        shirt_images_[2] = cv::imread(path + "purple/blue.png", CV_LOAD_IMAGE_COLOR);
-    }
-    else if (team_color_ == "Yellow")
-    {
-        shirt_images_[0] = cv::imread(path + "red/yellow.png", CV_LOAD_IMAGE_COLOR);
-        shirt_images_[1] = cv::imread(path + "green/yellow.png", CV_LOAD_IMAGE_COLOR);
-        shirt_images_[2] = cv::imread(path + "purple/yellow.png", CV_LOAD_IMAGE_COLOR);
-    }
-    else
-    {
-        ROS_ERROR("Unknown team identification");
-    }
-
-    // Calculates shirt histograms
-    for (int i = 0; i < 3; ++i)
-        shirt_histograms_[i] = calculateHistogram(shirt_images_[i]);
 }
 
 RobotData RobotIdentifier::identifyRobot(cv::Mat rgb_frame, std::vector<cv::Point> contour, cv::Rect boundingRect)
@@ -58,51 +27,7 @@ RobotData RobotIdentifier::identifyRobot(cv::Mat rgb_frame, std::vector<cv::Poin
 
     identifyTeam(data, data.robot_outline, rgb_frame);
 
-    // if (data.team == 0)
-    // {
-    //     cv::Point2f vertices[4];
-    //     data.robot_outline.points(vertices);
-    //     for (int i = 0; i < 4; i++)
-    //         cv::line(rgb_frame, vertices[i], vertices[(i+1)%4], cv::Scalar(0,255,0));
-    //     cv::line(rgb_frame, data.center_position,
-    //              cv::Point2f(data.center_position.x+(cos(data.orientation)*20),
-    //                          data.center_position.y+(sin(data.orientation)*20)),
-    //              cv::Scalar(255,255,0));
-    // }
-
     return data;
-}
-
-/**
- * Calculates and normalizes the histogram of the given image.
- * Code taken from:
- * <http://docs.opencv.org/doc/tutorials/imgproc/histograms/histogram_comparison/histogram_comparison.html>
- * @param img the image whose histogram is to be calculated
- * @return The normalized histogram
- */
-cv::Mat RobotIdentifier::calculateHistogram(cv::Mat img)
-{
-    cv::Mat histogram;
-    cv::Mat hsv;
-    cv::cvtColor(img, hsv, CV_BGR2HSV);
-
-    // Using 50 bins for hue and 60 for saturation
-    int h_bins = 50; int s_bins = 60;
-    int histSize[] = { h_bins, s_bins };
-
-    // hue varies from 0 to 179, saturation from 0 to 255
-    float h_ranges[] = { 0, 180 };
-    float s_ranges[] = { 0, 256 };
-    const float* ranges[] = { h_ranges, s_ranges };
-
-    // Use the o-th and 1-st channels
-    int channels[] = { 0, 1 };
-
-    cv::calcHist(&hsv, 1, channels, cv::Mat(), histogram, 1, histSize, ranges, true, false);
-
-    normalize(histogram, histogram, 0, 1, cv::NORM_MINMAX, -1, cv::Mat());
-
-    return histogram;
 }
 
 void RobotIdentifier::identifyTeam(RobotData &data, cv::RotatedRect robot, cv::Mat rgb_frame)
@@ -120,7 +45,7 @@ void RobotIdentifier::identifyTeam(RobotData &data, cv::RotatedRect robot, cv::M
             (team_color_ == "Yellow" and isPointYellow(hsv_value)))
         {
             data.team = RobotData::ALLY;
-            data.orientation = robot.angle+(90*((i+1)%4))*2*M_PI/360.0;
+            data.orientation = (robot.angle+(90*((i+1)%4)))*2*M_PI/360.0;
             cv::Point2f id_test_point = calculatePointAtMiddle(robot.center, vertices[(i+2)%4]);
             cv::Vec3b hsv_id_point = hsv.at<cv::Vec3b>(id_test_point.y, id_test_point.x);
             if (isPointRed(hsv_id_point))
@@ -147,7 +72,7 @@ void RobotIdentifier::identifyTeam(RobotData &data, cv::RotatedRect robot, cv::M
     }
     data.team = RobotData::OPPONENT;
     data.id = 0;
-    data.orientation = 0.0;
+    data.orientation = robot.angle * 2 * M_PI / 360;
 }
 
 cv::Point2f RobotIdentifier::calculatePointAtMiddle(cv::Point2f a, cv::Point2f b)

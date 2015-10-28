@@ -32,18 +32,16 @@ class RobotTracker
   private:
     void trackStep1(cv::Mat &rgb_frame, cv::Mat &depth_frame, cv::Mat &rgb_segmented_frame);
     void trackStep2(cv::Mat &rgb_frame, cv::Mat &depth_frame, cv::Mat &rgb_segmented_frame);
-    int getClosestOpponentRobot(cv::Point new_position);
     float distanceBetweenPoints(cv::Point a, cv::Point b);
     void setNewRobot(RobotData robot_data);
     bool foundAllRobots();
     void restartRobotFilters();
-    void trackIndividualRobot(cv::Mat &rgb_frame, cv::Mat &depth_segmented_frame, TrackedRobot &robot);
-    void chooseCorrectOrientation(float &orientation, TrackedRobot &robot);
+    void trackIndividualRobot(cv::Mat &hsv, cv::Mat &depth_segmented_frame, TrackedRobot &robot);
+    void chooseCorrectOrientation(float &orientation, cv::Point2f center_pos, cv::Mat &hsv);
     void calculateRegionOfInterest(cv::Mat &depth_segmented_frame, cv::Point2f predicted_position);
 
     RobotIdentifier robot_identifier_;
 
-    int robot_amount_;
     TrackedRobot robots_[2][3]; // First line for allied robots, second for opponent robots
 
     int tracking_step_;
@@ -52,6 +50,7 @@ class RobotTracker
     int min_area_, max_area_;
 
     // used for tracking system to make sure no more than 3 opponent robots are identified
+    int opponent_robot_counter_;
     bool used_opponent_robots_[3];
     bool used_allied_robots_[3];
 
@@ -60,7 +59,7 @@ class RobotTracker
 
     // used to identify whether the tracking situation has gone unstable
     bool found_robots_on_tracking_;
-    bool missing_frame_counter_;
+    int missing_frame_counter_;
 
     // used to obtain the region of interest on tracking
     cv::Rect prediction_window_;

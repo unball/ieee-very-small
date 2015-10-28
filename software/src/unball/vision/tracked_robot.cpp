@@ -47,7 +47,8 @@ void TrackedRobot::setPosition(RobotData data)
     tracking_window_ = data.tracking_window;
     robot_color_ = data.robot_color;
     robot_outline_ = data.robot_outline;
-    filter_.update(cv::Point2f(position_.x, position_.y));
+    filter_.updatePosition(cv::Point2f(position_.x, position_.y));
+    filter_.updateOrientation(orientation_);
 }
 
 void TrackedRobot::setPosition(cv::Point position, cv::RotatedRect robot_outline, float orientation)
@@ -55,13 +56,16 @@ void TrackedRobot::setPosition(cv::Point position, cv::RotatedRect robot_outline
     position_ = position;
     robot_outline_ = robot_outline;
     orientation_ = orientation;
-    filter_.update(cv::Point2f(position_.x, position_.y));
+    filter_.updatePosition(cv::Point2f(position_.x, position_.y));
+    filter_.updateOrientation(orientation_);
 }
 
-void TrackedRobot::setPosition(cv::Point position)
+void TrackedRobot::setPosition(cv::Point position, float orientation)
 {
     position_ = position;
-    filter_.update(cv::Point2f(position_.x, position_.y));
+    orientation_ = orientation;
+    filter_.updatePosition(cv::Point2f(position_.x, position_.y));
+    filter_.updateOrientation(orientation_);
 }
 
 std::vector<float> TrackedRobot::getRobotPose()

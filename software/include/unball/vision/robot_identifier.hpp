@@ -21,8 +21,6 @@
 #include <opencv2/opencv.hpp>
 
 #include <unball/vision/robot_data.hpp>
-#include <unball/vision/hsv_color_data.hpp>
-#include <unball/utils/math.hpp>
 
 class RobotIdentifier
 {
@@ -31,13 +29,9 @@ class RobotIdentifier
     RobotData identifyRobot(cv::Mat rgb_frame, std::vector<cv::Point> contour, cv::Rect boundingRect);
 
   private:
-    void loadShirtImages();
-    cv::Mat calculateHistogram(cv::Mat img);
     void identifyTeam(RobotData &data, cv::RotatedRect robot, cv::Mat rgb_frame);
 
     cv::Point2f calculatePointAtMiddle(cv::Point2f a, cv::Point2f b);
-
-    bool isPointColor(std::string color, cv::Vec3b hsv_values);
 
     bool isPointBlue(cv::Vec3b hsv_values);
     bool isPointYellow(cv::Vec3b hsv_values);
@@ -48,10 +42,6 @@ class RobotIdentifier
     int hsv_min_s_, hsv_min_v_;
 
     std::string team_color_;
-    cv::Mat shirt_images_[3];
-    cv::Mat shirt_histograms_[3];
-
-    std::map<std::string, HSVColorData> color_map_;
 };
 
 #endif // UNBALL_VISION_ROBOT_IDENTIFIER_H_
