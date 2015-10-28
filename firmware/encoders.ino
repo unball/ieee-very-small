@@ -113,21 +113,21 @@ void resetEncoders() {
 }
 
 /**
- * Calculate speed based on encode pulses.
- * @param encoderPulses Encoder pulses since last loop.
- * @return Speed in RPM.
+ * Estimate motor speeds.
  */
-float calculateSpeed(long encoderPulsesDiff) {
-  float dt = getTimeInterval();
-  return (encoderPulsesDiff/(float)ENCODER_NUM_PULSES)*(60.0/dt);
+void estimateSpeeds() {
+  speedA = estimateSpeed(encoderPulsesA);
+  speedB = estimateSpeed(encoderPulsesB);
 }
 
 /**
- * Calculate motor speeds.
+ * Estimate speed based on encode pulses.
+ * @param encoderPulses Encoder pulses since last loop.
+ * @return Speed in RPM.
  */
-void calculateSpeeds() {
-  speedA = calculateSpeed(encoderPulsesA);
-  speedB = calculateSpeed(encoderPulsesB);
+float estimateSpeed(long encoderPulsesDiff) {
+  float dt = getTimeInterval();
+  return (encoderPulsesDiff/(float)ENCODER_NUM_PULSES)*(60.0/dt);
 }
 
 /**

@@ -52,7 +52,7 @@ void setPins() {
 
 void loop() {
   receiveMessage();
-  calculateSpeeds();
+  estimateSpeeds();
   controlMotors();
 
 //  debugCommunication();

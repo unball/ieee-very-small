@@ -6,7 +6,7 @@ float speedB = 0;
 const int MAX_MOTOR_POWER = 255;
 const float MAX_ERROR_I = 1000;
 const float KP = 0.2;
-const float KI = 0.1;
+const float KI = 0;
 const float KD = 0;
 float errorAInt = 0;
 float errorBInt = 0;
@@ -67,37 +67,51 @@ void debugControl() {
  * @return Motor output power.
  */
 int control(float current, float target, float *errorInt, float *errorPrev) {
+  int power;
+  float dt;
+  float errorP;
+  float errorI;
+  float errorD;
+  
   // Somehow, the integral error initializes as NaN
   if (isnan(*errorInt))
     (*errorInt) = 0;
 
-  // PID errors
-  float dt = getTimeInterval();
-  float errorP = target - current;
-  float errorI = (*errorInt) + (errorP*dt);
-  float errorD = (errorP - (*errorPrev))/dt;
+  if (target == 0) {
+    // Special case where the target is zero
+    // Automatically stop and reset all error data
+    (*errorInt) = 0;
+    (*errorPrev) = 0;
+    power = 0;
+  } else {
+    // PID errors
+    dt = getTimeInterval();
+    errorP = target - current;
+    errorI = (*errorInt) + (errorP*dt);
+    errorD = (errorP - (*errorPrev))/dt;
+  
+    // Limit integral error
+    errorI = errorI > MAX_ERROR_I ? MAX_ERROR_I : errorI;
+  
+    // PID control law
+    power = KP*errorP + KI*errorI + KD*errorD;
+  
+    // Store data for next loop
+    *errorPrev = errorP;
+    *errorInt = errorI;
 
-  // Limit integral error
-  errorI = errorI > MAX_ERROR_I ? MAX_ERROR_I : errorI;
-
-  // PID control law
-  int power = KP*errorP + KI*errorI + KD*errorD;
-
-  // Store data for next loop
-  *errorPrev = errorP;
-  *errorInt = errorI;
-
-  // Debug
-  if (debugControlFlag) {
-    Serial.print(" Power: ");
-    Serial.print(power);
-    Serial.print(" P: ");
-    Serial.print(errorP);
-    Serial.print(" I: ");
-    Serial.print(errorI);
-    Serial.print(" D: ");
-    Serial.print(errorD);
-    Serial.println();
+    // Debug
+    if (debugControlFlag) {
+      Serial.print(" Power: ");
+      Serial.print(power);
+      Serial.print(" P: ");
+      Serial.print(errorP);
+      Serial.print(" I: ");
+      Serial.print(errorI);
+      Serial.print(" D: ");
+      Serial.print(errorD);
+      Serial.println();
+    }
   }
 
   return power;
