@@ -45,7 +45,7 @@ void RobotIdentifier::identifyTeam(RobotData &data, cv::RotatedRect robot, cv::M
             (team_color_ == "Yellow" and isPointYellow(hsv_value)))
         {
             data.team = RobotData::ALLY;
-            data.orientation = robot.angle+(90*((i+1)%4))*2*M_PI/360.0;
+            data.orientation = (robot.angle+(90*((i+1)%4)))*2*M_PI/360.0;
             cv::Point2f id_test_point = calculatePointAtMiddle(robot.center, vertices[(i+2)%4]);
             cv::Vec3b hsv_id_point = hsv.at<cv::Vec3b>(id_test_point.y, id_test_point.x);
             if (isPointRed(hsv_id_point))
@@ -72,7 +72,7 @@ void RobotIdentifier::identifyTeam(RobotData &data, cv::RotatedRect robot, cv::M
     }
     data.team = RobotData::OPPONENT;
     data.id = 0;
-    data.orientation = 0.0;
+    data.orientation = robot.angle * 2 * M_PI / 360;
 }
 
 cv::Point2f RobotIdentifier::calculatePointAtMiddle(cv::Point2f a, cv::Point2f b)
