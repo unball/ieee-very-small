@@ -17,7 +17,7 @@ void RobotFilter::predict()
     predicted_pose_ += predicted_velocity_ * 2;
 }
 
-void RobotFilter::update(cv::Point2f measured_pose)
+void RobotFilter::updatePosition(cv::Point2f measured_pose)
 {
     cv::Point2f previous_pose = predicted_pose_;
     predicted_pose_ = weight_ * predicted_pose_ +  (1 - weight_) * measured_pose;
@@ -29,4 +29,9 @@ void RobotFilter::restart()
     predicted_velocity_ = cv::Point2f(0, 0);
     predicted_pose_ = cv::Point2f(0, 0);
     weight_ = 0.5;
+}
+
+void RobotFilter::updateOrientation()
+{
+    cv::Point2f previous_orientation = predicted_orientation_;
 }

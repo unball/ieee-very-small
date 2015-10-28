@@ -14,11 +14,13 @@ class RobotFilter
     RobotFilter();
     cv::Point2f getPredictedPose();
     void predict();
-    void update(cv::Point2f measured_pose);
+    void updatePosition(cv::Point2f measured_pose);
     void restart();
+    void updateOrientation();
   private:
     cv::Point2f predicted_pose_;
     cv::Point2f predicted_velocity_;
+    cv::Point2f predicted_orientation_;
     float weight_;
 };
 
