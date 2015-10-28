@@ -4,14 +4,16 @@ float speedB = 0;
 
 // Motor PID control
 const int MAX_MOTOR_POWER = 255;
-const float MAX_ERROR_I = 1000;
-const float KP = 0.2;
-const float KI = 0;
-const float KD = 0;
+const float MAX_CONTROL_OUTPUT = MAX_MOTOR_POWER;
+const float KP = 1; // Previous: 1
+const float KI = 0; // Previous: 0
+const float KD = 0.1; // Previous: 0.1
 float errorAInt = 0;
 float errorBInt = 0;
 float errorAPrev = 0;
 float errorBPrev = 0;
+float prevTargetA = 0;
+float prevTargetB = 0;
 
 // Flag to print control data for debug purposes
 bool debugControlFlag = false;
@@ -43,9 +45,9 @@ void controlMotor(int motor, float targetSpeed) {
   int power;
   
   if (motor == MOTOR_A) {
-    power = control(speedA, targetSpeed, &errorAInt, &errorAPrev);
+    power = control(speedA, targetSpeed, &errorAInt, &errorAPrev, &prevTargetA);
   } else {
-    power = control(speedB, targetSpeed, &errorBInt, &errorBPrev);
+    power = control(speedB, targetSpeed, &errorBInt, &errorBPrev, &prevTargetB);
   }
 
   setMotorPower(motor, power);
@@ -64,9 +66,11 @@ void debugControl() {
  * @param target: Desired motor speed in RPM.
  * @param errorInt: Accumulated speed error.
  * @param errorPrev: Error from the last iteration.
+ * @param prevTarget: Previous desired motor speed in RPM.
  * @return Motor output power.
  */
-int control(float current, float target, float *errorInt, float *errorPrev) {
+int control(float current, float target, float *errorInt, float *errorPrev,
+  float *prevTarget) {
   int power;
   float dt;
   float errorP;
@@ -76,6 +80,13 @@ int control(float current, float target, float *errorInt, float *errorPrev) {
   // Somehow, the integral error initializes as NaN
   if (isnan(*errorInt))
     (*errorInt) = 0;
+
+  // Reset control variables when changing targets
+  if (*prevTarget != target) {
+    *prevTarget = target;
+    *errorInt = 0;
+    *errorPrev = 0;
+  }
 
   if (target == 0) {
     // Special case where the target is zero
@@ -91,10 +102,19 @@ int control(float current, float target, float *errorInt, float *errorPrev) {
     errorD = (errorP - (*errorPrev))/dt;
   
     // Limit integral error
-    errorI = errorI > MAX_ERROR_I ? MAX_ERROR_I : errorI;
+    if (errorI > MAX_CONTROL_OUTPUT)
+      errorI = MAX_CONTROL_OUTPUT;
+    else if (errorI < -MAX_CONTROL_OUTPUT)
+      errorI = -MAX_CONTROL_OUTPUT;
   
     // PID control law
     power = KP*errorP + KI*errorI + KD*errorD;
+
+    // Limit power
+    if (power > MAX_CONTROL_OUTPUT)
+      power = MAX_CONTROL_OUTPUT;
+    else if (power < -MAX_CONTROL_OUTPUT)
+      power = -MAX_CONTROL_OUTPUT;
   
     // Store data for next loop
     *errorPrev = errorP;
@@ -105,11 +125,11 @@ int control(float current, float target, float *errorInt, float *errorPrev) {
       Serial.print(" Power: ");
       Serial.print(power);
       Serial.print(" P: ");
-      Serial.print(errorP);
+      Serial.print(KP*errorP);
       Serial.print(" I: ");
-      Serial.print(errorI);
+      Serial.print(KI*errorI);
       Serial.print(" D: ");
-      Serial.print(errorD);
+      Serial.print(KD*errorD);
       Serial.println();
     }
   }

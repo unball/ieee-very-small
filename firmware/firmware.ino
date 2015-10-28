@@ -61,6 +61,6 @@ void loop() {
 
   resetEncoders();
   resetTimer();
-  
-  delay(50);
+
+  delay(100);
 }
