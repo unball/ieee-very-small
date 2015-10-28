@@ -87,8 +87,7 @@ int main(int argc, char **argv)
 
     // Publish the video
     ROS_INFO("Sending video");
-    frame_counter = 0;
-    while (ros::ok())
+    for (frame_counter = 0; ros::ok() && (frame_counter < num_frames); frame_counter++)
     {
         ROS_DEBUG("Frame counter: %d", frame_counter);
         // Publish the rgb frame
@@ -106,9 +105,6 @@ int main(int argc, char **argv)
 
         ros::spinOnce();
         loop_rate.sleep();
-        frame_counter++;
-        if (frame_counter >= num_frames)
-            rgb_cap.set(CV_CAP_PROP_POS_AVI_RATIO, 0); // Resets the video
     }
     ROS_INFO("Finished sending video");
 
