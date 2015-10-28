@@ -118,7 +118,7 @@ void resetEncoders() {
  * @return Speed in RPM.
  */
 float calculateSpeed(long encoderPulsesDiff) {
-  float dt = getInterval();
+  float dt = getTimeInterval();
   return (encoderPulsesDiff/(float)ENCODER_NUM_PULSES)*(60.0/dt);
 }
 

@@ -7,7 +7,7 @@ elapsedMillis timeElapsed;
  * Gets time interval since last reset.
  * @return Elapsed time in seconds.
  */
-float getInterval() {
+float getTimeInterval() {
   return timeElapsed/1000.0;
 }
 
@@ -16,7 +16,7 @@ float getInterval() {
  */
 void printTimer() {
   Serial.print("dt: ");
-  Serial.println(getInterval());
+  Serial.println(getTimeInterval());
 }
 
 /**

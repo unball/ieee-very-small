@@ -55,6 +55,7 @@ void loop() {
   calculateSpeeds();
   controlMotors();
 
+//  debugCommunication();
   debugControl();
   printSpeeds();
 

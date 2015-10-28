@@ -6,11 +6,21 @@ UnBallSoftwareSerial serial1(15, 14);
 // Conversion from message speed to RPM
 float speedMap[8] = {-150, -100, -50, 0, 37.5, 75, 112.5, 150};
 
+// Flag to print communication data for debug purposes
+bool debugCommunicationFlag = false;
+
 /**
  * Set XBee to start communicating.
  */
 void startCommunication() {
   serial1.begin(9600);
+}
+
+/**
+ * Configure to print communication data for debug.
+ */
+void debugCommunication() {
+  debugCommunicationFlag = true;
 }
 
 /**
@@ -24,19 +34,25 @@ void receiveMessage() {
   
   if (serial1.available()) {
     rcv_msg = (unsigned char)serial1.read();
-    Serial.print("Received: ");
-    Serial.println(rcv_msg);
     decode(rcv_msg, &rcv_robot, &rcv_speed_left_code, &rcv_speed_right_code);
 
     if (rcv_robot == ROBOT_NUM) {
       speed_left = speedMap[rcv_speed_left_code];
       speed_right = speedMap[rcv_speed_right_code];
-    }
 
-    Serial.print("Speed left: ");
-    Serial.print(speed_left);
-    Serial.print(" Speed right: ");
-    Serial.println(speed_right);
+      if (debugCommunicationFlag) {
+        Serial.print("Received: ");
+        Serial.println(rcv_msg);
+        Serial.print("Received left: ");
+        Serial.print(rcv_speed_left_code);
+        Serial.print(" Received right: ");
+        Serial.println(rcv_speed_right_code);
+        Serial.print("Target speed left: ");
+        Serial.print(speed_left);
+        Serial.print(" Target speed right: ");
+        Serial.println(speed_right);
+      }
+    }
   }
 }
 

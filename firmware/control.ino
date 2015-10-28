@@ -72,9 +72,10 @@ int control(float current, float target, float *errorInt, float *errorPrev) {
     (*errorInt) = 0;
 
   // PID errors
+  float dt = getTimeInterval();
   float errorP = target - current;
-  float errorI = (*errorInt) + errorP;
-  float errorD = (*errorPrev) - target;
+  float errorI = (*errorInt) + (errorP*dt);
+  float errorD = (errorP - (*errorPrev))/dt;
 
   // Limit integral error
   errorI = errorI > MAX_ERROR_I ? MAX_ERROR_I : errorI;
