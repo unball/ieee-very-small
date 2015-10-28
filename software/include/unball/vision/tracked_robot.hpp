@@ -34,7 +34,7 @@ class TrackedRobot : public TrackedObject
     void draw(cv::Mat &frame);
     void setPosition(RobotData data);
     void setPosition(cv::Point position, cv::RotatedRect robot_outline, float orientation);
-    void setPosition(cv::Point position);
+    void setPosition(cv::Point position, float orientation);
 
     std::vector<float> getRobotPose();
     cv::Point getPixelPosition();

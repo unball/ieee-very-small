@@ -134,7 +134,9 @@ void RobotTracker::trackStep2(cv::Mat &rgb_frame, cv::Mat &depth_frame, cv::Mat 
 void RobotTracker::trackIndividualRobot(cv::Mat &rgb_frame, cv::Mat &depth_segmented_frame, TrackedRobot &robot)
 {
     robot.filter_.predictPose();
+    robot.filter_.predictOrientation();
     cv::Point2f predicted_position = robot.filter_.getPredictedPose();
+    float predicted_orientation = robot.filter_.getPredictedOrientation();
     calculateRegionOfInterest(depth_segmented_frame, predicted_position);
     cv::Mat roi = depth_segmented_frame(prediction_window_);
 
@@ -148,14 +150,14 @@ void RobotTracker::trackIndividualRobot(cv::Mat &rgb_frame, cv::Mat &depth_segme
     {
         cv::RotatedRect robot_outline = cv::minAreaRect(contours[0]);
         robot_outline.center += cv::Point2f(upper_left_corner_.x, upper_left_corner_.y);
-        robot_outline.size += cv::Size2f(10,10);
+        robot_outline.size += cv::Size2f(6,6);
         float orientation = robot_outline.angle*2*M_PI/360.0;
-        chooseCorrectOrientation(orientation, robot);
+        chooseCorrectOrientation(orientation, predicted_orientation);
         robot.setPosition(robot_outline.center, robot_outline, orientation);
     }
     else
     {
-        robot.setPosition(predicted_position);
+        robot.setPosition(predicted_position, predicted_orientation);
         found_robots_on_tracking_ = false;
     }
 }
@@ -177,14 +179,13 @@ void RobotTracker::calculateRegionOfInterest(cv::Mat &depth_segmented_frame, cv:
     prediction_window_ = cv::Rect(upper_left_corner_.x, upper_left_corner_.y, window_width, window_height);
 }
 
-void RobotTracker::chooseCorrectOrientation(float &orientation, TrackedRobot &robot)
+void RobotTracker::chooseCorrectOrientation(float &orientation, float predicted_orientation)
 {
     float closest_orientation = orientation;
-    float previous_orientation = robot.getOrientation();
     for (int i = 1; i <= 4; ++i)
     {
         float current_orientation = orientation+M_PI*i/2;
-        if (abs(current_orientation - previous_orientation) < abs(closest_orientation - previous_orientation))
+        if (abs(current_orientation - predicted_orientation) < abs(closest_orientation - predicted_orientation))
             closest_orientation = current_orientation;
     }
     orientation = closest_orientation;

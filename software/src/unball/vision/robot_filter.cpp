@@ -23,7 +23,7 @@ void RobotFilter::predictPose()
 }
 
 void RobotFilter::predictOrientation(){
-    predicted_orientation_ += delta_theta_;
+    predicted_orientation_ += delta_theta_ * 3;
 }
 
 void RobotFilter::updatePosition(cv::Point2f measured_pose)
