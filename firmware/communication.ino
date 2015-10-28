@@ -3,8 +3,12 @@
 // XBee communication (RX, TX)
 UnBallSoftwareSerial serial1(15, 14);
 
+// Conversion from message speed to RPM
 float speedMap[8] = {-150, -100, -50, 0, 37.5, 75, 112.5, 150};
 
+/**
+ * Set XBee to start communicating.
+ */
 void startCommunication() {
   serial1.begin(9600);
 }
