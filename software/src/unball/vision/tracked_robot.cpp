@@ -56,6 +56,7 @@ void TrackedRobot::setPosition(cv::Point position, cv::RotatedRect robot_outline
     robot_outline_ = robot_outline;
     orientation_ = orientation;
     filter_.updatePosition(cv::Point2f(position_.x, position_.y));
+    filter_.updateOrientation(orientation_);
 }
 
 void TrackedRobot::setPosition(cv::Point position)

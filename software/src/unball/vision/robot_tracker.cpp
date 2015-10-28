@@ -133,7 +133,7 @@ void RobotTracker::trackStep2(cv::Mat &rgb_frame, cv::Mat &depth_frame, cv::Mat 
 
 void RobotTracker::trackIndividualRobot(cv::Mat &rgb_frame, cv::Mat &depth_segmented_frame, TrackedRobot &robot)
 {
-    robot.filter_.predict();
+    robot.filter_.predictPose();
     cv::Point2f predicted_position = robot.filter_.getPredictedPose();
     calculateRegionOfInterest(depth_segmented_frame, predicted_position);
     cv::Mat roi = depth_segmented_frame(prediction_window_);

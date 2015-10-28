@@ -12,9 +12,18 @@ cv::Point2f RobotFilter::getPredictedPose()
     return predicted_pose_;
 }
 
-void RobotFilter::predict()
+float RobotFilter::getPredictedOrientation()
+{
+    return predicted_orientation_;
+}
+
+void RobotFilter::predictPose()
 {
     predicted_pose_ += predicted_velocity_ * 2;
+}
+
+void RobotFilter::predictOrientation(){
+    predicted_orientation_ += delta_theta_;
 }
 
 void RobotFilter::updatePosition(cv::Point2f measured_pose)
@@ -31,7 +40,10 @@ void RobotFilter::restart()
     weight_ = 0.5;
 }
 
-void RobotFilter::updateOrientation()
+void RobotFilter::updateOrientation(float measured_orientation)
 {
-    cv::Point2f previous_orientation = predicted_orientation_;
+    float previous_orientation = predicted_orientation_;
+
+    predicted_orientation_ = weight_ * predicted_orientation_ + (1 - weight_) * measured_orientation;
+    delta_theta_ = predicted_orientation_ - previous_orientation;
 }

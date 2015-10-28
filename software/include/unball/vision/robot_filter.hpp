@@ -13,14 +13,18 @@ class RobotFilter
   public:
     RobotFilter();
     cv::Point2f getPredictedPose();
-    void predict();
+    float getPredictedOrientation();
+    void predictPose();
+    void predictOrientation();
     void updatePosition(cv::Point2f measured_pose);
+    void updateOrientation(float measured_orientation);
     void restart();
-    void updateOrientation();
+
   private:
     cv::Point2f predicted_pose_;
     cv::Point2f predicted_velocity_;
-    cv::Point2f predicted_orientation_;
+    float predicted_orientation_;
+    float delta_theta_;
     float weight_;
 };
 
