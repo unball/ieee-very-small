@@ -90,12 +90,6 @@ void RobotTracker::setNewRobot(RobotData robot_data)
         robots_[team][id].setPosition(robot_data);
         used_allied_robots_[id] = true;
     }
-    else if (continuous_frame_counter_ > 10)
-    {
-        int index = getClosestOpponentRobot(robot_data.center_position);
-        if (index != -1)
-            robots_[team][index].setPosition(robot_data);
-    }
     else
     {
         robots_[team][opponent_robot_counter_].setPosition(robot_data);
@@ -194,24 +188,6 @@ void RobotTracker::chooseCorrectOrientation(float &orientation, TrackedRobot &ro
             closest_orientation = current_orientation;
     }
     orientation = closest_orientation;
-}
-
-int RobotTracker::getClosestOpponentRobot(cv::Point new_position)
-{
-    int result = -1;
-    float closest_distance = 1000000000;
-    for (int i = 0; i < 3; ++i)
-    {
-        float current_distance = distanceBetweenPoints(new_position, robots_[1][i].getPixelPosition());;
-        if (current_distance < closest_distance && used_opponent_robots_[i] == false)
-        {
-            closest_distance = current_distance;
-            result = i;
-        }
-    }
-    if (result != -1)
-        used_opponent_robots_[result] = true;
-    return result;
 }
 
 float RobotTracker::distanceBetweenPoints(cv::Point a, cv::Point b)

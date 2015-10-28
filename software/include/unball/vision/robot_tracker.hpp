@@ -32,7 +32,6 @@ class RobotTracker
   private:
     void trackStep1(cv::Mat &rgb_frame, cv::Mat &depth_frame, cv::Mat &rgb_segmented_frame);
     void trackStep2(cv::Mat &rgb_frame, cv::Mat &depth_frame, cv::Mat &rgb_segmented_frame);
-    int getClosestOpponentRobot(cv::Point new_position);
     float distanceBetweenPoints(cv::Point a, cv::Point b);
     void setNewRobot(RobotData robot_data);
     bool foundAllRobots();
