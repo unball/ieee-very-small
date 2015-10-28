@@ -43,7 +43,6 @@ class RobotTracker
 
     RobotIdentifier robot_identifier_;
 
-    int robot_amount_;
     TrackedRobot robots_[2][3]; // First line for allied robots, second for opponent robots
 
     int tracking_step_;
@@ -52,6 +51,7 @@ class RobotTracker
     int min_area_, max_area_;
 
     // used for tracking system to make sure no more than 3 opponent robots are identified
+    int opponent_robot_counter_;
     bool used_opponent_robots_[3];
     bool used_allied_robots_[3];
 

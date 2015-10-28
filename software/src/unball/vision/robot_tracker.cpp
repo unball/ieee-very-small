@@ -21,7 +21,6 @@ RobotTracker::RobotTracker(MeasurementConversion *mc)
 
 void RobotTracker::loadConfig()
 {
-    ros::param::get("/vision/tracker/robots_per_team", robot_amount_);
     robot_identifier_.loadConfig();
     min_area_ = 800;
     max_area_ = 1730;
@@ -58,6 +57,7 @@ void RobotTracker::trackStep1(cv::Mat &rgb_frame, cv::Mat &depth_frame, cv::Mat 
     std::vector< std::vector<cv::Point> > contours;
     memset(used_opponent_robots_, false, sizeof(used_opponent_robots_));
     memset(used_allied_robots_, false, sizeof(used_allied_robots_));
+    opponent_robot_counter_ = 0;
 
     cv::findContours(depth_segmented_frame, contours, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_SIMPLE);
     for (int i = 0; i < contours.size(); ++i)
@@ -90,11 +90,17 @@ void RobotTracker::setNewRobot(RobotData robot_data)
         robots_[team][id].setPosition(robot_data);
         used_allied_robots_[id] = true;
     }
-    else
+    else if (continuous_frame_counter_ > 10)
     {
         int index = getClosestOpponentRobot(robot_data.center_position);
         if (index != -1)
             robots_[team][index].setPosition(robot_data);
+    }
+    else
+    {
+        robots_[team][opponent_robot_counter_].setPosition(robot_data);
+        used_opponent_robots_[opponent_robot_counter_] = true;
+        (++opponent_robot_counter_) %= 3;
     }
 }
 
@@ -173,6 +179,7 @@ void RobotTracker::calculateRegionOfInterest(cv::Mat &depth_segmented_frame, cv:
         upper_left_corner_.y = 0;
     else if (upper_left_corner_.y + window_height >= depth_segmented_frame.rows)
         upper_left_corner_.y = (depth_segmented_frame.rows - window_height - 1);
+
     prediction_window_ = cv::Rect(upper_left_corner_.x, upper_left_corner_.y, window_width, window_height);
 }
 
