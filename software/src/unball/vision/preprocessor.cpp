@@ -138,6 +138,10 @@ void Preprocessor::calculateMask()
                 field_mask_.at<uchar>(i, j) = 255;
         }
     }
+
+    cv::imshow("Field mask", field_mask_);
+    cv::waitKey(0);
+
     is_field_calibration_done_ = true;
 }
 

@@ -76,6 +76,7 @@ void Segmenter::loadHSVMaxHConfig()
 void Segmenter::loadHSVMinSConfig()
 {
     ros::param::get("/vision/segmenter/hsv_min_s", hsv_min_s_);
+    ros::param::get("/vision/segmenter/hsv_max_s", hsv_max_s_);
     ROS_INFO("HSV minimum saturation: %d", hsv_min_s_);
 }
 
@@ -85,6 +86,7 @@ void Segmenter::loadHSVMinSConfig()
 void Segmenter::loadHSVMinVConfig()
 {
     ros::param::get("/vision/segmenter/hsv_min_v", hsv_min_v_);
+    ros::param::get("/vision/segmenter/hsv_max_v", hsv_max_v_);
     ROS_INFO("HSV minimum value: %d", hsv_min_v_);
 }
 
