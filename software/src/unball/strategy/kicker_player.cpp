@@ -7,6 +7,7 @@ KickerPlayer::KickerPlayer()
 
 void KickerPlayer::buildPotentialFields(int robot_number)
 {
+    ROS_ERROR("Kicker player");
     Vector ball_position(Vector(Ball::getInstance().getX(), Ball::getInstance().getY()));
     Vector difference;
 
@@ -14,11 +15,15 @@ void KickerPlayer::buildPotentialFields(int robot_number)
 
     difference = ball_position - kick_target_;
 
-    if (isInBallRange(robot_number)) {
-        potential_fields_.push_back(new AttractivePotentialField(ball_position, 6));
-        //potential_fields_.push_back(new SelectivePotentialField(ball_position, difference.getDirection(), M_PI/4, 6, false));
+    if (isInBallRange(robot_number)) 
+    {
+        ROS_ERROR("Kick target: %.2f, %.2f", kick_target_.getX(), kick_target_.getY());
+
+        potential_fields_.push_back(new SelectivePotentialField(ball_position, difference.getDirection(), 
+            M_PI/4, 6, false));
     }
-    else {
+    else 
+    {
         potential_fields_.push_back(new AttractivePotentialField(ball_position, 6));
     }
 

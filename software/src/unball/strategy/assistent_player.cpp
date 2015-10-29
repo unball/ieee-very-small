@@ -20,11 +20,15 @@ void AssistentPlayer::buildPotentialFields(int robot_number)
 
     findTarget();
 
-	if (isInBallRange(robot_number)) {
-        // potential_fields_.push_back(new SelectivePotentialField(ball_position, kick_target_.getDirection(), M_PI/4, 6));
-        potential_fields_.push_back(new AttractivePotentialField(ball_position, 6));
+	if (isInBallRange(robot_number)) 
+    {
+        //potential_fields_.push_back(new SelectivePotentialField(ball_position, 
+        //    kick_target_.getDirection(), M_PI/4, 6));
+        potential_fields_.push_back(new SelectivePotentialField(ball_position, 
+            kick_target_.getDirection(), M_PI/4, 6, false));
     }
-    else {
+    else
+    {
         potential_fields_.push_back(new AttractivePotentialField(ball_position, 6));
     }
 
@@ -55,7 +59,7 @@ bool AssistentPlayer::isInBallRange(int robot_number)
 
 void AssistentPlayer::findTarget()
 {
-	kick_target_ = Vector(0,0) - Goals::getInstance().opponent_goal_;
+    kick_target_ = Vector(0,0) - Goals::getInstance().opponent_goal_;
 }
 
 void AssistentPlayer::avoidTheWalls(int robot_number)

@@ -36,24 +36,24 @@ vision:
 
     segmenter:
         # Show image with the results of segmentation
-        show_image: false
+        show_image: true
 
         # Show trackbars to manually set the minimum saturation and value for HSV segmentation.
         # true: Show trackbars.
         # false: Don't show trackbars.
-        hsv_adjust: false
+        hsv_adjust: true
 
         # Minimum hue for HSV segmentation.
         hsv_min_h: 0
 
         # Maximum hue for HSV segmentation.
-        hsv_max_h: 17
+        hsv_max_h: 20
 
         # Minimum saturation for HSV segmentation.
-        hsv_min_s: 133
+        hsv_min_s: 112
 
         # Minimum value for HSV segmentation.
-        hsv_min_v: 90
+        hsv_min_v: 78
 
         # Show image with the results of depth segmentation
         # true: Show trackbars
@@ -63,16 +63,18 @@ vision:
         # Show trackbar for depth segmentation adjustment
         # true: Show trackbars
         # false: Don't show trackbars
-        depth_adjust: false
+        depth_adjust: true
 
         # Treshold value
-        depth_treshold: 2000
+        depth_treshold: 2819
 
         # Depth threshold divider
         depth_treshold_divider: 56
 
         # Size Value
-        size_value: 100
+        size_value: 96
+
+        morphology_amount: 3
 
     tracker:
         # Show image with the results of tracking
@@ -93,7 +95,7 @@ vision:
         robots_per_team: 1
 
         # Identification for the color representing our team. Can be either "Blue" or "Yellow"
-        team: "Yellow"
+        team: "Blue"
 
     gui:
         # Name of the RGB window

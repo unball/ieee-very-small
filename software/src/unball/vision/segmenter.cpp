@@ -121,6 +121,7 @@ void Segmenter::loadDepthSegmentationConfig()
     ros::param::get("/vision/segmenter/depth_treshold", depth_threshold_);
     ros::param::get("/vision/segmenter/depth_treshold_divider", depth_threshold_divider_);
     ros::param::get("/vision/segmenter/size_value", size_value_);
+    ros::param::get("/vision/segmenter/morphology_amount", depth_morphology_amount_);
     if (depth_adjust_)
     {
         cv::namedWindow(depth_window_name_);

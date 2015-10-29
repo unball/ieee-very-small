@@ -118,10 +118,10 @@ void Strategy::updatePlayers()
        }
        else if (trajectory_controller_.getPlayer(i)->getBehaviour() == KICKER_PLAYER)
        {
-            if (not hasBall(i))
-                trajectory_controller_.updatePlayer(i,ASSISTENT_PLAYER);
+            // if (not hasBall(i))
+            //     trajectory_controller_.updatePlayer(i,ASSISTENT_PLAYER);
        }
-       else if (trajectory_controller_.getPlayer(i)->getBehaviour() == ASSISTENT_PLAYER)
+       /*else if (trajectory_controller_.getPlayer(i)->getBehaviour() == ASSISTENT_PLAYER)
        {
             if (isThere(KICKER_PLAYER))
             {
@@ -134,7 +134,7 @@ void Strategy::updatePlayers()
                 else
                     trajectory_controller_.updatePlayer(i,ASSISTENT_PLAYER);
             }
-       }
+       }*/
     }
 }
 

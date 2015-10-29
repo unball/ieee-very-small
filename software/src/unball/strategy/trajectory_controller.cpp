@@ -38,7 +38,7 @@ void TrajectoryController::run()
 
 void TrajectoryController::controlRobot(int robot_number, Vector force)
 {   
-    //HACK: We have to add M_PI because the force is being calculated backwards
+    //HACK: issue80 -  We have to add M_PI because the force is being calculated backwards
      if (fabs(math::reduceAngle(M_PI + force.getDirection() - robot[robot_number].getTh())) <= M_PI/2) 
      {
         move(robot_number, force.getMagnitude());
@@ -69,7 +69,7 @@ void TrajectoryController::turn(int robot_number, float angle)
     const float ANG_KP = 0.008;
     const float ANG_KD = 0;
 
-    //HACK: Should be: angle - robot.getTh()
+    //HACK: issue80 - Should be: angle - robot.getTh()
     float angle_error = math::reduceAngle(robot[robot_number].getTh() - angle);
     float angle_error_d = angle_error - angle_error_prev_;
     float ang_vel = ANG_KP*angle_error + ANG_KD*angle_error_d; // PD control

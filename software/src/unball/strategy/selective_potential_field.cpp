@@ -21,15 +21,20 @@ Vector SelectivePotentialField::calculateForce(Vector robot_position)
     Vector result;
     Vector difference = robot_position - origin_;
 
-    if (isInTheCone(difference))
+    if (isInTheCone(difference)) 
+    {
+        ROS_ERROR("[SelectivePotentialField]is in the cone");
         result += applyAttractivePotentialField(difference);
+    }
     else if (isSmooth_ and isInTheCone(difference, 1.5))
     {
+        ROS_ERROR("[SelectivePotentialField]is in the smoothened cone");
         result += applyAttractivePotentialField(difference);
         result += applyTangentialField(difference);
     }
     else
     {
+        ROS_ERROR("[SelectivePotentialField]is not in the cone");
         result += applyTangentialField(difference);
         if (isSmooth_)
         {   
@@ -37,7 +42,7 @@ Vector SelectivePotentialField::calculateForce(Vector robot_position)
             result += field.calculateForce(robot_position);
         }
     }
-    
+    ROS_ERROR("[SelectivePotentialField] force mag = %.2f, th = %.2f", result.getMagnitude(), result.getDirection()*180/M_PI);
     return result;
 }
 
@@ -81,21 +86,21 @@ bool SelectivePotentialField::shouldRotateClockwise(int angle_quadrant, int dire
 {
     bool clockwise = true;
 
-    if (direction_quadrant == 1 and angle_quadrant == 2)
-        clockwise = true;
-    else if (direction_quadrant == 1 and angle_quadrant == 4)
-        clockwise = false;
-    else if(direction_quadrant == 2 and angle_quadrant == 3)
+    if (direction_quadrant == 2 and angle_quadrant == 3)
         clockwise = true;
     else if (direction_quadrant == 2 and angle_quadrant == 1)
         clockwise = false;
-    else if (direction_quadrant == 3 and angle_quadrant == 4)
+    else if(direction_quadrant == 3 and angle_quadrant == 4)
         clockwise = true;
     else if (direction_quadrant == 3 and angle_quadrant == 2)
         clockwise = false;
     else if (direction_quadrant == 4 and angle_quadrant == 1)
         clockwise = true;
     else if (direction_quadrant == 4 and angle_quadrant == 3)
+        clockwise = false;
+    else if (direction_quadrant == 1 and angle_quadrant == 2)
+        clockwise = true;
+    else if (direction_quadrant == 1 and angle_quadrant == 4)
         clockwise = false;
     else if (resultant_angle <= 0)
         clockwise = false;

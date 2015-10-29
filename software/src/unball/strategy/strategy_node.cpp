@@ -105,7 +105,7 @@ void receiveVisionMessage(const unball::VisionMessage::ConstPtr &msg)
         robot[i].setPose(msg->y[i], -msg->x[i], math::reduceAngle(-msg->th[i] - M_PI_2));
     }
 
-    if (msg->x[2] < -0.75 or msg->x[2] > 0.75 or msg->y[2] < -0.65 or msg->y[2] > 0.65) 
+    if (msg->y[2] < -0.75 or msg->y[2] > 0.75 or msg->x[2] < -0.65 or msg->x[2] > 0.65) 
     {
         //HACK: in case we do not find our goakeeper, we set our goal by:
         //finding the opponent goalkeeper
@@ -113,10 +113,12 @@ void receiveVisionMessage(const unball::VisionMessage::ConstPtr &msg)
         //this way we find which is our goal, and therefore which goal we should target
         //only meant to happen on a penalty
         int opponent_goalkeeper_number = Goals::getInstance().findOpponentGoalkeeper();
-        Goals::getInstance().setGoalkeeperSide(-robot[opponent_goalkeeper_number].getX());    
+        Goals::getInstance().setGoalkeeperSide(-robot[opponent_goalkeeper_number].getY());    
     }
-    else
-        Goals::getInstance().setGoalkeeperSide(msg->x[2]);
+    else 
+    {
+        Goals::getInstance().setGoalkeeperSide(robot[2].getY());
+    }
     Ball::getInstance().update(msg->ball_y, -msg->ball_x);
 }
 
