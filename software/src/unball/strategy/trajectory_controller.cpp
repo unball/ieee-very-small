@@ -26,8 +26,9 @@ TrajectoryController::~TrajectoryController()
 void TrajectoryController::run()
 {
     Vector resultant_force;
-    for (int i = 0; i < 3; ++i)
+    //for (int i = 0; i < 3; ++i)
     {
+        int i = 0;
         player_[i]->buildPotentialFields(i);
         resultant_force = player_[i]->calculateResultantForce(i);
         player_[i]->clearPotentialFields();
@@ -37,16 +38,16 @@ void TrajectoryController::run()
 
 void TrajectoryController::controlRobot(int robot_number, Vector force)
 {   
-    if (fabs(math::reduceAngle(force.getDirection() - robot[robot_number].getTh())) <= M_PI/2) 
-    {
+    // if (fabs(math::reduceAngle(force.getDirection() - robot[robot_number].getTh())) <= M_PI/2) 
+    // {
         move(robot_number, force.getMagnitude());
         turn(robot_number, force.getDirection());
-    }
-    else
-    {
-        move(robot_number, -force.getMagnitude());
-        turn(robot_number, math::invertAngle(force.getDirection()));
-    }
+    // }
+    // else
+    // {
+    //    move(robot_number, -force.getMagnitude());
+    //    turn(robot_number, math::invertAngle(force.getDirection()));
+    // }
 }
 
 void TrajectoryController::move(int robot_number, float distance)
@@ -56,15 +57,15 @@ void TrajectoryController::move(int robot_number, float distance)
 
     float lin_vel = DIST_KP*distance; // P control
 
-    if (fabs(distance) > distance_tolerance)
+    // if (fabs(distance) > distance_tolerance)
         robot[robot_number].setLinVel(lin_vel);
-    else
-        robot[robot_number].setLinVel(0);
+    // else
+    //     robot[robot_number].setLinVel(0);
 }
 
 void TrajectoryController::turn(int robot_number, float angle)
 {
-    const float ANG_KP = 0.03;
+    const float ANG_KP = 0.01;
     const float ANG_KD = 0.003;
 
     float angle_error = math::reduceAngle(robot[robot_number].getTh() - angle);

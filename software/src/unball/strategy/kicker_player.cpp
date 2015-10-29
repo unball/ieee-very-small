@@ -14,13 +14,16 @@ void KickerPlayer::buildPotentialFields(int robot_number)
 
     difference = ball_position - kick_target_;
 
-    if (isInBallRange(robot_number))
-        potential_fields_.push_back(new SelectivePotentialField(ball_position, difference.getDirection(), M_PI/4, 6, false));
-    else
-        potential_fields_.push_back(new AttractivePotentialField(ball_position, 20));
+    if (isInBallRange(robot_number)) {
+        potential_fields_.push_back(new AttractivePotentialField(ball_position, 6));
+        //potential_fields_.push_back(new SelectivePotentialField(ball_position, difference.getDirection(), M_PI/4, 6, false));
+    }
+    else {
+        potential_fields_.push_back(new AttractivePotentialField(ball_position, 6));
+    }
 
-    potential_fields_.push_back(new RepulsivePotentialField(Vector(robot[5].getX(), robot[5].getY()), 0.3, 0.9));
-    avoidTheWalls(robot_number);
+    //potential_fields_.push_back(new RepulsivePotentialField(Vector(robot[5].getX(), robot[5].getY()), 0.3, 0.9));
+    //avoidTheWalls(robot_number);
 }
 
 void KickerPlayer::findTarget()

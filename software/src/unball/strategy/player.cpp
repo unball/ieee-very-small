@@ -19,6 +19,10 @@ Vector Player::calculateResultantForce(int robot_number)
 
     for (int i = 0; i < potential_fields_.size(); ++i) 
         resultant_force += potential_fields_[i]->calculateForce(position);
+
+    ROS_ERROR("[Player]Number of fields: %d", (int)potential_fields_.size());
+    ROS_ERROR("[Player]FORCE mag = %.2f, th = %.2f", resultant_force.getMagnitude(), resultant_force.getDirection()*180/M_PI);
+
     return resultant_force;	
 }
 
