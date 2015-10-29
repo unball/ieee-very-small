@@ -45,7 +45,7 @@ void AssistentPlayer::buildPotentialFields(int robot_number)
     if (friendly_kicker_ != -1)
     	potential_fields_.push_back(new RepulsivePotentialField(Vector(robot[friendly_kicker_].getX(),
     																   robot[friendly_kicker_].getY()), 0.3, 5));
-    avoidTheWalls(robot_number);*/
+    */avoidTheWalls(robot_number);
 }
 
 bool AssistentPlayer::isInBallRange(int robot_number)
@@ -64,16 +64,16 @@ void AssistentPlayer::findTarget()
 
 void AssistentPlayer::avoidTheWalls(int robot_number)
 {
-    if (robot[robot_number].getY() > 0.55)
-        potential_fields_.push_back(new ParallelPotentialField(Vector(robot[robot_number].getX(), robot[robot_number].getY()),
-        Vector(robot[robot_number].getX(), 0.65), 0.2));
-    else if (robot[robot_number].getY() < -0.55)
-        potential_fields_.push_back(new ParallelPotentialField(Vector(robot[robot_number].getX(), robot[robot_number].getY()),
-        Vector(robot[robot_number].getX(), -0.65), 0.2));
-    else if (robot[robot_number].getX() > 0.65)
-        potential_fields_.push_back(new ParallelPotentialField(Vector(robot[robot_number].getX(), robot[robot_number].getY()),
-        Vector(0.75, robot[robot_number].getY()), 0.2));
-    else if (robot[robot_number].getX() < -0.65)
-        potential_fields_.push_back(new ParallelPotentialField(Vector(robot[robot_number].getX(), robot[robot_number].getY()),
-        Vector(-0.75, robot[robot_number].getY()), 0.2));
+    if (robot[robot_number].getX() > 0.55)
+        potential_fields_.push_back(new ParallelPotentialField(Vector(robot[robot_number].getY(), robot[robot_number].getX()),
+        Vector(robot[robot_number].getY(), 0.65), 0.2));
+    else if (robot[robot_number].getX() < -0.55)
+        potential_fields_.push_back(new ParallelPotentialField(Vector(robot[robot_number].getY(), robot[robot_number].getX()),
+        Vector(robot[robot_number].getY(), -0.65), 0.2));
+    else if (robot[robot_number].getY() > 0.65)
+        potential_fields_.push_back(new ParallelPotentialField(Vector(robot[robot_number].getY(), robot[robot_number].getX()),
+        Vector(0.75, robot[robot_number].getX()), 0.2));
+    else if (robot[robot_number].getY() < -0.65)
+        potential_fields_.push_back(new ParallelPotentialField(Vector(robot[robot_number].getY(), robot[robot_number].getX()),
+        Vector(-0.75, robot[robot_number].getX()), 0.2));
 }

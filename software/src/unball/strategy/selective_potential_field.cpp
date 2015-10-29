@@ -64,7 +64,7 @@ Vector SelectivePotentialField::applyAttractivePotentialField(Vector difference)
 Vector SelectivePotentialField::applyTangentialField(Vector difference)
 {
         float angle = difference.getDirection();
-        float magnitude = range_/2;
+        float magnitude = range_;
         
         int angle_quadrant = math::quadrant(angle);
         int direction_quadrant = math::quadrant(direction_);

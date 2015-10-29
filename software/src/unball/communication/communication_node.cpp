@@ -41,7 +41,7 @@ int main(int argc, char **argv)
 	
 	ros::init(argc, argv, "communication_node");
     ros::NodeHandle n;
-    ros::Rate loop_rate(4); // Hz
+    ros::Rate loop_rate(3); // Hz
     
     ros::Subscriber sub = n.subscribe("strategy_topic", 1, receiveStrategyMessage);
 
@@ -52,18 +52,18 @@ int main(int argc, char **argv)
 
 		std::string message;
 
-		//for (int i=0; i<3; i++)
-		//{
-			int i = 0;
+		for (int i = 0; i < 3; i++)
+		{
 			robot_number = i;
 			right_wheel = convert(calculateRightSpeed(i));
 			left_wheel = convert(calculateLeftSpeed(i));
 			result = ((robot_number << 6) & 0b11000000) | ((left_wheel << 3) & 0b00111000) | (right_wheel & 0b00000111);
 
+			ROS_ERROR("Robot: %d\tLeft: %d\tRight: %d", i, left_wheel, right_wheel);
 			message = boost::lexical_cast<std::string>(result);
 
 			sp.write_some(boost::asio::buffer(message, message.size()));
-		//}	
+		}	
         
         ros::spinOnce();
         loop_rate.sleep();

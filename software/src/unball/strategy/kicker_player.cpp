@@ -7,7 +7,6 @@ KickerPlayer::KickerPlayer()
 
 void KickerPlayer::buildPotentialFields(int robot_number)
 {
-    ROS_ERROR("Kicker player");
     Vector ball_position(Vector(Ball::getInstance().getX(), Ball::getInstance().getY()));
     Vector difference;
 
@@ -17,10 +16,8 @@ void KickerPlayer::buildPotentialFields(int robot_number)
 
     if (isInBallRange(robot_number)) 
     {
-        ROS_ERROR("Kick target: %.2f, %.2f", kick_target_.getX(), kick_target_.getY());
-
         potential_fields_.push_back(new SelectivePotentialField(ball_position, difference.getDirection(), 
-            M_PI/4, 6, false));
+            M_PI/4, 6));
     }
     else 
     {
@@ -28,7 +25,7 @@ void KickerPlayer::buildPotentialFields(int robot_number)
     }
 
     //potential_fields_.push_back(new RepulsivePotentialField(Vector(robot[5].getX(), robot[5].getY()), 0.3, 0.9));
-    //avoidTheWalls(robot_number);
+    avoidTheWalls(robot_number);
 }
 
 void KickerPlayer::findTarget()
@@ -63,16 +60,16 @@ bool KickerPlayer::opponentGoalkeeperIsInGoalRange(int opponent_goalkeeper)
 
 void KickerPlayer::avoidTheWalls(int robot_number)
 {
-    if (robot[robot_number].getY() > 0.55)
-        potential_fields_.push_back(new ParallelPotentialField(Vector(robot[robot_number].getX(), robot[robot_number].getY()),
-        Vector(robot[robot_number].getX(), 0.65), 0.2));
-    else if (robot[robot_number].getY() < -0.55)
-        potential_fields_.push_back(new ParallelPotentialField(Vector(robot[robot_number].getX(), robot[robot_number].getY()),
-        Vector(robot[robot_number].getX(), -0.65), 0.2));
-    else if (robot[robot_number].getX() > 0.65)
-        potential_fields_.push_back(new ParallelPotentialField(Vector(robot[robot_number].getX(), robot[robot_number].getY()),
-        Vector(0.75, robot[robot_number].getY()), 0.2));
-    else if (robot[robot_number].getX() < -0.65)
-        potential_fields_.push_back(new ParallelPotentialField(Vector(robot[robot_number].getX(), robot[robot_number].getY()),
-        Vector(-0.75, robot[robot_number].getY()), 0.2));
+    if (robot[robot_number].getX() > 0.55)
+        potential_fields_.push_back(new ParallelPotentialField(Vector(robot[robot_number].getY(), robot[robot_number].getX()),
+        Vector(robot[robot_number].getY(), 0.65), 0.2));
+    else if (robot[robot_number].getX() < -0.55)
+        potential_fields_.push_back(new ParallelPotentialField(Vector(robot[robot_number].getY(), robot[robot_number].getX()),
+        Vector(robot[robot_number].getY(), -0.65), 0.2));
+    else if (robot[robot_number].getY() > 0.65)
+        potential_fields_.push_back(new ParallelPotentialField(Vector(robot[robot_number].getY(), robot[robot_number].getX()),
+        Vector(0.75, robot[robot_number].getX()), 0.2));
+    else if (robot[robot_number].getY() < -0.65)
+        potential_fields_.push_back(new ParallelPotentialField(Vector(robot[robot_number].getY(), robot[robot_number].getX()),
+        Vector(-0.75, robot[robot_number].getX()), 0.2));
 }

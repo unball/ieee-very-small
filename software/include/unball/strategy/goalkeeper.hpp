@@ -26,7 +26,7 @@ class Goalkeeper : public Player
 
   	void updateBallPos();
 
-    float x_pos_;
+    float y_pos_;
   	Vector ball_pos_;
 
   	static float const LEFT_LIMIT = 0.18;

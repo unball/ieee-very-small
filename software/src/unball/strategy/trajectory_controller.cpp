@@ -14,7 +14,7 @@ TrajectoryController::TrajectoryController()
 {
     player_[0] = new KickerPlayer();
     player_[1] = new AssistentPlayer();
-    player_[2] = new InitialGoalkeeper();
+    player_[2] = new Goalkeeper();
     direct_motion_ = true;
 }
 
@@ -27,14 +27,18 @@ TrajectoryController::~TrajectoryController()
 void TrajectoryController::run()
 {
     Vector resultant_force;
-    //for (int i = 0; i < 3; ++i)
-    // {
-        int i = 0;
+    //for (int i=0;i<3;i++)
+    for (int i = 0; i < 2; ++i)
+    {
         player_[i]->buildPotentialFields(i);
         resultant_force = player_[i]->calculateResultantForce(i);
+        ROS_ERROR("resultant_force: mag: %.2f ang: %.2f", resultant_force.getMagnitude(),
+            resultant_force.getDirection()*180/M_PI);
         player_[i]->clearPotentialFields();
         controlRobot(i, resultant_force);
-    // }
+    }
+    robot[2].setAngVel(5);
+    robot[2].setLinVel(0);
 }
 
 void TrajectoryController::controlRobot(int robot_number, Vector force)
