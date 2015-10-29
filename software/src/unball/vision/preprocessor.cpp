@@ -14,11 +14,14 @@
 Preprocessor::Preprocessor()
 {
     window_name_ = "Preprocessor";
+    is_field_calibration_done_ = false;
+    has_main_field_ = false;
+    has_goal_ = false;
 }
 
 Preprocessor::~Preprocessor()
 {
-    if (show_image_)
+    if (show_depth_image_)
         cv::destroyWindow(window_name_);
 }
 
@@ -28,11 +31,18 @@ Preprocessor::~Preprocessor()
  */
 void Preprocessor::loadConfig()
 {
-    ros::param::get("/vision/preprocessor/show_image", show_image_);
-    ROS_INFO("Preprocessor show image: %d", show_image_);
+    ros::param::get("/vision/preprocessor/show_depth_image", show_depth_image_);
+    ros::param::get("/vision/preprocessor/adjust_noise_reduction", adjust_noise_reduction_);
+    ros::param::get("/vision/preprocessor/noise_thresh", noise_thresh_);
+    ros::param::get("/vision/preprocessor/outside_val", outside_val_);
 
-    if (show_image_)
+    if (show_depth_image_)
+    {
         cv::namedWindow(window_name_);
+        if (adjust_noise_reduction_)
+            cv::createTrackbar("Noise thresh", window_name_, &noise_thresh_, 100);
+        cv::createTrackbar("Outside value", window_name_, &outside_val_, 255);
+    }
 }
 
 /**
@@ -47,58 +57,6 @@ void Preprocessor::preprocessRGB(cv::Mat &rgb_frame)
      * applied to the image.
      */
     cv::medianBlur(rgb_frame, rgb_frame, 5);
-
-    // TODO(matheus.v.portela@gmail.com): GUI should be the only one to deal with showing images.
-    // Show results
-    if (show_image_)
-    {
-        cv::imshow(window_name_, rgb_frame);
-        cv::waitKey(1);
-    }
-}
-
-/**
- * TODO (gabri.navess@gmail.com): This is a temporary method.
- * It is here so I don't forget how to do this. ;P
- * It will be removed later.
- *
- * @param image the image to be preprocessed
- */
-void Preprocessor::printMeanMinMax(const cv::Mat &image)
-{
-    typedef float pixelType;
-    pixelType min = 255, max = 0;
-    pixelType mean = 0, counter = 0;
-    int npixels = 0;
-
-    for (int i = 0; i < image.rows; i++)
-    {
-        for (int j = 0; j < image.cols; j++)
-        {
-            npixels++;
-            if (image.at<pixelType>(i, j) != 0)
-            {
-                counter++;
-                mean += image.at<pixelType>(i, j);
-
-                if (image.at<pixelType>(i, j) < min)
-                    min = image.at<pixelType>(i, j);
-
-                if (image.at<pixelType>(i, j) > max)
-                    max = image.at<pixelType>(i, j);
-            }
-        }
-    }
-
-    if (counter != 0)
-    {
-        ROS_ERROR("Analyzed %d pixels", (int)counter);
-        ROS_ERROR("Mean: %.3f", (float)mean / (float)counter);
-    }
-    ROS_ERROR("Max: %d", (int)max);
-    ROS_ERROR("Min: %d", (int)min);
-    ROS_ERROR("Npixels: %d", (int)npixels);
-    ROS_ERROR("image dimensions: (%d,%d)", (int)image.cols, (int)image.rows);
 }
 
 /**
@@ -111,6 +69,10 @@ void Preprocessor::preprocessDepth(cv::Mat &depth_frame)
     cv::medianBlur(depth_frame, depth_frame, 5);
     cv::normalize(depth_frame, depth_frame, 0, 256, cv::NORM_MINMAX, CV_8UC1);
     fixDepthImageNoise(depth_frame);
+    removeExteriorOfField(depth_frame);
+
+    if (show_depth_image_)
+        cv::imshow(window_name_, depth_frame);
 }
 
 /**
@@ -123,8 +85,16 @@ void Preprocessor::fixDepthImageNoise(cv::Mat &image)
 {
     for (int i = 0; i < image.rows; ++i)
         for (int j = 0; j < image.cols; ++j)
-            if (image.at<uchar>(i, j) == 0)
+            if (image.at<uchar>(i, j) <= noise_thresh_)
                 image.at<uchar>(i, j) = 255;
+}
+
+void Preprocessor::removeExteriorOfField(cv::Mat &image)
+{
+    for (int i = 0; i < image.rows; ++i)
+        for (int j = 0; j < image.cols; ++j)
+            if (field_mask_.at<uchar>(i, j) == 0)
+                image.at<uchar>(i, j) = outside_val_;
 }
 
 /**
@@ -136,4 +106,53 @@ void Preprocessor::preprocess(cv::Mat &rgb_frame, cv::Mat &depth_frame)
 {
     preprocessRGB(rgb_frame);
     preprocessDepth(depth_frame);
+}
+
+void Preprocessor::runFieldCalibration(std::vector<cv::Point2f> rgb_points)
+{
+    if (not has_main_field_)
+        getMainPolygon(rgb_points);
+    else if (not has_goal_)
+        getGoalPolygon(rgb_points);
+    else
+        calculateMask();
+}
+
+void Preprocessor::getMainPolygon(std::vector<cv::Point2f> rgb_points)
+{
+    if (rgb_points.size() != 8)
+        return;
+    main_polygon_.setPoints(rgb_points);
+    has_main_field_ = true;
+    GUI::clearRGBPoints();
+}
+
+void Preprocessor::getGoalPolygon(std::vector<cv::Point2f> rgb_points)
+{
+    if (rgb_points.size() != 4)
+        return;
+    goal_polygon_.setPoints(rgb_points);
+    has_goal_ = true;
+    GUI::clearRGBPoints();
+}
+
+void Preprocessor::calculateMask()
+{
+    field_mask_ = cv::Mat::zeros(480, 640, CV_8UC1);
+    for (int i = 0; i < field_mask_.rows; ++i)
+    {
+        for (int j = 0; j < field_mask_.cols; ++j)
+        {
+            cv::Point2f point(i, j);
+            // if (not( main_polygon_.isPointInside(point) or goal_polygon_.isPointInside(point) ))
+            if (main_polygon_.isPointInside(point) or goal_polygon_.isPointInside(point))
+                field_mask_.at<uchar>(i, j) = 255;
+        }
+    }
+    is_field_calibration_done_ = true;
+}
+
+bool Preprocessor::isFieldCalibrationDone()
+{
+    return is_field_calibration_done_;
 }

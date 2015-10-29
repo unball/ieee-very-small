@@ -39,8 +39,6 @@ class RobotIdentifier
     bool isPointGreen(cv::Vec3b hsv_values);
     bool isPointPurple(cv::Vec3b hsv_values);
 
-    int hsv_min_s_, hsv_min_v_;
-
     std::string team_color_;
 };
 

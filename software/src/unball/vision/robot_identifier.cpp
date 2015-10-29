@@ -12,8 +12,6 @@
 
 void RobotIdentifier::loadConfig()
 {
-    ros::param::get("/vision/segmenter/hsv_min_s", hsv_min_s_);
-    ros::param::get("/vision/segmenter/hsv_min_v", hsv_min_v_);
     ros::param::get("/vision/tracker/team", team_color_);
 }
 

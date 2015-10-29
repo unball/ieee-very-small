@@ -32,16 +32,23 @@ vision:
 
     preprocessor:
         # Show image with the results of preprocessing
-        show_image: false
+        show_depth_image: true
+
+        # Adjust preprocessor noise reduction
+        adjust_noise_reduction: false
+
+        noise_thresh: 0
+
+        outside_val: 255
 
     segmenter:
         # Show image with the results of segmentation
-        show_image: true
+        show_image: false
 
         # Show trackbars to manually set the minimum saturation and value for HSV segmentation.
         # true: Show trackbars.
         # false: Don't show trackbars.
-        hsv_adjust: true
+        hsv_adjust: false
 
         # Minimum hue for HSV segmentation.
         hsv_min_h: 0
@@ -66,15 +73,15 @@ vision:
         depth_adjust: true
 
         # Treshold value
-        depth_treshold: 2000
+        depth_treshold: 2110
 
         # Depth threshold divider
-        depth_treshold_divider: 56
+        depth_treshold_divider: 31
 
         # Size Value
-        size_value: 100
+        size_value: 53
 
-        morphology_amount: 3
+        morphology_amount: 11
 
     tracker:
         # Show image with the results of tracking
@@ -95,7 +102,7 @@ vision:
         robots_per_team: 1
 
         # Identification for the color representing our team. Can be either "Blue" or "Yellow"
-        team: "Blue"
+        team: "Yellow"
 
         robot_tracker:
             # Whether robot tracking should limit contour usage by contour bounding rect area

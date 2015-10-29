@@ -15,7 +15,6 @@ Segmenter::Segmenter()
 {
     window_name_ = "Segmenter";
     depth_window_name_ = "Segmented Depth Frame";
-    // depth_threshold_ = 4;
 }
 
 Segmenter::~Segmenter()
