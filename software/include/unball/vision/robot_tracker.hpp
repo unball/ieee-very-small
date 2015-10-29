@@ -47,6 +47,7 @@ class RobotTracker
     int tracking_step_;
 
     // Used on tracking step 1
+    bool limit_robot_by_area_, show_area_trackbars_;
     int min_area_, max_area_;
 
     // used for tracking system to make sure no more than 3 opponent robots are identified

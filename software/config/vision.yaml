@@ -97,6 +97,19 @@ vision:
         # Identification for the color representing our team. Can be either "Blue" or "Yellow"
         team: "Blue"
 
+        robot_tracker:
+            # Whether robot tracking should limit contour usage by contour bounding rect area
+            limit_robot_by_area: false
+
+            # Show trackbars for configuring the area values
+            show_trackbars: false
+
+            # Minimum area a contour's bounding rect should have
+            min_limit_area: 800
+
+            # Maximum area a contour's bounding rect should have
+            max_limit_area: 1730
+
     gui:
         # Name of the RGB window
         rgb_window_name: "RGB frame"

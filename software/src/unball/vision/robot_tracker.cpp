@@ -22,11 +22,16 @@ RobotTracker::RobotTracker(MeasurementConversion *mc)
 void RobotTracker::loadConfig()
 {
     robot_identifier_.loadConfig();
-    min_area_ = 800;
-    max_area_ = 1730;
-    // cv::namedWindow("Robot tracker config");
-    // cv::createTrackbar("Min area", "Robot tracker config", &min_area_, 20000);
-    // cv::createTrackbar("Max area", "Robot tracker config", &max_area_, 20000);
+    ros::param::get("/vision/tracker/robot_tracker/limit_robot_by_area", limit_robot_by_area_);
+    ros::param::get("/vision/tracker/robot_tracker/show_trackbars", show_area_trackbars_);
+    ros::param::get("/vision/tracker/robot_tracker/min_limit_area", min_area_);
+    ros::param::get("/vision/tracker/robot_tracker/max_limit_area", max_area_);
+    if (show_area_trackbars_)
+    {
+        cv::namedWindow("Robot tracker config");
+        cv::createTrackbar("Min area", "Robot tracker config", &min_area_, 5000);
+        cv::createTrackbar("Max area", "Robot tracker config", &max_area_, 5000);
+    }
 }
 
 void RobotTracker::track(cv::Mat &rgb_frame, cv::Mat &depth_frame, cv::Mat &rgb_segmented_frame)
@@ -63,7 +68,7 @@ void RobotTracker::trackStep1(cv::Mat &rgb_frame, cv::Mat &depth_frame, cv::Mat 
     for (int i = 0; i < contours.size(); ++i)
     {
         cv::Rect boundingRect = cv::boundingRect(contours[i]);
-        if (boundingRect.area() > min_area_ and boundingRect.area() < max_area_)
+        if ((boundingRect.area() > min_area_ and boundingRect.area() < max_area_) or not limit_robot_by_area_)
         {
             RobotData robot_data = robot_identifier_.identifyRobot(rgb_frame, contours[i], boundingRect);
             setNewRobot(robot_data);
