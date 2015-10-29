@@ -101,6 +101,7 @@ void Strategy::updatePlayers()
     {
        if (trajectory_controller_.getPlayer(i)->getBehaviour() == INITIAL_GOALKEEPER)
        {
+          ROS_ERROR("INITIAL GOALKEEPER");
             Vector goalkeeper_pos = Vector(robot[i].getPos().getX(),robot[i].getPos().getY());
 
             if (goalkeeper_pos.calculateDistance(Goals::getInstance().friendly_goal_) < 0.2)
@@ -113,15 +114,15 @@ void Strategy::updatePlayers()
        }
        else if (trajectory_controller_.getPlayer(i)->getBehaviour() == GOALKEEPER_KICKER)
        {
-            if (not Goals::getInstance().isBallInFriendlyGoalArea())
-                trajectory_controller_.updatePlayer(i,INITIAL_GOALKEEPER);
+       //     if (not Goals::getInstance().isBallInFriendlyGoalArea())
+       //         trajectory_controller_.updatePlayer(i,INITIAL_GOALKEEPER);
        }
        else if (trajectory_controller_.getPlayer(i)->getBehaviour() == KICKER_PLAYER)
        {
-            if (not hasBall(i))
-                trajectory_controller_.updatePlayer(i,ASSISTENT_PLAYER);
+            // if (not hasBall(i))
+            //     trajectory_controller_.updatePlayer(i,ASSISTENT_PLAYER);
        }
-       else if (trajectory_controller_.getPlayer(i)->getBehaviour() == ASSISTENT_PLAYER)
+       /*else if (trajectory_controller_.getPlayer(i)->getBehaviour() == ASSISTENT_PLAYER)
        {
             if (isThere(KICKER_PLAYER))
             {
@@ -134,7 +135,7 @@ void Strategy::updatePlayers()
                 else
                     trajectory_controller_.updatePlayer(i,ASSISTENT_PLAYER);
             }
-       }
+       }*/
     }
 }
 

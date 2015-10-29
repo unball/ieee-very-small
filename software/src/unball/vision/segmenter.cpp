@@ -105,7 +105,9 @@ void Segmenter::loadHSVAdjustConfig()
         cv::createTrackbar("HMIN", window_name_, &hsv_min_h_, 360);
         cv::createTrackbar("HMAX", window_name_, &hsv_max_h_, 360);
         cv::createTrackbar("SMIN", window_name_, &hsv_min_s_, 256);
+        cv::createTrackbar("SMAX", window_name_, &hsv_max_s_, 256);
         cv::createTrackbar("VMIN", window_name_, &hsv_min_v_, 256);
+        cv::createTrackbar("VMAX", window_name_, &hsv_max_v_, 256);
     }
 }
 
@@ -162,7 +164,8 @@ cv::Mat Segmenter::segmentRGB(cv::Mat image)
      * If we need any color that lies out of this scope, we should change the Hue value.
      * This range was chosen due to the colors that are most commonly present in the game field.
      */
-    cv::inRange(hsv, cv::Scalar(hsv_min_h_, hsv_min_s_, hsv_min_v_), cv::Scalar(hsv_max_h_, 256, 256), mask);
+    cv::inRange(hsv, cv::Scalar(hsv_min_h_, hsv_min_s_, hsv_min_v_),
+                     cv::Scalar(hsv_max_h_, hsv_max_s_, hsv_max_v_), mask);
 
     /*
      * Creating a kernel for morphologic transformations. The second parameter is the size of this kernel.

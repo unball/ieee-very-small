@@ -19,6 +19,7 @@ Vector AttractivePotentialField::calculateForce(Vector position)
 {
     Vector result;
     Vector difference = position - origin_;
+
     float angle = difference.getDirection();
     float magnitude = difference.getMagnitude()*magnitude_;
 
@@ -26,5 +27,6 @@ Vector AttractivePotentialField::calculateForce(Vector position)
         magnitude = MIN_MAGNITUDE_;
     
     result.setPolar(magnitude, angle);
+
     return result;
 }

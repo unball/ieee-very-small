@@ -30,6 +30,7 @@ float ang_vel[3];
 
 float const R = 0.03;
 float const WHEELS_DISTANCE = 0.075;
+float const LIN_VEL_CONST = 0.8;
 float const ANG_VEL_CONST = 500;
 
 int main(int argc, char **argv)
@@ -40,7 +41,7 @@ int main(int argc, char **argv)
 	
 	ros::init(argc, argv, "communication_node");
     ros::NodeHandle n;
-    ros::Rate loop_rate(4); // Hz
+    ros::Rate loop_rate(3); // Hz
     
     ros::Subscriber sub = n.subscribe("strategy_topic", 1, receiveStrategyMessage);
 
@@ -51,17 +52,15 @@ int main(int argc, char **argv)
 
 		std::string message;
 
-		for (int i=0; i<3; i++)
+		for (int i = 0; i < 3; i++)
 		{
 			robot_number = i;
 			right_wheel = convert(calculateRightSpeed(i));
 			left_wheel = convert(calculateLeftSpeed(i));
 			result = ((robot_number << 6) & 0b11000000) | ((left_wheel << 3) & 0b00111000) | (right_wheel & 0b00000111);
 
+			ROS_ERROR("Robot: %d\tLeft: %d\tRight: %d", i, left_wheel, right_wheel);
 			message = boost::lexical_cast<std::string>(result);
-
-			ROS_ERROR("Robot: %d\tLeft: %d\tRight: %d", robot_number, left_wheel, right_wheel);
-			ROS_ERROR("Message: %d", result);
 
 			sp.write_some(boost::asio::buffer(message, message.size()));
 		}	
@@ -87,12 +86,12 @@ void receiveStrategyMessage(const unball::StrategyMessage::ConstPtr &msg)
 
 float calculateLeftSpeed(int i)
 {
-	return (lin_vel[i] - (WHEELS_DISTANCE/2)*ang_vel[i]*ANG_VEL_CONST)/R;
+	return (lin_vel[i]*LIN_VEL_CONST - (WHEELS_DISTANCE/2)*ang_vel[i]*ANG_VEL_CONST)/R;
 }
 
 float calculateRightSpeed(int i)
 {
-	return (lin_vel[i] + (WHEELS_DISTANCE/2)*ang_vel[i]*ANG_VEL_CONST)/R;
+	return (lin_vel[i]*LIN_VEL_CONST + (WHEELS_DISTANCE/2)*ang_vel[i]*ANG_VEL_CONST)/R;
 }
 
 /**
@@ -100,20 +99,20 @@ float calculateRightSpeed(int i)
  */
 int convert(float speed)
 {
-	//We are assuming the maximum speed is somewhere close to 168. Ranges from 144 and above are on the maximum speed
-	if (speed >= 120)
+	//We are assuming the maximum speed is somewhere close to 198. Ranges from 150 and above are on the maximum speed.
+	if (speed >= 150)
 		return 7;
-	else if ((80 <= speed) and (speed < 120))
+	else if ((100 <= speed) and (speed < 150))
 		return 6;
-	else if ((50 <= speed) and (speed < 80))
+	else if ((60 <= speed) and (speed < 100))
 		return 5;
-	else if ((20 <= speed) and (speed < 50))
+	else if ((30 <= speed) and (speed < 60))
 		return 4;
-	else if ((-20 <= speed) and (speed < 20))
+	else if ((-30 <= speed) and (speed < 30))
 		return 3;
-	else if ((-65 <= speed) and (speed < -20))
+	else if ((-80 <= speed) and (speed < -30))
 		return 2;
-	else if ((-135 <= speed) and (speed < -65))
+	else if ((-150 <= speed) and (speed < -80))
 		return 1;
 	else
 		return 0;

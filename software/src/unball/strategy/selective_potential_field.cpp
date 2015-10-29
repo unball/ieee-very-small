@@ -21,9 +21,11 @@ Vector SelectivePotentialField::calculateForce(Vector robot_position)
     Vector result;
     Vector difference = robot_position - origin_;
 
-    if (isInTheCone(difference))
+    if (isInTheCone(difference)) 
+    {
         result += applyAttractivePotentialField(difference);
-    else if (isSmooth_ and isInTheCone(difference, 1.5))
+    }
+    else if (isSmooth_ and isInTheCone(difference, 2))
     {
         result += applyAttractivePotentialField(difference);
         result += applyTangentialField(difference);
@@ -81,21 +83,21 @@ bool SelectivePotentialField::shouldRotateClockwise(int angle_quadrant, int dire
 {
     bool clockwise = true;
 
-    if (direction_quadrant == 1 and angle_quadrant == 2)
-        clockwise = true;
-    else if (direction_quadrant == 1 and angle_quadrant == 4)
-        clockwise = false;
-    else if(direction_quadrant == 2 and angle_quadrant == 3)
+    if (direction_quadrant == 2 and angle_quadrant == 3)
         clockwise = true;
     else if (direction_quadrant == 2 and angle_quadrant == 1)
         clockwise = false;
-    else if (direction_quadrant == 3 and angle_quadrant == 4)
+    else if(direction_quadrant == 3 and angle_quadrant == 4)
         clockwise = true;
     else if (direction_quadrant == 3 and angle_quadrant == 2)
         clockwise = false;
     else if (direction_quadrant == 4 and angle_quadrant == 1)
         clockwise = true;
     else if (direction_quadrant == 4 and angle_quadrant == 3)
+        clockwise = false;
+    else if (direction_quadrant == 1 and angle_quadrant == 2)
+        clockwise = true;
+    else if (direction_quadrant == 1 and angle_quadrant == 4)
         clockwise = false;
     else if (resultant_angle <= 0)
         clockwise = false;
