@@ -13,22 +13,22 @@ vision:
         # Indicates whether the homography class needs to calibrate depth camera (relative to rgb camera)
         # true: calibrates the depth camera
         # false: no calibration required, calibration matrix is loaded from a separate file
-        calibrate: true
+        calibrate: false
 
         # If "calibrate" is active, indicates whether the homography class should overwrite the previous calibration
         # matrix
-        overwrite_calib_matrix: true
+        overwrite_calib_matrix: false
 
         # Indicates whether the homography class needs to run the rectification algorithm, or load a pre-calculated
         # from a separate file.
         # NOTE: If "calibrate" is active, rectification will also be active regardless of this config
         # true: runs the rectification algorithm
         # false: loads the rectification matrix from a separate file
-        rectify: true
+        rectify: false
 
         # If "rectify" is active, indicates whether the homography class should overwrite the previous rectification
         # matrix
-        overwrite_rect_matrix: true
+        overwrite_rect_matrix: false
 
     preprocessor:
         # Show image with the results of preprocessing
@@ -74,6 +74,8 @@ vision:
         # Size Value
         size_value: 100
 
+        morphology_amount: 3
+
     tracker:
         # Show image with the results of tracking
         show_image: false
@@ -93,7 +95,7 @@ vision:
         robots_per_team: 1
 
         # Identification for the color representing our team. Can be either "Blue" or "Yellow"
-        team: "Yellow"
+        team: "Blue"
 
     gui:
         # Name of the RGB window

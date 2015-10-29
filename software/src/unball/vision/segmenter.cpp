@@ -121,6 +121,7 @@ void Segmenter::loadDepthSegmentationConfig()
     ros::param::get("/vision/segmenter/depth_treshold", depth_threshold_);
     ros::param::get("/vision/segmenter/depth_treshold_divider", depth_threshold_divider_);
     ros::param::get("/vision/segmenter/size_value", size_value_);
+    ros::param::get("/vision/segmenter/morphology_amount", depth_morphology_amount_);
     if (depth_adjust_)
     {
         cv::namedWindow(depth_window_name_);
@@ -197,20 +198,6 @@ cv::Mat Segmenter::segmentRGB(cv::Mat image)
 cv::Mat Segmenter::segmentDepth(cv::Mat image)
 {
     cv::Mat mask = cv::Mat::zeros(image.rows, image.cols, CV_8UC1);
-    //cv::Mat image_8_bit;
-
-    /*
-     * Adaptive Threshold works only with 8-bit single channel images, so the original depth image needs to be
-     * converted to this format. Since it has a smaller range of possible values, it needs to be normalized too.
-     */
-    //cv::normalize(image, image_8_bit, 0, 256, cv::NORM_MINMAX, CV_8UC1);
-
-    for (int i = 0; i < image.rows; ++i)
-        for (int j = 0; j < image.cols; ++j)
-            if (image.at<uchar>(i, j) == 0)
-                image.at<uchar>(i, j) = 255;
-
-    cv::imshow("blabla", image);
 
     /*
      * Applies adaptive threshold to the image. The difference from normal thresholding is that the threshold value
