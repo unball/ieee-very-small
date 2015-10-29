@@ -30,6 +30,7 @@ class Preprocessor
 
   private:
     void printMeanMinMax(const cv::Mat &image);
+    void fixDepthImageNoise(cv::Mat &image);
     bool show_image_;
     std::string window_name_;
 };

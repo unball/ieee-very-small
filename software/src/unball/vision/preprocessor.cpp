@@ -45,7 +45,7 @@ void Preprocessor::preprocessRGB(cv::Mat &rgb_frame)
      * Smoother images are better for segmentation
      * The last parameter is the aperture linear size K, which must be an odd number. A kernel of size K x K will be
      * applied to the image.
-     */ 
+     */
     cv::medianBlur(rgb_frame, rgb_frame, 5);
 
     // TODO(matheus.v.portela@gmail.com): GUI should be the only one to deal with showing images.
@@ -61,7 +61,7 @@ void Preprocessor::preprocessRGB(cv::Mat &rgb_frame)
  * TODO (gabri.navess@gmail.com): This is a temporary method.
  * It is here so I don't forget how to do this. ;P
  * It will be removed later.
- * 
+ *
  * @param image the image to be preprocessed
  */
 void Preprocessor::printMeanMinMax(const cv::Mat &image)
@@ -80,7 +80,7 @@ void Preprocessor::printMeanMinMax(const cv::Mat &image)
             {
                 counter++;
                 mean += image.at<pixelType>(i, j);
-                
+
                 if (image.at<pixelType>(i, j) < min)
                     min = image.at<pixelType>(i, j);
 
@@ -102,16 +102,29 @@ void Preprocessor::printMeanMinMax(const cv::Mat &image)
 }
 
 /**
- * Prototype method for the preprocessing of the depth images. For now, it doesn't do much, just prints
- * the maximum and minimum pixel values, and the mean, on the screen.
- * 
+ * Applies a median blur to depth frame, and normalizes it to 8 bits. Also, gets rid of the kinect noise.
+ *
  * @param image the depth image to be preprocessed, it has to be a 16-bit unsigned image with one dimension (16UC1)
  */
 void Preprocessor::preprocessDepth(cv::Mat &depth_frame)
 {
     cv::medianBlur(depth_frame, depth_frame, 5);
     cv::normalize(depth_frame, depth_frame, 0, 256, cv::NORM_MINMAX, CV_8UC1);
+    fixDepthImageNoise(depth_frame);
+}
 
+/**
+ * Attempts to remove kinect depth image noise by making the affected pixels be as far as possible instead of
+ * near.
+ *
+ * @param image the depth image to have its noise fixed.
+ */
+void Preprocessor::fixDepthImageNoise(cv::Mat &image)
+{
+    for (int i = 0; i < image.rows; ++i)
+        for (int j = 0; j < image.cols; ++j)
+            if (image.at<uchar>(i, j) == 0)
+                image.at<uchar>(i, j) = 255;
 }
 
 /**

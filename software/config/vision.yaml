@@ -53,7 +53,7 @@ vision:
         hsv_min_s: 112
 
         # Minimum value for HSV segmentation.
-        hsv_min_v: 78
+        hsv_min_v: 178
 
         # Show image with the results of depth segmentation
         # true: Show trackbars
@@ -73,6 +73,8 @@ vision:
 
         # Size Value
         size_value: 96
+
+        morphology_amount: 3
 
         morphology_amount: 3
 
