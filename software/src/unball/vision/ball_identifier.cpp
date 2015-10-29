@@ -70,4 +70,6 @@ bool BallIdentifier::isOutOfLimits()
     if(ball_pose_.x < 0 or ball_pose_.y < 0 or
        ball_pose_.x > 640 or ball_pose_.y > 480)
         return true;
+    else 
+        return false;
 }
