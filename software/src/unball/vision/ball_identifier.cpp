@@ -31,9 +31,7 @@ std::vector<cv::Point> BallIdentifier::findLargerBlob(std::vector< std::vector<c
     for (int i = 0; i < contours.size() - 1; ++i)
     {
         if (cv::contourArea(comparison_contour) < cv::contourArea(contours[i+1]))
-        {
             comparison_contour = contours[i+1];
-        }
     }
     return comparison_contour;
 }
@@ -50,19 +48,19 @@ void BallIdentifier::track(cv::Mat &rgb_frame, cv::Mat &rgb_segmented_image)
     {
         larger_contour = findLargerBlob(contours);
         moments = cv::moments(larger_contour, true);
-        ball_pose_ = cv::Point2f (moments.m10/moments.m00, moments.m01/moments.m00);
+        ball_pose_ = cv::Point2f(moments.m10/moments.m00, moments.m01/moments.m00);
         tracker_.update(ball_pose_);
     }
     else
     {
         tracker_.predict();
+
+        if (isOutOfLimits())
+            tracker_.resetFilter();
+
         ball_pose_ = tracker_.getPredictedPose();
     }
-    if (isOutOfLimits())
-    {
-        tracker_.resetFilter();
-        ball_pose_ = tracker_.getPredictedPose();
-    }
+
 
     cv::circle(rgb_frame, ball_pose_, 10, CIRCLE_COLOR_);
 };
@@ -71,5 +69,5 @@ bool BallIdentifier::isOutOfLimits()
 {
     if(ball_pose_.x < 0 or ball_pose_.y < 0 or
        ball_pose_.x > 640 or ball_pose_.y > 480)
-        return  true;
+        return true;
 }
