@@ -58,5 +58,18 @@ void BallIdentifier::track(cv::Mat &rgb_frame, cv::Mat &rgb_segmented_image)
         tracker_.predict();
         ball_pose_ = tracker_.getPredictedPose();
     }
+    if (isOutOfLimits())
+    {
+        tracker_.resetFilter();
+        ball_pose_ = tracker_.getPredictedPose();
+    }
+
     cv::circle(rgb_frame, ball_pose_, 10, CIRCLE_COLOR_);
 };
+
+bool BallIdentifier::isOutOfLimits()
+{
+    if(ball_pose_.x < 0 or ball_pose_.y < 0 or
+       ball_pose_.x > 640 or ball_pose_.y > 480)
+        return  true;
+}

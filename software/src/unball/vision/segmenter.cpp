@@ -124,9 +124,9 @@ void Segmenter::loadDepthSegmentationConfig()
     if (depth_adjust_)
     {
         cv::namedWindow(depth_window_name_);
-        cv::createTrackbar("Threshold", depth_window_name_, &depth_threshold_, 2000);
+        cv::createTrackbar("Threshold", depth_window_name_, &depth_threshold_, 4000);
         cv::createTrackbar("Threshold divider", depth_window_name_, &depth_threshold_divider_, 100);
-        cv::createTrackbar("Size", depth_window_name_, &size_value_, 100);
+        cv::createTrackbar("Size", depth_window_name_, &size_value_, 200);
         cv::createTrackbar("Morphology amount", depth_window_name_, &depth_morphology_amount_, 20);
     }
 }
@@ -205,6 +205,13 @@ cv::Mat Segmenter::segmentDepth(cv::Mat image)
      */
     //cv::normalize(image, image_8_bit, 0, 256, cv::NORM_MINMAX, CV_8UC1);
 
+    for (int i = 0; i < image.rows; ++i)
+        for (int j = 0; j < image.cols; ++j)
+            if (image.at<uchar>(i, j) == 0)
+                image.at<uchar>(i, j) = 255;
+
+    cv::imshow("blabla", image);
+
     /*
      * Applies adaptive threshold to the image. The difference from normal thresholding is that the threshold value
      * is calculated for each pixel.
@@ -213,15 +220,20 @@ cv::Mat Segmenter::segmentDepth(cv::Mat image)
      * More info on < http://docs.opencv.org/modules/imgproc/doc/miscellaneous_transformations.html#adaptivethreshold >
      */
     cv::adaptiveThreshold(image, mask, 256, cv::ADAPTIVE_THRESH_GAUSSIAN_C, cv::THRESH_BINARY_INV,
-                          3+(size_value_*2), (float)(depth_threshold_-1000)/(float)(depth_threshold_divider_+1));
+                          3+(size_value_*2), (float)(depth_threshold_-2000)/(float)(depth_threshold_divider_+1));
 
     /*
      * Creating a kernel for morphologic transformations. The second parameter is the size of this kernel.
      * Empirically, a kernel of 3x3 generates good results for our application.
      */
-    cv::Mat structuring_element = cv::getStructuringElement(cv::MORPH_ELLIPSE, cv::Size(7, 7), cv::Point(3, 3));
+    cv::Mat structuring_element = cv::getStructuringElement(cv::MORPH_ELLIPSE, cv::Size(3, 3), cv::Point(1, 1));
 
-    cv::morphologyEx(mask, mask, cv::MORPH_OPEN, structuring_element, cv::Point(-1,-1), 1);
+    // cv::morphologyEx(mask, mask, cv::MORPH_OPEN, structuring_element, cv::Point(-1,-1), 1);
+    for (int i = 0; i < depth_morphology_amount_; ++i)
+    {
+        cv::morphologyEx(mask, mask, cv::MORPH_ERODE, structuring_element, cv::Point(-1,-1), 2);
+        cv::morphologyEx(mask, mask, cv::MORPH_DILATE, structuring_element, cv::Point(-1,-1), 1);
+    }
 
     if (show_depth_image_)
     {
