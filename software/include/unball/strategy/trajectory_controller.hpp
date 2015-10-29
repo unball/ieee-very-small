@@ -48,6 +48,9 @@ class TrajectoryController
     std::vector<PotentialField*> potential_fields_;
     float angle_error_prev_;
 
+    // Holds whether the robot moves with direct or inverse motion.
+    bool direct_motion_;
+
     void controlRobot(int robot_number, Vector force);
     void turn(int robot_number, float angle);
     void move(int robot_number, float distance);

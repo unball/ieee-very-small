@@ -15,6 +15,7 @@ TrajectoryController::TrajectoryController()
     player_[0] = new AssistentPlayer();
     player_[1] = new AssistentPlayer();
     player_[2] = new InitialGoalkeeper();
+    direct_motion_ = true;
 }
 
 TrajectoryController::~TrajectoryController()
@@ -27,19 +28,39 @@ void TrajectoryController::run()
 {
     Vector resultant_force;
     //for (int i = 0; i < 3; ++i)
-    {
+    // {
         int i = 0;
         player_[i]->buildPotentialFields(i);
         resultant_force = player_[i]->calculateResultantForce(i);
         player_[i]->clearPotentialFields();
         controlRobot(i, resultant_force);
-    }
+    // }
 }
 
 void TrajectoryController::controlRobot(int robot_number, Vector force)
-{   
+{
+    // Use histeresis to void quickly changing direction.
+    float error_margin = 15*M_PI/180;
+
+    if (direct_motion_)
+    {
+        if (fabs(math::reduceAngle(M_PI + force.getDirection() - robot[robot_number].getTh()))
+            > M_PI/2 + error_margin)
+        {
+            direct_motion_ = false;
+        }
+    }
+    else
+    {
+        if (fabs(math::reduceAngle(M_PI + force.getDirection() - robot[robot_number].getTh()))
+            < M_PI/2 - error_margin)
+        {
+            direct_motion_ = true;
+        }
+    }
+
     //HACK: issue80 -  We have to add M_PI because the force is being calculated backwards
-     if (fabs(math::reduceAngle(M_PI + force.getDirection() - robot[robot_number].getTh())) <= M_PI/2) 
+     if (direct_motion_) 
      {
         move(robot_number, force.getMagnitude());
         turn(robot_number, force.getDirection());
