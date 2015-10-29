@@ -62,11 +62,6 @@ int main(int argc, char **argv)
 
 			message = boost::lexical_cast<std::string>(result);
 
-			// ROS_ERROR("Robot: %d\tLin: %.3f\tAng: %.3f", robot_number, lin_vel[robot_number], ang_vel[robot_number]);
-			// ROS_ERROR("Robot: %d\tLeft: %.3f\tRight: %.3f", robot_number, calculateLeftSpeed(i), calculateRightSpeed(i));
-			// ROS_ERROR("Robot: %d\tLeft: %d\tRight: %d", robot_number, left_wheel, right_wheel);
-			//ROS_ERROR("Message: %d", result);
-
 			sp.write_some(boost::asio::buffer(message, message.size()));
 		//}	
         
