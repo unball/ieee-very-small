@@ -17,14 +17,15 @@ void startCommunication() {
 }
 
 /**
- * Configure to print communication data for debug.
+ * Configure to print communication data for debug purposes.
  */
 void debugCommunication() {
   debugCommunicationFlag = true;
 }
 
 /**
- * Receive message from XBee and decode.
+ * Receive message from XBee, decode, and save information to correspondent
+ * global variables.
  */
 void receiveMessage() {
   unsigned char rcv_msg;

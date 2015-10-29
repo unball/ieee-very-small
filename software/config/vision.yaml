@@ -69,7 +69,7 @@ vision:
         depth_treshold: 2000
 
         # Depth threshold divider
-        depth_treshold_divider: 36
+        depth_treshold_divider: 56
 
         # Size Value
         size_value: 100
@@ -93,7 +93,7 @@ vision:
         robots_per_team: 1
 
         # Identification for the color representing our team. Can be either "Blue" or "Yellow"
-        team: "Blue"
+        team: "Yellow"
 
     gui:
         # Name of the RGB window
