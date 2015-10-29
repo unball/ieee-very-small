@@ -65,12 +65,13 @@ void TrajectoryController::move(int robot_number, float distance)
 
 void TrajectoryController::turn(int robot_number, float angle)
 {
-    const float ANG_KP = 0.0035;
-    const float ANG_KD = 0.0003;
+    const float ANG_KP = 0.008;
+    const float ANG_KD = 0;
 
     float angle_error = math::reduceAngle(robot[robot_number].getTh() - angle);
-    float ang_vel = ANG_KP*(angle_error + (angle_error - ANG_KD*angle_error_d_)); // PD control
-    angle_error_d_ = angle_error;
+    float angle_error_d = angle_error - angle_error_prev_;
+    float ang_vel = ANG_KP*angle_error + ANG_KD*angle_error_d; // PD control
+    angle_error_prev_ = angle_error;
 
     robot[robot_number].setAngVel(ang_vel);
 }

@@ -46,7 +46,7 @@ class TrajectoryController
     Player* player_[3];
 
     std::vector<PotentialField*> potential_fields_;
-    float angle_error_d_;
+    float angle_error_prev_;
 
     void controlRobot(int robot_number, Vector force);
     void turn(int robot_number, float angle);
