@@ -34,10 +34,11 @@ class Preprocessor
     void runFieldCalibration(std::vector<cv::Point2f> rgb_points);
     bool isFieldCalibrationDone();
 
+    cv::Mat getFieldMask();
+
   private:
     void printMeanMinMax(const cv::Mat &image);
     void fixDepthImageNoise(cv::Mat &image);
-    void removeExteriorOfField(cv::Mat &image);
 
     void getMainPolygon(std::vector<cv::Point2f> rgb_points);
     void getGoalPolygon(std::vector<cv::Point2f> rgb_points);
@@ -47,7 +48,6 @@ class Preprocessor
     int noise_thresh_;
     std::string window_name_;
 
-    int outside_val_;
     bool has_main_field_;
     bool has_goal_;
     bool is_field_calibration_done_;

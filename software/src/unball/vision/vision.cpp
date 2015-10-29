@@ -133,6 +133,8 @@ void Vision::run()
             else
             {
                 preprocessor_.runFieldCalibration(gui_.getRGBPoints());
+                if (preprocessor_.isFieldCalibrationDone())
+                    segmenter_.setFieldMask(preprocessor_.getFieldMask());
             }
         }
 

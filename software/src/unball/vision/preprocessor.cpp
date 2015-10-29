@@ -34,14 +34,12 @@ void Preprocessor::loadConfig()
     ros::param::get("/vision/preprocessor/show_depth_image", show_depth_image_);
     ros::param::get("/vision/preprocessor/adjust_noise_reduction", adjust_noise_reduction_);
     ros::param::get("/vision/preprocessor/noise_thresh", noise_thresh_);
-    ros::param::get("/vision/preprocessor/outside_val", outside_val_);
 
     if (show_depth_image_)
     {
         cv::namedWindow(window_name_);
         if (adjust_noise_reduction_)
             cv::createTrackbar("Noise thresh", window_name_, &noise_thresh_, 100);
-        cv::createTrackbar("Outside value", window_name_, &outside_val_, 255);
     }
 }
 
@@ -69,7 +67,6 @@ void Preprocessor::preprocessDepth(cv::Mat &depth_frame)
     cv::medianBlur(depth_frame, depth_frame, 5);
     cv::normalize(depth_frame, depth_frame, 0, 256, cv::NORM_MINMAX, CV_8UC1);
     fixDepthImageNoise(depth_frame);
-    removeExteriorOfField(depth_frame);
 
     if (show_depth_image_)
         cv::imshow(window_name_, depth_frame);
@@ -87,14 +84,6 @@ void Preprocessor::fixDepthImageNoise(cv::Mat &image)
         for (int j = 0; j < image.cols; ++j)
             if (image.at<uchar>(i, j) <= noise_thresh_)
                 image.at<uchar>(i, j) = 255;
-}
-
-void Preprocessor::removeExteriorOfField(cv::Mat &image)
-{
-    for (int i = 0; i < image.rows; ++i)
-        for (int j = 0; j < image.cols; ++j)
-            if (field_mask_.at<uchar>(i, j) == 0)
-                image.at<uchar>(i, j) = outside_val_;
 }
 
 /**
@@ -155,4 +144,9 @@ void Preprocessor::calculateMask()
 bool Preprocessor::isFieldCalibrationDone()
 {
     return is_field_calibration_done_;
+}
+
+cv::Mat Preprocessor::getFieldMask()
+{
+    return field_mask_;
 }

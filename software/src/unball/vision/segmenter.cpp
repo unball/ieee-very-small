@@ -121,6 +121,7 @@ void Segmenter::loadDepthSegmentationConfig()
     ros::param::get("/vision/segmenter/depth_treshold_divider", depth_threshold_divider_);
     ros::param::get("/vision/segmenter/size_value", size_value_);
     ros::param::get("/vision/segmenter/morphology_amount", depth_morphology_amount_);
+    ros::param::get("/vision/segmenter/outside_val", outside_val_);
     if (depth_adjust_)
     {
         cv::namedWindow(depth_window_name_);
@@ -128,6 +129,7 @@ void Segmenter::loadDepthSegmentationConfig()
         cv::createTrackbar("Threshold divider", depth_window_name_, &depth_threshold_divider_, 100);
         cv::createTrackbar("Size", depth_window_name_, &size_value_, 200);
         cv::createTrackbar("Morphology amount", depth_window_name_, &depth_morphology_amount_, 20);
+        // cv::createTrackbar("Outside val", depth_window_name_, &outside_val_, 255);
     }
 }
 
@@ -176,6 +178,7 @@ cv::Mat Segmenter::segmentRGB(cv::Mat image)
      */
     cv::morphologyEx(mask, mask, cv::MORPH_ERODE, structuring_element, cv::Point(-1,-1), 5);
     cv::morphologyEx(mask, mask, cv::MORPH_DILATE, structuring_element, cv::Point(-1,-1), 7);
+    cv::morphologyEx(mask, mask, cv::MORPH_CLOSE, structuring_element, cv::Point(-1,-1), 3);
 
     // TODO(matheus.v.portela@gmail.com): GUI show be the only one to deal with showing images.
     // Show results
@@ -221,6 +224,8 @@ cv::Mat Segmenter::segmentDepth(cv::Mat image)
         cv::morphologyEx(mask, mask, cv::MORPH_DILATE, structuring_element, cv::Point(-1,-1), 1);
     }
 
+    removeExteriorOfField(mask);
+
     if (show_depth_image_)
     {
         cv::imshow(depth_window_name_, mask);
@@ -228,4 +233,17 @@ cv::Mat Segmenter::segmentDepth(cv::Mat image)
     }
 
     return mask;
+}
+
+void Segmenter::setFieldMask(cv::Mat field_mask)
+{
+    field_mask_ = field_mask;
+}
+
+void Segmenter::removeExteriorOfField(cv::Mat &image)
+{
+    for (int i = 0; i < image.rows; ++i)
+        for (int j = 0; j < image.cols; ++j)
+            if (field_mask_.at<uchar>(i, j) == 0)
+                image.at<uchar>(i, j) = outside_val_;
 }

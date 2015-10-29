@@ -39,8 +39,6 @@ vision:
 
         noise_thresh: 0
 
-        outside_val: 255
-
     segmenter:
         # Show image with the results of segmentation
         show_image: false
@@ -73,15 +71,17 @@ vision:
         depth_adjust: true
 
         # Treshold value
-        depth_treshold: 2110
+        depth_treshold: 2522
 
         # Depth threshold divider
-        depth_treshold_divider: 31
+        depth_treshold_divider: 41
 
         # Size Value
-        size_value: 53
+        size_value: 94
 
-        morphology_amount: 11
+        morphology_amount: 6
+
+        outside_val: 0
 
     tracker:
         # Show image with the results of tracking
@@ -106,10 +106,10 @@ vision:
 
         robot_tracker:
             # Whether robot tracking should limit contour usage by contour bounding rect area
-            limit_robot_by_area: false
+            limit_robot_by_area: true
 
             # Show trackbars for configuring the area values
-            show_trackbars: false
+            show_trackbars: true
 
             # Minimum area a contour's bounding rect should have
             min_limit_area: 800

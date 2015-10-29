@@ -30,6 +30,8 @@ class Segmenter
     cv::Mat segmentRGB(cv::Mat image);
     cv::Mat segmentDepth(cv::Mat image);
 
+    void setFieldMask(cv::Mat field_mask);
+
   private:
     void loadShowImage();
     void loadHSVMinHConfig();
@@ -38,6 +40,8 @@ class Segmenter
     void loadHSVMinVConfig();
     void loadHSVAdjustConfig();
     void loadDepthSegmentationConfig();
+
+    void removeExteriorOfField(cv::Mat &image);
 
     std::string window_name_;
     bool show_image_;
@@ -54,6 +58,9 @@ class Segmenter
     int depth_morphology_amount_;
     bool show_depth_image_;
     bool depth_adjust_;
+
+    cv::Mat field_mask_;
+    int outside_val_;
 };
 
 #endif // UNBALL_VISION_SEGMENTER_H_
