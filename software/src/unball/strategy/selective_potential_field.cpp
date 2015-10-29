@@ -23,18 +23,15 @@ Vector SelectivePotentialField::calculateForce(Vector robot_position)
 
     if (isInTheCone(difference)) 
     {
-        ROS_ERROR("[SelectivePotentialField]is in the cone");
         result += applyAttractivePotentialField(difference);
     }
     else if (isSmooth_ and isInTheCone(difference, 1.5))
     {
-        ROS_ERROR("[SelectivePotentialField]is in the smoothened cone");
         result += applyAttractivePotentialField(difference);
         result += applyTangentialField(difference);
     }
     else
     {
-        ROS_ERROR("[SelectivePotentialField]is not in the cone");
         result += applyTangentialField(difference);
         if (isSmooth_)
         {   
@@ -42,7 +39,7 @@ Vector SelectivePotentialField::calculateForce(Vector robot_position)
             result += field.calculateForce(robot_position);
         }
     }
-    ROS_ERROR("[SelectivePotentialField] force mag = %.2f, th = %.2f", result.getMagnitude(), result.getDirection()*180/M_PI);
+    
     return result;
 }
 

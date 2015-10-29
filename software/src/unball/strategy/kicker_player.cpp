@@ -38,13 +38,13 @@ void KickerPlayer::findTarget()
     
     if(opponentGoalkeeperIsInGoalRange(opponent_goalkeeper_index))
     {
-        if(robot[opponent_goalkeeper_index].getY() > 0)
-            target_ = robot[opponent_goalkeeper_index].getY() - (0.2 + fabs(robot[5].getY())/2);
+        if(robot[opponent_goalkeeper_index].getX() > 0)
+            target_ = robot[opponent_goalkeeper_index].getX() - (0.2 + fabs(robot[opponent_goalkeeper_index].getX())/2);
         else
-            target_ = robot[opponent_goalkeeper_index].getY() - (0.2 + fabs(robot[5].getY())/2);
+            target_ = robot[opponent_goalkeeper_index].getX() - (0.2 + fabs(robot[opponent_goalkeeper_index].getX())/2);
     }
 
-    kick_target_ = Vector(Goals::getInstance().opponent_goal_.getX(), target_);
+    kick_target_ = Vector(target_, Goals::getInstance().opponent_goal_.getY());
 }
 
 bool KickerPlayer::isInBallRange(int robot_number)
@@ -58,7 +58,7 @@ bool KickerPlayer::isInBallRange(int robot_number)
 
 bool KickerPlayer::opponentGoalkeeperIsInGoalRange(int opponent_goalkeeper)
 {
-    return (robot[opponent_goalkeeper].getY() > -0.22 and robot[opponent_goalkeeper].getY() < 0.22);
+    return (robot[opponent_goalkeeper].getX() > -0.22 and robot[opponent_goalkeeper].getX() < 0.22);
 }
 
 void KickerPlayer::avoidTheWalls(int robot_number)
