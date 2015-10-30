@@ -1,9 +1,13 @@
 // Robot identification number, from 0 to 2
-#define ROBOT_NUM 0
+#define ROBOT_NUM 1
 
 // Alias for motors
 #define MOTOR_A 1
 #define MOTOR_B 0
+
+// This time affects the amount of messages the robot can handle, as well
+// as the precision of the control loop
+const int LOOP_SLEEP_TIME = 10; // ms
 
 // Motor driver standby
 const int STBY = 6;
@@ -25,7 +29,7 @@ const int ENC_B_CH_B = 4; // Channel B
 int speed_left = 0; // Motor B target speed
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(115200);
   startCommunication();
   setPins();
   setEncoderInterrupts();
@@ -56,11 +60,11 @@ void loop() {
   controlMotors();
 
 //  debugCommunication();
-  debugControl();
-  printSpeeds();
+//  debugControl();
+//  printSpeeds();
 
   resetEncoders();
   resetTimer();
 
-  delay(100);
+  delay(LOOP_SLEEP_TIME);
 }

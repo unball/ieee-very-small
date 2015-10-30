@@ -2,9 +2,10 @@
 
 // XBee communication (RX, TX)
 UnBallSoftwareSerial serial1(15, 14);
+const int XBEE_DATA_RATE = 19200;
 
 // Conversion from message speed to RPM
-float speedMap[8] = {-150, -125, -100, 0, 75, 100, 125, 150};
+float speedMap[8] = {-6000, -4000, -2000, 0, 1000, 2000, 4000, 6000};
 
 // Flag to print communication data for debug purposes
 bool debugCommunicationFlag = false;
@@ -13,7 +14,7 @@ bool debugCommunicationFlag = false;
  * Set XBee to start communicating.
  */
 void startCommunication() {
-  serial1.begin(9600);
+  serial1.begin(XBEE_DATA_RATE);
 }
 
 /**

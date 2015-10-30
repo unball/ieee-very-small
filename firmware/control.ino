@@ -5,9 +5,9 @@ float speedB = 0;
 // Motor PID control
 const int MAX_MOTOR_POWER = 255;
 const float MAX_CONTROL_OUTPUT = MAX_MOTOR_POWER;
-const float KP = 1; // Best constant: 1
+const float KP = 0.07; // Best constant: 1
 const float KI = 0; // Best constant: 0
-const float KD = 0.1; // Best constant: 0.1
+const float KD = 0.007; // Best constant: 0.1
 float errorAInt = 0;
 float errorBInt = 0;
 float errorAPrev = 0;
