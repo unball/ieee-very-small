@@ -10,12 +10,17 @@
 
 #include <unball/vision/robot_identifier.hpp>
 
+cv::Point2f RobotIdentifier::point_ = cv::Point2f(0,0);
+
+
 void RobotIdentifier::loadConfig()
 {
     ros::param::get("/vision/segmenter/hsv_min_s", hsv_min_s_);
     ros::param::get("/vision/segmenter/hsv_min_v", hsv_min_v_);
     ros::param::get("/vision/tracker/team", team_color_);
     loadColors();
+    createTrackbars();
+    window_name_ = "Color Trackbar";
 }
 
 RobotData RobotIdentifier::identifyRobot(cv::Mat rgb_frame, std::vector<cv::Point> contour, cv::Rect boundingRect)
@@ -44,7 +49,7 @@ void RobotIdentifier::identifyTeam(RobotData &data, cv::RotatedRect robot, cv::M
         cv::Vec3b hsv_value = hsv.at<cv::Vec3b>(test_points[i].y, test_points[i].x);
         if ((team_color_ == "Blue" and isPointBlue(hsv_value)) or
             (team_color_ == "Yellow" and isPointYellow(hsv_value)))
-        {
+         {
             data.team = RobotData::ALLY;
             data.orientation = (robot.angle+(90*((i+1)%4)))*2*M_PI/360.0;
             cv::Point2f id_test_point = calculatePointAtMiddle(robot.center, vertices[(i+2)%4]);
@@ -78,26 +83,58 @@ void RobotIdentifier::identifyTeam(RobotData &data, cv::RotatedRect robot, cv::M
 
 void RobotIdentifier::loadColors()
 {
-    ros::param::get("/vision/colors/blue_min_h", blue_min_[0]);
-    ros::param::get("/vision/colors/blue_max_h", blue_max_[0]);
-    ros::param::get("/vision/colors/blue_min_s", blue_min_[1]);
-    ros::param::get("/vision/colors/blue_max_s", blue_max_[1]);
-    ros::param::get("/vision/colors/blue_min_v", blue_min_[2]);
-    ros::param::get("/vision/colors/blue_max_v", blue_max_[2]);
+    ros::param::get("/vision/color/blue_min_h", blue_min_[0]);
+    ros::param::get("/vision/color/blue_max_h", blue_max_[0]);
+    ros::param::get("/vision/color/blue_min_s", blue_min_[1]);
+    ros::param::get("/vision/color/blue_max_s", blue_max_[1]);
+    ros::param::get("/vision/color/blue_min_v", blue_min_[2]);
+    ros::param::get("/vision/color/blue_max_v", blue_max_[2]);
+    ros::param::get("/vision/color/yellow_min_h", yellow_min_[0]);
+    ros::param::get("/vision/color/yellow_max_h", yellow_max_[0]);
+    ros::param::get("/vision/color/yellow_min_s", yellow_min_[1]);
+    ros::param::get("/vision/color/yellow_max_s", yellow_max_[1]);
+    ros::param::get("/vision/color/yellow_min_v", yellow_min_[2]);
+    ros::param::get("/vision/color/yellow_max_v", yellow_max_[2]);
+    ros::param::get("/vision/color/red_min_h", red_min_[0]);
+    ros::param::get("/vision/color/red_max_h", red_max_[0]);
+    ros::param::get("/vision/color/red_min_s", red_min_[1]);
+    ros::param::get("/vision/color/red_max_s", red_max_[1]);
+    ros::param::get("/vision/color/red_min_v", red_min_[2]);
+    ros::param::get("/vision/color/red_max_v", red_max_[2]);
+    ros::param::get("/vision/color/green_min_h", green_min_[0]);
+    ros::param::get("/vision/color/green_max_h", green_max_[0]);
+    ros::param::get("/vision/color/green_min_s", green_min_[1]);
+    ros::param::get("/vision/color/green_max_s", green_max_[1]);
+    ros::param::get("/vision/color/green_min_v", green_min_[2]);
+    ros::param::get("/vision/color/green_max_v", green_max_[2]);
+    ros::param::get("/vision/color/purple_min_h", purple_min_[0]);
+    ros::param::get("/vision/color/purple_max_h", purple_max_[0]);
+    ros::param::get("/vision/color/purple_min_s", purple_min_[1]);
+    ros::param::get("/vision/color/purple_max_s", purple_max_[1]);
+    ros::param::get("/vision/color/purple_min_v", purple_min_[2]);
+    ros::param::get("/vision/color/purple_max_v", purple_max_[2]);
 }
 
 void RobotIdentifier::createTrackbars()
 {
-    std::string window_name_("Color Trackbar");
 
-    cv::createTrackbar("BLUEMINH", window_name_, &hsv_min_v_, 256);
-    cv::createTrackbar("BLUEMAXH", window_name_, &hsv_min_v_, 256);
-    cv::createTrackbar("BLUEMAXV", window_name_, &hsv_min_v_, 256);
-    cv::createTrackbar("BLUEMINV", window_name_, &hsv_min_v_, 256);
-    cv::createTrackbar("BLUEMAXS", window_name_, &hsv_min_v_, 256);
-    cv::createTrackbar("BLUEMINS", window_name_, &hsv_min_v_, 256);
-    waitkey(0);
-
+    cv::namedWindow(window_name_);
+    cv::createTrackbar("BLUEMINH", window_name_, &blue_min_[0], 255);
+    cv::createTrackbar("BLUEMAXH", window_name_, &blue_max_[0], 256);
+    cv::createTrackbar("BLUEMINV", window_name_, &blue_min_[1], 256);
+    cv::createTrackbar("BLUEMAXV", window_name_, &blue_max_[1], 256);
+    cv::createTrackbar("BLUEMAXS", window_name_, &blue_min_[2], 256);
+    cv::createTrackbar("BLUEMINS", window_name_, &blue_max_[2], 256);
+    cv::setMouseCallback(window_name_, mouseCallback);
+    cv::destroyWindow(window_name_);
+    cv::namedWindow(window_name_);
+    // cv::createTrackbar("YELLOWMINH", window_name_, &yellow_min_[0], 256);
+    // cv::createTrackbar("YELLOWMAXH", window_name_, &yellow_max_[0], 256);
+    // cv::createTrackbar("YELLOWMINV", window_name_, &yellow_min_[1], 256);
+    // cv::createTrackbar("YELLOWMAXV", window_name_, &yellow_max_[1], 256);
+    // cv::createTrackbar("YELLOWMAXS", window_name_, &yellow_min_[2], 256);
+    // cv::createTrackbar("YELLOWMINS", window_name_, &yellow_max_[2], 256);
+    
 }
 
 
@@ -129,4 +166,12 @@ bool RobotIdentifier::isPointGreen(cv::Vec3b hsv_values)
 bool RobotIdentifier::isPointPurple(cv::Vec3b hsv_values)
 {
     return (hsv_values[0] > 120 and hsv_values[0] <= 140 and hsv_values[2] > 90);
+}
+
+void RobotIdentifier::mouseCallback(int event, int x, int y, int, void*)
+{
+    if (event == cv::EVENT_LBUTTONDOWN)
+        point_ = cv::Point2f(x, y);
+    
+   
 }

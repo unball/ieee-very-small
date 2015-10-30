@@ -210,8 +210,6 @@ cv::Mat Segmenter::segmentDepth(cv::Mat image)
             if (image.at<uchar>(i, j) == 0)
                 image.at<uchar>(i, j) = 255;
 
-    cv::imshow("blabla", image);
-
     /*
      * Applies adaptive threshold to the image. The difference from normal thresholding is that the threshold value
      * is calculated for each pixel.

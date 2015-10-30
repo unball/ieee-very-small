@@ -39,7 +39,6 @@ class RobotTracker
     void trackIndividualRobot(cv::Mat &hsv, cv::Mat &depth_segmented_frame, TrackedRobot &robot);
     void chooseCorrectOrientation(float &orientation, cv::Point2f center_pos, cv::Mat &hsv);
     void calculateRegionOfInterest(cv::Mat &depth_segmented_frame, cv::Point2f predicted_position);
-
     RobotIdentifier robot_identifier_;
 
     TrackedRobot robots_[2][3]; // First line for allied robots, second for opponent robots

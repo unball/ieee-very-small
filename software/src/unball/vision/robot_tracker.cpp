@@ -58,7 +58,6 @@ void RobotTracker::trackStep1(cv::Mat &rgb_frame, cv::Mat &depth_frame, cv::Mat 
     memset(used_opponent_robots_, false, sizeof(used_opponent_robots_));
     memset(used_allied_robots_, false, sizeof(used_allied_robots_));
     opponent_robot_counter_ = 0;
-
     cv::findContours(depth_segmented_frame, contours, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_SIMPLE);
     for (int i = 0; i < contours.size(); ++i)
     {
