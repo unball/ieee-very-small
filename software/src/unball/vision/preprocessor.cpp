@@ -41,6 +41,25 @@ void Preprocessor::loadConfig()
         if (adjust_noise_reduction_)
             cv::createTrackbar("Noise thresh", window_name_, &noise_thresh_, 100);
     }
+
+    loadFieldMaskImage();
+}
+
+void Preprocessor::loadFieldMaskImage()
+{
+    field_mask_image_name_ = ros::package::getPath("unball");
+    field_mask_image_name_.append("/data/field_mask.png");
+
+    ros::param::get("/vision/preprocessor/create_field_mask", create_field_mask_);
+    if (not create_field_mask_)
+    {
+        field_mask_ = cv::imread(field_mask_image_name_, CV_LOAD_IMAGE_GRAYSCALE);
+        has_main_field_ = has_goal_ = true;
+    }
+    else
+    {
+        ros::param::get("/vision/preprocessor/overwrite_field_mask", overwrite_field_mask_);
+    }
 }
 
 /**
@@ -103,8 +122,10 @@ void Preprocessor::runFieldCalibration(std::vector<cv::Point2f> rgb_points)
         getMainPolygon(rgb_points);
     else if (not has_goal_)
         getGoalPolygon(rgb_points);
-    else
+    else if (create_field_mask_)
         calculateMask();
+    else
+        is_field_calibration_done_ = true;
 }
 
 void Preprocessor::getMainPolygon(std::vector<cv::Point2f> rgb_points)
@@ -133,11 +154,12 @@ void Preprocessor::calculateMask()
         for (int j = 0; j < field_mask_.cols; ++j)
         {
             cv::Point2f point(i, j);
-            // if (not( main_polygon_.isPointInside(point) or goal_polygon_.isPointInside(point) ))
             if (main_polygon_.isPointInside(point) or goal_polygon_.isPointInside(point))
                 field_mask_.at<uchar>(i, j) = 255;
         }
     }
+    if (overwrite_field_mask_)
+        cv::imwrite(field_mask_image_name_, field_mask_);
     is_field_calibration_done_ = true;
 }
 

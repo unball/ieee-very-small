@@ -39,6 +39,10 @@ vision:
 
         noise_thresh: 0
 
+        create_field_mask: false
+
+        overwrite_field_mask: false
+
     segmenter:
         # Show image with the results of segmentation
         show_image: false
@@ -112,10 +116,10 @@ vision:
             show_trackbars: true
 
             # Minimum area a contour's bounding rect should have
-            min_limit_area: 800
+            min_limit_area: 100
 
             # Maximum area a contour's bounding rect should have
-            max_limit_area: 1730
+            max_limit_area: 200
 
     gui:
         # Name of the RGB window

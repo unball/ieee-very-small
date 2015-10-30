@@ -15,6 +15,7 @@
 #include <string>
 
 #include <ros/ros.h>
+#include <ros/package.h>
 
 #include <opencv2/opencv.hpp>
 
@@ -44,6 +45,8 @@ class Preprocessor
     void getGoalPolygon(std::vector<cv::Point2f> rgb_points);
     void calculateMask();
 
+    void loadFieldMaskImage();
+
     bool show_depth_image_, adjust_noise_reduction_;
     int noise_thresh_;
     std::string window_name_;
@@ -53,6 +56,10 @@ class Preprocessor
     bool is_field_calibration_done_;
     VisionPolygon main_polygon_, goal_polygon_;
     cv::Mat field_mask_;
+
+    std::string field_mask_image_name_;
+    bool create_field_mask_;
+    bool overwrite_field_mask_;
 };
 
 #endif // UNBALL_VISION_PREPROCESSOR_H_
