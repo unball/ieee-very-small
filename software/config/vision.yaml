@@ -95,6 +95,68 @@ vision:
         # Identification for the color representing our team. Can be either "Blue" or "Yellow"
         team: "Yellow"
 
+    color:
+
+        # Hue values for blue
+        blue_min_h: 100
+        blue_max_h: 150
+
+        # Saturation values for blue
+        blue_min_s: 133
+        blue_max_s: 255
+
+        # Value values for blue
+        blue_min_v: 90
+        blue_max_v: 255
+
+        # Hue values for yellow
+        yellow_min_h: 0
+        yellow_max_h: 40
+
+        # Saturation values for yellow
+        yellow_min_s: 133
+        yellow_max_s: 255
+
+        # Value values for yellow
+        yellow_min_v: 90
+        yellow_max_v: 255
+
+        # Hue values for red
+        red_min_h: 150
+        red_max_h: 200
+
+        # Saturation values for red
+        red_min_s: 133
+        red_max_s: 255
+
+        # Value values for red
+        red_min_v: 90
+        red_max_v: 255
+
+        # Hue values for green
+        green_min_h: 80
+        green_max_h: 100
+
+        # Saturation values for green
+        green_min_s: 0
+        green_max_s: 255
+
+        # Value values for green
+        green_min_v: 90
+        green_max_v: 255
+
+        # Hue values for purple
+        purple_min_h: 120
+        purple_max_h: 140
+
+        # Saturation values for purple
+        purple_min_s: 0
+        purple_max_s: 255
+
+        # Value values for purple
+        purple_min_v: 90
+        purple_max_v: 255
+
     gui:
         # Name of the RGB window
         rgb_window_name: "RGB frame"

@@ -30,7 +30,8 @@ class RobotIdentifier
 
   private:
     void identifyTeam(RobotData &data, cv::RotatedRect robot, cv::Mat rgb_frame);
-
+    void loadColors();
+    void createTrackbars();
     cv::Point2f calculatePointAtMiddle(cv::Point2f a, cv::Point2f b);
 
     bool isPointBlue(cv::Vec3b hsv_values);
@@ -38,7 +39,8 @@ class RobotIdentifier
     bool isPointRed(cv::Vec3b hsv_values);
     bool isPointGreen(cv::Vec3b hsv_values);
     bool isPointPurple(cv::Vec3b hsv_values);
-
+    int blue_min_[3], blue_max_[3];
+    
     int hsv_min_s_, hsv_min_v_;
 
     std::string team_color_;

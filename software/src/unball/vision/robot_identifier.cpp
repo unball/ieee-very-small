@@ -15,6 +15,7 @@ void RobotIdentifier::loadConfig()
     ros::param::get("/vision/segmenter/hsv_min_s", hsv_min_s_);
     ros::param::get("/vision/segmenter/hsv_min_v", hsv_min_v_);
     ros::param::get("/vision/tracker/team", team_color_);
+    loadColors();
 }
 
 RobotData RobotIdentifier::identifyRobot(cv::Mat rgb_frame, std::vector<cv::Point> contour, cv::Rect boundingRect)
@@ -74,6 +75,31 @@ void RobotIdentifier::identifyTeam(RobotData &data, cv::RotatedRect robot, cv::M
     data.id = 0;
     data.orientation = robot.angle * 2 * M_PI / 360;
 }
+
+void RobotIdentifier::loadColors()
+{
+    ros::param::get("/vision/colors/blue_min_h", blue_min_[0]);
+    ros::param::get("/vision/colors/blue_max_h", blue_max_[0]);
+    ros::param::get("/vision/colors/blue_min_s", blue_min_[1]);
+    ros::param::get("/vision/colors/blue_max_s", blue_max_[1]);
+    ros::param::get("/vision/colors/blue_min_v", blue_min_[2]);
+    ros::param::get("/vision/colors/blue_max_v", blue_max_[2]);
+}
+
+void RobotIdentifier::createTrackbars()
+{
+    std::string window_name_("Color Trackbar");
+
+    cv::createTrackbar("BLUEMINH", window_name_, &hsv_min_v_, 256);
+    cv::createTrackbar("BLUEMAXH", window_name_, &hsv_min_v_, 256);
+    cv::createTrackbar("BLUEMAXV", window_name_, &hsv_min_v_, 256);
+    cv::createTrackbar("BLUEMINV", window_name_, &hsv_min_v_, 256);
+    cv::createTrackbar("BLUEMAXS", window_name_, &hsv_min_v_, 256);
+    cv::createTrackbar("BLUEMINS", window_name_, &hsv_min_v_, 256);
+    waitkey(0);
+
+}
+
 
 cv::Point2f RobotIdentifier::calculatePointAtMiddle(cv::Point2f a, cv::Point2f b)
 {
