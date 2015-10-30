@@ -65,7 +65,7 @@ void initRobotsPoses()
 {
     float x[6] = {0.37, 0.37, 0.60, -0.37, -0.37, -0.60};
     float y[6] = {0.40, -0.40, 0.0, 0.40, -0.40, 0.0};
-    
+
     for (int i = 0; i < 6; ++i)
         robot[i].setPose(x[i], y[i], 0.0); // Initial theta is 0
 }
@@ -88,7 +88,6 @@ void publishRobotsVelocities(ros::Publisher &publisher)
         ROS_DEBUG("lin_vel: %f\t ang_vel: %f", msg.lin_vel[i], msg.ang_vel[i]);
     }
     
-    ROS_ERROR("%.2f", Goals::getInstance().friendly_goal_.getX());
     publisher.publish(msg);
 }
 
@@ -103,10 +102,10 @@ void receiveVisionMessage(const unball::VisionMessage::ConstPtr &msg)
     for (int i = 0; i < 6; i++)
     {
         ROS_DEBUG("%d x: %f\t y: %f\t th: %f", i, msg->x[i], msg->y[i], msg->th[i]);
-        robot[i].setPose(msg->x[i], msg->y[i], msg->th[i]);
+        robot[i].setPose(msg->y[i], -msg->x[i], math::reduceAngle(-msg->th[i] - M_PI_2));
     }
 
-    if (msg->x[2] < -0.75 or msg->x[2] > 0.75 or msg->y[2] < -0.65 or msg->y[2] > 0.65) 
+    if (msg->y[2] < -0.75 or msg->y[2] > 0.75 or msg->x[2] < -0.65 or msg->x[2] > 0.65) 
     {
         //HACK: in case we do not find our goakeeper, we set our goal by:
         //finding the opponent goalkeeper
@@ -114,11 +113,13 @@ void receiveVisionMessage(const unball::VisionMessage::ConstPtr &msg)
         //this way we find which is our goal, and therefore which goal we should target
         //only meant to happen on a penalty
         int opponent_goalkeeper_number = Goals::getInstance().findOpponentGoalkeeper();
-        Goals::getInstance().setGoalkeeperSide(-robot[opponent_goalkeeper_number].getX());    
+        Goals::getInstance().setGoalkeeperSide(-robot[opponent_goalkeeper_number].getY());    
     }
-    else
-        Goals::getInstance().setGoalkeeperSide(msg->x[2]);
-    Ball::getInstance().update(msg->ball_x, msg->ball_y);
+    else 
+    {
+        Goals::getInstance().setGoalkeeperSide(robot[2].getY());
+    }
+    Ball::getInstance().update(msg->ball_y, -msg->ball_x);
 }
 
 /**

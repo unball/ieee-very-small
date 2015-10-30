@@ -19,6 +19,7 @@ Vector Player::calculateResultantForce(int robot_number)
 
     for (int i = 0; i < potential_fields_.size(); ++i) 
         resultant_force += potential_fields_[i]->calculateForce(position);
+
     return resultant_force;	
 }
 

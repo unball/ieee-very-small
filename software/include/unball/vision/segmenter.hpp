@@ -46,7 +46,9 @@ class Segmenter
     std::string window_name_;
     bool show_image_;
     int hsv_min_s_;
+    int hsv_max_s_;
     int hsv_min_v_;
+    int hsv_max_v_;
     int hsv_min_h_;
     int hsv_max_h_;
 

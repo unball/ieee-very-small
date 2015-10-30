@@ -39,7 +39,7 @@ class SelectivePotentialField : public PotentialField
 
     bool isSmooth_;
 
-    bool isInTheCone(Vector difference, float weight = 0.5);
+    bool isInTheCone(Vector difference, float weight = 1);
     Vector applyAttractivePotentialField(Vector difference);
     Vector applyTangentialField(Vector difference);
     float rotateClockwise(float angle);
