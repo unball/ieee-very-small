@@ -33,7 +33,7 @@ int main(int argc, char **argv)
     ros::init(argc, argv, "strategy_node");
     
     ros::NodeHandle n;
-    ros::Rate loop_rate(10); // Hz
+    ros::Rate loop_rate(30); // Hz
     
     ros::Subscriber sub = n.subscribe("vision_topic", 1, receiveVisionMessage);
     ros::Subscriber sub2 = n.subscribe("keyboard_topic", 1, receiveKeyboardMessage);

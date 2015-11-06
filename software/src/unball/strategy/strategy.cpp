@@ -81,7 +81,7 @@ void Strategy::run()
 {
     if (state_estimator_.getGameState() != WorldState::GAME_PAUSED)
     {
-		    state_estimator_.update();
+	    state_estimator_.update();
         updatePlayers();
         trajectory_controller_.run();
     }
@@ -101,7 +101,6 @@ void Strategy::updatePlayers()
     {
        if (trajectory_controller_.getPlayer(i)->getBehaviour() == INITIAL_GOALKEEPER)
        {
-          ROS_ERROR("INITIAL GOALKEEPER");
             Vector goalkeeper_pos = Vector(robot[i].getPos().getX(),robot[i].getPos().getY());
 
             if (goalkeeper_pos.calculateDistance(Goals::getInstance().friendly_goal_) < 0.2)

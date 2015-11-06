@@ -35,7 +35,7 @@ int main(int argc, char **argv)
     ros::init(argc, argv, "vision_node");
 
     ros::NodeHandle node_handle;
-    ros::Rate loop_rate(10);
+    ros::Rate loop_rate(30);
     ros::Publisher publisher = node_handle.advertise<unball::VisionMessage>("vision_topic", 1);
 
     image_transport::ImageTransport img_transport(node_handle);
@@ -165,3 +165,4 @@ void getBallPose(unball::VisionMessage &message)
     message.ball_x = pose.x;
     message.ball_y = pose.y;
 }
+

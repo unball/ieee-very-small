@@ -12,10 +12,10 @@ void Goalkeeper::buildPotentialFields(int robot_number)
     Vector robot_pos(robot[robot_number].getX(),y_pos_);
     Vector ball_line(ball_pos_.getX(),robot[robot_number].getY());
 
-    //if (isBallInRange())
-		//potential_fields_.push_back(new AttractivePotentialField(ball_line, 15));
-	//else
-    //	stayAtTheBoundary();
+    if (isBallInRange())
+		potential_fields_.push_back(new AttractivePotentialField(ball_line, 15));
+	else
+    	stayAtTheBoundary();
 }
 
 void Goalkeeper::updateBallPos()

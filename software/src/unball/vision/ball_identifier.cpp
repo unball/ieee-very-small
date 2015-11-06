@@ -16,6 +16,7 @@ const cv::Scalar BallIdentifier::CIRCLE_COLOR_(0, 0, 255);
 BallIdentifier::BallIdentifier(MeasurementConversion *mc){
     to_metric_ = mc;
     ball_pose_ = cv::Point2f(320, 240);
+    counter_ = 0;
 }
 
 cv::Point2f BallIdentifier::getBallPose()
@@ -53,12 +54,15 @@ void BallIdentifier::track(cv::Mat &rgb_frame, cv::Mat &rgb_segmented_image)
     }
     else
     {
+        counter_++;
         tracker_.predict();
-
+        if (counter_ > 15)
+            tracker_.resetLastPose(ball_pose_);
         if (isOutOfLimits())
             tracker_.resetFilter();
-
+        
         ball_pose_ = tracker_.getPredictedPose();
+
     }
 
 
