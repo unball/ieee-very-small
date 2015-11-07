@@ -1,5 +1,5 @@
 // Robot identification number, from 0 to 2
-#define ROBOT_NUM 1
+#define ROBOT_NUM 0
 
 // Alias for motors
 #define MOTOR_A 1
