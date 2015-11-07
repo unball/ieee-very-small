@@ -37,11 +37,11 @@ int main(int argc, char **argv)
 {
 	boost::asio::io_service ios;
 	boost::asio::serial_port sp(ios, "/dev/ttyUSB0");
-	sp.set_option(boost::asio::serial_port::baud_rate(9600));
+	sp.set_option(boost::asio::serial_port::baud_rate(19200));
 	
 	ros::init(argc, argv, "communication_node");
     ros::NodeHandle n;
-    ros::Rate loop_rate(3); // Hz
+    ros::Rate loop_rate(30); // Hz
     
     ros::Subscriber sub = n.subscribe("strategy_topic", 1, receiveStrategyMessage);
 

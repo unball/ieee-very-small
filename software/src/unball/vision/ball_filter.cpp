@@ -26,7 +26,14 @@ void BallFilter::update(cv::Point2f measured_pose)
     predicted_velocity_ = (predicted_pose_ - previous_pose);
 }  
 
-void BallFilter::resetFilter(){
-    predicted_velocity_ = cv::Point2f(0, 0);
+void BallFilter::resetFilter()
+{
+    predicted_velocity_ = cv::Point2f(0,0);
     predicted_pose_ = cv::Point2f(320, 240);
+}
+
+void BallFilter::resetLastPose(cv::Point2f last_pose)
+{
+    predicted_velocity_ = cv::Point2f(0,0);
+    predicted_pose_ = cv::Point2f(last_pose);
 }

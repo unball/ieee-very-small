@@ -35,6 +35,8 @@ class BallIdentifier
     cv::Point2f ball_pose_;
     BallFilter tracker_;
     MeasurementConversion *to_metric_;
+    int counter_;
+
 };
 
 #endif // UNBALL_VISION_BALL_TRACKER_H_

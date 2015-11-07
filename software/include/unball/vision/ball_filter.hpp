@@ -18,6 +18,7 @@ class BallFilter
     void predict();
     void update(cv::Point2f measured_pose);
     void resetFilter();
+    void resetLastPose(cv::Point2f last_pose);
   private:
     cv::Point2f predicted_pose_;
     cv::Point2f predicted_velocity_;

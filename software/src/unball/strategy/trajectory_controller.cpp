@@ -12,7 +12,7 @@
 
 TrajectoryController::TrajectoryController()
 {
-    player_[0] = new KickerPlayer();
+    player_[0] = new AssistentPlayer();
     player_[1] = new AssistentPlayer();
     player_[2] = new Goalkeeper();
     direct_motion_ = true;
@@ -27,8 +27,7 @@ TrajectoryController::~TrajectoryController()
 void TrajectoryController::run()
 {
     Vector resultant_force;
-    //for (int i=0;i<3;i++)
-    for (int i = 0; i < 2; ++i)
+    for (int i=0;i<3;i++)
     {
         player_[i]->buildPotentialFields(i);
         resultant_force = player_[i]->calculateResultantForce(i);

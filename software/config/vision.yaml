@@ -32,7 +32,7 @@ vision:
 
     preprocessor:
         # Show image with the results of preprocessing
-        show_depth_image: true
+        show_depth_image: false
 
         # Adjust preprocessor noise reduction
         adjust_noise_reduction: false
@@ -56,10 +56,10 @@ vision:
         hsv_min_h: 0
 
         # Maximum hue for HSV segmentation.
-        hsv_max_h: 30
+        hsv_max_h: 23
 
         # Minimum saturation for HSV segmentation.
-        hsv_min_s: 120
+        hsv_min_s: 0
 
         hsv_max_s: 256
 
@@ -79,15 +79,15 @@ vision:
         depth_adjust: true
 
         # Treshold value
-        depth_treshold: 2370
+        depth_treshold: 3170
 
         # Depth threshold divider
-        depth_treshold_divider: 41
+        depth_treshold_divider: 50
 
         # Size Value
-        size_value: 94
+        size_value: 110
 
-        morphology_amount: 10
+        morphology_amount: 8
 
         outside_val: 0
 
@@ -110,20 +110,20 @@ vision:
         robots_per_team: 1
 
         # Identification for the color representing our team. Can be either "Blue" or "Yellow"
-        team: "Blue"
+        team: "Yellow"
 
         robot_tracker:
             # Whether robot tracking should limit contour usage by contour bounding rect area
             limit_robot_by_area: true
 
             # Show trackbars for configuring the area values
-            show_trackbars: true
+            show_trackbars: false
 
             # Minimum area a contour's bounding rect should have
             min_limit_area: 100
 
             # Maximum area a contour's bounding rect should have
-            max_limit_area: 200
+            max_limit_area: 1000
 
     gui:
         # Name of the RGB window
