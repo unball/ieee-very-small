@@ -81,33 +81,9 @@ target_link_libraries(strategy_node ${catkin_LIBRARIES})
 
 add_executable(vision_node
   src/unball/vision/vision_node.cpp
-  src/unball/vision/vision.cpp
-  src/unball/vision/gui.cpp
-  src/unball/vision/kalman_filter.cpp
-  src/unball/vision/preprocessor.cpp
-  src/unball/vision/segmenter.cpp
-  src/unball/vision/tracker.cpp
-  src/unball/vision/tracked_object.cpp
-  src/unball/vision/tracked_field.cpp
-  src/unball/vision/tracked_robot.cpp
-  src/unball/vision/robot_identifier.cpp
-  src/unball/vision/robot_tracker.cpp
-  src/unball/vision/ball_filter.cpp
-  src/unball/vision/homography.cpp
-  src/unball/vision/ball_identifier.cpp
-  src/unball/vision/measurement_conversion.cpp
-  src/unball/vision/robot_filter.cpp
-  src/unball/vision/vision_polygon.cpp
-  src/unball/utils/math.cpp
-  src/unball/utils/point.cpp)
+  src/unball/vision/vision.cpp)
 add_dependencies(vision_node unball_gencpp)
 target_link_libraries(vision_node ${catkin_LIBRARIES})
-
-add_executable(color_calibration_node
-  src/unball/color_calibration/color_calibration_node.cpp
-  src/unball/color_calibration/color_calibration.cpp)
-add_dependencies(color_calibration_node unball_gencpp)
-target_link_libraries(color_calibration_node ${catkin_LIBRARIES})
 
 add_executable(show_kinect_camera
   src/unball/camera/show_kinect_camera.cpp)
