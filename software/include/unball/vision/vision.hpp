@@ -24,6 +24,8 @@ class Vision
   public:
     void run();
 
+    static Vision& getInstance();
+
   private:
 };
 

@@ -10,10 +10,16 @@
 
 #include <unball/vision/vision.hpp>
 
+Vision& Vision::getInstance()
+{
+    static Vision vision;
+    return vision;
+}
+
 /**
  * Execute vision processing.
  */
 void Vision::run()
 {
-    ROS_DEBUG("Run vision");
+
 }
