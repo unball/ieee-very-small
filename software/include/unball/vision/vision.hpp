@@ -19,6 +19,8 @@
 
 #include <opencv2/opencv.hpp>
 
+#include <unball/vision/segmenter.hpp>
+
 class Vision
 {
   public:
