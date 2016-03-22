@@ -20,15 +20,14 @@
 #include <opencv2/opencv.hpp>
 
 #include <unball/vision/segmenter.hpp>
+#include <unball/vision/tracker.hpp>
 
 class Vision
 {
   public:
-    void run();
-
     static Vision& getInstance();
 
-  private:
+    void run();
 };
 
 #endif // UNBALL_VISION_H_
