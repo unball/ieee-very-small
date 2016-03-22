@@ -25,6 +25,7 @@ class SegmentationAlgorithm
   public:
     SegmentationAlgorithm();
     virtual ~SegmentationAlgorithm() {}
+
     virtual void run() = 0;
 
     cv::Mat getSegmentationOutput();
@@ -32,9 +33,6 @@ class SegmentationAlgorithm
 
   protected:
     std::string name_;
-
-  private:
-
     cv::Mat output_image_;
 };
 

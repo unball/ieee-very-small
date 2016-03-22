@@ -18,5 +18,6 @@ Segmenter& Segmenter::getInstance()
 
 void Segmenter::runSegmentationAlgorithms()
 {
-    // run segmentation algorithms
+    for(auto algorithm : algorithms_)
+        algorithm -> run();
 }

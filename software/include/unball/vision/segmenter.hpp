@@ -16,17 +16,19 @@
 #define UNBALL_SEGMENTER_H_
 
 #include <vector>
+#include <memory>
+
+#include <unball/vision/segmentation_algorithm.hpp>
 
 class Segmenter
 {
   public:
+    static Segmenter& getInstance();
 
     void runSegmentationAlgorithms();
 
-    static Segmenter& getInstance();
-
-
   private:
+    std::vector<std::shared_ptr<SegmentationAlgorithm>> algorithms_;
 };
 
 #endif // UNBALL_SEGMENTER_H_

@@ -24,6 +24,5 @@ void Vision::run()
     // Run calibration-related alterations on original image
 
     Segmenter::getInstance().runSegmentationAlgorithms();
-
-    // Run rest of vision algorithm
+    // Tracker::getInstance().runTracking();
 }
