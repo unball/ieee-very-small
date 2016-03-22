@@ -7,7 +7,7 @@
  *
  * @brief Potential field that affects objects according to the distance to its
  * origin in a particular area and with a specific width. It consist of a junction
- * of the radial and tangencial field, but with some particularities. 
+ * of the radial and tangencial field, but with some particularities.
  */
 
 #ifndef UNBALL_SELECTIVE_POTENTIAL_FIELD_H_
@@ -23,7 +23,7 @@ class SelectivePotentialField : public PotentialField
   public:
     SelectivePotentialField(Vector origin, float direction, float width, float range, bool isSmooth = true);
     Vector calculateForce(Vector robot_position);
-  
+
   private:
     // The position attracting robots.
     Vector origin_;
@@ -47,9 +47,9 @@ class SelectivePotentialField : public PotentialField
 
     bool shouldRotateClockwise(int angle_quadrant, int direction_quadrant, float resultant_angle);
 
-    static float const MIN_MAGNITUDE_ = 3.5;
+    static float const MIN_MAGNITUDE_;
     //HACK: We added this const to stop the robot from overshooting when going around the target.
-    static float const TANGENTIAL_CORRECTION_ = 0.4;
+    static float const TANGENTIAL_CORRECTION_;
 };
 
 #endif  // UNBALL_SELECTIVE_POTENTIAL_FIELD_H_

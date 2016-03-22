@@ -1,5 +1,8 @@
 #include <unball/strategy/goalkeeper.hpp>
 
+float const Goalkeeper::LEFT_LIMIT = 0.18;
+float const Goalkeeper::RIGHT_LIMIT = -0.18;
+
 Goalkeeper::Goalkeeper()
 {
 	behaviour_ = GOALKEEPER;

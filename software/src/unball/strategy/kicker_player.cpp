@@ -1,5 +1,7 @@
 #include <unball/strategy/kicker_player.hpp>
 
+float const KickerPlayer::BALL_RANGE_ = 0.3;
+
 KickerPlayer::KickerPlayer()
 {
     behaviour_ = KICKER_PLAYER;
@@ -14,12 +16,12 @@ void KickerPlayer::buildPotentialFields(int robot_number)
 
     difference = ball_position - kick_target_;
 
-    if (isInBallRange(robot_number)) 
+    if (isInBallRange(robot_number))
     {
-        potential_fields_.push_back(new SelectivePotentialField(ball_position, difference.getDirection(), 
+        potential_fields_.push_back(new SelectivePotentialField(ball_position, difference.getDirection(),
             M_PI/4, 6));
     }
-    else 
+    else
     {
         potential_fields_.push_back(new AttractivePotentialField(ball_position, 6));
     }
@@ -32,7 +34,7 @@ void KickerPlayer::findTarget()
 {
     target_ = 0;
     int opponent_goalkeeper_index = Goals::getInstance().findOpponentGoalkeeper();
-    
+
     if(opponentGoalkeeperIsInGoalRange(opponent_goalkeeper_index))
     {
         if(robot[opponent_goalkeeper_index].getX() > 0)
@@ -48,8 +50,8 @@ bool KickerPlayer::isInBallRange(int robot_number)
 {
     Vector ball_position(Vector(Ball::getInstance().getX(), Ball::getInstance().getY()));
     Vector robot_position(robot[robot_number].getX(), robot[robot_number].getY());
-    Vector difference = robot_position - ball_position;    
-    
+    Vector difference = robot_position - ball_position;
+
     return difference.getMagnitude() < BALL_RANGE_;
 }
 

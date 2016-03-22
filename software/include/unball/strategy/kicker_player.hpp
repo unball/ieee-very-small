@@ -19,11 +19,11 @@ class KickerPlayer : public Player
   public:
   	KickerPlayer();
   	void buildPotentialFields(int robot_number);
-  
+
   private:
   	void findTarget();
 
-  	static float const BALL_RANGE_ = 0.3;
+  	static float const BALL_RANGE_;
 
   	bool isInBallRange(int robot_number);
   	bool opponentGoalkeeperIsInGoalRange(int opponent_goalkeeper);

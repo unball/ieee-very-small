@@ -19,12 +19,12 @@ class AttractivePotentialField : public PotentialField
   public:
     AttractivePotentialField(Vector origin, float magnitude);
     Vector calculateForce(Vector position);
-  
+
   private:
     Vector origin_;
     float magnitude_;
 
-	static float const MIN_MAGNITUDE_ = 0.5;    
+	static float const MIN_MAGNITUDE_;
 };
 
 #endif  // UNBALL_ATTRACTIVE_POTENTIAL_FIELD_H_

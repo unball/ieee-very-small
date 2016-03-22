@@ -15,6 +15,8 @@ find_package(catkin REQUIRED COMPONENTS
   freenect_launch
 )
 
+add_definitions(-std=c++11)
+
 find_package(gazebo REQUIRED)
 
 find_package(Boost REQUIRED COMPONENTS system)
@@ -82,7 +84,8 @@ target_link_libraries(strategy_node ${catkin_LIBRARIES})
 add_executable(vision_node
   src/unball/vision/vision_node.cpp
   src/unball/vision/vision.cpp
-  src/unball/vision/segmenter.cpp)
+  src/unball/vision/segmenter.cpp
+  src/unball/vision/segmentation_algorithm.cpp)
 add_dependencies(vision_node unball_gencpp)
 target_link_libraries(vision_node ${catkin_LIBRARIES})
 

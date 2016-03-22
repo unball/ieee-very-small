@@ -1,5 +1,6 @@
 #include <unball/strategy/assistent_player.hpp>
 
+float const AssistentPlayer::BALL_RANGE_ = 0.5;
 
 AssistentPlayer::AssistentPlayer()
 {
@@ -20,11 +21,11 @@ void AssistentPlayer::buildPotentialFields(int robot_number)
 
     findTarget();
 
-	if (isInBallRange(robot_number)) 
+	if (isInBallRange(robot_number))
     {
-        //potential_fields_.push_back(new SelectivePotentialField(ball_position, 
+        //potential_fields_.push_back(new SelectivePotentialField(ball_position,
         //    kick_target_.getDirection(), M_PI/4, 6));
-        potential_fields_.push_back(new SelectivePotentialField(ball_position, 
+        potential_fields_.push_back(new SelectivePotentialField(ball_position,
             kick_target_.getDirection(), M_PI/4, 6, false));
     }
     else
@@ -39,7 +40,7 @@ void AssistentPlayer::buildPotentialFields(int robot_number)
     for (int i=0; i<6; i++)
     {
         if (i != robot_number)
-            potential_fields_.push_back(new RepulsivePotentialField(Vector(robot[i].getX(), robot[i].getY()), 0.3, 3));    
+            potential_fields_.push_back(new RepulsivePotentialField(Vector(robot[i].getX(), robot[i].getY()), 0.3, 3));
     }
     potential_fields_.push_back(new RepulsivePotentialField(Vector(robot[2].getX(), robot[2].getY()), 0.3, 5));
     if (friendly_kicker_ != -1)
@@ -52,8 +53,8 @@ bool AssistentPlayer::isInBallRange(int robot_number)
 {
 	Vector ball_position(Vector(Ball::getInstance().getX(), Ball::getInstance().getY()));
     Vector robot_position(robot[robot_number].getX(), robot[robot_number].getY());
-    Vector difference = robot_position - ball_position;    
-    
+    Vector difference = robot_position - ball_position;
+
     return difference.getMagnitude() < BALL_RANGE_;
 }
 

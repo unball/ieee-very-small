@@ -10,6 +10,8 @@
 
 #include <unball/strategy/attractive_potential_field.hpp>
 
+float const AttractivePotentialField::MIN_MAGNITUDE_ = 0.5;
+
 AttractivePotentialField::AttractivePotentialField(Vector origin, float magnitude) :
     origin_(origin), magnitude_(magnitude)
 {
@@ -25,7 +27,7 @@ Vector AttractivePotentialField::calculateForce(Vector position)
 
     if (magnitude < MIN_MAGNITUDE_)
         magnitude = MIN_MAGNITUDE_;
-    
+
     result.setPolar(magnitude, angle);
 
     return result;

@@ -1,5 +1,7 @@
 #include <unball/strategy/initial_goalkeeper.hpp>
 
+float const InitialGoalkeeper::OFFSET = 0.18;
+
 InitialGoalkeeper::InitialGoalkeeper()
 {
 	behaviour_ = INITIAL_GOALKEEPER;
