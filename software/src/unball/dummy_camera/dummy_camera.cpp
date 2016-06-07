@@ -42,13 +42,12 @@ int main(int argc, char **argv)
     ros::NodeHandle nh;
     image_transport::ImageTransport it(nh); // Used to publish and subscribe to images.
     image_transport::Publisher rgb_pub = it.advertise("/camera/rgb/image_raw", 1);
-    image_transport::Publisher depth_pub = it.advertise("/camera/depth/image", 1);
-    cv_bridge::CvImage rgb_frame, depth_frame;
+    cv_bridge::CvImage rgb_frame;
     int frame_counter; // Used to count the number of frames published on the topic.
     int num_frames;
 
     // Check if enough arguments where given
-    if( argc != 3)
+    if( argc != 2)
     {
         ROS_ERROR("Not enough arguments. Usage: dummy_camera <rgb video file> <depth image folder>");
         return -1;
@@ -62,12 +61,6 @@ int main(int argc, char **argv)
         return -1;
     }
 
-    // Opens depth image and check for errors
-    std::string depth_image_file, folder(argv[2]);
-    if (depth_image_file[depth_image_file.size()-1] == '/') depth_image_file.erase(depth_image_file.end());
-    depth_image_file = folder + "/depth";
-    int depth_counter = 0;
-
     // Set the loop rate, defined by the framerate of the video
     double rgb_video_fps = rgb_cap.get(CV_CAP_PROP_FPS);
     /**
@@ -79,7 +72,6 @@ int main(int argc, char **argv)
 
     // Set rgb and depth frame encoding
     rgb_frame.encoding = sensor_msgs::image_encodings::BGR8;
-    depth_frame.encoding = sensor_msgs::image_encodings::TYPE_32FC1;
 
     // Retrieve amount of frames on the video
     num_frames = rgb_cap.get(CV_CAP_PROP_FRAME_COUNT);
@@ -94,16 +86,9 @@ int main(int argc, char **argv)
         ROS_DEBUG("Publishing the rgb frame");
         rgb_cap >> rgb_frame.image; // Get a new frame from the rgb video capture
         rgb_pub.publish(rgb_frame.toImageMsg());
-
-        // Publish the depth frame
-        ROS_DEBUG("Publishing the depth frame");
-        depth_counter++;
-        cv::Mat loaded_image;
-        loaded_image = cv::imread(depth_image_file+to_string(depth_counter)+".png", CV_LOAD_IMAGE_ANYDEPTH);
-        loaded_image.convertTo(depth_frame.image, CV_32FC1, 1.0);
-        depth_pub.publish(depth_frame.toImageMsg());
-
+        cv::imshow("RGB Video", rgb_frame.image);
         ros::spinOnce();
+        if(cv::waitKey(30) == 27) break;
         loop_rate.sleep();
     }
     ROS_INFO("Finished sending video");
