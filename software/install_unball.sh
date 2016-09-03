@@ -125,7 +125,7 @@ cd ~/libfreenect
 mkdir build
 cd build
 cmake CMAKE_INSTALL_PREFIX=/usr/local ..
-make -j $nproc
+make -j $(nproc)
 sudo make install
 sudo ldconfig
 sudo adduser $USER video
