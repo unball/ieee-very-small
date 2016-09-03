@@ -8,6 +8,28 @@ function program_is_installed {
   echo "$return_"
 }
 
+function verify_opencv {
+	if pkg-config --cflags opencv; then
+		echo "opencv $(echo_pass)"
+	else
+		printf "\e[93mLight\e[1m[WARNING]\e[21m Package not found"
+      	printf "\e[0m\n"
+      	printf "\e[1m Installing"
+      	printf "\e[0m\n"
+      	OPENCV=2.4.13
+      	cd ~/
+		wget https://github.com/Itseez/opencv/archive/$OPENCV.zip
+		unzip $OPENCV
+		cd opencv-$OPENCV
+		mkdir build
+		cd build
+		cmake -D CMAKE_BUILD_TYPE=RELEASE -D CMAKE_INSTALL_PREFIX=/usr/local ..
+		make -j $nproc
+		sudo make install
+		echo "Finished"
+	fi
+
+}
 # display a message in red with a cross by it
 # example
 # echo echo_fail "No"
@@ -45,11 +67,11 @@ install_dependency() {
       printf "\e[32m----------------Package $i already installed----------------"
       printf "\033[0m \n"
     else
-      printf "\e[91m\e[1m[ERROR]\e[21m Package not found"
+      printf "\e[91m\e[1m[WARNING]\e[21m Package not found"
       printf "\e[0m\n"
       printf "\e[1m Installing"
       printf "\e[0m\n"
-      sudo apt-get -y install "$i"
+      sudo apt-get -y --force-yes install "$i"
       echo "Done installing $i!"
     fi
   done
@@ -57,6 +79,7 @@ install_dependency() {
 
 
 echo "ros $(echo_if $(program_is_installed roscore))"
+echo "$(verify_opencv)"
 rosinstall_=$(program_is_installed roscore)
 
 if [ $rosinstall_ == 0 ]; then
@@ -120,7 +143,7 @@ install_dependency "Video I/O packages" video_iopack[@]
 install_dependency "Python 2.7 dev tools" python_dev[@]
 install_dependency "Freenect Libs" freenect_libs[@]
 
-git clone git://github.com/OpenKinect/libfreenect.git ~/libfreenect
+git clone https://github.com/OpenKinect/libfreenect.git ~/libfreenect
 cd ~/libfreenect
 mkdir build
 cd build
