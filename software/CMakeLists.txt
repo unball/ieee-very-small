@@ -75,31 +75,6 @@ add_executable(strategy_node
 add_dependencies(strategy_node unball_gencpp)
 target_link_libraries(strategy_node ${catkin_LIBRARIES})
 
-add_executable(show_kinect_camera
-  src/unball/camera/show_kinect_camera.cpp)
-add_dependencies(show_kinect_camera unball_gencpp)
-target_link_libraries(show_kinect_camera ${catkin_LIBRARIES})
-
-add_executable(save_kinect_video
-  src/unball/camera/save_kinect_video.cpp)
-add_dependencies(save_kinect_video unball_gencpp)
-target_link_libraries(save_kinect_video ${catkin_LIBRARIES})
-
-add_executable(take_kinect_photo
-  src/unball/camera/take_kinect_photo.cpp)
-add_dependencies(take_kinect_photo unball_gencpp)
-target_link_libraries(take_kinect_photo ${catkin_LIBRARIES})
-
-add_executable(dummy_camera
-  src/unball/dummy_camera/dummy_camera.cpp)
-add_dependencies(dummy_camera unball_gencpp)
-target_link_libraries(dummy_camera ${catkin_LIBRARIES})
-
-add_executable(dummy_frame
-  src/unball/dummy_camera/dummy_frame.cpp)
-add_dependencies(dummy_frame unball_gencpp)
-target_link_libraries(dummy_frame ${catkin_LIBRARIES})
-
 add_executable(simulator_node
   src/unball/simulator/simulator_node.cpp)
 add_dependencies(simulator_node unball_gencpp)
