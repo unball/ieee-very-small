@@ -1,4 +1,0 @@
-<launch>
-  <node name="vision" pkg="unball" type="vision_node" />
-  <node name="show_camera" pkg="unball" type="show_camera" args="1" />
-</launch>
