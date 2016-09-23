@@ -7,7 +7,8 @@ RF24 radio(3,2);    //arduino nano
 /**********************************************************/
 
 byte pipe[][6] = {"1Node","2Node","3Node","4Node"}; 
-int receive_msg[1]; //pipe number
+int msg_from_robot[2]; //pipe number
+int msg_from_ROS[2];
 
 void setup() {
   Serial.begin(250000);
@@ -31,7 +32,7 @@ void checkIfRadioIsPVariant(){
 bool receive_data_from_robot() {
   if(radio.available()){
     while (radio.available()) {         
-      radio.read(&receive_msg, sizeof(receive_msg));       
+      radio.read(&msg_from_robot, sizeof(msg_from_robot));       
     }
     return true;
   }
@@ -39,34 +40,25 @@ bool receive_data_from_robot() {
 }
 
 void send_data_to_ROS() {
-  Serial.println(receive_msg[0]); //Serial.write() may be a better choice for this
-  Serial.println(receive_msg[1]); //Serial.write() may be a better choice for this
+  Serial.println(msg_from_robot[0]); //Serial.write() may be a better choice for this
+  Serial.println(msg_from_robot[1]); //Serial.write() may be a better choice for this
 }
-
-String input_string;
-int string_length = 0;
 
 bool receive_data_from_ROS() {
   if(Serial.available()){
-    input_string = "";
+    int i=0;
     while (Serial.available()) {         
-      char in_char = (char)Serial.read(); //taken from the SerialEvent example
-      input_string += in_char;
+      msg_from_ROS[i] = Serial.read();
     }
-    if (input_string.length() == string_length)
-      return true;
+    return true;
   }
   return false;
 }
 
 void send_data_to_robot() {
-  if(radio.available()){
-    while (radio.available()) {         
-      radio.read(&receive_msg, sizeof(receive_msg));       
-    }
-    return true;
-  }
-  return false;  
+  radio.stopListening();
+  radio.write(msg_from_ROS, sizeof(msg_from_ROS));
+  radio.startListening();
 }
 
 void loop() {
