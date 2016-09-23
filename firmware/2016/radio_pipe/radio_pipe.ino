@@ -12,7 +12,7 @@ int msg_from_ROS[2];
 
 void setup() {
   Serial.begin(250000);
-  Serial.println("Inicio");
+  Serial.println("Inicio - central");
   radio.begin();
   
   radio.setPALevel(RF24_PA_MAX);
@@ -40,24 +40,38 @@ bool receive_data_from_robot() {
 }
 
 void send_data_to_ROS() {
+  
   Serial.println(msg_from_robot[0]); //Serial.write() may be a better choice for this
   Serial.println(msg_from_robot[1]); //Serial.write() may be a better choice for this
+}
+
+int commands[2];
+int robotPipe=0;
+
+void parseROStoRobot(){
+  robotPipe=msg_from_ROS[0];
+  commands[0]=msg_from_ROS[1];
+  commands[1]=msg_from_ROS[2];
 }
 
 bool receive_data_from_ROS() {
   if(Serial.available()){
     int i=0;
     while (Serial.available()) {         
-      msg_from_ROS[i] = Serial.read();
+      msg_from_ROS[i++] = Serial.read();
     }
+    parseROStoRobot();
     return true;
   }
   return false;
 }
 
+int online=0; 
+
 void send_data_to_robot() {
   radio.stopListening();
-  radio.write(msg_from_ROS, sizeof(msg_from_ROS));
+  radio.openWritingPipe(pipe[robotPipe]);
+  online = radio.write(commands, sizeof(commands));
   radio.startListening();
 }
 
