@@ -5,7 +5,15 @@ RF24 radio(10,A0);    //arduino pro micro
 
 byte pipe[][6] = {"1Node","2Node","3Node","4Node"}; 
 int send_msg[2]; //number of pipes
-int my_pipe = 0;
+
+int start_pipe = 0;
+int my_pipe;
+
+void setPipes(int new_pipe) {
+  my_pipe = new_pipe;
+  radio.openReadingPipe(1,pipe[my_pipe]);
+  radio.openWritingPipe(pipe[my_pipe+1]);    //n0->central pelo pipe0    
+}
 
 void setup() {
   Serial.begin(250000);
@@ -17,9 +25,7 @@ void setup() {
   radio.setDataRate(RF24_2MBPS);
   radio.setChannel(108);
 
-  radio.openReadingPipe(1,pipe[my_pipe]);
-  radio.openWritingPipe(pipe[my_pipe+1]);    //n0->central pelo pipe0  
-
+  setPipes(start_pipe);
   radio.startListening();
 }
 
@@ -53,18 +59,14 @@ bool test_receive() {
 
 void set_channel() { 
   radio.stopListening();
-
-  my_pipe = msg_from_central[1];
-
-  radio.openReadingPipe(1,pipe[my_pipe]);
-  radio.openWritingPipe(pipe[my_pipe+1]);
-
+  
+  setPipes(msg_from_central[1]);
   radio.startListening();  
 }
 
 void loop() {
   bool has_received_message = test_receive();
-  if (my_pipe == 0) {
+  if (my_pipe == start_pipe) {
     if (has_received_message)
       set_channel();
   }
