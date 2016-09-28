@@ -18,7 +18,7 @@ void setup() {
   radio.setChannel(108);
 
   radio.openReadingPipe(1,pipe[my_pipe]);
-  radio.openWritingPipe(pipe[1]);    //n0->central pelo pipe0  
+  radio.openWritingPipe(pipe[my_pipe+1]);    //n0->central pelo pipe0  
 
   radio.startListening();
 }
@@ -38,18 +38,36 @@ void test_send() {
 
 int msg_from_central[2] = {0,0};
 
-void test_receive() {
+bool test_receive() {
   if(radio.available()){
     while (radio.available()) { 
       radio.read(&msg_from_central, sizeof(msg_from_central));       
     }
     Serial.println(msg_from_central[0]);
     Serial.println(msg_from_central[1]);
+    return true;
   }
+  return false;
+}
+
+
+void set_channel() { 
+  radio.stopListening();
+
+  my_pipe = msg_from_central[1];
+
+  radio.openReadingPipe(1,pipe[my_pipe]);
+  radio.openWritingPipe(pipe[my_pipe+1]);
+
+  radio.startListening();  
 }
 
 void loop() {
-  test_receive();
+  bool has_received_message = test_receive();
+  if (my_pipe == 0) {
+    if (has_received_message)
+      set_channel();
+  }
   delay(10);
 }
 
