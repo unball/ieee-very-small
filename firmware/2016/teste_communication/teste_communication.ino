@@ -4,12 +4,12 @@
 RF24 radio(10,A0);    //arduino pro micro
 
 byte pipe[][6] = {"1Node","2Node","3Node","4Node"}; 
-int send_msg[2]; //pipe number
+int send_msg[2]; //number of pipes
 
 void setup() {
   Serial.begin(250000);
   while(!Serial);
-  Serial.println("Inicio - robo");
+    Serial.println("Inicio - robo");
   radio.begin();
   
   radio.setPALevel(RF24_PA_MAX);
@@ -39,7 +39,7 @@ int msg_from_central[2] = {0,0};
 
 void test_receive() {
   if(radio.available()){
-    while (radio.available()) {         
+    while (radio.available()) { 
       radio.read(&msg_from_central, sizeof(msg_from_central));       
     }
     Serial.println(msg_from_central[0]);
