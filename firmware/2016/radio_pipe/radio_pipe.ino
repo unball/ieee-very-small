@@ -7,8 +7,13 @@ RF24 radio(3, 2);   //arduino nano
 /**********************************************************/
 
 byte pipe[][6] = {"1Node", "2Node", "3Node", "4Node"};
-int msg_from_robot[2]; //pipe number
+int msg_from_robot[2];
 int msg_from_ROS[3];
+
+int commands[2];
+int robotPipe;
+
+bool robot_online = false;
 
 void setup() {
   Serial.begin(250000);
@@ -19,7 +24,7 @@ void setup() {
   radio.setDataRate(RF24_2MBPS);
   radio.setChannel(108);
 
-  radio.openReadingPipe(0, pipe[0]); //n1->central pelo pipe0
+  radio.openReadingPipe(1, pipe[1]); //n1->central pelo pipe0
   radio.startListening();
 }
 
@@ -56,9 +61,6 @@ bool receive_data_from_ROS() {
   return false;
 }
 
-int commands[2];
-int robotPipe = 1;
-
 void parseROStoRobot() {
   robotPipe = msg_from_ROS[0];
   commands[0] = msg_from_ROS[1];
@@ -68,7 +70,8 @@ void parseROStoRobot() {
 void send_data_to_robot() {
   radio.stopListening();
   radio.openWritingPipe(pipe[robotPipe]);
-  radio.write(commands, sizeof(commands));
+  robot_online = radio.write(commands, sizeof(commands));
+  Serial.println(online);
   radio.startListening();
 }
 
