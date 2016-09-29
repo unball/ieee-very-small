@@ -9,35 +9,25 @@ function program_is_installed {
 }
 
 function verify_opencv {
-	if pkg-config --cflags opencv; then
-		OPENCV_VERSION=$(pkg-config --modversion opencv)
-    wget https://github.com/Itseez/opencv/archive/$OPENCV_VERSION.zip
-    unzip $OPENCV
-    cd opencv-$OPENCV
-    mkdir build
-    cd build
-    cmake -D CMAKE_BUILD_TYPE=RELEASE -D CMAKE_INSTALL_PREFIX=/usr/local ..
-    make -j $nproc
-    sudo make uninstall
-    echo "Finished"
-	else
-		printf "\e[93mLight\e[1m[WARNING]\e[21m Package not found"
-      	printf "\e[0m\n"
-      	printf "\e[1m Installing"
-      	printf "\e[0m\n"
-      	OPENCV=3.1.0
-      	cd ~/
-		wget https://github.com/Itseez/opencv/archive/$OPENCV.zip
-		unzip $OPENCV
-		cd opencv-$OPENCV
-		mkdir build
-		cd build
-		cmake -D CMAKE_BUILD_TYPE=RELEASE -D CMAKE_INSTALL_PREFIX=/usr/local ..
-		make -j $nproc
-		sudo make install
-		echo "Finished"
-	fi
-
+    if pkg-config --cflags opencv; then
+        echo "opencv $(echo_pass)"
+    else
+        printf "\e[93mLight\e[1m[WARNING]\e[21m Package not found"
+        printf "\e[0m\n"
+        printf "\e[1m Installing"
+        printf "\e[0m\n"
+        OPENCV=2.4.13
+        cd ~/
+        wget https://github.com/Itseez/opencv/archive/$OPENCV.zip
+        unzip $OPENCV
+        cd opencv-$OPENCV
+        mkdir build
+        cd build
+        cmake -D CMAKE_BUILD_TYPE=RELEASE -D CMAKE_INSTALL_PREFIX=/usr/local ..
+        make -j $nproc
+        sudo make install
+        echo "Finished"
+    fi
 }
 # display a message in red with a cross by it
 # example
@@ -86,27 +76,6 @@ install_dependency() {
   done
 }
 
-
-echo "ros $(echo_if $(program_is_installed roscore))"
-echo "$(verify_opencv)"
-rosinstall_=$(program_is_installed roscore)
-
-if [ $rosinstall_ == 0 ]; then
-    echo "Starting ROS-indigo installation"
-    sudo sh -c 'echo "deb http://packages.ros.org/ros/ubuntu trusty main" > /etc/apt/sources.list.d/ros-latest.list'
-    wget https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -O - | sudo apt-key add -
-    sudo apt-get update
-    sudo apt-get install ros-indigo-desktop-full
-    sudo rosdep init
-    rosdep update
-    echo "# Sourcing ROS environment variables" >> /root/.bashrc
-    echo "source /opt/ros/indigo/setup.bash" >> /root/.bashrc
-    mkdir -p ~/catkin_ws/src && cd ~/catkin_ws/src && catkin_init_workspace
-    echo "# Sourcing catkin environment variables" >> root/.bashrc
-    echo "source ~/catkin_ws/devel/setup.sh" >> root/.
-    echo "Finished"
-fi
-
 devtools=(
   "build-essential"
   "cmake"
@@ -126,12 +95,14 @@ video_iopack=(
 )
 
 python_dev=(
-  "python2.7-dev"
-  "python-numpy"
-  "python-dev"
-  "python-opencv"
-  "python-qt4"
-  "python-qt4-gl"
+    "python-pip"
+    "python3-pip"
+    "python2.7-dev"
+    "python-numpy"
+    "python-dev"
+    "python-opencv"
+    "python-qt4"
+    "python-qt4-gl"
 )
 
 freenect_libs=(
@@ -150,7 +121,29 @@ install_dependency "Developer tools and packages" devtools[@]
 install_dependency "GTK development library" gtk[@]
 install_dependency "Video I/O packages" video_iopack[@]
 install_dependency "Python 2.7 dev tools" python_dev[@]
-install_dependency "Freenect Libs" freenect_libs[@]
+
+echo "ros $(echo_if $(program_is_installed roscore))"
+rosinstall_=$(program_is_installed roscore)
+
+
+if [ $rosinstall_ == 0 ]; then
+    echo "Starting ROS-indigo installation"
+    sudo sh -c 'echo "deb http://packages.ros.org/ros/ubuntu trusty main" > /etc/apt/sources.list.d/ros-latest.list'
+    wget https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -O - | sudo apt-key add -
+
+    sudo apt-get update
+    sudo apt-get install ros-indigo-desktop-full
+    sudo rosdep init
+    rosdep update
+    echo "# Sourcing ROS environment variables" >> /root/.bashrc
+    echo "source /opt/ros/indigo/setup.bash" >> /root/.bashrc
+    mkdir -p ~/catkin_ws/src && cd ~/catkin_ws/src && catkin_init_workspace
+    echo "# Sourcing catkin environment variables" >> root/.bashrc
+    echo "source ~/catkin_ws/devel/setup.sh" >> root/.
+    echo "Finished"
+fi
+
+echo "$(verify_opencv)"
 
 git clone https://github.com/OpenKinect/libfreenect.git ~/libfreenect
 cd ~/libfreenect
@@ -178,3 +171,4 @@ sudo mv 51-kinect.rules /etc/udev/rules.d/51-kinect.rules
 install_dependency "Freenect ROS packages" freenect_ros[@]
 
 printf "\e[94m\e[1mFinished\033[0m\n"
+install_dependency "Freenect Libs" freenect_libs[@]
