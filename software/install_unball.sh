@@ -10,13 +10,22 @@ function program_is_installed {
 
 function verify_opencv {
 	if pkg-config --cflags opencv; then
-		echo "opencv $(echo_pass)"
+		OPENCV_VERSION=$(pkg-config --modversion opencv)
+    wget https://github.com/Itseez/opencv/archive/$OPENCV_VERSION.zip
+    unzip $OPENCV
+    cd opencv-$OPENCV
+    mkdir build
+    cd build
+    cmake -D CMAKE_BUILD_TYPE=RELEASE -D CMAKE_INSTALL_PREFIX=/usr/local ..
+    make -j $nproc
+    sudo make uninstall
+    echo "Finished"
 	else
 		printf "\e[93mLight\e[1m[WARNING]\e[21m Package not found"
       	printf "\e[0m\n"
       	printf "\e[1m Installing"
       	printf "\e[0m\n"
-      	OPENCV=2.4.13
+      	OPENCV=3.1.0
       	cd ~/
 		wget https://github.com/Itseez/opencv/archive/$OPENCV.zip
 		unzip $OPENCV
