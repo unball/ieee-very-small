@@ -71,7 +71,7 @@ void send_data_to_robot() {
   radio.stopListening();
   radio.openWritingPipe(pipe[robotPipe]);
   robot_online = radio.write(commands, sizeof(commands));
-  Serial.println(online);
+  Serial.println(robot_online);
   radio.startListening();
 }
 

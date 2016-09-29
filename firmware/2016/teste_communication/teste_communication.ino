@@ -12,7 +12,7 @@ int my_pipe;
 void setPipes(int new_pipe) {
   my_pipe = new_pipe;
   radio.openReadingPipe(1,pipe[my_pipe]);
-  radio.openWritingPipe(pipe[my_pipe+1]);    //n0->central pelo pipe0    
+  radio.openWritingPipe(pipe[my_pipe+1]);    //n0->central pelo pipe0
 }
 
 void setup() {
@@ -56,19 +56,18 @@ bool test_receive() {
   return false;
 }
 
-
 void set_channel() { 
   radio.stopListening();
-  
-  setPipes(msg_from_central[1]);
+  setPipes(msg_from_central[0]);
   radio.startListening();  
 }
 
 void loop() {
   bool has_received_message = test_receive();
   if (my_pipe == start_pipe) {
-    if (has_received_message)
+    if (has_received_message) {
       set_channel();
+    }
   }
   delay(10);
 }
