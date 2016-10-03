@@ -3,14 +3,6 @@
 
 int LED = 6;
 
-/*Motor Variables*/
-int PWMA = 9;
-int AIN1 = 8;
-int AIN2 = 7;
-int PWMB = 5;
-int BIN1 = 4;
-int BIN2 = A3;
-
 void setup() {
   radioSetup();
 }
@@ -22,4 +14,6 @@ void loop() {
       setChannel();
   }
   delay(10);
+  move(25, "motorA");
+  move(75, "motorB");
 }

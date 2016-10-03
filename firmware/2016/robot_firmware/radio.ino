@@ -18,6 +18,22 @@ int send_msg[SEND_MESSAGE_SIZE];  //The message the robot will send to the centr
 #define RECEIVED_MESSAGE_SIZE 2
 int msg_from_central[RECEIVED_MESSAGE_SIZE] = {0,0};
 
+void radioSetup() {
+  radio.begin();
+  radio.setPALevel(RF24_PA_MAX);
+  radio.setDataRate(RF24_2MBPS);
+  radio.setChannel(108);
+  setPipes(starting_pipe);
+  radio.startListening();
+}
+
+void setChannel() { 
+  radio.stopListening();
+  
+  setPipes(msg_from_central[0]);
+  radio.startListening();  
+}
+
 /* 
  * Listening Pipe <- new_pipe
  * Writting Pipe <- new_pipe + 1
@@ -26,15 +42,6 @@ void setPipes(int new_pipe) {
   my_pipe = new_pipe;
   radio.openReadingPipe(1,pipe[my_pipe]);
   radio.openWritingPipe(pipe[my_pipe+1]);   
-}
-
-void radioSetup() {
-  radio.begin();
-  radio.setPALevel(RF24_PA_MAX);
-  radio.setDataRate(RF24_2MBPS);
-  radio.setChannel(108);
-  setPipes(starting_pipe);
-  radio.startListening();
 }
 
 void send() {
@@ -54,13 +61,6 @@ bool receive() {
     return true;
   }
   return false;
-}
-
-void setChannel() { 
-  radio.stopListening();
-  
-  setPipes(msg_from_central[0]);
-  radio.startListening();  
 }
 
 bool isStartingPipe() {
