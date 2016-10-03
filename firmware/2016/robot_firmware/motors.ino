@@ -1,4 +1,3 @@
-/*Motor Variables*/
 int PWMA = 9;
 int AIN1 = 8;
 int AIN2 = 7;
@@ -6,13 +5,6 @@ int AIN2 = 7;
 int PWMB = 5;
 int BIN1 = 4;
 int BIN2 = A3;
-
-int channelA = 3; //TX
-int channelB = 2; //RX
-
-volatile unsigned long contadorA = 0;
-volatile unsigned long contadorB = 0;
-volatile unsigned long contador = 0;
 
 void setMotors() {
   pinMode(channelA, INPUT);  
@@ -28,19 +20,6 @@ void setMotorPin(int PWM, int IN1, int IN2) {
 
   digitalWrite(IN1, HIGH);
   digitalWrite(IN2, LOW);
-}
-
-void interruptEncoderPins(int channel, volatile unsigned long &contador_i) {
-  contador = 0;
-  attachInterrupt(channel, soma, RISING);
-  delay(100);
-  detachInterrupt(channel);
-  contador_i = contador;  
-}
-
-void encoder() {
-  interruptEncoderPins(channelA, contadorA);
-  interruptEncoderPins(channelB, contadorB);
 }
 
 void soma(){

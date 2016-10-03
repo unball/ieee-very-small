@@ -5,6 +5,7 @@ int LED = 6;
 
 void setup() {
   radioSetup();
+  setMotors();
 }
 
 void loop() {
