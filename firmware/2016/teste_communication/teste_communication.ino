@@ -27,6 +27,17 @@ void setup() {
 
   setPipes(start_pipe);
   radio.startListening();
+
+  checkIfRadioIsPVariant();
+}
+
+void checkIfRadioIsPVariant() {
+  if (radio.isPVariant()) {
+    Serial.println("versao nrf24l01+");
+  }
+  else {
+    Serial.println("it is not");
+  }
 }
 
 int contador = 0;
@@ -63,12 +74,14 @@ void set_channel() {
 }
 
 void loop() {
-  bool has_received_message = test_receive();
-  if (my_pipe == start_pipe) {
-    if (has_received_message) {
-      set_channel();
-    }
-  }
+  checkIfRadioIsPVariant();
+  test_send();
+  //bool has_received_message = test_receive();
+  //if (my_pipe == start_pipe) {
+  //  if (has_received_message) {
+  //    set_channel();
+  //  }
+  //}
   delay(10);
 }
 
