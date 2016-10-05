@@ -4,9 +4,6 @@
 int LED = 6;
 
 void setup() {
-  Serial.begin(250000);
-  while(!Serial);
-    Serial.println("Inicio - robo");
   radioSetup();
   motorsSetup();
   IMUSetup();
@@ -19,4 +16,7 @@ void loop() {
       setChannel();
   }
   delay(20);
+
+  move(100, "motorA");
+  move(-100, "motorB");
 }
