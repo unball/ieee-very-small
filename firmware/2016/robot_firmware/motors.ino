@@ -6,10 +6,9 @@ int PWMB = 5;
 int BIN1 = 4;
 int BIN2 = A3;
 
-void setMotors() {
-  pinMode(channelA, INPUT);  
-  setMotorPin(PWMA, AIN1, AIN2);
-  pinMode(channelB, INPUT);  
+void motorsSetup() {
+  encodersSetup();
+  setMotorPin(PWMA, AIN1, AIN2);  
   setMotorPin(PWMB, BIN1, BIN2);
 }
 

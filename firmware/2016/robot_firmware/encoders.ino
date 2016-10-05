@@ -5,6 +5,11 @@ volatile unsigned long contadorA = 0;
 volatile unsigned long contadorB = 0;
 volatile unsigned long contador = 0;
 
+void encodersSetup() {
+  pinMode(channelA, INPUT);  
+  pinMode(channelB, INPUT);
+}
+
 void interruptEncoderPins(int channel, volatile unsigned long &contador_i) {
   contador = 0;
   attachInterrupt(channel, soma, RISING);
