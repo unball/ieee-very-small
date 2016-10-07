@@ -10,25 +10,23 @@ void setup() {
   IMUSetup();
 }
 
-void verifyPipe() {
-  if (isStartingPipe()) {
-    if (has_received_message)
-      setChannel();
-  }  
+void sendMessageBackToCentral() {
+    int send_message[2];
+    getMessages(send_message);
+    send(send_message);   
 }
 
 void loop() {
   has_received_message = receive();
-  verifyPipe();
 
-  int send_message[2];
-  getMessages(send_message);
-  send(send_message);
+  if (has_received_message){
+    if (isStartingPipe())
+      setChannel();
+    else {
+      sendMessageBackToCentral(); 
+    }    
+  }
   
   delay(20);
-
-  move (100, "motorA");
-  move (-100,"motorB");
-
   has_received_message = false;
 }
