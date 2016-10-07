@@ -5,9 +5,27 @@ volatile unsigned long contadorA = 0;
 volatile unsigned long contadorB = 0;
 volatile unsigned long contador = 0;
 
+const int ENCODER_NUM_LINES = 512;
+const int ENCODER_NUM_PULSES = ENCODER_NUM_LINES*19;
+
 void encodersSetup() {
   pinMode(channelA, INPUT);  
   pinMode(channelB, INPUT);
+}
+
+void estimateSpeeds(float *speedA, float *speedB) {
+  *speedA = estimateSpeed(contadorA);
+  *speedB = estimateSpeed(contadorB);
+}
+
+/**
+ * Estimate speed based on encode pulses.
+ * @param encoderPulses Encoder pulses since last loop.
+ * @return Speed in RPM.
+ */
+float estimateSpeed(unsigned long encoderPulsesDiff) {
+  float dt = getTimeInterval();
+  return (encoderPulsesDiff/(float)ENCODER_NUM_PULSES)*(60.0/dt);
 }
 
 void interruptEncoderPins(int channel, volatile unsigned long &contador_i) {
@@ -16,6 +34,10 @@ void interruptEncoderPins(int channel, volatile unsigned long &contador_i) {
   delay(100);
   detachInterrupt(channel);
   contador_i = contador;  
+}
+
+void soma(){
+  contador++;
 }
 
 void encoder() {

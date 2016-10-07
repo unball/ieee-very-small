@@ -3,8 +3,8 @@ int AIN1 = 8;
 int AIN2 = 7;
 
 int PWMB = 5;
-int BIN1 = 4;
-int BIN2 = A3;
+int BIN1 = A3;
+int BIN2 = 4;
 
 void motorsSetup() {
   encodersSetup();
@@ -19,10 +19,6 @@ void setMotorPin(int PWM, int IN1, int IN2) {
 
   digitalWrite(IN1, HIGH);
   digitalWrite(IN2, LOW);
-}
-
-void soma(){
-  contador++;
 }
 
 /*motor <- "motorA" or "motorB"*/
