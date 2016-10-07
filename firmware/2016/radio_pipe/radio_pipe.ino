@@ -6,7 +6,7 @@ RF24 radio(3, 2);   //arduino nano
 //RF24 radio(10,A0); //arduino pro micro
 /**********************************************************/
 
-byte pipe[][6] = {"1Node", "2Node", "3Node", "4Node"};
+byte pipe[][6] = {"1Node", "2Node", "3Node", "4Node", "5Node", "6Node", "7Node"};
 int msg_from_robot[2];
 int msg_from_ROS[3];
 
@@ -25,6 +25,9 @@ void setup() {
   radio.setChannel(108);
 
   radio.openReadingPipe(1, pipe[1]); //n1->central pelo pipe0
+  radio.openReadingPipe(3, pipe[3]); //n1->central pelo pipe0
+  radio.openReadingPipe(5, pipe[5]); //n1->central pelo pipe0
+  radio.openReadingPipe(7, pipe[7]); //n1->central pelo pipe0
   radio.startListening();
 }
 

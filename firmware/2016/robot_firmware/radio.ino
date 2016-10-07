@@ -44,9 +44,13 @@ void setPipes(int new_pipe) {
   radio.openWritingPipe(pipe[my_pipe+1]);   
 }
 
-void send() {
-  radio.stopListening();
+void send(int *msg) {
   int i;
+  for (i=0;i<SEND_MESSAGE_SIZE;i++)
+    send_msg[i] = msg[i];
+  
+  radio.stopListening();
+  
   for (i=0;i<SEND_MESSAGE_SIZE;i++) {
     radio.write(send_msg, sizeof(send_msg));      
   }
@@ -61,6 +65,16 @@ bool receive() {
     return true;
   }
   return false;
+}
+
+int getMessage(int i) {
+  return msg_from_central[i];
+}
+
+void getMessages(int *msgs) {
+  int i;
+  for (i=0; i<RECEIVED_MESSAGE_SIZE; i++)
+    msgs[i] = msg_from_central[i];
 }
 
 bool isStartingPipe() {
