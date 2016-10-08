@@ -27,8 +27,8 @@ void setup() {
   radio.setDataRate(RF24_2MBPS);
   radio.setChannel(108);
 
-  radio.openReadingPipe(1,pipe[1]);  //cetral->n0 pelo pipe1
-  radio.openWritingPipe(pipe[0]);    //n0->central pelo pipe0
+  radio.openReadingPipe(1,pipe[0]);  //cetral->n0 pelo pipe1
+  radio.openWritingPipe(pipe[1]);    //n0->central pelo pipe0
   
   // Start the radio listening for data
   radio.startListening();
@@ -51,7 +51,7 @@ void setMotorPin(int PWM, int IN1, int IN2) {
 }
 
 void interruptEncoderPins(int channel, volatile unsigned long &contador_i) {
-  contador = 0;
+  //contador = 0;
   attachInterrupt(channel, soma, RISING);
   delay(100);
   detachInterrupt(channel);
@@ -102,9 +102,9 @@ void move(int speed, int direction) {
 }
 
 void loop() {
-  receive();
-  int speed = map(msg,-100,100,-255,255);
-  move(abs(speed), (speed > 0 ? 1:0));
+  //receive();
+  //int speed = map(msg,-100,100,-255,255);
+  //move(abs(speed), (speed > 0 ? 1:0));
   encoder();
   send_message();
 }
