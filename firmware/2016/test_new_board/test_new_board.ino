@@ -27,6 +27,7 @@ void loop() {
   has_received_message = receive();
 
   setSpeeds();
+   
   if (has_received_message){
     if (isStartingPipe())
       setChannel();
