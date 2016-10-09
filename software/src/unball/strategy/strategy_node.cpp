@@ -33,7 +33,7 @@ int main(int argc, char **argv)
     ros::init(argc, argv, "strategy_node");
     
     ros::NodeHandle n;
-    ros::Rate loop_rate(10); // Hz
+    ros::Rate loop_rate(30); // Hz
     
     ros::Subscriber sub = n.subscribe("measurement_system_topic", 1, receiveMeasurementSystemMessage);
     ros::Subscriber sub2 = n.subscribe("keyboard_topic", 1, receiveKeyboardMessage);
@@ -44,9 +44,7 @@ int main(int argc, char **argv)
     while (ros::ok())
     {
         strategy.run();
-
         publishRobotsVelocities(publisher);
-        
         ros::spinOnce();
         loop_rate.sleep();
     }
@@ -67,7 +65,7 @@ void initRobotsPoses()
 {
     float x[6] = {0.37, 0.37, 0.60, -0.37, -0.37, -0.60};
     float y[6] = {0.40, -0.40, 0.0, 0.40, -0.40, 0.0};
-    
+
     for (int i = 0; i < 6; ++i)
         robot[i].setPose(x[i], y[i], 0.0); // Initial theta is 0
 }
@@ -108,8 +106,21 @@ void receiveMeasurementSystemMessage(const unball::MeasurementSystemMessage::Con
     }
 
     //ROS_INFO("Ball: x: %f, y: %f", msg->ball_x, msg->ball_y);
-    Goals::getInstance().setGoalkeeperSide(msg->x[2]);
-    Ball::getInstance().update(msg->ball_x, msg->ball_y);
+    if (msg->y[2] < -0.75 or msg->y[2] > 0.75 or msg->x[2] < -0.65 or msg->x[2] > 0.65) 
+    {
+        //HACK: in case we do not find our goakeeper, we set our goal by:
+        //finding the opponent goalkeeper
+        //sending the negative of its x position to the function setGoalkeeperSide
+        //this way we find which is our goal, and therefore which goal we should target
+        //only meant to happen on a penalty
+        int opponent_goalkeeper_number = Goals::getInstance().findOpponentGoalkeeper();
+        Goals::getInstance().setGoalkeeperSide(-robot[opponent_goalkeeper_number].getY());    
+    }
+    else 
+    {
+        Goals::getInstance().setGoalkeeperSide(robot[2].getY());
+    }
+    Ball::getInstance().update(msg->ball_y, -msg->ball_x);
 }
 
 /**

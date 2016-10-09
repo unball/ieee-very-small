@@ -16,15 +16,15 @@
 class GoalkeeperKicker : public Player
 {
   public:
-  	GoalkeeperKicker();  
+  	GoalkeeperKicker();
   	void buildPotentialFields(int robot_number);
   private:
   	void updateBallPos();
 
   	Vector ball_pos_;
 
-  	static float const LEFT_LIMIT = 0.18;
-  	static float const RIGHT_LIMIT = -0.18;
+  	static float const LEFT_LIMIT;
+  	static float const RIGHT_LIMIT;
 };
 
 #endif  // UNBALL_GOALKEEPER_KICKER_H_

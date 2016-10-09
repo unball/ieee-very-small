@@ -59,7 +59,7 @@ void Strategy::PauseGame()
 	ROS_INFO("[Strategy] Keyboard input: Setting game state PAUSED");
 	state_estimator_.setGameState(WorldState::GAME_PAUSED);
 
-	for (int i=0;i<6;i++)
+	for (int i=0;i<3;i++)
 		trajectory_controller_.stopRobot(i);
 }
 
@@ -81,9 +81,14 @@ void Strategy::run()
 {
     if (state_estimator_.getGameState() != WorldState::GAME_PAUSED)
     {
-		    state_estimator_.update();
+	    state_estimator_.update();
         updatePlayers();
         trajectory_controller_.run();
+    }
+    else
+    {
+      for (int i=0;i<3;i++)
+        trajectory_controller_.stopRobot(i);
     }
 }
 
@@ -103,20 +108,20 @@ void Strategy::updatePlayers()
        }
        else if (trajectory_controller_.getPlayer(i)->getBehaviour() == GOALKEEPER)
        {
-            if (Goals::getInstance().isBallInFriendlyGoalArea())
-                trajectory_controller_.updatePlayer(i,GOALKEEPER_KICKER);
+            //if (Goals::getInstance().isBallInFriendlyGoalArea())
+            //    trajectory_controller_.updatePlayer(i,GOALKEEPER_KICKER);
        }
        else if (trajectory_controller_.getPlayer(i)->getBehaviour() == GOALKEEPER_KICKER)
        {
-            if (not Goals::getInstance().isBallInFriendlyGoalArea())
-                trajectory_controller_.updatePlayer(i,INITIAL_GOALKEEPER);
+       //     if (not Goals::getInstance().isBallInFriendlyGoalArea())
+       //         trajectory_controller_.updatePlayer(i,INITIAL_GOALKEEPER);
        }
        else if (trajectory_controller_.getPlayer(i)->getBehaviour() == KICKER_PLAYER)
        {
-            if (not hasBall(i))
-                trajectory_controller_.updatePlayer(i,ASSISTENT_PLAYER);
+            // if (not hasBall(i))
+            //     trajectory_controller_.updatePlayer(i,ASSISTENT_PLAYER);
        }
-       else if (trajectory_controller_.getPlayer(i)->getBehaviour() == ASSISTENT_PLAYER)
+       /*else if (trajectory_controller_.getPlayer(i)->getBehaviour() == ASSISTENT_PLAYER)
        {
             if (isThere(KICKER_PLAYER))
             {
@@ -129,7 +134,7 @@ void Strategy::updatePlayers()
                 else
                     trajectory_controller_.updatePlayer(i,ASSISTENT_PLAYER);
             }
-       }
+       }*/
     }
 }
 

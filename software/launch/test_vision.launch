@@ -1,5 +1,0 @@
-<launch>
-  <rosparam command="load" file="$(find unball)/config/vision.yaml" />
-  <node name="vision" pkg="unball" type="vision_node" />
-  <node name="dummy_camera" pkg="unball" type="dummy_camera" args="$(find unball)/data/rgb_video.avi $(find unball)/data/depth" />
-</launch>

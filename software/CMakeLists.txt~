@@ -15,6 +15,8 @@ find_package(catkin REQUIRED COMPONENTS
   freenect_launch
 )
 
+add_definitions(-std=c++11)
+
 find_package(gazebo REQUIRED)
 
 find_package(Boost REQUIRED COMPONENTS system)
@@ -25,10 +27,8 @@ find_package(freenect_camera REQUIRED)
 
 add_message_files(DIRECTORY msg FILES
   VisionMessage.msg
-  SimulatorMessage.msg
   StrategyMessage.msg
-  KeyboardMessage.msg
-  MeasurementSystemMessage.msg)
+  KeyboardMessage.msg)
 generate_messages(DEPENDENCIES std_msgs)
 
 catkin_package(
@@ -81,35 +81,6 @@ add_executable(strategy_node
 add_dependencies(strategy_node unball_gencpp)
 target_link_libraries(strategy_node ${catkin_LIBRARIES})
 
-add_executable(vision_node
-  src/unball/vision/vision_node.cpp
-  src/unball/vision/vision.cpp
-  src/unball/vision/gui.cpp
-  src/unball/vision/kalman_filter.cpp
-  src/unball/vision/preprocessor.cpp
-  src/unball/vision/segmenter.cpp
-  src/unball/vision/tracker.cpp
-  src/unball/vision/tracked_object.cpp
-  src/unball/vision/tracked_field.cpp
-  src/unball/vision/tracked_robot.cpp
-  src/unball/vision/robot_identifier.cpp
-  src/unball/vision/robot_tracker.cpp
-  src/unball/vision/ball_filter.cpp
-  src/unball/vision/homography.cpp
-  src/unball/vision/ball_identifier.cpp
-  src/unball/vision/measurement_conversion.cpp
-  src/unball/vision/robot_filter.cpp
-  src/unball/utils/math.cpp
-  src/unball/utils/point.cpp)
-add_dependencies(vision_node unball_gencpp)
-target_link_libraries(vision_node ${catkin_LIBRARIES})
-
-add_executable(color_calibration_node
-  src/unball/color_calibration/color_calibration_node.cpp
-  src/unball/color_calibration/color_calibration.cpp)
-add_dependencies(color_calibration_node unball_gencpp)
-target_link_libraries(color_calibration_node ${catkin_LIBRARIES})
-
 add_executable(show_kinect_camera
   src/unball/camera/show_kinect_camera.cpp)
 add_dependencies(show_kinect_camera unball_gencpp)
@@ -151,11 +122,6 @@ add_executable(communication_node
 add_dependencies(communication_node unball_gencpp)
 target_link_libraries(communication_node ${catkin_LIBRARIES})
 
-add_executable(measurement_system_node
-  src/unball/measurement_system/measurement_system_node.cpp)
-add_dependencies(measurement_system unball_gencpp)
-target_link_libraries(measurement_system_node ${catkin_LIBRARIES})
-
 catkin_add_gtest(test_point
   test/utils/test_point.cpp
   src/unball/utils/point.cpp)
@@ -171,3 +137,8 @@ catkin_add_gtest(test_invert_angles
   src/unball/utils/point.cpp
   src/unball/utils/math.cpp)
 target_link_libraries(test_invert_angles ${catkin_LIBRARIES})
+
+add_executable(measurement_system_node
+  src/unball/measurement_system/measurement_system_node.cpp)
+add_dependencies(measurement_system unball_gencpp)
+target_link_libraries(measurement_system_node ${catkin_LIBRARIES})

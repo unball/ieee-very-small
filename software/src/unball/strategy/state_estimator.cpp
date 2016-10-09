@@ -14,7 +14,7 @@
 
  StateEstimator::StateEstimator()
  {
-    setGameState(WorldState::GAME_RUNNING);
+    setGameState(WorldState::GAME_PAUSED);
     score = 0;
  }
 

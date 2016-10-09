@@ -10,6 +10,10 @@
 
 #include <unball/strategy/selective_potential_field.hpp>
 
+float const SelectivePotentialField::MIN_MAGNITUDE_ = 3.5;
+//HACK: We added this const to stop the robot from overshooting when going around the target.
+float const SelectivePotentialField::TANGENTIAL_CORRECTION_ = 0.4;
+
 SelectivePotentialField::SelectivePotentialField(Vector origin, float direction,
     float width, float range, bool isSmooth) :
     origin_(origin), direction_(direction), width_(width), range_(range), isSmooth_(isSmooth)
@@ -22,8 +26,10 @@ Vector SelectivePotentialField::calculateForce(Vector robot_position)
     Vector difference = robot_position - origin_;
 
     if (isInTheCone(difference))
+    {
         result += applyAttractivePotentialField(difference);
-    else if (isSmooth_ and isInTheCone(difference, 1.5))
+    }
+    else if (isSmooth_ and isInTheCone(difference, 2))
     {
         result += applyAttractivePotentialField(difference);
         result += applyTangentialField(difference);
@@ -32,12 +38,12 @@ Vector SelectivePotentialField::calculateForce(Vector robot_position)
     {
         result += applyTangentialField(difference);
         if (isSmooth_)
-        {   
+        {
             RepulsivePotentialField field(origin_, range_, 0.6);
             result += field.calculateForce(robot_position);
         }
     }
-    
+
     return result;
 }
 
@@ -49,13 +55,13 @@ bool SelectivePotentialField::isInTheCone(Vector difference, float weight)
 Vector SelectivePotentialField::applyAttractivePotentialField(Vector difference)
 {
     float angle = difference.getDirection();
-    float magnitude = difference.getMagnitude()*range_;    
-    
+    float magnitude = difference.getMagnitude()*range_;
+
     if (magnitude < MIN_MAGNITUDE_)
         magnitude = MIN_MAGNITUDE_;
 
     Vector result;
-    result.setPolar(magnitude, angle); 
+    result.setPolar(magnitude, angle);
     return result;
 }
 
@@ -63,14 +69,14 @@ Vector SelectivePotentialField::applyTangentialField(Vector difference)
 {
         float angle = difference.getDirection();
         float magnitude = range_;
-        
+
         int angle_quadrant = math::quadrant(angle);
         int direction_quadrant = math::quadrant(direction_);
 
         if(shouldRotateClockwise(angle_quadrant, direction_quadrant, math::reduceAngle(angle - direction_)))
             angle = rotateClockwise(angle);
         else
-            angle = rotateCounterClockwise(angle); 
+            angle = rotateCounterClockwise(angle);
 
         Vector result;
         result.setPolar(magnitude, angle);
@@ -81,21 +87,21 @@ bool SelectivePotentialField::shouldRotateClockwise(int angle_quadrant, int dire
 {
     bool clockwise = true;
 
-    if (direction_quadrant == 1 and angle_quadrant == 2)
-        clockwise = true;
-    else if (direction_quadrant == 1 and angle_quadrant == 4)
-        clockwise = false;
-    else if(direction_quadrant == 2 and angle_quadrant == 3)
+    if (direction_quadrant == 2 and angle_quadrant == 3)
         clockwise = true;
     else if (direction_quadrant == 2 and angle_quadrant == 1)
         clockwise = false;
-    else if (direction_quadrant == 3 and angle_quadrant == 4)
+    else if(direction_quadrant == 3 and angle_quadrant == 4)
         clockwise = true;
     else if (direction_quadrant == 3 and angle_quadrant == 2)
         clockwise = false;
     else if (direction_quadrant == 4 and angle_quadrant == 1)
         clockwise = true;
     else if (direction_quadrant == 4 and angle_quadrant == 3)
+        clockwise = false;
+    else if (direction_quadrant == 1 and angle_quadrant == 2)
+        clockwise = true;
+    else if (direction_quadrant == 1 and angle_quadrant == 4)
         clockwise = false;
     else if (resultant_angle <= 0)
         clockwise = false;

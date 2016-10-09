@@ -24,7 +24,7 @@ class RegularPlayer : public Player
   private:
   	void avoidTheWalls(int robot_number);
 
-  	static float const BALL_RANGE_ = 0.5;
+  	static float const BALL_RANGE_;
 };
 
 #endif  // UNBALL_REGULAR_PLAYER_H_

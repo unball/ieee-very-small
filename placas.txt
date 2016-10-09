@@ -1,0 +1,41 @@
+Placa A:
+- Arduíno: ok
+- Rádio: ok
+- Driver: Curto-circuito (ATMega esquenta, led do arduino e IMU resetam)
+- Encoder: -
+- IMU: -
+- LED: -
+
+Placa B:
+- Arduíno: ok
+- Rádio: ok
+- Driver: ok
+- Encoder: ok
+- IMU: - ok
+- LED: - ok
+
+Placa C:
+- Arduíno: ok
+- Rádio: ok
+- Driver: ok
+- Encoder: ok
+- IMU: ok
+- LED: ok
+
+Placa D:
+- Arduíno: - ok
+- Rádio: - não
+- Driver: -
+- Encoder:
+- IMU: -
+- LED: -
+
+Placa E:
+- Arduíno: ok
+- Rádio: ok
+- Driver: ok
+- Encoder: ok
+- IMU: ok
+- LED: não
+
+Placa F: NÃO TESTAR - sai fumaça, explode. Nada funciona 

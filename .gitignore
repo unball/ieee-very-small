@@ -15,3 +15,7 @@
 # Sublime workspace files
 *.sublime-workspace
 *.sublime-project
+
+# Build files
+software/build/*
+software/build/

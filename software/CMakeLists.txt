@@ -11,17 +11,13 @@ find_package(catkin REQUIRED COMPONENTS
   sensor_msgs
   cv_bridge
   message_generation
-  freenect_camera
-  freenect_launch
 )
+
+add_definitions(-std=c++11)
 
 find_package(gazebo REQUIRED)
 
 find_package(Boost REQUIRED COMPONENTS system)
-
-find_package(freenect_launch REQUIRED)
-
-find_package(freenect_camera REQUIRED)
 
 add_message_files(DIRECTORY msg FILES
   VisionMessage.msg
@@ -80,60 +76,6 @@ add_executable(strategy_node
   src/unball/strategy/trajectory_controller.cpp)
 add_dependencies(strategy_node unball_gencpp)
 target_link_libraries(strategy_node ${catkin_LIBRARIES})
-
-add_executable(vision_node
-  src/unball/vision/vision_node.cpp
-  src/unball/vision/vision.cpp
-  src/unball/vision/gui.cpp
-  src/unball/vision/kalman_filter.cpp
-  src/unball/vision/preprocessor.cpp
-  src/unball/vision/segmenter.cpp
-  src/unball/vision/tracker.cpp
-  src/unball/vision/tracked_object.cpp
-  src/unball/vision/tracked_field.cpp
-  src/unball/vision/tracked_robot.cpp
-  src/unball/vision/robot_identifier.cpp
-  src/unball/vision/robot_tracker.cpp
-  src/unball/vision/ball_filter.cpp
-  src/unball/vision/homography.cpp
-  src/unball/vision/ball_identifier.cpp
-  src/unball/vision/measurement_conversion.cpp
-  src/unball/vision/robot_filter.cpp
-  src/unball/utils/math.cpp
-  src/unball/utils/point.cpp)
-add_dependencies(vision_node unball_gencpp)
-target_link_libraries(vision_node ${catkin_LIBRARIES})
-
-add_executable(color_calibration_node
-  src/unball/color_calibration/color_calibration_node.cpp
-  src/unball/color_calibration/color_calibration.cpp)
-add_dependencies(color_calibration_node unball_gencpp)
-target_link_libraries(color_calibration_node ${catkin_LIBRARIES})
-
-add_executable(show_kinect_camera
-  src/unball/camera/show_kinect_camera.cpp)
-add_dependencies(show_kinect_camera unball_gencpp)
-target_link_libraries(show_kinect_camera ${catkin_LIBRARIES})
-
-add_executable(save_kinect_video
-  src/unball/camera/save_kinect_video.cpp)
-add_dependencies(save_kinect_video unball_gencpp)
-target_link_libraries(save_kinect_video ${catkin_LIBRARIES})
-
-add_executable(take_kinect_photo
-  src/unball/camera/take_kinect_photo.cpp)
-add_dependencies(take_kinect_photo unball_gencpp)
-target_link_libraries(take_kinect_photo ${catkin_LIBRARIES})
-
-add_executable(dummy_camera
-  src/unball/dummy_camera/dummy_camera.cpp)
-add_dependencies(dummy_camera unball_gencpp)
-target_link_libraries(dummy_camera ${catkin_LIBRARIES})
-
-add_executable(dummy_frame
-  src/unball/dummy_camera/dummy_frame.cpp)
-add_dependencies(dummy_frame unball_gencpp)
-target_link_libraries(dummy_frame ${catkin_LIBRARIES})
 
 add_executable(simulator_node
   src/unball/simulator/simulator_node.cpp)
