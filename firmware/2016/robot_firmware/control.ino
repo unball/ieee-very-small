@@ -7,7 +7,7 @@ int reference_speedB;
 
 // Motor PID control
 const int MAX_MOTOR_POWER = 255;
-const float MAX_CONTROL_OUTPUT = 500;
+const float MAX_CONTROL_OUTPUT = 255;
 const float KP = 0.5;
 const float KI = 0;
 const float KD = 0.01;

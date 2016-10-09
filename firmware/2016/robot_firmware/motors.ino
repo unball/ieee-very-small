@@ -22,7 +22,7 @@ void setMotorPin(int PWM, int IN1, int IN2) {
 }
 
 /*motor <- "motorA" or "motorB"*/
-void move(int speed, String motor) {
+void move(int power, String motor) {
   int pin1, pin2;
   int PWM;
   if (motor == "motorA") {
@@ -36,13 +36,12 @@ void move(int speed, String motor) {
     PWM = PWMB;    
   }
   
-  speed = map(speed,-100,100,-255,255);
-  int speed_magnitude = abs(speed);
-  int speed_direction = (speed > 0 ? 1:0);
+  int speed_magnitude = abs(power);
+  int speed_direction = (power > 0 ? 1:0);
   move(speed_magnitude, speed_direction, PWM, pin1, pin2);
 }
 
-void move(int speed, int direction, int PWM, int IN1, int IN2) {
+void move(int power, int direction, int PWM, int IN1, int IN2) {
   boolean inPin1 = LOW;
   boolean inPin2 = HIGH;
 
@@ -53,5 +52,5 @@ void move(int speed, int direction, int PWM, int IN1, int IN2) {
 
   digitalWrite(IN1, inPin1);
   digitalWrite(IN2, inPin2);
-  analogWrite(PWM, speed);
+  analogWrite(PWM, power);
 }

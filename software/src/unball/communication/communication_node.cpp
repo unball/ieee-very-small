@@ -23,21 +23,17 @@ void receiveStrategyMessage(const unball::StrategyMessage::ConstPtr &msg);
 float calculateLeftSpeed(int i);
 float calculateRightSpeed(int i);
 
-int convert(float speed);
-
 float lin_vel[3];
 float ang_vel[3];
 
 float const R = 0.03;
 float const WHEELS_DISTANCE = 0.075;
-float const LIN_VEL_CONST = 0.8;
-float const ANG_VEL_CONST = 500;
 
 int main(int argc, char **argv)
 {
 	boost::asio::io_service ios;
 	boost::asio::serial_port sp(ios, "/dev/ttyUSB0");
-	sp.set_option(boost::asio::serial_port::baud_rate(19200));
+	sp.set_option(boost::asio::serial_port::baud_rate(250000));
 	
 	ros::init(argc, argv, "communication_node");
     ros::NodeHandle n;
@@ -47,20 +43,19 @@ int main(int argc, char **argv)
 
     while (ros::ok())
     {
-		int robot_number, right_wheel, left_wheel;
-		unsigned char result;
-
+		char robot_number, right_wheel, left_wheel;
+		char robot_number_char, right_wheel_char, left_wheel_char;
 		std::string message;
 
 		for (int i = 0; i < 3; i++)
 		{
-			robot_number = i;
-			right_wheel = convert(calculateRightSpeed(i));
-			left_wheel = convert(calculateLeftSpeed(i));
-			result = ((robot_number << 6) & 0b11000000) | ((left_wheel << 3) & 0b00111000) | (right_wheel & 0b00000111);
+			robot_number = i + 48;
+			right_wheel = (int)calculateRightSpeed(i) + 48;
+			left_wheel = (int)calculateLeftSpeed(i) + 48;
 
-			ROS_ERROR("Robot: %d\tLeft: %d\tRight: %d", i, left_wheel, right_wheel);
-			message = boost::lexical_cast<std::string>(result);
+			message.push_back(robot_number); message.push_back(right_wheel); message.push_back(left_wheel);
+
+			ROS_ERROR("Robot: %c\tLeft: %c\tRight: %c", i, left_wheel, right_wheel);
 
 			sp.write_some(boost::asio::buffer(message, message.size()));
 		}	
@@ -86,34 +81,25 @@ void receiveStrategyMessage(const unball::StrategyMessage::ConstPtr &msg)
 
 float calculateLeftSpeed(int i)
 {
-	return (lin_vel[i]*LIN_VEL_CONST - (WHEELS_DISTANCE/2)*ang_vel[i]*ANG_VEL_CONST)/R;
+	return 100;
+	float linear_speed_rpm = convertSpeedToRpm(lin_vel[i]);
+	float tangential_speed = ang_vel[i]*(WHEELS_DISTANCE/2);
+	float tangential_speed_rpm = convertSpeedToRpm(tangential_speed);
+	return linear_speed_rpm - tangential_speed_rpm;
 }
 
 float calculateRightSpeed(int i)
 {
-	return (lin_vel[i]*LIN_VEL_CONST + (WHEELS_DISTANCE/2)*ang_vel[i]*ANG_VEL_CONST)/R;
+	return 70;
+	float linear_speed_rpm = convertSpeedToRpm(lin_vel[i]);
+	float tangential_speed = ang_vel[i]*(WHEELS_DISTANCE/2);
+	float tangential_speed_rpm = convertSpeedToRpm(tangential_speed);
+	return linear_speed_rpm + tangential_speed_rpm;
 }
 
-/**
- * Converts the expected speed on the wheels to a number from 0 - 7
- */
-int convert(float speed)
-{
-	//We are assuming the maximum speed is somewhere close to 198. Ranges from 150 and above are on the maximum speed.
-	if (speed >= 150)
-		return 7;
-	else if ((100 <= speed) and (speed < 150))
-		return 6;
-	else if ((60 <= speed) and (speed < 100))
-		return 5;
-	else if ((30 <= speed) and (speed < 60))
-		return 4;
-	else if ((-30 <= speed) and (speed < 30))
-		return 3;
-	else if ((-80 <= speed) and (speed < -30))
-		return 2;
-	else if ((-150 <= speed) and (speed < -80))
-		return 1;
-	else
-		return 0;
+float convertSpeedToRpm(float speed) {
+	float wheel_lenght = 2*M_PI*R;
+	float rotations_per_second = speed/wheel_lenght;
+	float rpm = rotations_per_second * 60;
+	return rpm;
 }

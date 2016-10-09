@@ -10,14 +10,14 @@ byte pipe[][6] = {"1Node", "2Node", "3Node", "4Node", "5Node", "6Node", "7Node"}
 int msg_from_robot[2];
 int msg_from_ROS[3];
 
-int commands[2];
+int commands[2] ={0,0};
 int robotPipe;
 
 bool robot_online = false;
 
 void setup() {
-  Serial.begin(250000);
-  Serial.println("Inicio - central");
+  Serial.begin(19200);
+  //Serial.println("Inicio - central");
   radio.begin();
 
   radio.setPALevel(RF24_PA_MAX);
@@ -25,9 +25,9 @@ void setup() {
   radio.setChannel(108);
 
   radio.openReadingPipe(1, pipe[1]); //n1->central pelo pipe0
-  radio.openReadingPipe(3, pipe[3]); //n1->central pelo pipe0
-  radio.openReadingPipe(5, pipe[5]); //n1->central pelo pipe0
-  radio.openReadingPipe(7, pipe[7]); //n1->central pelo pipe0
+  radio.openReadingPipe(2, pipe[3]); //n1->central pelo pipe0
+  radio.openReadingPipe(3, pipe[5]); //n1->central pelo pipe0
+  radio.openReadingPipe(4, pipe[7]); //n1->central pelo pipe0
   radio.startListening();
 }
 
@@ -48,12 +48,13 @@ bool receive_data_from_robot() {
 }
 
 void send_data_to_ROS() {
-  Serial.println(msg_from_robot[0]); //Serial.write() may be a better choice for this
-  Serial.println(msg_from_robot[1]); //Serial.write() may be a better choice for this
+  //Serial.println(msg_from_robot[0]); //Serial.write() may be a better choice for this
+  //Serial.println(msg_from_robot[1]); //Serial.write() may be a better choice for this
 }
 
 bool receive_data_from_ROS() {
   if (Serial.available()) {
+    send_data_to_robot();
     int i = 0;
     while (Serial.available()) {
       msg_from_ROS[i++] = Serial.read() - 48;
@@ -74,7 +75,7 @@ void send_data_to_robot() {
   radio.stopListening();
   radio.openWritingPipe(pipe[robotPipe]);
   robot_online = radio.write(commands, sizeof(commands));
-  Serial.println(robot_online);
+  //Serial.println(robot_online);
   radio.startListening();
 }
 
