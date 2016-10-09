@@ -1,4 +1,4 @@
 <launch>
-  <include file="$(find unball)/launch/run_vision.launch" />
+  <include file="$(find vision)/launch/run_vision.launch" />
   <include file="$(find unball)/launch/run_strategy.launch" />
 </launch>
