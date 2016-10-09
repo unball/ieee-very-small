@@ -137,3 +137,8 @@ catkin_add_gtest(test_invert_angles
   src/unball/utils/point.cpp
   src/unball/utils/math.cpp)
 target_link_libraries(test_invert_angles ${catkin_LIBRARIES})
+
+add_executable(measurement_system_node
+  src/unball/measurement_system/measurement_system_node.cpp)
+add_dependencies(measurement_system unball_gencpp)
+target_link_libraries(measurement_system_node ${catkin_LIBRARIES})

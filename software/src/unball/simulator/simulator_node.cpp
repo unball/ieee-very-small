@@ -18,13 +18,13 @@
 #include <gazebo_msgs/ModelStates.h>
 
 #include "unball/StrategyMessage.h"
-#include "unball/VisionMessage.h"
+#include "unball/SimulatorMessage.h"
 
 void receiveStrategyMessage(const unball::StrategyMessage::ConstPtr &msg);
 void publishVelocities(ros::Publisher &publisher, float lin_vel, float ang_vel);
 void receiveGazeboModelStates(const gazebo_msgs::ModelStates::ConstPtr &msg);
 float convertQuaternionToEuler(float x, float y, float z, float w);
-void publishVisionMessage(ros::Publisher &publisher, std::vector<float> &x, std::vector<float> &y, std::vector<float> &th,
+void publishSimulatorMessage(ros::Publisher &publisher, std::vector<float> &x, std::vector<float> &y, std::vector<float> &th,
                           std::vector<float> &ball_location);
 
 ros::Publisher publisher[6], poses_publisher;
@@ -46,7 +46,7 @@ int main(int argc, char **argv)
     publisher[4] = n.advertise<geometry_msgs::Twist>("robot_5/cmd_vel", 1);
     publisher[5] = n.advertise<geometry_msgs::Twist>("robot_6/cmd_vel", 1);
     
-    poses_publisher = n.advertise<unball::VisionMessage>("vision_topic", 1);
+    poses_publisher = n.advertise<unball::SimulatorMessage>("simulator_topic", 1);
   
     while (ros::ok())
     {
@@ -155,7 +155,7 @@ void receiveGazeboModelStates(const gazebo_msgs::ModelStates::ConstPtr &msg)
                                                    msg->pose[i].orientation.z, msg->pose[i].orientation.w);
     }
     
-    publishVisionMessage(poses_publisher, x, y, th, ball_location);
+    publishSimulatorMessage(poses_publisher, x, y, th, ball_location);
 }
 
 /**
@@ -188,21 +188,21 @@ float convertQuaternionToEuler(float x, float y, float z, float w)
  * @param th robots orientation angle.
  * @param ball_location vector containing the ball (x, y) coordinates.
  */
-void publishVisionMessage(ros::Publisher &publisher, std::vector<float> &x, std::vector<float> &y, std::vector<float> &th,
+void publishSimulatorMessage(ros::Publisher &publisher, std::vector<float> &x, std::vector<float> &y, std::vector<float> &th,
                           std::vector<float> &ball_location)
 {
-    unball::VisionMessage message;
+    unball::SimulatorMessage message;
  
-    ROS_DEBUG("Publishing robots locations");
+    //ROS_INFO("\n\n[SimulatorNode]:PublishSimulatorMessage - Publishing robots locations");
     for (int i = 0; i < 6; i++)
     {
-        ROS_DEBUG("Robot %d: x: %f, y: %f, th: %f", i, x[i], y[i], th[i]);
+        //ROS_INFO("Robot %d: x: %f, y: %f, th: %f", i, x[i], y[i], th[i]);
         message.x[i] = x[i];
         message.y[i] = y[i];
         message.th[i] = th[i];
     }
     
-    ROS_DEBUG("Ball: x: %f, y: %f", ball_location[0], ball_location[1]);
+    //ROS_INFO("Ball: x: %f, y: %f", ball_location[0], ball_location[1]);
     message.ball_x = ball_location[0];
     message.ball_y = ball_location[1];
     

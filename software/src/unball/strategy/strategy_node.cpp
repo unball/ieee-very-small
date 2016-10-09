@@ -15,7 +15,7 @@
 
 #include <ros/ros.h>
 
-#include <unball/VisionMessage.h>
+#include <unball/MeasurementSystemMessage.h>
 #include <unball/StrategyMessage.h>
 #include <unball/KeyboardMessage.h>
 #include <unball/strategy/strategy.hpp> // Strategy strategy;
@@ -25,7 +25,7 @@
 
 void initRobotsPoses();
 void publishRobotsVelocities(ros::Publisher &publisher);
-void receiveVisionMessage(const unball::VisionMessage::ConstPtr &msg);
+void receiveMeasurementSystemMessage(const unball::MeasurementSystemMessage::ConstPtr &msg);
 void receiveKeyboardMessage(const unball::KeyboardMessage::ConstPtr &msg);
 
 int main(int argc, char **argv)
@@ -35,7 +35,7 @@ int main(int argc, char **argv)
     ros::NodeHandle n;
     ros::Rate loop_rate(30); // Hz
     
-    ros::Subscriber sub = n.subscribe("vision_topic", 1, receiveVisionMessage);
+    ros::Subscriber sub = n.subscribe("measurement_system_topic", 1, receiveMeasurementSystemMessage);
     ros::Subscriber sub2 = n.subscribe("keyboard_topic", 1, receiveKeyboardMessage);
     ros::Publisher publisher = n.advertise<unball::StrategyMessage>("strategy_topic", 1);
     
@@ -95,16 +95,17 @@ void publishRobotsVelocities(ros::Publisher &publisher)
  * Receives the robots locations from the vision topic.
  * @param msg an UnBall vision message pointer.
  */
-void receiveVisionMessage(const unball::VisionMessage::ConstPtr &msg)
+void receiveMeasurementSystemMessage(const unball::MeasurementSystemMessage::ConstPtr &msg)
 {
-    ROS_DEBUG("Receiving vision message");
+    //ROS_INFO("\n\n[StrategyNode]:ReceiveMeasuermentSystemMessage - Receiving measurement system message");
     
     for (int i = 0; i < 6; i++)
     {
-        ROS_DEBUG("%d x: %f\t y: %f\t th: %f", i, msg->x[i], msg->y[i], msg->th[i]);
-        robot[i].setPose(msg->y[i], -msg->x[i], math::reduceAngle(-msg->th[i] - M_PI_2));
+        //ROS_INFO("Robots: %d x: %f\t y: %f\t th: %f", i, msg->x[i], msg->y[i], msg->th[i]);
+        robot[i].setPose(msg->x[i], msg->y[i], msg->th[i]);
     }
 
+    //ROS_INFO("Ball: x: %f, y: %f", msg->ball_x, msg->ball_y);
     if (msg->y[2] < -0.75 or msg->y[2] > 0.75 or msg->x[2] < -0.65 or msg->x[2] > 0.65) 
     {
         //HACK: in case we do not find our goakeeper, we set our goal by:

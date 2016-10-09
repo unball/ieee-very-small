@@ -21,8 +21,10 @@ find_package(Boost REQUIRED COMPONENTS system)
 
 add_message_files(DIRECTORY msg FILES
   VisionMessage.msg
+  SimulatorMessage.msg
   StrategyMessage.msg
-  KeyboardMessage.msg)
+  KeyboardMessage.msg
+  MeasurementSystemMessage.msg)
 generate_messages(DEPENDENCIES std_msgs)
 
 catkin_package(
@@ -90,6 +92,11 @@ add_executable(communication_node
   src/unball/communication/communication_node.cpp)
 add_dependencies(communication_node unball_gencpp)
 target_link_libraries(communication_node ${catkin_LIBRARIES})
+
+add_executable(measurement_system_node
+  src/unball/measurement_system/measurement_system_node.cpp)
+add_dependencies(measurement_system_node unball_gencpp)
+target_link_libraries(measurement_system_node ${catkin_LIBRARIES})
 
 catkin_add_gtest(test_point
   test/utils/test_point.cpp
