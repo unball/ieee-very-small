@@ -38,4 +38,4 @@ Placa E:
 - IMU: ok
 - LED: não
 
-Placa F: NÃO TESTAR - sai fumaça, explode. Nada funciona
+Placa F: NÃO TESTAR - sai fumaça, explode. Nada funciona 

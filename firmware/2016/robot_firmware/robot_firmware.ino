@@ -16,10 +16,15 @@ void setup() {
 
 void sendMessageBackToCentral() {
     int send_message[2];
-    //getMessages(send_message);
+    getMessages(send_message);
+    send(send_message);   
+}
+
+void getEncoderValues() {
+    int send_message[2];
     send_message[0] = getMotorSpeed("motorA");
     send_message[1] = getMotorSpeed("motorB");
-    send(send_message);   
+    send(send_message);  
 }
 
 void setSpeeds() {
@@ -35,12 +40,12 @@ void loop() {
     if (isStartingPipe())
       setChannel();
     else {
-      //sendMessageBackToCentral();
+      sendMessageBackToCentral();
       digitalWrite(LED, HIGH);
       setSpeeds();
     }    
   }
-  //sendMessageBackToCentral();
+  
   controlMotors();
   
   delay(20);

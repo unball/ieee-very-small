@@ -16,14 +16,8 @@ void encodersSetup() {
 
 void estimateSpeeds(float *speedA, float *speedB) {
   encoder();
-  //int contadores[2] = {contadorA, contadorB};
-  //send(contadores);
-  int speeds[2];
-  speeds[0] = estimateSpeed(contadorA);
-  speeds[1] = estimateSpeed(contadorB);
-  send(speeds);
-  //*speedA = estimateSpeed(contadorA);
-  //*speedB = estimateSpeed(contadorB);
+  *speedA = estimateSpeed(contadorA);
+  *speedB = estimateSpeed(contadorB);
 }
 
 /**
