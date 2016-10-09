@@ -153,7 +153,7 @@ target_link_libraries(communication_node ${catkin_LIBRARIES})
 
 add_executable(measurement_system_node
   src/unball/measurement_system/measurement_system_node.cpp)
-add_dependencies(measurement_system_node unball_gencpp)
+add_dependencies(measurement_system unball_gencpp)
 target_link_libraries(measurement_system_node ${catkin_LIBRARIES})
 
 catkin_add_gtest(test_point

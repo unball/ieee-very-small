@@ -63,17 +63,17 @@ void StateEstimator::updateBallState()
     if (ball_x > 0.25)
     {
         ball_state_ = WorldState::BALL_ATTACK_FIELD;
-        ROS_INFO("[StateEstimator] Ball state: Attack");
+        //ROS_INFO("[StateEstimator] Ball state: Attack");
     }
     else if (ball_x < -0.25)
     {
         ball_state_ = WorldState::BALL_DEFENSE_FIELD;
-        ROS_INFO("[StateEstimator] Ball state: Defense");
+        //ROS_INFO("[StateEstimator] Ball state: Defense");
     }
     else
     {
         ball_state_ = WorldState::BALL_MIDDLE_FIELD;
-        ROS_INFO("[StateEstimator] Ball state: Middle");
+        //ROS_INFO("[StateEstimator] Ball state: Middle");
     }
 }
 
@@ -117,17 +117,17 @@ void StateEstimator::updateBallPossessionState()
     if (closest_index == -1)
     {
         ball_possession_state_ = WorldState::BALL_POSSESSION_NONE;
-        ROS_INFO("[StateEstimator] Ball possession: no one");
+        //ROS_INFO("[StateEstimator] Ball possession: no one");
     }
     else if ((closest_index >= 0) and (closest_index < 3))
     {
         ball_possession_state_ = WorldState::BALL_POSSESSION_THEIRS;
-        ROS_INFO("[StateEstimator] Ball possession: theirs");
+        //ROS_INFO("[StateEstimator] Ball possession: theirs");
     }
     else if (closest_index >= 3)
     {
         ball_possession_state_ = WorldState::BALL_POSSESSION_OURS;
-        ROS_INFO("[StateEstimator] Ball possession: ours");
+        //ROS_INFO("[StateEstimator] Ball possession: ours");
     }
 }
 
