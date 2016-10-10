@@ -35,7 +35,8 @@ void move(int power, String motor) {
     pin2 = BIN2;
     PWM = PWMB;    
   }
-  
+
+  power = map(power,-100, 100, -255, 255);
   int speed_magnitude = abs(power);
   int speed_direction = (power > 0 ? 1:0);
   move(speed_magnitude, speed_direction, PWM, pin1, pin2);

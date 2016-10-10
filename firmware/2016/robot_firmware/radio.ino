@@ -5,7 +5,7 @@ RF24 radio(10,A0);    //arduino pro micro
 /*The starting LISTENING pipe defines the "lost robots" zone. The communication between
 the central and the robots will not be made through this pipe. This pipe will 
 only be used to tell the robot which pipe it should switch to*/
-int starting_pipe = 0;
+int starting_pipe = 2;
 
 /*Actual pipe the robot will use to LISTEN. The writting pipe number is, by default, 
  * the listening pipe number + 1 (my_pipe+1)*/

@@ -7,8 +7,8 @@ def talker():
     pub = rospy.Publisher('strategy_topic', StrategyMessage)
     r = rospy.Rate(10)
     msg = StrategyMessage()
-    msg.lin_vel = [1,2,3,4,5,6]
-    msg.ang_vel = [6,5,4,3,2,1]
+    msg.lin_vel = [0.1,0.2,0.3,0.4,0.5,0.6]
+    msg.ang_vel = [0.6,0.5,0.4,0.3,0.2,0.1]
 
     while not rospy.is_shutdown():
         rospy.loginfo(msg)
