@@ -17,9 +17,11 @@
 #include <unball/VisionMessage.h>
 #include <unball/SimulatorMessage.h>
 #include <unball/MeasurementSystemMessage.h>
+#include <opencv2/opencv.hpp>
 
 void receiveVisionMessage(const unball::VisionMessage::ConstPtr &msg_s);
 void rotateAxis();
+void convertPixelsToMeters();
 void receiveSimulatorMessage(const unball::SimulatorMessage::ConstPtr &msg_v);
 void publishMeasurementSystemMessage(ros::Publisher &publisher);
 
@@ -92,9 +94,8 @@ void receiveVisionMessage(const unball::VisionMessage::ConstPtr &msg_v)
         message.x[robot_index] = msg_v->x[robot_index];
         message.y[robot_index] = msg_v->y[robot_index];
         message.th[robot_index] = msg_v->th[robot_index];
-
     }
-
+    convertPixelsToMeters();
     rotateAxis();
 
     ROS_INFO("Ball: x: %f, y: %f", ball_location[0], ball_location[1]);
@@ -141,4 +142,20 @@ void rotateAxis()
     aux = -message.ball_x;
     message.ball_x = message.ball_y;
     message.ball_y = aux;
+}
+
+void convertPixelsToMeters(){
+    auto x_conversion = field_metric_width_ / field_pixel_width;
+    auto y_conversion = field_metric_height_ / field_pixel_height;
+    for (int i = 0; i < 6; ++i)
+    {
+        message.x[i] -= 320;
+        point_in_pixel.y[i] -= 240;
+        message.x[i] *= x_conversion;
+        message.y[i] *= y_conversion;
+    }
+    message.ball_x -= 320;
+    message.ball_y -= 240;
+    message.ball_x *= x_conversion;
+    message.ball_y *= y_conversion;
 }

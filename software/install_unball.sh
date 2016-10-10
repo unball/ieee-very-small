@@ -135,11 +135,11 @@ if [ $rosinstall_ == 0 ]; then
     sudo apt-get install ros-indigo-desktop-full
     sudo rosdep init
     rosdep update
-    echo "# Sourcing ROS environment variables" >> /root/.bashrc
-    echo "source /opt/ros/indigo/setup.bash" >> /root/.bashrc
+    echo "# Sourcing ROS environment variables" >> ~/.bashrc
+    echo "source /opt/ros/indigo/setup.bash" >> ~/.bashrc
     mkdir -p ~/catkin_ws/src && cd ~/catkin_ws/src && catkin_init_workspace
-    echo "# Sourcing catkin environment variables" >> root/.bashrc
-    echo "source ~/catkin_ws/devel/setup.sh" >> root/.
+    echo "# Sourcing catkin environment variables" >> ~/.bashrc
+    echo "source ~/catkin_ws/devel/setup.sh" >> ~/.bashrc
     echo "Finished"
 fi
 
