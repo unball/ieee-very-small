@@ -145,12 +145,12 @@ void rotateAxis()
 }
 
 void convertPixelsToMeters(){
-    auto x_conversion = field_metric_width_ / field_pixel_width;
-    auto y_conversion = field_metric_height_ / field_pixel_height;
+    auto x_conversion = 1.50 / 640;
+    auto y_conversion = 1.30 / 480;
     for (int i = 0; i < 6; ++i)
     {
         message.x[i] -= 320;
-        point_in_pixel.y[i] -= 240;
+        message.y[i] -= 240;
         message.x[i] *= x_conversion;
         message.y[i] *= y_conversion;
     }
