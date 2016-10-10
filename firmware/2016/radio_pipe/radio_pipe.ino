@@ -2,11 +2,11 @@
 #include "RF24.h"
 
 /* Hardware configuration: Set up nRF24L01 radio on SPI protocol*/
-RF24 radio(3, 2);   //arduino nano
-//RF24 radio(10,A0); //arduino pro micro
+//RF24 radio(3, 2);   //arduino nano
+RF24 radio(10,A0); //arduino pro micro
 /**********************************************************/
 
-byte pipe[][6] = {"1Node", "2Node", "3Node", "4Node", "5Node", "6Node", "7Node"};
+byte pipe[][6] = {"1Node", "2Node", "3Node", "4Node", "5Node", "6Node", "7Node", "8Node"};
 int msg_from_robot[2];
 int msg_from_ROS[3];
 
@@ -17,7 +17,8 @@ bool robot_online = false;
 
 void setup() {
   Serial.begin(19200);
-  //Serial.println("Inicio - central");
+  while(!Serial)
+    Serial.println("Inicio - central");
   radio.begin();
 
   radio.setPALevel(RF24_PA_MAX);
@@ -56,8 +57,9 @@ bool receive_data_from_ROS() {
   if (Serial.available()) {
     send_data_to_robot();
     int i = 0;
-    while (Serial.available()) {
+    while (i<3) {
       msg_from_ROS[i++] = Serial.read() - 48;
+      Serial.println(msg_from_ROS[i-1]);
     }
     parseROStoRobot();
     return true;
