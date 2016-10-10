@@ -112,4 +112,5 @@ catkin_add_gtest(test_invert_angles
 target_link_libraries(test_invert_angles ${catkin_LIBRARIES})
 
 catkin_install_python(PROGRAMS nodes/communication_node.py
+                               nodes/fake_strategy_node.py
                       DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})

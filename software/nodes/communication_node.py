@@ -44,19 +44,28 @@ def calculateLeftSpeed(i):
     linear_speed_rpm = convertSpeedToRpm(lin_vel[i])
     tangential_speed = ang_vel[i] * (WHEELS_DISTANCE / 2)
     tangential_speed_rpm = convertSpeedToRpm(tangential_speed)
-    return int(linear_speed_rpm - tangential_speed_rpm)
+    speed_in_rpm = int(linear_speed_rpm - tangential_speed_rpm)
+    return saturateInt(speed_in_rpm, 127)
 
 def calculateRightSpeed(i):
     linear_speed_rpm = convertSpeedToRpm(lin_vel[i])
     tangential_speed = ang_vel[i] * (WHEELS_DISTANCE / 2)
     tangential_speed_rpm = convertSpeedToRpm(tangential_speed)
-    return int(linear_speed_rpm + tangential_speed_rpm)
+    speed_in_rpm = int(linear_speed_rpm + tangential_speed_rpm)
+    return saturateInt(speed_in_rpm, 127)
 
 def convertSpeedToRpm(speed):
     wheel_length = 2*pi*R
     rotations_per_second = speed / wheel_length
     rpm = rotations_per_second * 60
     return rpm
+
+def saturateInt(value, max_value):
+    if value > max_value:
+        value = max_value
+    elif value < -max_value:
+        value = -max_value
+    return value
 
 if __name__ == '__main__':
     main()
