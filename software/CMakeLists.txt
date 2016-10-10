@@ -11,6 +11,7 @@ find_package(catkin REQUIRED COMPONENTS
   sensor_msgs
   cv_bridge
   message_generation
+  rospy
 )
 
 add_definitions(-std=c++11)
@@ -32,6 +33,7 @@ catkin_package(
     gazebo_ros
   CATKIN_DEPENDS
     message_runtime
+    rospy
   INCLUDE_DIRS
   LIBRARIES
 )
@@ -88,11 +90,6 @@ add_executable(keyboard_node
 add_dependencies(keyboard_node unball_gencpp)
 target_link_libraries(keyboard_node ${catkin_LIBRARIES})
 
-add_executable(communication_node
-  src/unball/communication/communication_node.cpp)
-add_dependencies(communication_node unball_gencpp)
-target_link_libraries(communication_node ${catkin_LIBRARIES})
-
 add_executable(measurement_system_node
   src/unball/measurement_system/measurement_system_node.cpp)
 add_dependencies(measurement_system_node unball_gencpp)
@@ -113,3 +110,6 @@ catkin_add_gtest(test_invert_angles
   src/unball/utils/point.cpp
   src/unball/utils/math.cpp)
 target_link_libraries(test_invert_angles ${catkin_LIBRARIES})
+
+catkin_install_python(PROGRAMS nodes/communication_node.py
+                      DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
