@@ -7,8 +7,8 @@ from unball.msg import StrategyMessage
 from math import pi
 import serial
 
-lin_vel = [0,0,0]
-ang_vel = [0,0,0]
+lin_vel = [0,0,0,0,0,0]
+ang_vel = [0,0,0,0,0,0]
 
 R = 0.03
 WHEELS_DISTANCE = 0.075
@@ -27,7 +27,7 @@ def main():
         rospy.spin()
 
 def receiveStrategyMessage(data):
-    rospy.debug('[Communication Node]Receiving Strategy message')
+    rospy.logdebug('[Communication Node]Receiving Strategy message')
     for i in range(3):
         lin_vel[i] = data.lin_vel[i]
         ang_vel[i] = data.ang_vel[i]
@@ -36,8 +36,9 @@ def receiveStrategyMessage(data):
         msg = str(unichr(i)) + \
               str(unichr(calculateRightSpeed(i))) + \
               str(unichr(calculateLeftSpeed(i)))
-        print msg
-        ser.write(msg)
+        rospy.logdebug(msg)
+        if ser.isOpen():
+            ser.write(msg)
 
 def calculateLeftSpeed(i):
     linear_speed_rpm = convertSpeedToRpm(lin_vel[i])
