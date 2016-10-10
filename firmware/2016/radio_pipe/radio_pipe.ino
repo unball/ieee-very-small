@@ -38,7 +38,7 @@ void checkIfRadioIsPVariant() {
   }
 }
 
-bool receive_data_from_robot() {
+bool receiveDataFromAnotherRadio() {
   if (radio.available()) {
     while (radio.available()) {
       radio.read(&msg_from_robot, sizeof(msg_from_robot));
@@ -48,32 +48,30 @@ bool receive_data_from_robot() {
   return false;
 }
 
-void send_data_to_ROS() {
-  //Serial.println(msg_from_robot[0]); //Serial.write() may be a better choice for this
-  //Serial.println(msg_from_robot[1]); //Serial.write() may be a better choice for this
+void sendDataToSerialPort() {
+  Serial.println(msg_from_robot[0]); //Serial.write() may be a better choice for this
+  Serial.println(msg_from_robot[1]); //Serial.write() may be a better choice for this
 }
 
-bool receive_data_from_ROS() {
+bool receiveDataFromSerialPort() {
   if (Serial.available()) {
-    send_data_to_robot();
     int i = 0;
     while (i<3) {
-      msg_from_ROS[i++] = Serial.read();
-      //Serial.println(msg_from_ROS[i-1]);
+      msg_from_ROS[i++] = Serial.read() - 48;
     }
-    parseROStoRobot();
+    parseSerialMessageToRobot();
     return true;
   }
   return false;
 }
 
-void parseROStoRobot() {
+void parseSerialMessageToRobot() {
   robotPipe = msg_from_ROS[0];
   commands[0] = msg_from_ROS[1];
   commands[1] = msg_from_ROS[2];
 }
 
-void send_data_to_robot() {
+void sendDataToRobot() {
   radio.stopListening();
   radio.openWritingPipe(pipe[robotPipe]);
   robot_online = radio.write(commands, sizeof(commands));
@@ -82,10 +80,10 @@ void send_data_to_robot() {
 }
 
 void loop() {
-  if (receive_data_from_robot())
-    send_data_to_ROS();
-  if (receive_data_from_ROS())
-    send_data_to_robot();
+  if (receiveDataFromAnotherRadio())
+    sendDataToSerialPort();
+  if (receiveDataFromSerialPort())
+    sendDataToRobot();
 
   delay(10);
 }
