@@ -36,8 +36,6 @@ void TrajectoryController::run()
         player_[i]->clearPotentialFields();
         controlRobot(i, resultant_force);
     }
-    robot[2].setAngVel(5);
-    robot[2].setLinVel(0);
 }
 
 void TrajectoryController::controlRobot(int robot_number, Vector force)

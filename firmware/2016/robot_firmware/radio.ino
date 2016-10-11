@@ -62,6 +62,8 @@ bool receive() {
     while (radio.available()) { 
       radio.read(&msg_from_central, sizeof(msg_from_central));       
     }
+    msg_from_central[0] = msg_from_central[0] - 50;
+    msg_from_central[1] = msg_from_central[1] - 50;
     return true;
   }
   return false;
