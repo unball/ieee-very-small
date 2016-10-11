@@ -31,7 +31,7 @@ void TrajectoryController::run()
     {
         player_[i]->buildPotentialFields(i);
         resultant_force = player_[i]->calculateResultantForce(i);
-        ROS_ERROR("resultant_force: mag: %.2f ang: %.2f", resultant_force.getMagnitude(),
+        //ROS_ERROR("resultant_force: mag: %.2f ang: %.2f", resultant_force.getMagnitude(),
             resultant_force.getDirection()*180/M_PI);
         player_[i]->clearPotentialFields();
         controlRobot(i, resultant_force);
