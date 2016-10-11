@@ -20,25 +20,41 @@ def main():
     rospy.Subscriber('strategy_topic', StrategyMessage, receiveStrategyMessage, queue_size=1)
 
     ser.baudrate = 19200
-    ser.port = '/dev/ttyACM0'
+    ser.port = '/dev/ttyACM1'
     ser.open()
 
     while not rospy.is_shutdown():
         rospy.spin()
 
 def receiveStrategyMessage(data):
-    rospy.logdebug('[Communication Node]Receiving Strategy message')
-    for i in range(3):
-        lin_vel[i] = data.lin_vel[i]
-        ang_vel[i] = data.ang_vel[i]
-        # Reference:
-        # http://stackoverflow.com/questions/3673428/convert-int-to-ascii-and-back-in-python
-        msg = str(unichr(i)) + \
-              str(unichr(calculateRightSpeed(i))) + \
-              str(unichr(calculateLeftSpeed(i)))
-        rospy.logdebug(msg)
-        if ser.isOpen():
-            ser.write(msg)
+    rospy.logdebug('[communication_node Node]Receiving Strategy message')
+    i = 1
+    #for i in range(3):
+    lin_vel[i] = data.lin_vel[i]
+    ang_vel[i] = data.ang_vel[i]
+    rospy.loginfo(data.lin_vel[i])
+    # Reference:
+    # http://stackoverflow.com/questions/3673428/convert-int-to-ascii-and-back-in-python
+            
+    if i == 0:
+        robot_number = 2
+    elif i == 1:
+        robot_number = 4
+    else:
+        robot_number = 6
+
+    msg = str(unichr(robot_number)) + \
+          str(unichr(calculateRightSpeed(i))) + \
+          str(unichr(calculateLeftSpeed(i)))
+    log = msg[0]
+    rospy.loginfo(ord(log))
+    log = msg[1]
+    rospy.loginfo(ord(log))
+    log = msg[2]
+    rospy.loginfo(ord(log))
+    rospy.loginfo("----")
+    if ser.isOpen():
+        ser.write(msg)
 
 def calculateLeftSpeed(i):
     linear_speed_rpm = convertSpeedToRpm(lin_vel[i])

@@ -8,8 +8,8 @@ int reference_speedB;
 // Motor PID control
 const int MAX_MOTOR_POWER = 255;
 const float MAX_CONTROL_OUTPUT = 255;
-const float KP = 0.5;
-const float KI = 0;
+const float KP = 2;
+const float KI = 5;
 const float KD = 0.01;
 float errorA_int = 0;
 float errorA_prev = 0;
@@ -40,6 +40,11 @@ float getMotorSpeed(String motor) {
  */
 void controlMotors() {
   estimateSpeeds(&speedA, &speedB);
+  float percent_errorA = (reference_speedA - speedA)/reference_speedA;
+  float percent_errorB = (reference_speedB - speedB)/reference_speedB;
+  float errors_difference = percent_errorA - percent_errorB;
+  reference_speedA *= (1 + errors_difference);
+  reference_speedB *= (1 - errors_difference);
   controlMotor(MOTOR_A, reference_speedA);
   controlMotor(MOTOR_B, reference_speedB);  
 }
