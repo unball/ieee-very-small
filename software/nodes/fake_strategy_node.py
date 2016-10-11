@@ -5,7 +5,7 @@ from unball.msg import StrategyMessage
 
 def talker():
     rospy.init_node('fake_strategy_node', anonymous=True)
-    pub = rospy.Publisher('strategy_topic', StrategyMessage)
+    pub = rospy.Publisher('strategy_topic', StrategyMessage, queue_size=1)
     r = rospy.Rate(10)
     msg = StrategyMessage()
 

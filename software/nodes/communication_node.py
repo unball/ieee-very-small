@@ -1,7 +1,5 @@
 #!/usr/bin/env python
 
-# pyserial reference: http://pyserial.readthedocs.io/en/latest/shortintro.html
-
 import rospy
 from unball.msg import StrategyMessage
 from math import pi
@@ -27,7 +25,6 @@ def main():
         rospy.spin()
 
 def receiveStrategyMessage(data):
-    rospy.logdebug('[communication_node Node]Receiving Strategy message')
     i = 1
     #for i in range(3):
     lin_vel[i] = data.lin_vel[i]
@@ -55,6 +52,12 @@ def receiveStrategyMessage(data):
     rospy.loginfo("----")
     if ser.isOpen():
         ser.write(msg)
+
+#    rospy.logdebug('[Communication Node]Receiving Strategy message')
+#    for i in range(3):
+#        lin_vel[i] = data.lin_vel[i]
+#        ang_vel[i] = data.ang_vel[i]
+#        rospy.loginfo('[CommunicationNode]: ' + str((lin_vel, ang_vel)))
 
 def calculateLeftSpeed(i):
     linear_speed_rpm = convertSpeedToRpm(lin_vel[i])
