@@ -83,12 +83,21 @@ void publishRobotsVelocities(ros::Publisher &publisher)
     for (int i = 0; i < 6; i++)
     {
         msg.lin_vel[i] = robot[i].getLinVel();
+        //msg.ang_vel[i] = robot[i].getAngVel();
         msg.ang_vel[i] = robot[i].getAngVel();
-        
+
         ROS_DEBUG("lin_vel: %f\t ang_vel: %f", msg.lin_vel[i], msg.ang_vel[i]);
     }
     
     publisher.publish(msg);
+}
+
+float getAngularVel(int i) {
+    float K = 1;
+    float distance_x = Ball::getInstance().getX() - robot[i].getX();
+    float distance_y = Ball::getInstance().getY() - robot[i].getY();
+    float angle_to_ball = atan2(distance_y,distance_x);
+    return K*(robot[i].getTh() - angle_to_ball);
 }
 
 /**
@@ -97,7 +106,7 @@ void publishRobotsVelocities(ros::Publisher &publisher)
  */
 void receiveMeasurementSystemMessage(const unball::MeasurementSystemMessage::ConstPtr &msg)
 {
-    //ROS_INFO("\n\n[StrategyNode]:ReceiveMeasuermentSystemMessage - Receiving measurement system message");
+    //ROS_INF)O("\n\n[StrategyNode]:ReceiveMeasuermentSystemMessage - Receiving measurement system message");
     
     for (int i = 0; i < 6; i++)
     {
