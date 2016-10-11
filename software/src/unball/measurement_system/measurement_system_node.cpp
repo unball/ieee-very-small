@@ -95,12 +95,12 @@ void receiveVisionMessage(const unball::VisionMessage::ConstPtr &msg_v)
         message.y[robot_index] = msg_v->y[robot_index];
         message.th[robot_index] = msg_v->th[robot_index];
     }
+    message.ball_x = msg_v->ball_x;
+    message.ball_y = msg_v->ball_y;
     convertPixelsToMeters();
     rotateAxis();
 
     ROS_INFO("Ball: x: %f, y: %f", ball_location[0], ball_location[1]);
-    message.ball_x = msg_v->ball_x;
-    message.ball_y = msg_v->ball_y;
 
     ROS_INFO("\n\n[MeasurementNode]:ReceiveVisionMessage - Sending measurement system message");
 

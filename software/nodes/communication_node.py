@@ -5,21 +5,19 @@ from unball.msg import StrategyMessage
 from math import pi
 import serial
 
-lin_vel = [0,0,0,0,0,0]
-ang_vel = [0,0,0,0,0,0]
+lin_vel = [0.0,0.0,0.0,0.0,0.0,0.0]
+ang_vel = [0.0,0.0,0.0,0.0,0.0,0.0]
 
 R = 0.03
 WHEELS_DISTANCE = 0.075
 
-ser = serial.Serial()
+ser = serial.Serial('/dev/ttyACM1')
 
 def main():
-    rospy.init_node('communication_node', anonymous=True)
+    rospy.init_node('communicati1on_node', anonymous=True)
     rospy.Subscriber('strategy_topic', StrategyMessage, receiveStrategyMessage, queue_size=1)
 
     ser.baudrate = 19200
-    ser.port = '/dev/ttyACM1'
-    ser.open()
 
     while not rospy.is_shutdown():
         rospy.spin()
@@ -27,9 +25,9 @@ def main():
 def receiveStrategyMessage(data):
     i = 1
     #for i in range(3):
-    lin_vel[i] = data.lin_vel[i]
+    lin_vel[i] = data.lin_vel[i]/13.
     ang_vel[i] = data.ang_vel[i]
-    rospy.loginfo(data.lin_vel[i])
+    #rospy.logerr(lin_vel[i])
     # Reference:
     # http://stackoverflow.com/questions/3673428/convert-int-to-ascii-and-back-in-python
             
@@ -43,13 +41,13 @@ def receiveStrategyMessage(data):
     msg = str(unichr(robot_number)) + \
           str(unichr(calculateRightSpeed(i))) + \
           str(unichr(calculateLeftSpeed(i)))
-    log = msg[0]
-    rospy.loginfo(ord(log))
-    log = msg[1]
-    rospy.loginfo(ord(log))
-    log = msg[2]
-    rospy.loginfo(ord(log))
-    rospy.loginfo("----")
+    #log = msg[0]
+    #rospy.logerr(ord(log))
+    #log = msg[1]
+    #rospy.logerr(ord(log))
+    #log = msg[2]
+    #rospy.logerr(ord(log))
+    #rospy.logerr("----")
     if ser.isOpen():
         ser.write(msg)
 
@@ -57,7 +55,7 @@ def receiveStrategyMessage(data):
 #    for i in range(3):
 #        lin_vel[i] = data.lin_vel[i]
 #        ang_vel[i] = data.ang_vel[i]
-#        rospy.loginfo('[CommunicationNode]: ' + str((lin_vel, ang_vel)))
+#        rospy.logerror('[CommunicationNode]: ' + str((lin_vel, ang_vel)))
 
 def calculateLeftSpeed(i):
     linear_speed_rpm = convertSpeedToRpm(lin_vel[i])
