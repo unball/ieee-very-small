@@ -81,9 +81,9 @@ void Strategy::run()
 {
     if (state_estimator_.getGameState() != WorldState::GAME_PAUSED)
     {
-	    state_estimator_.update();
-        updatePlayers();
-        trajectory_controller_.run();
+      state_estimator_.update();
+      updatePlayers();
+      trajectory_controller_.run();
     }
     else
     {
@@ -108,20 +108,20 @@ void Strategy::updatePlayers()
        }
        else if (trajectory_controller_.getPlayer(i)->getBehaviour() == GOALKEEPER)
        {
-            //if (Goals::getInstance().isBallInFriendlyGoalArea())
-            //    trajectory_controller_.updatePlayer(i,GOALKEEPER_KICKER);
+            if (Goals::getInstance().isBallInFriendlyGoalArea())
+                trajectory_controller_.updatePlayer(i,GOALKEEPER_KICKER);
        }
        else if (trajectory_controller_.getPlayer(i)->getBehaviour() == GOALKEEPER_KICKER)
        {
-       //     if (not Goals::getInstance().isBallInFriendlyGoalArea())
-       //         trajectory_controller_.updatePlayer(i,INITIAL_GOALKEEPER);
+            if (not Goals::getInstance().isBallInFriendlyGoalArea())
+                trajectory_controller_.updatePlayer(i,INITIAL_GOALKEEPER);
        }
        else if (trajectory_controller_.getPlayer(i)->getBehaviour() == KICKER_PLAYER)
        {
-            // if (not hasBall(i))
-            //     trajectory_controller_.updatePlayer(i,ASSISTENT_PLAYER);
+             if (not hasBall(i))
+                 trajectory_controller_.updatePlayer(i,ASSISTENT_PLAYER);
        }
-       /*else if (trajectory_controller_.getPlayer(i)->getBehaviour() == ASSISTENT_PLAYER)
+       else if (trajectory_controller_.getPlayer(i)->getBehaviour() == ASSISTENT_PLAYER)
        {
             if (isThere(KICKER_PLAYER))
             {
@@ -134,7 +134,7 @@ void Strategy::updatePlayers()
                 else
                     trajectory_controller_.updatePlayer(i,ASSISTENT_PLAYER);
             }
-       }*/
+       }
     }
 }
 

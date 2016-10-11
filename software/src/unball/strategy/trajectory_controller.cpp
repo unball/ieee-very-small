@@ -93,8 +93,7 @@ void TrajectoryController::turn(int robot_number, float angle)
     const float ANG_KP = 0.008;
     const float ANG_KD = 0;
 
-    //HACK: issue80 - Should be: angle - robot.getTh()
-    float angle_error = math::reduceAngle(robot[robot_number].getTh() - angle);
+    float angle_error = math::reduceAngle(robot[robot_number].getTh());
     float angle_error_d = angle_error - angle_error_prev_;
     float ang_vel = ANG_KP*angle_error + ANG_KD*angle_error_d; // PD control
     angle_error_prev_ = angle_error;
