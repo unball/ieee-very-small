@@ -35,10 +35,10 @@ void move(int speed, String motor) {
     PWM = PWMB;    
   }
   
-  speed = map(speed,-100,100,-255,255);
-  int speed_magnitude = abs(speed);
-  int speed_direction = (speed > 0 ? 1:0);
-  move(speed_magnitude, speed_direction, PWM, pin1, pin2);
+  int power = map(power,-100,100,-255,255);
+  int power_magnitude = abs(power);
+  int motor_direction = (power > 0 ? 1:0);
+  move(power_magnitude, motor_direction, PWM, pin1, pin2);
 }
 
 void move(int speed, int direction, int PWM, int IN1, int IN2) {

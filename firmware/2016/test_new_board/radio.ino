@@ -27,6 +27,25 @@ void radioSetup() {
   radio.startListening();
 }
 
+int getMessage(int i) {
+  return msg_from_central[i];
+}
+
+void getMessages(int *msgs) {
+  int i;
+  for (i=0; i<RECEIVED_MESSAGE_SIZE; i++)
+    msgs[i] = msg_from_central[i];
+}
+
+void checkIfRadioIsPVariant() {
+  if (radio.isPVariant()) {
+    Serial.println("versao nrf24l01+");
+  }
+  else {
+    Serial.println("it is not");
+  }
+}
+
 void setChannel() { 
   radio.stopListening();
   
@@ -42,6 +61,10 @@ void setPipes(int new_pipe) {
   my_pipe = new_pipe;
   radio.openReadingPipe(1,pipe[my_pipe]);
   radio.openWritingPipe(pipe[my_pipe+1]);   
+}
+
+bool isStartingPipe() {
+  return my_pipe == starting_pipe;
 }
 
 void send(int *msg) {
@@ -65,19 +88,5 @@ bool receive() {
     return true;
   }
   return false;
-}
-
-int getMessage(int i) {
-  return msg_from_central[i];
-}
-
-void getMessages(int *msgs) {
-  int i;
-  for (i=0; i<RECEIVED_MESSAGE_SIZE; i++)
-    msgs[i] = msg_from_central[i];
-}
-
-bool isStartingPipe() {
-  return my_pipe == starting_pipe;
 }
 

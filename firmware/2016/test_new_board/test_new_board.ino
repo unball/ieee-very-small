@@ -4,35 +4,47 @@
 #define MOTOR_A "motorA"
 #define MOTOR_B "motorB"
 
+int motor_power = 0;
+
 int LED = 6;
-bool has_received_message;
 
 void setup() {
   radioSetup();
   motorsSetup();
 }
 
-void sendMessageBackToCentral() {
+void testCommunicationWithCentral() {
+  bool has_received_message = receive();
+  if (has_received_message) {
     int send_message[2];
     getMessages(send_message);
-    send(send_message);   
+    send(send_message);      
+  }
 }
 
-void setSpeeds() {
-  move(100, MOTOR_A);
-  move(100, MOTOR_B);
+void testRadio() {
+  checkIfRadioIsPVariant();
+  testCommunicationWithCentral();
+}
+
+
+int sign = 1;
+void defineDirection() {
+  if (abs(motor_power) > 100)
+    sign = -sign;
+}
+
+void testMotors() {
+  defineDirection();
+  motor_power += sign;
+  
+  move(motor_power, MOTOR_A);
+  move(motor_power, MOTOR_B);  
 }
 
 void loop() {
-  has_received_message = receive();
-
-  setSpeeds();
-   
-  if (has_received_message){
-    if (isStartingPipe())
-      setChannel();
-  }
+  testRadio();
+  testMotors();
   
-  delay(20);
-  has_received_message = false;
+  delay(10);
 }
