@@ -4,14 +4,13 @@
 
 #include <SPI.h>
 
-int LED = 6;
 bool has_received_message;
 
 void setup() {
+  Serial.begin(9600);
   radioSetup();
   motorsSetup();
-  IMUSetup();
-  pinMode(LED, OUTPUT);
+  //IMUSetup();
 }
 
 void sendMessageBackToCentral() {
@@ -21,21 +20,22 @@ void sendMessageBackToCentral() {
 }
 
 void setSpeeds() {
-  setControlReference(MOTOR_A, getMessage(0));
-  setControlReference(MOTOR_B, getMessage(1));
+  move(MOTOR_A, getMessage(0));
+  move(MOTOR_B, getMessage(1));
+  //setControlReference(MOTOR_A, getMessage(0));
+  //setControlReference(MOTOR_B, getMessage(1));
 }
 
 void loop() {
   has_received_message = receive();
-  digitalWrite(LED, LOW);
-
+  Serial.println(getMessage(0));
   if (has_received_message){
       sendMessageBackToCentral();
-      digitalWrite(LED, HIGH);
       setSpeeds();
+      Serial.println("aloha");
   }
 
-  controlMotors();
+  //controlMotors();
   
   delay(20);
   has_received_message = false;

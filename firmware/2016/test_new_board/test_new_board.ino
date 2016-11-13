@@ -49,8 +49,8 @@ void testEncoders() {
 }
 
 void loop() {
-  //testRadio();
-  //testMotors();
+  testRadio();
+  testMotors();
   testEncoders();
   
   delay(10);
