@@ -1,5 +1,7 @@
-int channelA = 3; //TX
-int channelB = 2; //RX
+#include <time.h>
+
+int channelA = 1; //TX
+int channelB = 0; //RX
 
 volatile unsigned long contadorA = 0;
 volatile unsigned long contadorB = 0;
@@ -13,12 +15,21 @@ void encodersSetup() {
   pinMode(channelB, INPUT);
 }
 
-void estimateSpeeds(int *speedA, int *speedB) {
-  encoder();
-  int contadores[2] = {contadorA, contadorB};
-  send(contadores);
-  *speedA = estimateSpeed(contadorA);
-  *speedB = estimateSpeed(contadorB);
+void soma(){
+  contador++;
+}
+
+void interruptEncoderPins(int channel, volatile unsigned long &contador_i) {
+  contador = 0;
+  attachInterrupt(channel, soma, RISING);
+  delay(100);
+  detachInterrupt(channel);
+  contador_i = contador;  
+}
+
+void encoder() {
+  interruptEncoderPins(channelA, contadorA);
+  interruptEncoderPins(channelB, contadorB);
 }
 
 /**
@@ -31,19 +42,9 @@ int estimateSpeed(unsigned long encoderPulsesDiff) {
   return (int)(encoderPulsesDiff/(float)ENCODER_NUM_PULSES)*(60.0/dt);
 }
 
-void interruptEncoderPins(int channel, volatile unsigned long &contador_i) {
-  contador = 0;
-  attachInterrupt(channel, soma, RISING);
-  delay(100);
-  detachInterrupt(channel);
-  contador_i = contador;  
-}
-
-void soma(){
-  contador++;
-}
-
-void encoder() {
-  interruptEncoderPins(channelA, contadorA);
-  interruptEncoderPins(channelB, contadorB);
+void estimateSpeeds(int *speedA, int *speedB) {
+  encoder();
+  int contadores[2] = {contadorA, contadorB};
+  *speedA = estimateSpeed(contadorA);
+  *speedB = estimateSpeed(contadorB);
 }

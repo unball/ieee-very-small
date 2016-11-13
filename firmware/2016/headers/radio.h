@@ -1,5 +1,6 @@
-/*Radio pins depend on the Arduino used*/
-RF24 radio(10,A0);    //arduino pro micro
+#include "RF24.h"
+
+RF24 radio(A1,A0);    //arduino pro micro
 //RF24 radio(3, 2);   //arduino nano
 
 /*The starting LISTENING pipe defines the "lost robots" zone. The communication between
@@ -17,6 +18,23 @@ byte pipe[][6] = {"1Node","2Node","3Node","4Node"};
 int send_msg[SEND_MESSAGE_SIZE];  //The message the robot will send to the central
 #define RECEIVED_MESSAGE_SIZE 2
 int msg_from_central[RECEIVED_MESSAGE_SIZE] = {0,0};
+
+/* 
+ * Listening Pipe <- new_pipe
+ * Writting Pipe <- new_pipe + 1
+ */
+void setPipes(int new_pipe) {
+  my_pipe = new_pipe;
+  radio.openReadingPipe(1,pipe[my_pipe]);
+  radio.openWritingPipe(pipe[my_pipe+1]);   
+}
+
+void setChannel() { 
+  radio.stopListening();
+  
+  setPipes(msg_from_central[0]);
+  radio.startListening();  
+}
 
 void radioSetup() {
   radio.begin();
@@ -44,23 +62,6 @@ void checkIfRadioIsPVariant() {
   else {
     Serial.println("it is not");
   }
-}
-
-void setChannel() { 
-  radio.stopListening();
-  
-  setPipes(msg_from_central[0]);
-  radio.startListening();  
-}
-
-/* 
- * Listening Pipe <- new_pipe
- * Writting Pipe <- new_pipe + 1
- */
-void setPipes(int new_pipe) {
-  my_pipe = new_pipe;
-  radio.openReadingPipe(1,pipe[my_pipe]);
-  radio.openWritingPipe(pipe[my_pipe+1]);   
 }
 
 bool isStartingPipe() {

@@ -1,8 +1,8 @@
-#include <SPI.h>
-#include "RF24.h"
+#include <control.h>
+#include <IMU.h>
+#include <radio.h>
 
-#define MOTOR_A "motorA"
-#define MOTOR_B "motorB"
+#include <SPI.h>
 
 int LED = 6;
 bool has_received_message;
@@ -11,7 +11,7 @@ void setup() {
   radioSetup();
   motorsSetup();
   IMUSetup();
-  pinMode(6, OUTPUT);
+  pinMode(LED, OUTPUT);
 }
 
 void sendMessageBackToCentral() {
@@ -20,16 +20,7 @@ void sendMessageBackToCentral() {
     send(send_message);   
 }
 
-void getEncoderValues() {
-    int send_message[2];
-    send_message[0] = getMotorSpeed("motorA");
-    send_message[1] = getMotorSpeed("motorB");
-    send(send_message);  
-}
-
 void setSpeeds() {
-  //move(getMessage(0), MOTOR_A);
-  //move(getMessage(1), MOTOR_B);
   setControlReference(MOTOR_A, getMessage(0));
   setControlReference(MOTOR_B, getMessage(1));
 }

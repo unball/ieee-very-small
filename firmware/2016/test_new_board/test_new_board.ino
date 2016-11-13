@@ -1,8 +1,7 @@
-#include <SPI.h>
-#include "RF24.h"
+#include <motors.h>
+#include <radio.h>
 
-#define MOTOR_A "motorA"
-#define MOTOR_B "motorB"
+#include <SPI.h>
 
 int motor_power = 0;
 
@@ -27,7 +26,6 @@ void testRadio() {
   testCommunicationWithCentral();
 }
 
-
 int sign = 1;
 void defineDirection() {
   if (abs(motor_power) > 100)
@@ -38,8 +36,8 @@ void testMotors() {
   defineDirection();
   motor_power += sign;
   
-  move(motor_power, MOTOR_A);
-  move(motor_power, MOTOR_B);  
+  move(MOTOR_A, motor_power);
+  move(MOTOR_B, motor_power);  
 }
 
 void loop() {
