@@ -5,9 +5,9 @@ int PWMA = 9;
 int AIN1 = 8;
 int AIN2 = 7;
 
-int PWMB = 10;
-int BIN1 = 4;
-int BIN2 = 5;
+int PWMB = 5;
+int BIN1 = A3;
+int BIN2 = 4;
 
 int STDBY = 6;
 

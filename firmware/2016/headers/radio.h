@@ -1,6 +1,6 @@
 #include "RF24.h"
 
-RF24 radio(A1,A0);    //arduino pro micro
+RF24 radio(10,A0);    //arduino pro micro
 //RF24 radio(3, 2);   //arduino nano
 
 /*The starting LISTENING pipe defines the "lost robots" zone. The communication between

@@ -1,4 +1,4 @@
-#include <motors.h>
+#include <control.h>
 #include <radio.h>
 
 #include <SPI.h>
@@ -10,6 +10,7 @@ int LED = 6;
 void setup() {
   radioSetup();
   motorsSetup();
+  encodersSetup();
 }
 
 void testCommunicationWithCentral() {
@@ -40,9 +41,17 @@ void testMotors() {
   move(MOTOR_B, motor_power);  
 }
 
+void testEncoders() {
+  int speed1, speed2;
+  estimateSpeeds(&speed1, &speed2);
+  Serial.print("SpeedA = "); Serial.print(speed1);
+  Serial.print(", SpeedB = "); Serial.println(speed2); 
+}
+
 void loop() {
-  testRadio();
-  testMotors();
+  //testRadio();
+  //testMotors();
+  testEncoders();
   
   delay(10);
 }

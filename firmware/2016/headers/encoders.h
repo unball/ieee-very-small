@@ -1,7 +1,7 @@
 #include <time.h>
 
-int channelA = 1; //TX
-int channelB = 0; //RX
+int channelA = 3; //TX = 3
+int channelB = 2; //RX = 2
 
 volatile unsigned long contadorA = 0;
 volatile unsigned long contadorB = 0;
@@ -38,13 +38,13 @@ void encoder() {
  * @return Speed in RPM.
  */
 int estimateSpeed(unsigned long encoderPulsesDiff) {
-  float dt = getTimeInterval();
+  //float dt = getTimeInterval();
+  float dt = 0.1;
   return (int)(encoderPulsesDiff/(float)ENCODER_NUM_PULSES)*(60.0/dt);
 }
 
 void estimateSpeeds(int *speedA, int *speedB) {
   encoder();
-  int contadores[2] = {contadorA, contadorB};
-  *speedA = estimateSpeed(contadorA);
-  *speedB = estimateSpeed(contadorB);
+  *speedA = contadorA;//estimateSpeed(contadorA);
+  *speedB = contadorB;//estimateSpeed(contadorB);
 }
