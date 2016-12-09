@@ -1,15 +1,7 @@
+#include <pins.h>
+
 #define MOTOR_A "motorA"
 #define MOTOR_B "motorB"
-
-int PWMA = 9;
-int AIN1 = 8;
-int AIN2 = 7;
-
-int PWMB = 5;
-int BIN1 = A3;
-int BIN2 = 4;
-
-int STDBY = 6;
 
 void setMotorPin(int PWM, int IN1, int IN2) {  
   pinMode(PWM, OUTPUT);

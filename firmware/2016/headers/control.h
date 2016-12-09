@@ -1,3 +1,4 @@
+#include <pins.h>
 #include <motors.h>
 #include <encoders.h>
 

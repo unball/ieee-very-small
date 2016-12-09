@@ -1,7 +1,5 @@
+#include <pins.h>
 #include <time.h>
-
-int channelA = 3; //TX = 3
-int channelB = 2; //RX = 2
 
 volatile unsigned long contadorA = 0;
 volatile unsigned long contadorB = 0;
