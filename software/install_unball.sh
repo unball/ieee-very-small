@@ -64,7 +64,7 @@ install_dependency() {
 }
 
 install_ros(){
-  echo "Starting ROS-indigo installation"
+  echo "Starting ROS-kinetic installation"
   sudo sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list'
   sudo apt-key adv --keyserver hkp://ha.pool.sks-keyservers.net:80 --recv-key 421C365BD9FF1F717815A3895523BAEEB01FA116
 
@@ -73,7 +73,7 @@ install_ros(){
   sudo rosdep init
   rosdep update
   echo "# Sourcing ROS environment variables" >> ~/.bashrc
-  echo "source /opt/ros/indigo/setup.bash" >> ~/.bashrc
+  echo "source /opt/ros/kinetic/setup.bash" >> ~/.bashrc
   mkdir -p ~/catkin_ws/src; cd ~/catkin_ws/src; catkin_init_workspace
   echo "# Sourcing catkin environment variables" >> ~/.bashrc
   echo "source ~/catkin_ws/devel/setup.sh" >> ~/.bashrc
