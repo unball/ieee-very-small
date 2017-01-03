@@ -1,5 +1,13 @@
 #!/bin/bash
-function program_is_installed {
+
+ROS_FOLDER=/opt/ros/kinetic/
+
+configld(){
+    sudo echo "$ROS_FOLDER"/lib > /etc/ld.so.conf.d/ros.conf
+    sudo ldconfig -v
+}
+
+program_is_installed() {
   # set to 1 initially
   local return_=1
   # set to 0 if not found
@@ -8,31 +16,10 @@ function program_is_installed {
   echo "$return_"
 }
 
-function verify_opencv {
-    if pkg-config --cflags opencv; then
-        echo "opencv $(echo_pass)"
-    else
-        printf "\e[93mLight\e[1m[WARNING]\e[21m Package not found"
-        printf "\e[0m\n"
-        printf "\e[1m Installing"
-        printf "\e[0m\n"
-        OPENCV=2.4.13
-        cd ~/
-        wget https://github.com/Itseez/opencv/archive/$OPENCV.zip
-        unzip $OPENCV
-        cd opencv-$OPENCV
-        mkdir build
-        cd build
-        cmake -D CMAKE_BUILD_TYPE=RELEASE -D CMAKE_INSTALL_PREFIX=/usr/local ..
-        make -j $nproc
-        sudo make install
-        echo "Finished"
-    fi
-}
 # display a message in red with a cross by it
 # example
 # echo echo_fail "No"
-function echo_fail {
+echo_fail(){
   # echo first argument in red
   printf "\e[31m✘ ${1}"
   # reset colours back to normal
@@ -42,14 +29,14 @@ function echo_fail {
 # display a message in green with a tick by it
 # example
 # echo echo_fail "Yes"
-function echo_pass {
+echo_pass(){
   # echo first argument in green
   printf "\e[32m✔ ${1}"
   # reset colours back to normal
   printf "\033[0m"
 }
 
-function echo_if {
+echo_if(){
   if [ $1 == 1 ]; then
     echo_pass $2
   else
@@ -74,6 +61,23 @@ install_dependency() {
       echo "Done installing $i!"
     fi
   done
+}
+
+install_ros(){
+  echo "Starting ROS-indigo installation"
+  sudo sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list'
+  sudo apt-key adv --keyserver hkp://ha.pool.sks-keyservers.net:80 --recv-key 421C365BD9FF1F717815A3895523BAEEB01FA116
+
+  sudo apt-get update
+  sudo apt-get install ros-kinetic-desktop-full
+  sudo rosdep init
+  rosdep update
+  echo "# Sourcing ROS environment variables" >> ~/.bashrc
+  echo "source /opt/ros/indigo/setup.bash" >> ~/.bashrc
+  mkdir -p ~/catkin_ws/src; cd ~/catkin_ws/src; catkin_init_workspace
+  echo "# Sourcing catkin environment variables" >> ~/.bashrc
+  echo "source ~/catkin_ws/devel/setup.sh" >> ~/.bashrc
+  echo "Finished"
 }
 
 devtools=(
@@ -105,17 +109,7 @@ python_dev=(
     "python-qt4-gl"
 )
 
-freenect_libs=(
-    "freeglut3-dev"
-    "libxmu-dev"
-    "libxi-dev"
-    "libusb-1.0-0-dev"
-)
-
-freenect_ros=(
-    "ros-indigo-freenect-camera"
-    "ros-indigo-freenect-launch"
-)
+[ `whoami` = root ] || { sudo "$0" "$@"; exit $?; }
 
 install_dependency "Developer tools and packages" devtools[@]
 install_dependency "GTK development library" gtk[@]
@@ -127,48 +121,7 @@ rosinstall_=$(program_is_installed roscore)
 
 
 if [ $rosinstall_ == 0 ]; then
-    echo "Starting ROS-indigo installation"
-    sudo sh -c 'echo "deb http://packages.ros.org/ros/ubuntu trusty main" > /etc/apt/sources.list.d/ros-latest.list'
-    wget https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -O - | sudo apt-key add -
-
-    sudo apt-get update
-    sudo apt-get install ros-indigo-desktop-full
-    sudo rosdep init
-    rosdep update
-    echo "# Sourcing ROS environment variables" >> ~/.bashrc
-    echo "source /opt/ros/indigo/setup.bash" >> ~/.bashrc
-    mkdir -p ~/catkin_ws/src && cd ~/catkin_ws/src && catkin_init_workspace
-    echo "# Sourcing catkin environment variables" >> ~/.bashrc
-    echo "source ~/catkin_ws/devel/setup.sh" >> ~/.bashrc
-    echo "Finished"
+  install_ros
+  configld
 fi
 
-echo "$(verify_opencv)"
-
-git clone https://github.com/OpenKinect/libfreenect.git ~/libfreenect
-cd ~/libfreenect
-mkdir build
-cd build
-cmake CMAKE_INSTALL_PREFIX=/usr/local ..
-make -j $(nproc)
-sudo make install
-sudo ldconfig
-sudo adduser $USER video
-echo "# ATTR{product}=="Xbox NUI Motor"
-SUBSYSTEM=="usb", ATTR{idVendor}=="045e", ATTR{idProduct}=="02b0", MODE="0666"
-# ATTR{product}=="Xbox NUI Audio"
-SUBSYSTEM=="usb", ATTR{idVendor}=="045e", ATTR{idProduct}=="02ad", MODE="0666"
-# ATTR{product}=="Xbox NUI Camera"
-SUBSYSTEM=="usb", ATTR{idVendor}=="045e", ATTR{idProduct}=="02ae", MODE="0666"
-# ATTR{product}=="Xbox NUI Motor"
-SUBSYSTEM=="usb", ATTR{idVendor}=="045e", ATTR{idProduct}=="02c2", MODE="0666"
-# ATTR{product}=="Xbox NUI Motor"
-SUBSYSTEM=="usb", ATTR{idVendor}=="045e", ATTR{idProduct}=="02be", MODE="0666"
-# ATTR{product}=="Xbox NUI Motor"
-SUBSYSTEM=="usb", ATTR{idVendor}=="045e", ATTR{idProduct}=="02bf", MODE="0666"" >> 51-kinect.rules
-sudo mv 51-kinect.rules /etc/udev/rules.d/51-kinect.rules
-
-install_dependency "Freenect ROS packages" freenect_ros[@]
-
-printf "\e[94m\e[1mFinished\033[0m\n"
-install_dependency "Freenect Libs" freenect_libs[@]
