@@ -70,7 +70,8 @@ install_ros(){
   echo "# Sourcing ROS environment variables" >> /home/$user_/.bashrc
   echo "source /opt/ros/kinetic/setup.bash" >> /home/$user_/.bashrc
   source /home/$user_/.bashrc
-  mkdir -p /home/$user_/catkin_ws/src; cd /home/$user_/catkin_ws/src; catkin_init_workspace;
+  mkdir -p /home/$user_/catkin_ws/src; cd /home/$user_/catkin_ws/src; catkin_init_workspace; 
+  cd ..; catkin_make;
   echo "# Sourcing catkin environment variables" >> /home/$user_/.bashrc
   echo "source ~/catkin_ws/devel/setup.sh" >> /home/$user_/.bashrc
   source /home/$user_/.bashrc
