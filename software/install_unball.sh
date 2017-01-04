@@ -64,13 +64,13 @@ install_ros(){
   sudo apt-key adv --keyserver hkp://ha.pool.sks-keyservers.net:80 --recv-key 421C365BD9FF1F717815A3895523BAEEB01FA116
 
   sudo apt-get update
-  sudo apt-get install ros-kinetic-desktop-full
+  sudo apt-get -y --force-yes install ros-kinetic-desktop-full
   sudo rosdep init
   rosdep update
   echo "# Sourcing ROS environment variables" >> /home/$user_/.bashrc
   echo "source /opt/ros/kinetic/setup.bash" >> /home/$user_/.bashrc
   source /home/$user_/.bashrc
-  mkdir -p /home/$user_/catkin_ws/src; cd /home/$user_/catkin_ws/src; catkin_init_workspace; catkin_init_workspace
+  mkdir -p /home/$user_/catkin_ws/src; cd /home/$user_/catkin_ws/src; catkin_init_workspace;
   echo "# Sourcing catkin environment variables" >> /home/$user_/.bashrc
   echo "source ~/catkin_ws/devel/setup.sh" >> /home/$user_/.bashrc
   source /home/$user_/.bashrc
@@ -114,11 +114,8 @@ install_dependency "GTK development library" gtk[@]
 install_dependency "Video I/O packages" video_iopack[@]
 install_dependency "Python 2.7 dev tools" python_dev[@]
 
-if [[ -x "$(command -v roscore)" ]];then
+if ! [[ -x "$(command -v roscore)" ]];then
   echo $(echo_pass 'ros')
 else
   install_ros
 fi
-
-
-
