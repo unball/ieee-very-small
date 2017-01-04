@@ -73,10 +73,12 @@ install_ros(){
   sudo rosdep init
   rosdep update
   echo "# Sourcing ROS environment variables" >> ~/.bashrc
-  echo "source /opt/ros/kinetic/setup.bash" >> ~/.bashrc
+  echo "source /opt/ros/ kinetic/setup.bash" >> ~/.bashrc
+  source ~/.bashrc
   mkdir -p ~/catkin_ws/src; cd ~/catkin_ws/src; catkin_init_workspace
   echo "# Sourcing catkin environment variables" >> ~/.bashrc
   echo "source ~/catkin_ws/devel/setup.sh" >> ~/.bashrc
+  source ~/.bashrc
   echo "Finished"
 }
 
