@@ -7,13 +7,8 @@ configld(){
     sudo ldconfig -v
 }
 
-program_is_installed() {
-  # set to 1 initially
-  local return_=1
-  # set to 0 if not found
-  type $1 >/dev/null 2>&1 || { local return_=0; }
-  # return value
-  echo "$return_"
+program_is_installed () {
+  type "$1" &> /dev/null ;
 }
 
 # display a message in red with a cross by it
@@ -72,13 +67,13 @@ install_ros(){
   sudo apt-get install ros-kinetic-desktop-full
   sudo rosdep init
   rosdep update
-  echo "# Sourcing ROS environment variables" >> ~/.bashrc
-  echo "source /opt/ros/ kinetic/setup.bash" >> ~/.bashrc
-  source ~/.bashrc
-  mkdir -p ~/catkin_ws/src; cd ~/catkin_ws/src; catkin_init_workspace
-  echo "# Sourcing catkin environment variables" >> ~/.bashrc
-  echo "source ~/catkin_ws/devel/setup.sh" >> ~/.bashrc
-  source ~/.bashrc
+  echo "# Sourcing ROS environment variables" >> /home/$user_/bashrc
+  echo "source /opt/ros/ kinetic/setup.bash" >> /home/$user_/bashrc
+  source /home/$user_/.bashrc
+  mkdir -p /home/$user_/catkin_ws/src; cd /home/$user_/catkin_ws/src; catkin_init_workspace
+  echo "# Sourcing catkin environment variables" >> /home/$user_/bashrc
+  echo "source ~/catkin_ws/devel/setup.sh" >> /home/$user_/bashrc
+  source /home/$user_/bashrc
   echo "Finished"
 }
 
@@ -111,19 +106,19 @@ python_dev=(
     "python-qt4-gl"
 )
 
-[ `whoami` = root ] || { sudo "$0" "$@"; exit $?; }
+user_=$(whoami)
 
+source /home/$user_/.bashrc
 install_dependency "Developer tools and packages" devtools[@]
 install_dependency "GTK development library" gtk[@]
 install_dependency "Video I/O packages" video_iopack[@]
 install_dependency "Python 2.7 dev tools" python_dev[@]
 
-echo "ros $(echo_if $(program_is_installed roscore))"
-rosinstall_=$(program_is_installed roscore)
-
-
-if [ $rosinstall_ == 0 ]; then
+if [[ -x "$(command -v roscore)" ]];then
+  echo $(echo_pass 'ros')
+else
   install_ros
-  configld
 fi
+
+
 
