@@ -116,18 +116,19 @@ python_dev=(
 )
 
 user_=$(whoami)
-
+install_folder=$(pwd)
 source /home/$user_/.bashrc
 install_dependency "Developer tools and packages" devtools[@]
 install_dependency "GTK development library" gtk[@]
 install_dependency "Video I/O packages" video_iopack[@]
 install_dependency "Python 2.7 dev tools" python_dev[@]
 
-if ! [[ -x "$(command -v roscore)" ]];then
+if [[ -x "$(command -v roscore)" ]];then
   echo $(echo_pass 'ros')
 else
   install_ros
   configure_catkin
 fi
 
-configld
+#configld
+$install_folder/./install_vision.sh

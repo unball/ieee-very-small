@@ -7,7 +7,7 @@ CONTRIB=opencv_contrib
 INSTALL_DIR=installdir
 OPENCV_VERSION=3.1.0
 NORMALCOLOR="\e[0m\n"
-ROS_FOLDER=/opt/ros/kinetic/
+ROS_FOLDER=/opt/ros/kinetic
 VISION_ROOT=""
 
 isprograminstalled() {
@@ -20,24 +20,18 @@ isprograminstalled() {
 }
 
 downloadandextract(){
-    if pkg-config --cflags $OPENCV; then
-        printf "\e[1m\e[34m Downloading Necessary Files"
-        printf $NORMALCOLOR
-        OPENCV_REPO=https://github.com/opencv/opencv/
-        CONTRIB_REPO=https://github.com/opencv/opencv_contrib/ 
-        SOURCE_TAR=source_code.tar.gz
-        CONTRIB_TAR=contrib.tar.gz
-        wget $OPENCV_REPO"archive/"$OPENCV_VERSION.tar.gz -O $SOURCE_TAR 
-        wget $CONTRIB_REPO"/archive/"$OPENCV_VERSION.tar.gz -O $CONTRIB_TAR
-        printf "\e[1m\e[34m Downloaded"
-        printf $NORMALCOLOR
-        tar -xzf $SOURCE_TAR; tar -xzf $CONTRIB_TAR
-        rm $SOURCE_TAR; rm $CONTRIB_TAR
-    else
-        printf "\e[91m\e[1m[ERROR]Opencv already installed, exiting"
-        printf $NORMALCOLOR
-        exit
-    fi
+    printf "\e[1m\e[34m Downloading Necessary Files"
+    printf $NORMALCOLOR
+    OPENCV_REPO=https://github.com/opencv/opencv/
+    CONTRIB_REPO=https://github.com/opencv/opencv_contrib/ 
+    SOURCE_TAR=source_code.tar.gz
+    CONTRIB_TAR=contrib.tar.gz
+    wget $OPENCV_REPO"archive/"$OPENCV_VERSION.tar.gz -O $SOURCE_TAR 
+    wget $CONTRIB_REPO"/archive/"$OPENCV_VERSION.tar.gz -O $CONTRIB_TAR
+    printf "\e[1m\e[34m Downloaded"
+    printf $NORMALCOLOR
+    tar -xzf $SOURCE_TAR; tar -xzf $CONTRIB_TAR
+    rm $SOURCE_TAR; rm $CONTRIB_TAR
 }
 
 installopencv(){ 
@@ -78,6 +72,7 @@ cd $INSTALL_DIR
 downloadandextract
 installopencv
 configld
+mv $ROS_FOLDER/lib/pkgconfig/opencv-3.1.0-dev.pc $ROS_FOLDER/lib/pkgconfig/opencv.pc
 cd $VISION_ROOT
 rm -R $INSTALL_DIR
 
