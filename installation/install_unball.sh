@@ -129,5 +129,5 @@ else
   install_ros
   configure_catkin
 fi
-
+export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:/opt/ros/kinetic/lib/pkgconfig
 sudo cp $ROS_FOLDER/lib/pkgconfig/opencv-3.1.0-dev.pc $ROS_FOLDER/lib/pkgconfig/opencv.pc
