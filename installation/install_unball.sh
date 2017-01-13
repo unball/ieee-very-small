@@ -3,8 +3,8 @@
 ROS_FOLDER=/opt/ros/kinetic/
 
 configld(){
-    sudo echo "$ROS_FOLDER"/lib > /etc/ld.so.conf.d/ros.conf
-    sudo ldconfig -v
+  sudo echo "$ROS_FOLDER"/lib > /etc/ld.so.conf.d/ros.conf
+  sudo ldconfig -v
 }
 
 program_is_installed () {
@@ -69,7 +69,7 @@ install_ros(){
   rosdep update
   echo "# Sourcing ROS environment variables" >> /home/$user_/.bashrc
   echo "source /opt/ros/kinetic/setup.bash" >> /home/$user_/.bashrc
-  
+  configld
   echo "Finished"
 }
 
@@ -130,5 +130,4 @@ else
   configure_catkin
 fi
 
-#configld
-$install_folder/./install_vision.sh
+sudo cp $ROS_FOLDER/lib/pkgconfig/opencv-3.1.0-dev.pc $ROS_FOLDER/lib/pkgconfig/opencv.pc

@@ -72,7 +72,7 @@ cd $INSTALL_DIR
 downloadandextract
 installopencv
 configld
-mv $ROS_FOLDER/lib/pkgconfig/opencv-3.1.0-dev.pc $ROS_FOLDER/lib/pkgconfig/opencv.pc
+sudo cp $ROS_FOLDER/lib/pkgconfig/opencv-3.1.0-dev.pc $ROS_FOLDER/lib/pkgconfig/opencv.pc
 cd $VISION_ROOT
 rm -R $INSTALL_DIR
 
