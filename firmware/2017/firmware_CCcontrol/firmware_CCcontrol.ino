@@ -47,9 +47,9 @@ int CS = 10; //pro micro
 RF24 radio(CE,CS);                        // Set up nRF24L01 radio on SPI bus plus pins 3 & 2 for nano
 
 
-const uint64_t pipes[2] = { 0xABCDABCD71LL, 0x544d52687CLL };   // Radio pipe addresses for the 2 nodes to communicate.
+const uint64_t pipes[4] = { 0xABCDABCD71LL, 0x544d52687CLL, 0x644d52687CLL, 0x744d52687CLL};
 uint64_t pipeEnvia=pipes[0];
-uint64_t pipeRecebe=pipes[1];
+uint64_t pipeRecebe=pipes[3];
 
 
 struct dataStruct{
