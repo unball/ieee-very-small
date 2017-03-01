@@ -19,11 +19,11 @@
 #include <unball/MeasurementSystemMessage.h>
 #include <opencv2/opencv.hpp>
 
-const float field_x_lenght = 1.50;
-const float field_y_lenght = 1.30;
+const float field_x_length = 1.50;
+const float field_y_length = 1.30;
 
-const float camera_x_lenght = 640;
-const float camera_y_lenght = 480;
+const float camera_x_length = 640;
+const float camera_y_length = 480;
 
 void receiveVisionMessage(const unball::VisionMessage::ConstPtr &msg_s);
 void rotateAxis();
@@ -86,17 +86,17 @@ void receiveVisionMessage(const unball::VisionMessage::ConstPtr &msg_v)
 }
 
 void convertPixelsToMeters(){
-    auto x_conversion = field_x_lenght / camera_x_lenght;
-    auto y_conversion = field_y_lenght / camera_y_lenght;
+    auto x_conversion = field_x_length / camera_x_length;
+    auto y_conversion = field_y_length / camera_y_length;
     for (int i = 0; i < 6; ++i)
     {
-        message.x[i] -= camera_x_lenght / 2;
-        message.y[i] -= camera_y_lenght / 2;
+        message.x[i] -= camera_x_length / 2;
+        message.y[i] -= camera_y_length / 2;
         message.x[i] *= x_conversion;
         message.y[i] *= y_conversion;
     }
-    message.ball_x -= camera_x_lenght / 2;
-    message.ball_y -= camera_y_lenght / 2;
+    message.ball_x -= camera_x_length / 2;
+    message.ball_y -= camera_y_length / 2;
     message.ball_x *= x_conversion;
     message.ball_y *= y_conversion;
 }
