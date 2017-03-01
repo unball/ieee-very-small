@@ -52,43 +52,43 @@ link_directories(
   ${SDFormat_LIBRARY_DIRS}
 )
 
-add_executable(strategy_node
-  src/unball/utils/point.cpp
-  src/unball/utils/math.cpp
-  src/unball/utils/vector.cpp
-  src/unball/strategy/strategy_node.cpp
-  src/unball/strategy/strategy.cpp
-  src/unball/strategy/state_estimator.cpp
-  src/unball/strategy/robot.cpp
-  src/unball/strategy/ball.cpp
-  src/unball/strategy/goals.cpp
-  src/unball/strategy/player.cpp
-  src/unball/strategy/goalkeeper.cpp
-  src/unball/strategy/goalkeeper_kicker.cpp
-  src/unball/strategy/initial_goalkeeper.cpp
-  src/unball/strategy/regular_player.cpp
-  src/unball/strategy/kicker_player.cpp
-  src/unball/strategy/assistent_player.cpp
-  src/unball/strategy/attractive_potential_field.cpp
-  src/unball/strategy/parallel_potential_field.cpp
-  src/unball/strategy/perpendicular_potential_field.cpp
-  src/unball/strategy/repulsive_potential_field.cpp
-  src/unball/strategy/selective_potential_field.cpp
-  src/unball/strategy/tangential_potential_field.cpp
-  src/unball/strategy/trajectory_controller.cpp)
-add_dependencies(strategy_node unball_gencpp)
-target_link_libraries(strategy_node ${catkin_LIBRARIES})
+#add_executable(strategy_node
+#  src/unball/utils/point.cpp
+#  src/unball/utils/math.cpp
+#  src/unball/utils/vector.cpp
+#  src/unball/strategy/strategy_node.cpp
+#  src/unball/strategy/strategy.cpp
+#  src/unball/strategy/state_estimator.cpp
+#  src/unball/strategy/robot.cpp
+#  src/unball/strategy/ball.cpp
+#  src/unball/strategy/goals.cpp
+#  src/unball/strategy/player.cpp
+#  src/unball/strategy/goalkeeper.cpp
+#  src/unball/strategy/goalkeeper_kicker.cpp
+#  src/unball/strategy/initial_goalkeeper.cpp
+#  src/unball/strategy/regular_player.cpp
+#  src/unball/strategy/kicker_player.cpp
+#  src/unball/strategy/assistent_player.cpp
+#  src/unball/strategy/attractive_potential_field.cpp
+#  src/unball/strategy/parallel_potential_field.cpp
+#  src/unball/strategy/perpendicular_potential_field.cpp
+#  src/unball/strategy/repulsive_potential_field.cpp
+#  src/unball/strategy/selective_potential_field.cpp
+#  src/unball/strategy/tangential_potential_field.cpp
+#  src/unball/strategy/trajectory_controller.cpp)
+#add_dependencies(strategy_node unball_gencpp)
+#target_link_libraries(strategy_node ${catkin_LIBRARIES})
 
 add_executable(simulator_node
   src/unball/simulator/simulator_node.cpp)
 add_dependencies(simulator_node unball_gencpp)
 target_link_libraries(simulator_node ${catkin_LIBRARIES})
 
-add_executable(keyboard_node
-  src/unball/keyboard/keyboard_node.cpp
-  src/unball/keyboard/keyboard_input.cpp)
-add_dependencies(keyboard_node unball_gencpp)
-target_link_libraries(keyboard_node ${catkin_LIBRARIES})
+#add_executable(keyboard_node
+#  src/unball/keyboard/keyboard_node.cpp
+#  src/unball/keyboard/keyboard_input.cpp)
+#add_dependencies(keyboard_node unball_gencpp)
+#target_link_libraries(keyboard_node ${catkin_LIBRARIES})
 
 add_executable(measurement_system_node
   src/unball/measurement_system/measurement_system_node.cpp)
