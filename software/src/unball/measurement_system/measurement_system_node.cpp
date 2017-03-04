@@ -4,11 +4,11 @@
  * @date   23/09/2016
  *
  * @attention Copyright (C) 2014 UnBall Robot Soccer Team
- * 
+ *
  * @brief Rotate robot position datas acording to camera position in the vision and simulator and publishes that.
  *
 */
- 
+
 #include <vector>
 #include <cmath>
 
@@ -38,10 +38,10 @@ ros::Publisher publisher;
 int main(int argc, char **argv)
 {
     ros::init(argc, argv, "measurement_system_node");
-    
+
     ros::NodeHandle n;
     ros::Rate loop_rate(10); // Hz
-    
+
     ros::Subscriber sub = n.subscribe("vision_topic", 1, receiveVisionMessage);
     publisher = n.advertise<unball::MeasurementSystemMessage>("measurement_system_topic", 1);
 
@@ -50,7 +50,7 @@ int main(int argc, char **argv)
         ros::spinOnce();
         loop_rate.sleep();
     }
-    
+
     return 0;
 }
 
@@ -82,12 +82,12 @@ void receiveVisionMessage(const unball::VisionMessage::ConstPtr &msg_v)
     }
     ROS_INFO("Ball: x: %f, y: %f", message.ball_x, message.ball_y);
 
-    publisher.publish(message); 
+    publisher.publish(message);
 }
 
 void convertPixelsToMeters(){
     auto x_conversion = field_x_length / camera_x_length;
-    auto y_conversion = field_y_length / camera_y_length;
+    auto y_conversion = (field_y_length / camera_y_length) * -1;
     for (int i = 0; i < 6; ++i)
     {
         message.x[i] -= camera_x_length / 2;
