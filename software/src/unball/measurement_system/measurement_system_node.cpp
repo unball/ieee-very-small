@@ -65,9 +65,12 @@ void receiveVisionMessage(const unball::VisionMessage::ConstPtr &msg_v)
     {
         ROS_INFO("%d x: %f\t y: %f\t th: %f", robot_index, msg_v->x[robot_index], msg_v->y[robot_index],
             msg_v->th[robot_index]);
-        message.x[robot_index] = msg_v->x[robot_index];
-        message.y[robot_index] = msg_v->y[robot_index];
-        message.th[robot_index] = msg_v->th[robot_index];
+        if (not (msg_v->x[robot_index] == -1 and msg_v->y[robot_index] == -1)) 
+        {
+            message.x[robot_index] = msg_v->x[robot_index];
+            message.y[robot_index] = msg_v->y[robot_index];
+            message.th[robot_index] = msg_v->th[robot_index];
+        }
     }
     message.ball_x = msg_v->ball_x;
     message.ball_y = msg_v->ball_y;
