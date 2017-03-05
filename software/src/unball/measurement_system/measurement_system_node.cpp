@@ -30,6 +30,7 @@ void rotateAxis();
 void convertPixelsToMeters();
 void receiveSimulatorMessage(const unball::SimulatorMessage::ConstPtr &msg_v);
 void publishMeasurementSystemMessage(ros::Publisher &publisher);
+void filter();
 
 unball::MeasurementSystemMessage message;
 
@@ -73,6 +74,8 @@ void receiveVisionMessage(const unball::VisionMessage::ConstPtr &msg_v)
     message.ball_y = msg_v->ball_y;
     convertPixelsToMeters();
 
+    filter();
+
     ROS_INFO("\n\n[MeasurementNode]:ReceiveVisionMessage - Sending measurement system message");
 
     for (int robot_index = 0; robot_index < 6; robot_index++)
@@ -99,4 +102,34 @@ void convertPixelsToMeters(){
     message.ball_y -= camera_y_length / 2;
     message.ball_x *= x_conversion;
     message.ball_y *= y_conversion;
+}
+
+float mean_array_x[6]={0,0,0,0,0,0};
+float mean_array_y[6]={0,0,0,0,0,0};
+float mean_ball_x=0;
+float mean_ball_y=0;
+float mean_array_th[6]={0,0,0,0,0,0};
+float N_mean=3;
+
+
+void filter(){
+    for (int i = 0; i < 6; ++i)
+    {
+        mean_array_x[i] += (message.x[i] - mean_array_x[i])/N_mean;
+        message.x[i] = mean_array_x[i];
+
+        mean_array_y[i] += (message.y[i] - mean_array_y[i])/N_mean;
+        message.y[i] = mean_array_y[i];
+
+        if (not std::isnan(mean_array_th[i] + (message.th[i] - mean_array_th[i])/N_mean)) {
+            mean_array_th[i] += (message.th[i] - mean_array_th[i])/N_mean;
+            message.th[i] = mean_array_th[i];
+        }
+    }
+
+    mean_ball_x += (message.ball_x - mean_ball_x)/N_mean;
+    message.ball_x = mean_ball_x;
+
+    mean_ball_y += (message.ball_y - mean_ball_y)/N_mean;
+    message.ball_y = mean_ball_y;
 }
