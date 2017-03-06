@@ -70,8 +70,14 @@ void receiveVisionMessage(const unball::VisionMessage::ConstPtr &msg_v)
         {
             message.x[robot_index] = msg_v->x[robot_index];
             message.y[robot_index] = msg_v->y[robot_index];
-            message.th[robot_index] = msg_v->th[robot_index];
+            if (not std::isnan(msg_v->th[robot_index])){
+                message.th[robot_index] = msg_v->th[robot_index] * -1;
+            }
+
         }
+        //if(message.th[robot_index]!=0){
+        //    message.th[robot_index] = msg_v->th[robot_index] * -1;
+        //}
     }
     message.ball_x = msg_v->ball_x;
     message.ball_y = msg_v->ball_y;
@@ -112,7 +118,7 @@ float mean_array_y[6]={0,0,0,0,0,0};
 float mean_ball_x=0;
 float mean_ball_y=0;
 float mean_array_th[6]={0,0,0,0,0,0};
-float N_mean=3;
+float N_mean=4;
 
 
 void filter(){
@@ -123,13 +129,18 @@ void filter(){
 
         mean_array_y[i] += (message.y[i] - mean_array_y[i])/N_mean;
         message.y[i] = mean_array_y[i];
+        
 
         if (not std::isnan(mean_array_th[i] + (message.th[i] - mean_array_th[i])/N_mean)) {
-            mean_array_th[i] += (message.th[i] - mean_array_th[i])/N_mean;
+            if(abs(message.th[i]-mean_array_th[i])>M_PI/2){
+                    mean_array_th[i]=message.th[i];
+                }else{
+                    mean_array_th[i] += (message.th[i] - mean_array_th[i])/N_mean;
+                }
             message.th[i] = mean_array_th[i];
         }
     }
-
+    
     mean_ball_x += (message.ball_x - mean_ball_x)/N_mean;
     message.ball_x = mean_ball_x;
 
