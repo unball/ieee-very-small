@@ -19,8 +19,12 @@
 #include <unball/MeasurementSystemMessage.h>
 #include <opencv2/opencv.hpp>
 
-const float field_x_length = 1.50;
+//const float field_x_length = 1.50;
+//const float field_y_length = 1.30;
+
+const float field_x_length = 1.60;
 const float field_y_length = 1.30;
+
 
 const float camera_x_length = 640;
 const float camera_y_length = 480;
@@ -71,19 +75,17 @@ void receiveVisionMessage(const unball::VisionMessage::ConstPtr &msg_v)
             message.x[robot_index] = msg_v->x[robot_index];
             message.y[robot_index] = msg_v->y[robot_index];
             if (not std::isnan(msg_v->th[robot_index])){
-                message.th[robot_index] = msg_v->th[robot_index] * -1;
+                message.th[robot_index] = msg_v->th[robot_index];
             }
 
         }
-        //if(message.th[robot_index]!=0){
-        //    message.th[robot_index] = msg_v->th[robot_index] * -1;
-        //}
+
     }
     message.ball_x = msg_v->ball_x;
     message.ball_y = msg_v->ball_y;
     convertPixelsToMeters();
 
-    filter();
+    //filter();
 
     ROS_INFO("\n\n[MeasurementNode]:ReceiveVisionMessage - Sending measurement system message");
 
@@ -118,7 +120,7 @@ float mean_array_y[6]={0,0,0,0,0,0};
 float mean_ball_x=0;
 float mean_ball_y=0;
 float mean_array_th[6]={0,0,0,0,0,0};
-float N_mean=4;
+float N_mean=10;
 
 
 void filter(){
