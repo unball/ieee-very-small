@@ -59,6 +59,7 @@ int main(int argc, char **argv)
     return 0;
 }
 
+bool shouldConvert[3] = { true, true, true};
 void receiveVisionMessage(const unball::VisionMessage::ConstPtr &msg_v)
 {
     std::vector<float> x(6), y(6), th(6);
@@ -70,15 +71,20 @@ void receiveVisionMessage(const unball::VisionMessage::ConstPtr &msg_v)
     {
         ROS_INFO("%d x: %f\t y: %f\t th: %f", robot_index, msg_v->x[robot_index], msg_v->y[robot_index],
             msg_v->th[robot_index]);
-        if (not (msg_v->x[robot_index] == -1 and msg_v->y[robot_index] == -1)) 
-        {
+        //if (not (msg_v->x[robot_index] == -1 and msg_v->y[robot_index] == -1)) 
+        
+        if(msg_v->y[robot_index] > 1 and msg_v->y[robot_index] < 480)
+        { 
             message.x[robot_index] = msg_v->x[robot_index];
             message.y[robot_index] = msg_v->y[robot_index];
             if (not std::isnan(msg_v->th[robot_index])){
                 message.th[robot_index] = msg_v->th[robot_index];
             }
+            shouldConvert[robot_index] = true;
 
         }
+        else
+            shouldConvert[robot_index] = false;        
 
     }
     message.ball_x = msg_v->ball_x;
@@ -104,10 +110,23 @@ void convertPixelsToMeters(){
     auto y_conversion = (field_y_length / camera_y_length) * -1;
     for (int i = 0; i < 6; ++i)
     {
-        message.x[i] -= camera_x_length / 2;
-        message.y[i] -= camera_y_length / 2;
-        message.x[i] *= x_conversion;
-        message.y[i] *= y_conversion;
+        if (i<3) 
+        {
+            if (shouldConvert[i]) 
+            {
+                message.x[i] -= camera_x_length / 2;
+                message.y[i] -= camera_y_length / 2;
+                message.x[i] *= x_conversion;
+                message.y[i] *= y_conversion;
+            }
+        }
+        else 
+        {
+            message.x[i] -= camera_x_length / 2;
+            message.y[i] -= camera_y_length / 2;
+            message.x[i] *= x_conversion;
+            message.y[i] *= y_conversion;
+        }
     }
     message.ball_x -= camera_x_length / 2;
     message.ball_y -= camera_y_length / 2;
@@ -132,7 +151,7 @@ void filter(){
         mean_array_y[i] += (message.y[i] - mean_array_y[i])/N_mean;
         message.y[i] = mean_array_y[i];
         
-
+        /*
         if (not std::isnan(mean_array_th[i] + (message.th[i] - mean_array_th[i])/N_mean)) {
             if(abs(message.th[i]-mean_array_th[i])>M_PI/2){
                     mean_array_th[i]=message.th[i];
@@ -141,6 +160,7 @@ void filter(){
                 }
             message.th[i] = mean_array_th[i];
         }
+        */
     }
     
     mean_ball_x += (message.ball_x - mean_ball_x)/N_mean;
