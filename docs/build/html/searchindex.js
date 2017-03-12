@@ -1,0 +1,1 @@
+Search.setIndex({docnames:["index","vision"],envversion:51,filenames:["index.rst","vision.rst"],objects:{},objnames:{},objtypes:{},terms:{content:[],index:[],modul:0,page:[],ref:[],rst:[],search:[],vision:0},titles:["Welcome to UnBall&#8217;s documentation!","Vision Module"],titleterms:{document:0,indic:[],modul:1,tabl:[],unbal:0,vision:1,welcom:0}})
