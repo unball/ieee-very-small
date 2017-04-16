@@ -88,7 +88,7 @@ On ROS Kinetic the OpenCV library its already installed, all you need to do is s
 .. code-block:: bash
 
     export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:/opt/ros/kinetic/lib/pkgconfig
-    sudo cp /opt/ros/kinetic/lib/pkgconfig/opencv-3.1.0-dev.pc $ROS_FOLDER/lib/pkgconfig/opencv.pc
+    sudo cp /opt/ros/kinetic/lib/pkgconfig/opencv-3.1.0-dev.pc /opt/ros/kinetic/lib/pkgconfig/opencv.pc
 
 
 
