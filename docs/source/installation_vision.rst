@@ -55,7 +55,7 @@ Initialize rosdep
     sudo rosdep init
     rosdep update
 
-In order to setup environment variables, append the following to `/.bashrc`
+In order to setup environment variables, append the following to `~/.bashrc`
 
 .. code-block:: bash
     
@@ -88,11 +88,11 @@ On ROS Kinetic the OpenCV library its already installed, all you need to do is s
 .. code-block:: bash
 
     export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:/opt/ros/kinetic/lib/pkgconfig
-    sudo cp /opt/ros/kinetic/lib/pkgconfig/opencv-3.1.0-dev.pc /opt/ros/kinetic/lib/pkgconfig/opencv.pc
+    sudo cp /opt/ros/kinetic/lib/pkgconfig/opencv-3.2.0-dev.pc /opt/ros/kinetic/lib/pkgconfig/opencv.pc
 
 
 
 .. rubric:: Notes
 .. [#ubuntunote] A VM can be used but depending on your machine, some algorithms may behave slower than in case that the system is really installed on HDD
 .. [#rosreference] `ROS installation guide <http://wiki.ros.org/kinetic/Installation/Ubuntu>`_
-.. [#versionnote] ROS has keep opencv version sync with opencv repository, so the file `opencv-3.1.0-dev.pc` may be another opencv version, in case of error, just substitute `opencv-3.1.0-dev.pc` for existent `opencv-version.pc` in the folder.
+.. [#versionnote] ROS has keep opencv version sync with opencv repository, so the file `opencv-3.2.0-dev.pc` may be another opencv version, in case of error, just substitute `opencv-3.2.0-dev.pc` for existent `opencv-version.pc` in the folder.
