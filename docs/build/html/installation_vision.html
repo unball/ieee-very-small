@@ -1,0 +1,202 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Installation &#8212; UnBall 2.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '2.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="2. Running Vision" href="running_vision.html" />
+    <link rel="prev" title="Vision Module" href="vision.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="installation">
+<span id="id1"></span><h1>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h1>
+<p>On this subsection will be shown all necessary steps to get Vision Module&#8217;s enviroment set in order to run/develop code.</p>
+<div class="section" id="installing-ubuntu">
+<h2>Installing Ubuntu<a class="headerlink" href="#installing-ubuntu" title="Permalink to this headline">¶</a></h2>
+<dl class="docutils">
+<dt>First of all, we need to install <a class="reference external" href="http://ubuntu.com/">Ubuntu</a> <a class="footnote-reference" href="#ubuntunote" id="id2">[1]</a>:</dt>
+<dd><ol class="first last arabic simple">
+<li>Download Ubuntu from <a class="reference external" href="http://www.ubuntu.com/download/desktop">official website</a></li>
+<li>Burn the <cite>.iso</cite> image either in a CD-ROM, DVD-ROM or flash drive. If you decide to use the flash drive approach, take a look in <a class="reference external" href="http://www.ubuntu.com/download/desktop/create-a-usb-stick-on-windows">this tutorial on how to create a bootable USB stick on Windows.</a></li>
+<li>Put the media in your computer and check whether the device comes first in the BIOS boot order. Take a look in <a class="reference external" href="http://www.howtogeek.com/129815/beginner-geek-how-to-change-the-boot-order-in-your-computers-bios/">this tutorial to learn how to change the boot order.</a></li>
+<li>The Ubuntu installation script must have initialized. Choose the preferred language, mark to download updates while installing and install third-party software and to erase the current disk. You may also manually create partitions and allocate space in disk according to your preferences.</li>
+<li>The installation will also require you geographic location and keyboard layout. The keyboard layout need not be the same as the selected language. For instance, if you bought your laptop in the United States, the preferred language may be Brazilian Portuguese and the keyboard layout English (US, alternative international) to allow typing accents.</li>
+<li>Afterwards, the installation will ask your name, the computer&#8217;s name (for network identification), an username and password. Do not forget this password, since it will also be the superuser password (unless changed).</li>
+<li>Finally, Ubuntu will be installed. This step requires to reboot the machine when finished.</li>
+<li>Update all packages to its last version. You can either use the Update Manager or the commands <cite>sudo apt-get update</cite> and <cite>sudo apt-get upgrade.</cite></li>
+</ol>
+</dd>
+</dl>
+</div>
+<div class="section" id="installing-ros">
+<h2>Installing ROS <a class="footnote-reference" href="#rosreference" id="id3">[2]</a><a class="headerlink" href="#installing-ros" title="Permalink to this headline">¶</a></h2>
+<p>Add the ROS Debian packages source for Ubuntu 16.04.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>sudo sh -c <span class="s1">&#39;echo &quot;deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main&quot; &gt; /etc/apt/sources.list.d/ros-latest.list&#39;</span>
+</pre></div>
+</div>
+<p>Setup keys</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>sudo apt-key adv --keyserver hkp://ha.pool.sks-keyservers.net:80 --recv-key 421C365BD9FF1F717815A3895523BAEEB01FA116
+</pre></div>
+</div>
+<p>Update <cite>apt-get</cite></p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>sudo apt-get update
+</pre></div>
+</div>
+<p>Install ROS Kinetic full</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>sudo apt-get install ros-kinetic-desktop-full
+</pre></div>
+</div>
+<p>Initialize rosdep</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>sudo rosdep init
+rosdep update
+</pre></div>
+</div>
+<p>In order to setup environment variables, append the following to <cite>/.bashrc</cite></p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span><span class="c1"># Sourcing ROS environment variables</span>
+<span class="nb">source</span> /opt/ros/kinetic/setup.bash
+</pre></div>
+</div>
+</div>
+<div class="section" id="configuring-catkin-workspace">
+<h2>Configuring catkin workspace<a class="headerlink" href="#configuring-catkin-workspace" title="Permalink to this headline">¶</a></h2>
+<p>ROS recommends the usage of catkin for building it&#8217;s packages. In order to achieve this, we&#8217;ll create a new directory <cite>catkin_ws</cite>, with an inner directory <cite>src</cite> and a <cite>CMakeLists.txt</cite> indicating it is a catkin workspace.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>mkdir -p ~/catkin_ws/src
+<span class="nb">cd</span> ~/catkin_ws/src
+catkin_init_workspace
+</pre></div>
+</div>
+<p>Also, in order to setup environment variables, append the following to <cite>~/.bashrc</cite>. Make sure to adapt to your usage if you don&#8217;t create the workspace in the <cite>~/catkin_ws</cite> directory.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span><span class="c1"># Sourcing catkin environment variables</span>
+<span class="nb">source</span> ~/catkin_ws/devel/setup.sh
+</pre></div>
+</div>
+</div>
+<div class="section" id="install-opencv">
+<h2>Install OpenCV<a class="headerlink" href="#install-opencv" title="Permalink to this headline">¶</a></h2>
+<p>On ROS Kinetic the OpenCV library its already installed, all you need to do is set <cite>PKG_CONFIG_PATH</cite> to point to ROS libs <a class="footnote-reference" href="#versionnote" id="id4">[3]</a>:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span><span class="nb">export</span> <span class="nv">PKG_CONFIG_PATH</span><span class="o">=</span><span class="nv">$PKG_CONFIG_PATH</span>:/opt/ros/kinetic/lib/pkgconfig
+sudo cp /opt/ros/kinetic/lib/pkgconfig/opencv-3.1.0-dev.pc <span class="nv">$ROS_FOLDER</span>/lib/pkgconfig/opencv.pc
+</pre></div>
+</div>
+<p class="rubric">Notes</p>
+<table class="docutils footnote" frame="void" id="ubuntunote" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id2">[1]</a></td><td>A VM can be used but depending on your machine, some algorithms may behave slower than in case that the system is really installed on HDD</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="rosreference" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id3">[2]</a></td><td><a class="reference external" href="http://wiki.ros.org/kinetic/Installation/Ubuntu">ROS installation guide</a></td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="versionnote" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id4">[3]</a></td><td>ROS has keep opencv version sync with opencv repository, so the file <cite>opencv-3.1.0-dev.pc</cite> may be another opencv version, in case of error, just substitute <cite>opencv-3.1.0-dev.pc</cite> for existent <cite>opencv-version.pc</cite> in the folder.</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Installation</a><ul>
+<li><a class="reference internal" href="#installing-ubuntu">Installing Ubuntu</a></li>
+<li><a class="reference internal" href="#installing-ros">Installing ROS </a></li>
+<li><a class="reference internal" href="#configuring-catkin-workspace">Configuring catkin workspace</a></li>
+<li><a class="reference internal" href="#install-opencv">Install OpenCV</a></li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  <li><a href="vision.html">Vision Module</a><ul>
+      <li>Previous: <a href="vision.html" title="previous chapter">Vision Module</a></li>
+      <li>Next: <a href="running_vision.html" title="next chapter">2. Running Vision</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/installation_vision.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017, UnBall.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.5.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="_sources/installation_vision.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
