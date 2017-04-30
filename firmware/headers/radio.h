@@ -1,0 +1,91 @@
+#include <SPI.h>
+#include "RF24.h"
+
+RF24 radio(CE,CS);
+
+const uint64_t pipes[4] = { 0xABCDABCD71LL, 0x544d52687CLL, 0x644d52687CLL, 0x744d52687CLL};
+uint64_t pipeEnvia=pipes[0];
+uint64_t pipeRecebe=pipes[3];
+
+struct dataStruct{
+    char data1;
+    int data2;
+}myData;
+
+struct dataStruct2{
+    int motorA=0;
+    int motorB=0;
+}velocidades;
+
+void radioSetup(){
+  radio.begin();                           // inicializa radio
+  radio.setChannel(108);                   //muda para um canal de frequencia diferente de 2.4Ghz
+  radio.setPALevel(RF24_PA_MAX);           //usa potencia maxima
+  radio.setDataRate(RF24_2MBPS);           //usa velocidade de transmissao maxima
+
+  radio.openWritingPipe(pipeEnvia);        //escreve pelo pipe0
+  radio.openReadingPipe(1,pipeRecebe);      //escuta pelo pipe1
+
+  radio.enableDynamicPayloads();           //ativa payloads dinamicos(pacote tamamhos diferentes do padrao)
+  radio.setPayloadSize(sizeof(velocidades));   //ajusta os o tamanho dos pacotes ao tamanho da mensagem
+  
+  radio.startListening();                 // Start listening
+}
+
+void levelocidades(){
+  if(radio.available()){
+     while(radio.available()){       
+      radio.read(&velocidades,sizeof(velocidades));
+     }
+  Serial.println(velocidades.motorA);
+  Serial.println(velocidades.motorB);
+  }
+}
+
+void recebeMensagem(){
+   if(radio.available()){
+     while(radio.available()){       
+      radio.read(&myData,sizeof(myData));
+     }
+     Serial.print("mensagem: ");
+     Serial.println(myData.data1);
+   }
+}
+
+void mandaMensagem(){
+  Serial.println("Escreva 1 caractere");
+  while(!Serial.available());
+  
+  char c = toupper(Serial.read());
+  myData.data1=c;
+  radio.stopListening();
+  radio.enableDynamicAck();                 //essa funcao precisa andar colada na de baixo
+  radio.write(&myData,sizeof(myData), 1);   //lembrar que precisa enableDynamicAck antes
+                                            // 1-NOACK, 0-ACK
+  radio.startListening(); 
+  Serial.println(c);
+}
+
+void radio_status(){
+  Serial.print("CE: ");
+  Serial.println(CE);
+  Serial.print("CS: ");
+  Serial.println(CS);
+  
+  Serial.print("Channel: ");
+  Serial.print(radio.getChannel());
+  Serial.println("  0-125");
+  Serial.print("PALevel: ");
+  Serial.print(radio.getPALevel());
+  Serial.println("  0-3");
+  Serial.print("DataRate: ");
+  Serial.print(radio.getDataRate());
+  Serial.println("  0->1MBPS, 1->2MBPS, 2->250KBPS");
+  Serial.println();
+  Serial.print("Enviar por: ");
+  Serial.println(int(pipeEnvia));
+  Serial.print("Recebe por: ");
+  Serial.println(int(pipeRecebe));
+  Serial.print("Payload size: ");
+  Serial.println(radio.getPayloadSize());
+}

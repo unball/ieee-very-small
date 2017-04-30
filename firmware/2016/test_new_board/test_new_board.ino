@@ -29,13 +29,14 @@ void testRadio() {
 
 int sign = 1;
 void defineDirection() {
-  if (abs(motor_power) > 100)
+  if (abs(motor_power) > 50)
     sign = -sign;
 }
 
 void testMotors() {
-  defineDirection();
   motor_power += sign;
+  Serial.println(motor_power);
+  defineDirection();
   
   move(MOTOR_A, motor_power);
   move(MOTOR_B, motor_power);  
@@ -49,9 +50,9 @@ void testEncoders() {
 }
 
 void loop() {
-  testRadio();
+  //testRadio();
   testMotors();
   testEncoders();
   
-  delay(10);
+  delay(100);
 }
