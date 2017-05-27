@@ -21,7 +21,6 @@ find_package(gazebo REQUIRED)
 find_package(Boost REQUIRED COMPONENTS system)
 
 add_message_files(DIRECTORY msg FILES
-  VisionMessage.msg
   SimulatorMessage.msg
   StrategyMessage.msg
   KeyboardMessage.msg
