@@ -7,11 +7,6 @@ const uint64_t pipes[4] = { 0xABCDABCD71LL, 0x544d52687CLL, 0x644d52687CLL, 0x74
 uint64_t pipeEnvia=pipes[0];
 uint64_t pipeRecebe=pipes[3];
 
-struct dataStruct{
-    char data1;
-    int data2;
-}myData;
-
 struct dataStruct2{
     int motorA=0;
     int motorB=0;
@@ -45,10 +40,10 @@ void levelocidades(){
 void recebeMensagem(){
    if(radio.available()){
      while(radio.available()){       
-      radio.read(&myData,sizeof(myData));
+      radio.read(&velocidades,sizeof(velocidades));
      }
      Serial.print("mensagem: ");
-     Serial.println(myData.data1);
+     Serial.println(velocidades.motorA);
    }
 }
 
@@ -57,10 +52,10 @@ void mandaMensagem(){
   while(!Serial.available());
   
   char c = toupper(Serial.read());
-  myData.data1=c;
+  velocidades.motorA=c;
   radio.stopListening();
   radio.enableDynamicAck();                 //essa funcao precisa andar colada na de baixo
-  radio.write(&myData,sizeof(myData), 1);   //lembrar que precisa enableDynamicAck antes
+  radio.write(&velocidades,sizeof(velocidades), 1);   //lembrar que precisa enableDynamicAck antes
                                             // 1-NOACK, 0-ACK
   radio.startListening(); 
   Serial.println(c);

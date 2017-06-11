@@ -1,28 +1,9 @@
-void stand(){
-  int acc=0;
-  while(true){
-    if(radio.available()){
-       acc=0; 
-       int temp1=velocidades.motorA;
-       int temp2=velocidades.motorB;
-       while(radio.available()){       
-        radio.read(&velocidades,sizeof(velocidades));
-       }
-       if(!(velocidades.motorA==temp1 && velocidades.motorB==temp2)){
-        //errorA_i=0;
-        //errorB_i=0;  
-       }
-     }else{
-      //procedimento para indicar que o robo nao recebe mensagens nas ultimas 20000 iteracoes
-      acc++;
-      if(acc>20000){
-        control(200,-200);
-      }else{
-        control(velocidades.motorA, velocidades.motorB);
-      }
-    }
-  }
-}
+long errorA_i=0;
+long errorB_i=0;
+long commandA_media=0;
+long commandB_media=0;
+
+int acc=0;
 
 void control(int velocidadeA, int velocidadeB){
   if(velocidadeA || velocidadeB){
@@ -60,5 +41,31 @@ void control(int velocidadeA, int velocidadeB){
     contadorB_media=0;
     move(0,0);
     move(1,0);
+  }
+}
+
+void stand(){
+  int acc=0;
+  while(true){
+    if(radio.available()){
+       acc=0; 
+       int temp1=velocidades.motorA;
+       int temp2=velocidades.motorB;
+       while(radio.available()){       
+        radio.read(&velocidades,sizeof(velocidades));
+       }
+       if(!(velocidades.motorA==temp1 && velocidades.motorB==temp2)){
+        //errorA_i=0;
+        //errorB_i=0;  
+       }
+     }else{
+      //procedimento para indicar que o robo nao recebe mensagens nas ultimas 20000 iteracoes
+      acc++;
+      if(acc>20000){
+        control(200,-200);
+      }else{
+        control(velocidades.motorA, velocidades.motorB);
+      }
+    }
   }
 }
