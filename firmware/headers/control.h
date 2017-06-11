@@ -27,49 +27,34 @@ void stand(){
 void control(int velocidadeA, int velocidadeB){
   if(velocidadeA || velocidadeB){
     encoder();
-    Serial.print("  motor0: ");Serial.print(contadorA);Serial.print("//");Serial.print(contadorA_media);
-    Serial.print("  motor1: ");Serial.print(contadorB);Serial.print("//");Serial.print(contadorB_media);
     long errorA=velocidadeA-contadorA_media;
-    long errorB=velocidadeB-contadorB_media;
     errorA_i+=errorA;
-    errorB_i+=errorB;
-    
-    Serial.print(" error:");
-    Serial.print(errorA);
-    Serial.print("||");
-    Serial.print(errorB);
-    
     long ke_a=1200;
     long ki_a=30;
-    
-    long ke_b=1200;
-    long ki_b=30;
-
     long intermediarioA=0;
     intermediarioA=(ke_a*errorA)/1000;
-    intermediarioA+=(ki_a*errorA_i)/1000;
-
-    long intermediarioB=0;
-    intermediarioB=(ke_b*errorB)/1000;
-    intermediarioB+=(ki_b*errorB_i)/1000;
-
+    intermediarioA+=(ki_a*errorA_i)/1000;    
     int commandA=intermediarioA;
-    int commandB=intermediarioB;
     commandA_media+=(commandA-commandA_media)/10;
-    commandB_media+=(commandB-commandB_media)/10;
-
     if(commandA_media>255){
       commandA_media=255;
     }
+    move(0, commandA_media);
+
+
+    long errorB=velocidadeB-contadorB_media;
+    errorB_i+=errorB;
+    long ke_b=1200;
+    long ki_b=30;
+    long intermediarioB=0;
+    intermediarioB=(ke_b*errorB)/1000;
+    intermediarioB+=(ki_b*errorB_i)/1000;
+    int commandB=intermediarioB;
+    commandB_media+=(commandB-commandB_media)/10;
     if(commandB_media>255){
       commandB_media=255;
-    }
-    
-    move(0, commandA_media);
+    }    
     move(1, commandB_media);
-    Serial.print("   commands ");
-    Serial.print(commandA);Serial.print("//");Serial.print(commandA_media);
-    Serial.print(" ");Serial.print(commandB);Serial.print("//");Serial.println(commandB_media);
   }else{
     contadorA_media=0;
     contadorB_media=0;
