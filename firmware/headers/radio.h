@@ -1,7 +1,7 @@
 #include <SPI.h>
 #include "RF24.h"
 
-RF24 radio(CE,CS);
+RF24 radio(Pins::CE,Pins::CS);
 
 const uint64_t pipes[4] = { 0xABCDABCD71LL, 0x544d52687CLL, 0x644d52687CLL, 0x744d52687CLL};
 uint64_t pipeEnvia=pipes[0];
@@ -63,9 +63,9 @@ void mandaMensagem(){
 
 void radio_status(){
   Serial.print("CE: ");
-  Serial.println(CE);
+  Serial.println(Pins::CE);
   Serial.print("CS: ");
-  Serial.println(CS);
+  Serial.println(Pins::CS);
   
   Serial.print("Channel: ");
   Serial.print(radio.getChannel());

@@ -5,8 +5,8 @@ long contadorA_media=0;
 long contadorB_media=0;
 
 void encodersSetup() {
-  pinMode(channelA, INPUT);  
-  pinMode(channelB, INPUT);
+  pinMode(Pins::channelA, INPUT);  
+  pinMode(Pins::channelB, INPUT);
 }
 
 void soma(){
@@ -22,8 +22,8 @@ void interruptEncoderPins(int channel, volatile long &contador_i) {
 }
 
 void encoder() {
-  interruptEncoderPins(channelA, contadorA);
-  interruptEncoderPins(channelB, contadorB);
+  interruptEncoderPins(Pins::channelA, contadorA);
+  interruptEncoderPins(Pins::channelB, contadorB);
 
   contadorA_media+=(motorA_direction*contadorA-contadorA_media)/10;
   contadorB_media+=(motorB_direction*contadorB-contadorB_media)/10;

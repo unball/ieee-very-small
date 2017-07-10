@@ -5,7 +5,6 @@
 #include <control.h>
 
 void setup(void) {
-
   Serial.begin(115200);
   
   radioSetup();

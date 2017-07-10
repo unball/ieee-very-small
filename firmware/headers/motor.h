@@ -2,16 +2,15 @@ long motorA_direction=0;
 long motorB_direction=0;
 
 void motorsSetup(){  
-  pinMode(PWMA, OUTPUT);
-  pinMode(AIN1, OUTPUT);
-  pinMode(BIN1, OUTPUT);
+  pinMode(Pins::PWMA, OUTPUT);
+  pinMode(Pins::AIN1, OUTPUT);
+  pinMode(Pins::BIN1, OUTPUT);
 
   //pinMode(STBY, OUTPUT);
   
-  pinMode(PWMB, OUTPUT);
-  pinMode(BIN1, OUTPUT);
-  pinMode(BIN2, OUTPUT);
-  
+  pinMode(Pins::PWMB, OUTPUT);
+  pinMode(Pins::BIN1, OUTPUT);
+  pinMode(Pins::BIN2, OUTPUT);
 }
 
 void move(int motor, int power) {
@@ -19,14 +18,14 @@ void move(int motor, int power) {
   int pin1, pin2;
   int PWM;
   if (motor == 0) {
-    pin1 = AIN1;
-    pin2 = AIN2;
-    PWM = PWMA;
+    pin1 = Pins::AIN1;
+    pin2 = Pins::AIN2;
+    PWM = Pins::PWMA;
   }
   else {
-    pin1 = BIN1;
-    pin2 = BIN2;
-    PWM = PWMB;    
+    pin1 = Pins::BIN1;
+    pin2 = Pins::BIN2;
+    PWM = Pins::PWMB;    
   }
   
   //power = map(power,-100,100,-255,255);

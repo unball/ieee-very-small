@@ -5,6 +5,10 @@ long commandB_media=0;
 
 int acc=0;
 
+void control(int velocidade, int error, long command_media) {
+  
+}
+
 void control(int velocidadeA, int velocidadeB){
   if(velocidadeA || velocidadeB){
     encoder();
