@@ -11,8 +11,8 @@ void control(int velocidade, int error, long command_media) {
 
 void control(int velocidadeA, int velocidadeB){
   if(velocidadeA || velocidadeB){
-    encoder();
-    long errorA=velocidadeA-contadorA_media;
+    Encoder::encoder();
+    long errorA=velocidadeA-Encoder::contadorA_media;
     errorA_i+=errorA;
     long ke_a=1200;
     long ki_a=30;
@@ -24,10 +24,10 @@ void control(int velocidadeA, int velocidadeB){
     if(commandA_media>255){
       commandA_media=255;
     }
-    move(0, commandA_media);
+    Motor::move(0, commandA_media);
 
 
-    long errorB=velocidadeB-contadorB_media;
+    long errorB=velocidadeB-Encoder::contadorB_media;
     errorB_i+=errorB;
     long ke_b=1200;
     long ki_b=30;
@@ -39,24 +39,24 @@ void control(int velocidadeA, int velocidadeB){
     if(commandB_media>255){
       commandB_media=255;
     }    
-    move(1, commandB_media);
+    Motor::move(1, commandB_media);
   }else{
-    contadorA_media=0;
-    contadorB_media=0;
-    move(0,0);
-    move(1,0);
+    Encoder::contadorA_media=0;
+    Encoder::contadorB_media=0;
+    Motor::move(0,0);
+    Motor::move(1,0);
   }
 }
 
 void stand(){
   int acc=0;
   while(true){
-    if(radio.available()){
+    if(Radio::radio.available()){
        acc=0; 
        int temp1=velocidades.motorA;
        int temp2=velocidades.motorB;
-       while(radio.available()){       
-        radio.read(&velocidades,sizeof(velocidades));
+       while(Radio::radio.available()){       
+        Radio::radio.read(&velocidades,sizeof(velocidades));
        }
        if(!(velocidades.motorA==temp1 && velocidades.motorB==temp2)){
         //errorA_i=0;

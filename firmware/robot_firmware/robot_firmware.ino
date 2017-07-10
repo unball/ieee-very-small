@@ -7,9 +7,9 @@
 void setup(void) {
   Serial.begin(115200);
   
-  radioSetup();
-  motorsSetup();
-  encodersSetup();
+  Radio::Setup();
+  Motor::Setup();
+  Encoder::Setup();
 }
 
 void loop(){
