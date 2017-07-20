@@ -32,13 +32,12 @@ int main(int argc, char **argv)
     return 0;
 }
 
-bool shouldConvert[3] = { true, true, true};
 void receivePxToMMessage(const vision::PixelToMetricConversionMessage::ConstPtr &msg_v)
 {
     std::vector<float> x(6), y(6), th(6);
     std::vector<float> ball_location(2);
 
-    ROS_INFO("\n\n[MeasurementNode]:receivePxToMMessage - Receiving vision message");
+    ROS_INFO("\n\n[MeasurementNode]:receivePxToMMessage");
 
     for (int robot_index = 0; robot_index < 6; robot_index++)
     {
@@ -47,14 +46,12 @@ void receivePxToMMessage(const vision::PixelToMetricConversionMessage::ConstPtr 
 
         message.x[robot_index] = msg_v->x[robot_index];
         message.y[robot_index] = msg_v->y[robot_index];
-        message.th[robot_index] = msg_v->th[robot_index];
+        message.th[robot_index] = msg_v->th[robot_index] * -1;
     }
     message.ball_x = msg_v->ball_x;
     message.ball_y = msg_v->ball_y;
 
-    //filter();
-
-    ROS_INFO("\n\n[MeasurementNode]:receivePxToMMessage - Sending measurement system message");
+    ROS_INFO("\n\n[MeasurementNode]: Sending measurement system message");
 
     for (int robot_index = 0; robot_index < 6; robot_index++)
     {
@@ -64,40 +61,4 @@ void receivePxToMMessage(const vision::PixelToMetricConversionMessage::ConstPtr 
     ROS_INFO("Ball: x: %f, y: %f", message.ball_x, message.ball_y);
 
     publisher.publish(message);
-}
-
-float mean_array_x[6]={0,0,0,0,0,0};
-float mean_array_y[6]={0,0,0,0,0,0};
-float mean_ball_x=0;
-float mean_ball_y=0;
-float mean_array_th[6]={0,0,0,0,0,0};
-float N_mean=10;
-
-
-void filter(){
-    for (int i = 0; i < 6; ++i)
-    {
-        mean_array_x[i] += (message.x[i] - mean_array_x[i])/N_mean;
-        message.x[i] = mean_array_x[i];
-
-        mean_array_y[i] += (message.y[i] - mean_array_y[i])/N_mean;
-        message.y[i] = mean_array_y[i];
-
-        /*
-        if (not std::isnan(mean_array_th[i] + (message.th[i] - mean_array_th[i])/N_mean)) {
-            if(abs(message.th[i]-mean_array_th[i])>M_PI/2){
-                    mean_array_th[i]=message.th[i];
-                }else{
-                    mean_array_th[i] += (message.th[i] - mean_array_th[i])/N_mean;
-                }
-            message.th[i] = mean_array_th[i];
-        }
-        */
-    }
-
-    mean_ball_x += (message.ball_x - mean_ball_x)/N_mean;
-    message.ball_x = mean_ball_x;
-
-    mean_ball_y += (message.ball_y - mean_ball_y)/N_mean;
-    message.ball_y = mean_ball_y;
 }
