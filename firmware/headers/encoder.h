@@ -2,8 +2,8 @@ namespace Encoder {
   volatile long contadorA = 0;
   volatile long contadorB = 0;
   volatile long contador = 0;
-  long contadorA_media=0;
-  long contadorB_media=0;
+  long contadorA_media = 0;
+  long contadorB_media = 0;
 
   void Setup() {
     pinMode(Pins::channelA, INPUT);  
@@ -20,6 +20,11 @@ namespace Encoder {
     delay(10);
     detachInterrupt(channel);
     contador_i = contador;  
+  }
+
+  void resetEncoders() {
+      contadorA_media=0;
+      contadorB_media=0;      
   }
 
   void encoder() {
