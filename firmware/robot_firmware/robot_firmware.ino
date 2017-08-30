@@ -10,8 +10,9 @@ void setup(void) {
   Radio::Setup();
   Motor::Setup();
   Encoder::Setup();
+  Control::acc = 0;
 }
 
 void loop(){
-  stand();
+  Control::stand();
 }

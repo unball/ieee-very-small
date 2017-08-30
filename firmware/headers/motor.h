@@ -58,4 +58,8 @@ namespace Motor {
     digitalWrite(pin2, inPin2);
     analogWrite(PWM, abs(power));
   }
+
+    void stop(int motorNumber) {
+      move(motorNumber, 0);
+  }
 }
