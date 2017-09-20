@@ -114,6 +114,7 @@ python_dev=(
     "python-qt4"
     "python-qt4-gl"
 )
+rosversion="ros-kinetic"
 
 user_=$(whoami)
 
@@ -129,5 +130,12 @@ else
   install_ros
   configure_catkin
 fi
+
+ros_tools=(
+    $rosversion"-joy"
+    $rosversion"-bridge-server"
+    $rosversion"-rosserial"
+    $rosversion"-rosserial-arduino"
+)
 
 configld
