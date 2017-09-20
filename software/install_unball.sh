@@ -131,6 +131,7 @@ else
   configure_catkin
 fi
 
+<<<<<<< HEAD
 ros_tools=(
     $rosversion"-joy"
     $rosversion"-bridge-server"
@@ -139,3 +140,7 @@ ros_tools=(
 )
 
 configld
+=======
+configld
+ 
+>>>>>>> 419ca6140646c95364c0867b0679045433a2895c

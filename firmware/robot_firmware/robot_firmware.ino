@@ -5,14 +5,14 @@
 #include <control.h>
 
 void setup(void) {
-
   Serial.begin(115200);
   
-  radioSetup();
-  motorsSetup();
-  encodersSetup();
+  Radio::Setup();
+  Motor::Setup();
+  Encoder::Setup();
+  Control::acc = 0;
 }
 
 void loop(){
-  stand();
+  Control::stand();
 }
