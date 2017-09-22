@@ -114,6 +114,7 @@ python_dev=(
     "python-qt4"
     "python-qt4-gl"
 )
+rosversion="ros-kinetic"
 
 ros_tools=(
     $rosversion"-joy"
@@ -139,5 +140,11 @@ else
   configure_catkin
 fi
 
+ros_tools=(
+    $rosversion"-joy"
+    $rosversion"-bridge-server"
+    $rosversion"-rosserial"
+    $rosversion"-rosserial-arduino"
+)
+
 configld
- 
