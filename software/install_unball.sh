@@ -115,6 +115,14 @@ python_dev=(
     "python-qt4-gl"
 )
 
+ros_tools=(
+    $rosversion"-joy"
+    $rosversion"-bridge-server"
+    $rosversion"-rosserial"
+    $rosversion"-rosserial-arduino"
+)
+
+
 user_=$(whoami)
 
 source /home/$user_/.bashrc
@@ -122,6 +130,7 @@ install_dependency "Developer tools and packages" devtools[@]
 install_dependency "GTK development library" gtk[@]
 install_dependency "Video I/O packages" video_iopack[@]
 install_dependency "Python 2.7 dev tools" python_dev[@]
+install_dependency "ROS Dependencies" ros_tools[@]
 
 if ! [[ -x "$(command -v roscore)" ]];then
   echo $(echo_pass 'ros')
