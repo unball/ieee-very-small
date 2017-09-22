@@ -123,6 +123,12 @@ ros_tools=(
     $rosversion"-rosserial-arduino"
 )
 
+ros_tools=(
+    $rosversion"-joy"
+    $rosversion"-bridge-server"
+    $rosversion"-rosserial"
+    $rosversion"-rosserial-arduino"
+)
 
 user_=$(whoami)
 
@@ -140,11 +146,5 @@ else
   configure_catkin
 fi
 
-ros_tools=(
-    $rosversion"-joy"
-    $rosversion"-bridge-server"
-    $rosversion"-rosserial"
-    $rosversion"-rosserial-arduino"
-)
 
 configld
