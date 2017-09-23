@@ -5,7 +5,7 @@ namespace Motor {
   void Setup(){  
     pinMode(Pins::PWMA, OUTPUT);
     pinMode(Pins::AIN1, OUTPUT);
-    pinMode(Pins::BIN1, OUTPUT);
+    pinMode(Pins::AIN2, OUTPUT);
 
     //pinMode(STBY, OUTPUT);
     

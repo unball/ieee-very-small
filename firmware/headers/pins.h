@@ -7,6 +7,7 @@ namespace Pins {
 	int PWMA = 9;
 	int AIN1 = 7;
 	int AIN2 = 8;
+	
 	int PWMB = 6;
 	int BIN1 = 5;
 	int BIN2 = 4;
