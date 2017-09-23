@@ -68,6 +68,7 @@ struct dataStruct2{
 void setup(void) {
 
   Serial.begin(115200);
+  Serial.println("Inicio");
   
   
   radioSetup();
@@ -112,7 +113,7 @@ void stand(){
       //procedimento para indicar que o robo nao recebe mensagens nas ultimas 20000 iteracoes
       acc++;
       if(acc>20000){
-        control(200,-200);
+        control(700,-700);
       }else{
         control(velocidades.motorA, velocidades.motorB);
       }
@@ -272,11 +273,11 @@ void control(int velocidadeA, int velocidadeB){
     Serial.print("||");
     Serial.print(errorB);
     
-    long ke_a=1200;
-    long ki_a=30;
+    long ke_a=1400;
+    long ki_a=5;
     
-    long ke_b=1200;
-    long ki_b=30;
+    long ke_b=1400;
+    long ki_b=5;
 
     long intermediarioA=0;
     intermediarioA=(ke_a*errorA)/1000;
@@ -432,7 +433,7 @@ void move(int motor, int power) {
 void motorsSetup(){  
   pinMode(PWMA, OUTPUT);
   pinMode(AIN1, OUTPUT);
-  pinMode(BIN1, OUTPUT);
+  pinMode(AIN1, OUTPUT);
 
   //pinMode(STBY, OUTPUT);
   
