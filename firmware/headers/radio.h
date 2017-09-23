@@ -1,3 +1,8 @@
+#ifndef RADIO_H
+#define RADIO_H
+#include <pins.h>
+
+
 #include <SPI.h>
 #include "RF24.h"
 
@@ -86,3 +91,5 @@ namespace Radio {
     Serial.println(radio.getPayloadSize());
   }
 }
+
+#endif

@@ -1,3 +1,8 @@
+#ifndef MOTOR_H
+#define MOTOR_H
+#include <pins.h>
+
+
 namespace Motor {
   long motorA_direction=0;
   long motorB_direction=0;
@@ -63,3 +68,5 @@ namespace Motor {
       move(motorNumber, 0);
   }
 }
+
+#endif

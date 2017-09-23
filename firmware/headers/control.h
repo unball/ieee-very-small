@@ -1,3 +1,10 @@
+#ifndef CONTROL_H
+#define CONTROL_H
+#include <motor.h>
+#include <encoder.h>
+#include <radio.h>
+
+
 namespace Control {
 
   long errorA_i=0;
@@ -110,3 +117,5 @@ namespace Control {
     }
   }  
 }
+
+#endif

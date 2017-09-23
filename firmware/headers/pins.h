@@ -1,3 +1,7 @@
+#ifndef PINS_H
+#define PINS_H
+
+
 namespace Pins {
 	/*Encoder pins*/
 	int channelA = 3; //TX = 3
@@ -7,7 +11,7 @@ namespace Pins {
 	int PWMA = 9;
 	int AIN1 = 7;
 	int AIN2 = 8;
-	
+
 	int PWMB = 6;
 	int BIN1 = 5;
 	int BIN2 = 4;
@@ -19,3 +23,5 @@ namespace Pins {
 	//int CE = 3; //nano
 	//int CS = 2; //nano
 }
+
+#endif

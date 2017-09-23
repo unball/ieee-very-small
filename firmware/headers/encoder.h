@@ -1,3 +1,8 @@
+#ifndef ENCODER_H
+#define ENCODER_H
+#include <pins.h>
+#include <motor.h>
+
 namespace Encoder {
   volatile long contadorA = 0;
   volatile long contadorB = 0;
@@ -35,3 +40,5 @@ namespace Encoder {
     contadorB_media+=(Motor::motorB_direction*contadorB-contadorB_media)/10;
   }
 }
+
+#endif
