@@ -13,6 +13,9 @@ namespace Control {
   long errorB_d_ant=0;
   long commandA_media=0;
   long commandB_media=0;
+  int sat_count = 0;
+  unsigned long cicle_time=0;
+  bool bateria_fraca;
 
   int acc=0;
 
@@ -22,10 +25,39 @@ namespace Control {
       Motor::stop(1);
   }
 
+  bool Bateria(long ki_erroA, long ki_erroB, long Sat_ki_erro, int velA, int velB){
+    if(abs(ki_erroA) > Sat_ki_erro || abs(ki_erroB) > Sat_ki_erro){
+      sat_count++;
+    }
+    else{
+      sat_count = 0;
+    }
+
+    if(sat_count > 50){
+      if(abs(velA) < 600 || abs(velB) < 600){
+        Serial.print("VERIFICAR BATERIA DO ROBO ");
+        Serial.println(robot_number);
+        return true;
+      }
+      else{
+        return false;
+      }
+    }
+  }
+
+  //verifica e imprime o tempo de duração de um ciclo
+  void TimeOfCicle(){
+    cicle_time = millis() - cicle_time;
+    Serial.print("TIME: ");
+    Serial.println(cicle_time);
+    cicle_time = millis();
+  }
+
   void control(int velocidadeA, int velocidadeB){
     if(velocidadeA || velocidadeB){
     Encoder::encoder();
-    Serial.print("  motor0: ");Serial.print(Encoder::contadorA);Serial.print("//");Serial.print(Encoder::contadorA_media);
+    //TimeOfCicle();
+    Serial.print("motor0: ");Serial.print(Encoder::contadorA);Serial.print("//");Serial.print(Encoder::contadorA_media);
     Serial.print("  motor1: ");Serial.print(Encoder::contadorB);Serial.print("//");Serial.print(Encoder::contadorB_media);
     long errorA=velocidadeA-Encoder::contadorA_media;
     long errorB=velocidadeB-Encoder::contadorB_media;
@@ -52,6 +84,7 @@ namespace Control {
 
     long intermediarioA=0;
     intermediarioA=(ki_a*errorA_i)/1000;
+    long ki_erro_A = intermediarioA;
 
     //Saturação do ki*errorA_i
     if(intermediarioA > Saturacao_ki_erro){
@@ -69,6 +102,7 @@ namespace Control {
 
     long intermediarioB=0;
     intermediarioB=(ki_b*errorB_i)/1000;
+    long ki_erro_B = intermediarioB;
 
     //Saturação do ki*errorB_i
     if(intermediarioB > Saturacao_ki_erro){
@@ -89,18 +123,30 @@ namespace Control {
     commandA_media+=(commandA-commandA_media)/10;
     commandB_media+=(commandB-commandB_media)/10;
 
-    if(commandA_media>255){
-      commandA_media=255;
+    if(commandA_media > 255){
+      commandA_media = 255;
     }
-    if(commandB_media>255){
-      commandB_media=255;
+    if(commandB_media > 255){
+      commandB_media = 255;
     }
+    if(commandA_media < -255){
+      commandA_media = -255;
+    }
+    if(commandB_media < -255){
+      commandB_media = -255;
+    }
+
     
     Motor::move(0, commandA_media);
     Motor::move(1, commandB_media);
     Serial.print("   commands ");
     Serial.print(commandA);Serial.print("//");Serial.print(commandA_media);
     Serial.print(" ");Serial.print(commandB);Serial.print("//");Serial.println(commandB_media);
+
+    
+    //verifica se o erro integrativo satura a velocidade baixa
+    //bateria_fraca = Bateria(ki_erro_A, ki_erro_B, Saturacao_ki_erro, velocidadeA, velocidadeB);
+
     }else{
       Encoder::resetEncoders();
       stopRobot();
@@ -110,7 +156,7 @@ namespace Control {
   bool radioNotAvailableFor(int numberOfCicles) {
     acc++;
     return acc>numberOfCicles;
-  }
+  } 
 
   void stand() {
     if(Radio::radio.available()) {
@@ -122,8 +168,9 @@ namespace Control {
      else {
       //procedimento para indicar que o robo nao recebe mensagens nas ultimas 20000 iteracoes
       if(radioNotAvailableFor(20000))
-        control(500, 500);
+        control(400, -400);
       else {
+        //control(500, 500);
         control(velocidades.motorA, velocidades.motorB);
       }
     }

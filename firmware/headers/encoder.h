@@ -36,8 +36,11 @@ namespace Encoder {
     interruptEncoderPins(Pins::channelA, contadorA);
     interruptEncoderPins(Pins::channelB, contadorB);
 
-    contadorA_media+=(Motor::motorA_direction*contadorA-contadorA_media)/10;
-    contadorB_media+=(Motor::motorB_direction*contadorB-contadorB_media)/10;
+    float a = 0.9; // SEMPRE 0 <= a <= 1
+
+
+    contadorA_media = a*contadorA_media + (1 - a)*Motor::motorA_direction*contadorA;
+    contadorB_media = a*contadorB_media + (1 - a)*Motor::motorB_direction*contadorB;
   }
 }
 
