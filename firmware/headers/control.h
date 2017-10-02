@@ -16,6 +16,7 @@ namespace Control {
   int sat_count = 0;
   unsigned long cicle_time=0;
   bool bateria_fraca;
+  int tensao=100;
 
   int acc=0;
 
@@ -72,13 +73,13 @@ namespace Control {
     Serial.print("||");
     Serial.print(errorB);
     
-    long kp_a=1200;
-    long ki_a=70;
-    long kd_a=12000;
+    long kp_a=2100;
+    long ki_a=0;
+    long kd_a=1800;
     
-    long kp_b=1200;
-    long ki_b=70;
-    long kd_b=12000;
+    long kp_b=2100;
+    long ki_b=0;
+    long kd_b=1800;
 
     long Saturacao_ki_erro=200;
 
@@ -120,25 +121,33 @@ namespace Control {
 
     int commandA=intermediarioA;
     int commandB=intermediarioB;
-    commandA_media+=(commandA-commandA_media)/10;
-    commandB_media+=(commandB-commandB_media)/10;
 
-    if(commandA_media > 255){
-      commandA_media = 255;
+    if(commandA > 255){
+      commandA = 255;
     }
-    if(commandB_media > 255){
-      commandB_media = 255;
+    else if(commandA < -255){
+      commandA = -255;
     }
-    if(commandA_media < -255){
-      commandA_media = -255;
+    if(commandB > 255){
+      commandB = 255;
     }
-    if(commandB_media < -255){
-      commandB_media = -255;
+    else if(commandB < -255){
+      commandB = -255;
     }
 
+    /*tensao++;
+    if(tensao>240){
+      tensao=240;
+      Serial.println("SATUROU");
+    }
+    Serial.print("tensao: ");
+    Serial.println(tensao);*/
+
+    Motor::move(0, commandA);
+    Motor::move(1, commandB);
     
-    Motor::move(0, commandA_media);
-    Motor::move(1, commandB_media);
+    //delay(1000);
+    
     Serial.print("   commands ");
     Serial.print(commandA);Serial.print("//");Serial.print(commandA_media);
     Serial.print(" ");Serial.print(commandB);Serial.print("//");Serial.println(commandB_media);
@@ -168,7 +177,7 @@ namespace Control {
      else {
       //procedimento para indicar que o robo nao recebe mensagens nas ultimas 20000 iteracoes
       if(radioNotAvailableFor(20000))
-        control(400, -400);
+        control(600, 600);
       else {
         //control(500, 500);
         control(velocidades.motorA, velocidades.motorB);

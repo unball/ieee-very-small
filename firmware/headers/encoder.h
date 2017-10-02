@@ -37,10 +37,13 @@ namespace Encoder {
     interruptEncoderPins(Pins::channelB, contadorB);
 
     float a = 0.9; // SEMPRE 0 <= a <= 1
-
-
     contadorA_media = a*contadorA_media + (1 - a)*Motor::motorA_direction*contadorA;
     contadorB_media = a*contadorB_media + (1 - a)*Motor::motorB_direction*contadorB;
+    /*Serial.print("\ncontadorA: ");
+    Serial.print(contadorA);
+    Serial.print("\t contadorB: ");
+    Serial.println(contadorB);
+    Serial.print("\n");*/
   }
 }
 
