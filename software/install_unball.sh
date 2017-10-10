@@ -139,7 +139,7 @@ install_dependency "Video I/O packages" video_iopack[@]
 install_dependency "Python 2.7 dev tools" python_dev[@]
 install_dependency "ROS Dependencies" ros_tools[@]
 
-if ! [[ -x "$(command -v roscore)" ]];then
+if ! [[ ! -x "$(command -v roscore)" ]];then
   echo $(echo_pass 'ros')
 else
   install_ros
