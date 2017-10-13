@@ -16,7 +16,7 @@ namespace Control {
   int sat_count = 0;
   unsigned long cicle_time=0;
   bool bateria_fraca;
-  int tensao=100;
+  int tensao=0;
 
   int acc=0;
 
@@ -57,7 +57,7 @@ namespace Control {
   void control(int velocidadeA, int velocidadeB){
     if(velocidadeA || velocidadeB){
     Encoder::encoder();
-    //TimeOfCicle();
+    TimeOfCicle();
     Serial.print("motor0: ");Serial.print(Encoder::contadorA);Serial.print("//");Serial.print(Encoder::contadorA_media);
     Serial.print("  motor1: ");Serial.print(Encoder::contadorB);Serial.print("//");Serial.print(Encoder::contadorB_media);
     long errorA=velocidadeA-Encoder::contadorA_media;
@@ -72,7 +72,7 @@ namespace Control {
     Serial.print(errorA);
     Serial.print("||");
     Serial.print(errorB);
-    
+
     long kp_a=2100;
     long ki_a=0;
     long kd_a=1800;
@@ -95,7 +95,7 @@ namespace Control {
       errorA_i = (-1000)*Saturacao_ki_erro/ki_a;
     }
     intermediarioA=(ki_a*errorA_i)/1000;
-    Serial.print("  errorA_i: ");Serial.print(errorA_i);
+    //Serial.print("  errorA_i: ");Serial.print(errorA_i);
     intermediarioA += (kp_a*errorA)/1000;
     intermediarioA += (kd_a*errorA_d)/1000;
     errorA_d_ant = errorA;
@@ -113,7 +113,7 @@ namespace Control {
       errorB_i = (-1000)*Saturacao_ki_erro/ki_b;
     }
     intermediarioB=(ki_b*errorB_i)/1000;
-    Serial.print("  errorB_i: ");Serial.print(errorB_i);
+    //Serial.print("  errorB_i: ");Serial.print(errorB_i);
     intermediarioB += (kp_b*errorB)/1000;
     intermediarioB += (kd_b*errorB_d)/1000;
     errorB_d_ant = errorB;
@@ -135,24 +135,27 @@ namespace Control {
       commandB = -255;
     }
 
+
+    //Teste para verificação dos motores
     /*tensao++;
-    if(tensao>240){
-      tensao=240;
-      Serial.println("SATUROU");
+    if(tensao>220){
+      tensao=220;
+      Serial.println("#");
     }
-    Serial.print("tensao: ");
-    Serial.println(tensao);*/
+    Serial.println("$");
+    Serial.println(tensao);
+    Serial.println(Encoder::contadorA_media);
+    Serial.println(Encoder::contadorB_media);*/
 
     Motor::move(0, commandA);
     Motor::move(1, commandB);
     
-    //delay(1000);
-    
     Serial.print("   commands ");
-    Serial.print(commandA);Serial.print("//");Serial.print(commandA_media);
-    Serial.print(" ");Serial.print(commandB);Serial.print("//");Serial.println(commandB_media);
+    Serial.print(commandA);Serial.print("//");
+    Serial.print(" ");Serial.println(commandB);
 
-    
+    //delay(300);
+
     //verifica se o erro integrativo satura a velocidade baixa
     //bateria_fraca = Bateria(ki_erro_A, ki_erro_B, Saturacao_ki_erro, velocidadeA, velocidadeB);
 
@@ -176,8 +179,9 @@ namespace Control {
      }
      else {
       //procedimento para indicar que o robo nao recebe mensagens nas ultimas 20000 iteracoes
-      if(radioNotAvailableFor(20000))
+      if(radioNotAvailableFor(40000)){
         control(600, 600);
+      }
       else {
         //control(500, 500);
         control(velocidades.motorA, velocidades.motorB);
