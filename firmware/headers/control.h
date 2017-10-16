@@ -57,7 +57,7 @@ namespace Control {
   void control(int velocidadeA, int velocidadeB){
     if(velocidadeA || velocidadeB){
     Encoder::encoder();
-    TimeOfCicle();
+    //TimeOfCicle();
     Serial.print("motor0: ");Serial.print(Encoder::contadorA);Serial.print("//");Serial.print(Encoder::contadorA_media);
     Serial.print("  motor1: ");Serial.print(Encoder::contadorB);Serial.print("//");Serial.print(Encoder::contadorB_media);
     long errorA=velocidadeA-Encoder::contadorA_media;
@@ -176,10 +176,10 @@ namespace Control {
        while(Radio::radio.available()) {       
         Radio::radio.read(&velocidades,sizeof(velocidades));
        }
-     }
-     else {
-      //procedimento para indicar que o robo nao recebe mensagens nas ultimas 20000 iteracoes
-      if(radioNotAvailableFor(40000)){
+    }
+    //procedimento para indicar que o robo nao recebe mensagens nas ultimas 20000 iteracoes
+    else {
+      if(radioNotAvailableFor(20000)){
         control(600, 600);
       }
       else {
@@ -188,6 +188,7 @@ namespace Control {
       }
     }
   }  
-}
 
-#endif
+}//end namespace
+
+#endif 

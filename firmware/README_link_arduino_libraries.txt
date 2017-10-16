@@ -14,3 +14,16 @@ On Windows:
 
 
 Reference: https://www.howtogeek.com/howto/16226/complete-guide-to-symbolic-links-symlinks-on-windows-or-linux/
+
+
+How to install new libraries on Linux:
+
+	the header must be placed on ~/arduino/libraries/<header name>/
+
+	example:
+		to install de header control.h you must, on your arduino
+		folder: 
+			open the folder libraries;
+			create a folder named control;
+			paste the file control.h inside the control folder.
+		
