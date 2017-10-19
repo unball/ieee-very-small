@@ -1,4 +1,4 @@
-#define robot_number 1 //Define qual robô esta sendo configurado
+#define robot_number 2 //Define qual robô esta sendo configurado [0, 1, 2]
 #include <pins.h>
 #include <radio.h>
 #include <motor.h>
