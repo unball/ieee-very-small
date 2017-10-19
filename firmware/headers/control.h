@@ -171,20 +171,20 @@ namespace Control {
   } 
 
   void stand() {
-    if(Radio::radio.available()) {
+    if(Radio::receivedata(&velocidades)) { // radio.available
        acc=0;
-       while(Radio::radio.available()) {       
+       /*while(Radio::radio.available()) {       
         Radio::radio.read(&velocidades,sizeof(velocidades));
-       }
+       }*/
     }
     //procedimento para indicar que o robo nao recebe mensagens nas ultimas 20000 iteracoes
     else {
       if(radioNotAvailableFor(20000)){
-        control(600, 600);
+        control(400, -400);
       }
       else {
         //control(500, 500);
-        control(velocidades.motorA, velocidades.motorB);
+        control(velocidades.A, velocidades.B);
       }
     }
   }  
