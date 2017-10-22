@@ -131,7 +131,7 @@ install_dependency "GTK development library" gtk[@]
 install_dependency "Video I/O packages" video_iopack[@]
 install_dependency "Python 2.7 dev tools" python_dev[@]
 
-if ! [[ ! -x "$(command -v roscore)" ]];then
+if [[ ! -x "$(command -v roscore)" ]];then
   echo $(echo_pass 'ros')
 else
   install_ros
@@ -139,5 +139,4 @@ else
 fi
 
 install_dependency "ROS Dependencies" ros_tools[@]
-
-# configld
+configld
