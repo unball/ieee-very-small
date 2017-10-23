@@ -11,7 +11,7 @@ struct dataStruct{
     int B=0;
 };
 
-dataStruct velocidades;
+dataStruct velocidades, report;
 
 namespace Radio {
   RF24 radio(Pins::CE,Pins::CS);
@@ -52,6 +52,16 @@ namespace Radio {
         return true;
      }
     return false;
+  }
+
+  void reportMessage(int message){
+    report.A = robot_number;
+    report.B = message;
+    radio.stopListening();
+    radio.enableDynamicAck();                 //essa funcao precisa andar colada na de baixo
+    radio.write(&report, sizeof(report), 1);  //lembrar que precisa enableDynamicAck antes
+                                              // 1-NOACK, 0-ACK
+    radio.startListening();
   }
 
   void mandaMensagem(){
