@@ -3,10 +3,10 @@
 #include <motor.h>
 #include <encoder.h>
 #include <radio.h>
-
+#define MOTOR_TEST false  //define se está ou não fazendo o teste nos motores
+#define PI 3.14159265
 
 namespace Control {
-
   long errorA_i=0;
   long errorB_i=0;
   long errorA_d_ant=0;
@@ -16,7 +16,7 @@ namespace Control {
   int sat_count = 0;
   unsigned long cicle_time=0;
   bool bateria_fraca;
-  int tensao=0;
+  int angulo=0;
 
   int acc=0;
 
@@ -24,26 +24,6 @@ namespace Control {
   void stopRobot() {
       Motor::stop(0);
       Motor::stop(1);
-  }
-
-  bool Bateria(long ki_erroA, long ki_erroB, long Sat_ki_erro, int velA, int velB){
-    if(abs(ki_erroA) > Sat_ki_erro || abs(ki_erroB) > Sat_ki_erro){
-      sat_count++;
-    }
-    else{
-      sat_count = 0;
-    }
-
-    if(sat_count > 50){
-      if(abs(velA) < 600 || abs(velB) < 600){
-        Serial.print("VERIFICAR BATERIA DO ROBO ");
-        Serial.println(robot_number);
-        return true;
-      }
-      else{
-        return false;
-      }
-    }
   }
 
   //verifica e imprime o tempo de duração de um ciclo
@@ -58,8 +38,10 @@ namespace Control {
     if(velocidadeA || velocidadeB){
     Encoder::encoder();
     //TimeOfCicle();
-    Serial.print("motor0: ");Serial.print(Encoder::contadorA);Serial.print("//");Serial.print(Encoder::contadorA_media);
-    Serial.print("  motor1: ");Serial.print(Encoder::contadorB);Serial.print("//");Serial.print(Encoder::contadorB_media);
+    if(!MOTOR_TEST){
+      Serial.print("motor0: ");Serial.print(Encoder::contadorA);Serial.print("//");Serial.print(Encoder::contadorA_media);
+      Serial.print("  motor1: ");Serial.print(Encoder::contadorB);Serial.print("//");Serial.print(Encoder::contadorB_media);
+    }
     long errorA=velocidadeA-Encoder::contadorA_media;
     long errorB=velocidadeB-Encoder::contadorB_media;
     errorA_i+=errorA;
@@ -68,18 +50,20 @@ namespace Control {
     long errorA_d = errorA - errorA_d_ant;
     long errorB_d = errorB - errorB_d_ant;
     
-    Serial.print(" error:");
-    Serial.print(errorA);
-    Serial.print("||");
-    Serial.print(errorB);
+    if(!MOTOR_TEST){
+      Serial.print(" error:");
+      Serial.print(errorA);
+      Serial.print("||");
+      Serial.print(errorB);
+    }
 
     long kp_a=2100;
-    long ki_a=0;
-    long kd_a=1800;
+    long ki_a=5;
+    long kd_a=1500;
     
     long kp_b=2100;
-    long ki_b=0;
-    long kd_b=1800;
+    long ki_b=5;
+    long kd_b=1500;
 
     long Saturacao_ki_erro=200;
 
@@ -122,6 +106,24 @@ namespace Control {
     int commandA=intermediarioA;
     int commandB=intermediarioB;
 
+    float km = 0.9;
+    commandA_media = km*commandA_media + (1-km)*commandA;
+    commandB_media = km*commandB_media + (1-km)*commandB;
+
+    //commandA = commandA_media;
+    //commandB = commandB_media;
+
+
+    //Teste para verificação dos motores
+    if(MOTOR_TEST){
+      Serial.println("$");
+      Serial.println(velocidadeA);
+      Serial.println(Encoder::contadorA_media);
+      Serial.println(Encoder::contadorB_media);
+    }
+
+
+
     if(commandA > 255){
       commandA = 255;
     }
@@ -135,26 +137,14 @@ namespace Control {
       commandB = -255;
     }
 
-
-    //Teste para verificação dos motores
-    /*tensao++;
-    if(tensao>220){
-      tensao=220;
-      Serial.println("#");
-    }
-    Serial.println("$");
-    Serial.println(tensao);
-    Serial.println(Encoder::contadorA_media);
-    Serial.println(Encoder::contadorB_media);*/
-
     Motor::move(0, commandA);
     Motor::move(1, commandB);
-    
-    Serial.print("   commands ");
-    Serial.print(commandA);Serial.print("//");
-    Serial.print(" ");Serial.println(commandB);
 
-    //delay(300);
+    if(!MOTOR_TEST){
+      Serial.print("   commands ");
+      Serial.print(commandA);Serial.print("//");
+      Serial.print(" ");Serial.println(commandB);
+    }
 
     //verifica se o erro integrativo satura a velocidade baixa
     //bateria_fraca = Bateria(ki_erro_A, ki_erro_B, Saturacao_ki_erro, velocidadeA, velocidadeB);
@@ -166,26 +156,32 @@ namespace Control {
   }
 
   bool radioNotAvailableFor(int numberOfCicles) {
-    acc++;
+    if(acc<numberOfCicles+10)
+      acc++;
     return acc>numberOfCicles;
   } 
 
   void stand() {
-    if(Radio::receivedata(&velocidades)) { // radio.available
-       acc=0;
-       /*while(Radio::radio.available()) {       
-        Radio::radio.read(&velocidades,sizeof(velocidades));
-       }*/
+    if(Radio::receivedata(&velocidades)) { 
+       acc=0;   
     }
     //procedimento para indicar que o robo nao recebe mensagens nas ultimas 20000 iteracoes
+    if(radioNotAvailableFor(20000)){
+      //Radio::reportMessage(1);
+      int vA=400, vB=-400;
+      if(MOTOR_TEST){
+        angulo++;
+        if(angulo>720*4){
+          Serial.println("#");
+        }
+        vA = 700*sin(angulo*(PI/180)/4);
+        vB = 700*sin(angulo*(PI/180)/4);
+      }
+      control(vA, vB);
+    }
     else {
-      if(radioNotAvailableFor(20000)){
-        control(400, -400);
-      }
-      else {
-        //control(500, 500);
-        control(velocidades.A, velocidades.B);
-      }
+      //control(500, 500);
+      control(velocidades.A, velocidades.B);
     }
   }  
 
