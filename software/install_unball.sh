@@ -3,7 +3,7 @@
 ROS_FOLDER=/opt/ros/kinetic/
 
 configld(){
-    sudo echo "$ROS_FOLDER"/lib > /etc/ld.so.conf.d/ros.conf
+    sudo echo "$ROS_FOLDER"lib > /etc/ld.so.conf.d/ros.conf
     sudo ldconfig -v
 }
 
@@ -76,12 +76,12 @@ install_ros(){
 configure_catkin(){
   echo "$user_"
   source /opt/ros/kinetic/setup.bash
-  mkdir -p /home/$user_/catkin_ws/src; cd /home/$user_/catkin_ws/src
+  mkdir -p /home/$user_/catkin_ws_unball/src; cd /home/$user_/catkin_ws_unball/src
   catkin_init_workspace
-  source ~/catkin_ws/devel/setup.bash
-  cd /home/$user_/catkin_ws/; catkin_make;
+  source ~/catkin_ws_unball/devel/setup.bash
+  cd /home/$user_/catkin_ws_unball/; catkin_make;
   echo "# Sourcing catkin environment variables" >> /home/$user_/.bashrc
-  echo "source ~/catkin_ws/devel/setup.bash" >> /home/$user_/.bashrc
+  echo "source ~/catkin_ws_unball/devel/setup.bash" >> /home/$user_/.bashrc
   source /home/$user_/.bashrc
 }
 
@@ -131,7 +131,7 @@ install_dependency "GTK development library" gtk[@]
 install_dependency "Video I/O packages" video_iopack[@]
 install_dependency "Python 2.7 dev tools" python_dev[@]
 
-if [[ ! -x "$(command -v roscore)" ]];then
+if ! [[ ! -x "$(command -v roscore)" ]];then
   echo $(echo_pass 'ros')
 else
   install_ros
