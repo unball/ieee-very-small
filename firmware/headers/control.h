@@ -3,8 +3,10 @@
 #include <motor.h>
 #include <encoder.h>
 #include <radio.h>
-#define MOTOR_TEST false  //define se está ou não fazendo o teste nos motores
+#define MOTOR_TEST false   //define se está ou não fazendo o teste nos motores
+#define wave 2    // sine = 1 -- square = 2 -- step = 3
 #define PI 3.14159265
+
 
 namespace Control {
   long errorA_i=0;
@@ -16,9 +18,12 @@ namespace Control {
   int sat_count = 0;
   unsigned long cicle_time=0;
   bool bateria_fraca;
-  int angulo=0;
-
   int acc=0;
+
+  //variaveis de teste
+  int wave_flag=1;
+  int angulo=0;
+  long square_cont=0, cont=0;
 
 
   void stopRobot() {
@@ -59,11 +64,11 @@ namespace Control {
 
     long kp_a=2100;
     long ki_a=5;
-    long kd_a=1500;
+    long kd_a=1800;
     
     long kp_b=2100;
     long ki_b=5;
-    long kd_b=1500;
+    long kd_b=2000;
 
     long Saturacao_ki_erro=200;
 
@@ -168,14 +173,35 @@ namespace Control {
     //procedimento para indicar que o robo nao recebe mensagens nas ultimas 20000 iteracoes
     if(radioNotAvailableFor(20000)){
       //Radio::reportMessage(1);
-      int vA=400, vB=-400;
+      int vA=500, vB=-500;
+      bool asd;
+
       if(MOTOR_TEST){
-        angulo++;
-        if(angulo>720*4){
-          Serial.println("#");
+        if(wave == 1){
+          angulo++;
+          if(angulo>720*4){
+            Serial.println("#");
+          }
+          vA = 700*sin(angulo*(PI/180)/4);
+          vB = 700*sin(angulo*(PI/180)/4);
         }
-        vA = 700*sin(angulo*(PI/180)/4);
-        vB = 700*sin(angulo*(PI/180)/4);
+        else if(wave == 2){
+          cont+=1;
+          if(square_cont > 8){
+            Serial.println("#");
+          }
+          if(cont>100){
+            wave_flag = -1*wave_flag;
+            cont = 0;
+            square_cont+=1;
+          }
+          vA = vA*wave_flag;
+          vB = -1*vB*wave_flag;
+        }
+        else if(wave == 3){
+          vA = 500;
+          vB = 500;
+        }
       }
       control(vA, vB);
     }
