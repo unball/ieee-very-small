@@ -1,8 +1,8 @@
-#define robot_number 3 //Define qual robô esta sendo configurado [1, 2, 3]
+#define robot_number 2 //Define qual robô esta sendo configurado [0->placa 2] [1->placa 3] [2->placa 6]
 #include <pins.h>
 #include <radio.h>
 #include <motor.h>
-#include <encoder.h>
+#include <encoder.h>  
 #include <control.h>
 
 void setup(void) {
