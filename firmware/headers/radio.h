@@ -16,9 +16,9 @@ dataStruct velocidades, report;
 namespace Radio {
   RF24 radio(Pins::CE,Pins::CS);
 
-  const uint64_t pipes[4] = { 0xABCDABCD71LL, 0x544d52687CLL, 0x644d52687CLL, 0x744d52687CLL };
-  uint64_t pipeEnvia=pipes[0];
-  uint64_t pipeRecebe=pipes[robot_number];
+  const uint64_t channels[4] = { 0xABCDABCD71LL, 0x544d52687CLL, 0x644d52687CLL, 0x744d52687CLL };
+  uint64_t channelEnvia=channels[3];
+  uint64_t channelRecebe=channels[robot_number];
 
   void Setup(){
     radio.begin();                           // inicializa radio
@@ -26,11 +26,11 @@ namespace Radio {
     radio.setPALevel(RF24_PA_MAX);           //usa potencia maxima
     radio.setDataRate(RF24_2MBPS);           //usa velocidade de transmissao maxima
 
-    radio.openWritingPipe(pipeEnvia);        //escreve pelo pipe0 SEMPRE
-    radio.openReadingPipe(1,pipeRecebe);      //escuta pelo pipe1, evitar usar pipe0
+    radio.openWritingPipe(channelEnvia);        //escreve pelo pipe0 SEMPRE
+    radio.openReadingPipe(1,channelRecebe);      //escuta pelo pipe1, evitar usar pipe0
 
     radio.enableDynamicPayloads();           //ativa payloads dinamicos(pacote tamamhos diferentes do padrao)
-    radio.setPayloadSize(sizeof(velocidades));   //ajusta os o tamanho dos pacotes ao tamanho da mensagem
+    radio.setPayloadSize(sizeof(dataStruct));   //ajusta os o tamanho dos pacotes ao tamanho da mensagem
                                                  //tamanho maximo de payload 32 BYTES
     
     radio.startListening();                 // Start listening
@@ -39,7 +39,7 @@ namespace Radio {
   void levelocidades(){
     if(radio.available()){
        while(radio.available()){       
-        radio.read(&velocidades,sizeof(velocidades));
+        radio.read(&velocidades,sizeof(dataStruct));
        }
     Serial.println(velocidades.A);
     Serial.println(velocidades.B);
@@ -58,8 +58,9 @@ namespace Radio {
     report.A = robot_number;
     report.B = message;
     radio.stopListening();
-    radio.enableDynamicAck();                 //essa funcao precisa andar colada na de baixo
-    radio.write(&report, sizeof(report), 1);  //lembrar que precisa enableDynamicAck antes
+    radio.enableDynamicAck();                 //essa funcao precisa andar colada na função radio.write()
+    radio.openWritingPipe(channelEnvia);
+    radio.write(&report, sizeof(dataStruct), 1);  //lembrar que precisa enableDynamicAck antes
                                               // 1-NOACK, 0-ACK
     radio.startListening();
   }
@@ -72,7 +73,7 @@ namespace Radio {
     velocidades.A=c;
     radio.stopListening();
     radio.enableDynamicAck();                 //essa funcao precisa andar colada na de baixo
-    radio.write(&velocidades,sizeof(velocidades), 1);   //lembrar que precisa enableDynamicAck antes
+    radio.write(&velocidades,sizeof(dataStruct), 1);   //lembrar que precisa enableDynamicAck antes
                                               // 1-NOACK, 0-ACK
     radio.startListening(); 
     Serial.println(c);
@@ -95,12 +96,12 @@ namespace Radio {
     Serial.println("  0->1MBPS, 1->2MBPS, 2->250KBPS");
     Serial.println();
     Serial.print("Enviar por: ");
-    Serial.println(int(pipeEnvia));
+    Serial.println(int(channelEnvia));
     Serial.print("Recebe por: ");
-    Serial.println(int(pipeRecebe));
+    Serial.println(int(channelRecebe));
     Serial.print("Payload size: ");
     Serial.println(radio.getPayloadSize());
   }
-}
+} //end namespace
 
 #endif
