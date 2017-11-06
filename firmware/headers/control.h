@@ -20,6 +20,7 @@ namespace Control {
   bool bateria_fraca;
   int acc=0;
   int ctr = 0;
+  bool start_flag=true;
 
   //variaveis de teste
   int wave_flag=1;
@@ -243,7 +244,7 @@ namespace Control {
 
   bool frame_rate(){
     ctr++;
-    if(ctr == 10000){
+    if(ctr == 100){
       ctr = 0;
       return true;
     }
@@ -255,6 +256,9 @@ namespace Control {
   void stand() {
     if(Radio::receivedata(&velocidades)) { 
        acc=0;   
+       if(frame_rate()){
+        Radio::reportMessage(2);
+      }
     }
     //procedimento para indicar que o robo nao recebe mensagens nas ultimas 20000 iteracoes
     if(radioNotAvailableFor(20000)){
@@ -268,7 +272,8 @@ namespace Control {
     }
     else {
       //control(500, 500);
-      if(frame_rate()){
+      if(start_flag){
+        start_flag = false;
         Radio::reportMessage(2);
       }
       control(velocidades.A, velocidades.B);
