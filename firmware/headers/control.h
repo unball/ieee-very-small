@@ -296,7 +296,6 @@ namespace Control {
         Radio::reportMessage(2);
       }
       control(velocidades.A, velocidades.B);
-      }
     }
   }  
 
