@@ -253,6 +253,25 @@ namespace Control {
     }
   }
 
+  void Turbo(int turboA, int turboB){
+    if(turboA>0 && turboB>0){
+      Motor::move(0, 255);
+      Motor::move(1, 255);
+    }
+    else if(turboA<0 && turboB<0){
+      Motor::move(0, -255);
+      Motor::move(1, -255);
+    }
+    else if(turboA>0 && turboB<0){
+      Motor::move(0, 255);
+      Motor::move(1, -255);
+    }
+    else{
+      Motor::move(0, -255);
+      Motor::move(1, 255);
+    }
+  }
+
   void stand() {
     if(Radio::receivedata(&velocidades)) { 
        acc=0;   
@@ -277,6 +296,7 @@ namespace Control {
         Radio::reportMessage(2);
       }
       control(velocidades.A, velocidades.B);
+      }
     }
   }  
 
